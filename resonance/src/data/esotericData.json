@@ -1,0 +1,2157 @@
+[
+  {
+    "id": "root__sun",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 396,
+    "planetToneHz": 126.22,
+    "color": "#ef4444",
+    "accentColor": "#fca311",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Sun illuminates the Root today — a focus on safety, grounding and the will to keep going, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Sunstone",
+        "color": "#fca311",
+        "effect": "restores optimism and personal light"
+      }
+    ]
+  },
+  {
+    "id": "root__moon",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 396,
+    "planetToneHz": 210.42,
+    "color": "#ef4444",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Moon softens the Root today — a focus on safety, grounding and the will to keep going, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Moonstone",
+        "color": "#cbd5e1",
+        "effect": "attunes you to cycles and inner tides"
+      }
+    ]
+  },
+  {
+    "id": "root__mercury",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 396,
+    "planetToneHz": 141.27,
+    "color": "#ef4444",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Mercury quickens the Root today — a focus on safety, grounding and the will to keep going, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Blue Lace Agate",
+        "color": "#93c5fd",
+        "effect": "gentles anxious speech into calm"
+      }
+    ]
+  },
+  {
+    "id": "root__venus",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 396,
+    "planetToneHz": 221.23,
+    "color": "#ef4444",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Venus sweetens the Root today — a focus on safety, grounding and the will to keep going, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      }
+    ]
+  },
+  {
+    "id": "root__mars",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 396,
+    "planetToneHz": 144.72,
+    "color": "#ef4444",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Mars fires the Root today — a focus on safety, grounding and the will to keep going, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Hematite",
+        "color": "#4b5563",
+        "effect": "pulls scattered energy back to the ground"
+      }
+    ]
+  },
+  {
+    "id": "root__jupiter",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 396,
+    "planetToneHz": 183.58,
+    "color": "#ef4444",
+    "accentColor": "#e0b15e",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Jupiter expands the Root today — a focus on safety, grounding and the will to keep going, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      }
+    ]
+  },
+  {
+    "id": "root__saturn",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 396,
+    "planetToneHz": 147.85,
+    "color": "#ef4444",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Saturn tempers the Root today — a focus on safety, grounding and the will to keep going, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Smoky Quartz",
+        "color": "#57534e",
+        "effect": "transmutes stress and lightens the load"
+      }
+    ]
+  },
+  {
+    "id": "root__uranus",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 396,
+    "planetToneHz": 207.36,
+    "color": "#ef4444",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Uranus electrifies the Root today — a focus on safety, grounding and the will to keep going, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Labradorite",
+        "color": "#64748b",
+        "effect": "guards the aura and reveals hidden currents"
+      }
+    ]
+  },
+  {
+    "id": "root__neptune",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 396,
+    "planetToneHz": 211.44,
+    "color": "#ef4444",
+    "accentColor": "#6c8cff",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Neptune dissolves the edges of the Root today — a focus on safety, grounding and the will to keep going, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Red Jasper",
+        "color": "#b91c1c",
+        "effect": "anchors stamina and steady presence"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      },
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      }
+    ]
+  },
+  {
+    "id": "root__pluto",
+    "chakra": "root",
+    "chakraName": "Root",
+    "sanskrit": "Muladhara",
+    "note": "C",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 396,
+    "planetToneHz": 140.25,
+    "color": "#ef4444",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I am safe, supported and here.",
+    "guidance": "Pluto transforms the Root today — a focus on safety, grounding and the will to keep going, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Smoky Quartz",
+        "color": "#57534e",
+        "effect": "transmutes stress and lightens the load"
+      },
+      {
+        "name": "Garnet",
+        "color": "#9f1239",
+        "effect": "revives passion, drive and root strength"
+      }
+    ]
+  },
+  {
+    "id": "sacral__sun",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 417,
+    "planetToneHz": 126.22,
+    "color": "#f97316",
+    "accentColor": "#fca311",
+    "affirmation": "I let life move through me.",
+    "guidance": "Sun illuminates the Sacral today — a focus on feeling, pleasure and creative flow, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Sunstone",
+        "color": "#fca311",
+        "effect": "restores optimism and personal light"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      }
+    ]
+  },
+  {
+    "id": "sacral__moon",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 417,
+    "planetToneHz": 210.42,
+    "color": "#f97316",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I let life move through me.",
+    "guidance": "Moon softens the Sacral today — a focus on feeling, pleasure and creative flow, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Moonstone",
+        "color": "#cbd5e1",
+        "effect": "attunes you to cycles and inner tides"
+      }
+    ]
+  },
+  {
+    "id": "sacral__mercury",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 417,
+    "planetToneHz": 141.27,
+    "color": "#f97316",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I let life move through me.",
+    "guidance": "Mercury quickens the Sacral today — a focus on feeling, pleasure and creative flow, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Blue Lace Agate",
+        "color": "#93c5fd",
+        "effect": "gentles anxious speech into calm"
+      }
+    ]
+  },
+  {
+    "id": "sacral__venus",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 417,
+    "planetToneHz": 221.23,
+    "color": "#f97316",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I let life move through me.",
+    "guidance": "Venus sweetens the Sacral today — a focus on feeling, pleasure and creative flow, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      }
+    ]
+  },
+  {
+    "id": "sacral__mars",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 417,
+    "planetToneHz": 144.72,
+    "color": "#f97316",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I let life move through me.",
+    "guidance": "Mars fires the Sacral today — a focus on feeling, pleasure and creative flow, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Bloodstone",
+        "color": "#166534",
+        "effect": "renews courage and physical resolve"
+      }
+    ]
+  },
+  {
+    "id": "sacral__jupiter",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 417,
+    "planetToneHz": 183.58,
+    "color": "#f97316",
+    "accentColor": "#e0b15e",
+    "affirmation": "I let life move through me.",
+    "guidance": "Jupiter expands the Sacral today — a focus on feeling, pleasure and creative flow, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      }
+    ]
+  },
+  {
+    "id": "sacral__saturn",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 417,
+    "planetToneHz": 147.85,
+    "color": "#f97316",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I let life move through me.",
+    "guidance": "Saturn tempers the Sacral today — a focus on feeling, pleasure and creative flow, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      }
+    ]
+  },
+  {
+    "id": "sacral__uranus",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 417,
+    "planetToneHz": 207.36,
+    "color": "#f97316",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I let life move through me.",
+    "guidance": "Uranus electrifies the Sacral today — a focus on feeling, pleasure and creative flow, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Labradorite",
+        "color": "#64748b",
+        "effect": "guards the aura and reveals hidden currents"
+      }
+    ]
+  },
+  {
+    "id": "sacral__neptune",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 417,
+    "planetToneHz": 211.44,
+    "color": "#f97316",
+    "accentColor": "#6c8cff",
+    "affirmation": "I let life move through me.",
+    "guidance": "Neptune dissolves the edges of the Sacral today — a focus on feeling, pleasure and creative flow, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      }
+    ]
+  },
+  {
+    "id": "sacral__pluto",
+    "chakra": "sacral",
+    "chakraName": "Sacral",
+    "sanskrit": "Svadhisthana",
+    "note": "D",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 417,
+    "planetToneHz": 140.25,
+    "color": "#f97316",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I let life move through me.",
+    "guidance": "Pluto transforms the Sacral today — a focus on feeling, pleasure and creative flow, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "color": "#fb923c",
+        "effect": "sparks creative fire and momentum"
+      },
+      {
+        "name": "Orange Calcite",
+        "color": "#fdba74",
+        "effect": "thaws creative and emotional blocks"
+      },
+      {
+        "name": "Obsidian",
+        "color": "#111827",
+        "effect": "mirrors the shadow for an honest reckoning"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__sun",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 528,
+    "planetToneHz": 126.22,
+    "color": "#facc15",
+    "accentColor": "#fca311",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Sun illuminates the Solar Plexus today — a focus on will, confidence and personal power, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__moon",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 528,
+    "planetToneHz": 210.42,
+    "color": "#facc15",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Moon softens the Solar Plexus today — a focus on will, confidence and personal power, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Moonstone",
+        "color": "#cbd5e1",
+        "effect": "attunes you to cycles and inner tides"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__mercury",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 528,
+    "planetToneHz": 141.27,
+    "color": "#facc15",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Mercury quickens the Solar Plexus today — a focus on will, confidence and personal power, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Blue Lace Agate",
+        "color": "#93c5fd",
+        "effect": "gentles anxious speech into calm"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__venus",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 528,
+    "planetToneHz": 221.23,
+    "color": "#facc15",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Venus sweetens the Solar Plexus today — a focus on will, confidence and personal power, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__mars",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 528,
+    "planetToneHz": 144.72,
+    "color": "#facc15",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Mars fires the Solar Plexus today — a focus on will, confidence and personal power, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Bloodstone",
+        "color": "#166534",
+        "effect": "renews courage and physical resolve"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__jupiter",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 528,
+    "planetToneHz": 183.58,
+    "color": "#facc15",
+    "accentColor": "#e0b15e",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Jupiter expands the Solar Plexus today — a focus on will, confidence and personal power, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Yellow Jasper",
+        "color": "#fcd34d",
+        "effect": "steadies the nerves for sustained effort"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__saturn",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 528,
+    "planetToneHz": 147.85,
+    "color": "#facc15",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Saturn tempers the Solar Plexus today — a focus on will, confidence and personal power, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__uranus",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 528,
+    "planetToneHz": 207.36,
+    "color": "#facc15",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Uranus electrifies the Solar Plexus today — a focus on will, confidence and personal power, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Labradorite",
+        "color": "#64748b",
+        "effect": "guards the aura and reveals hidden currents"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__neptune",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 528,
+    "planetToneHz": 211.44,
+    "color": "#facc15",
+    "accentColor": "#6c8cff",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Neptune dissolves the edges of the Solar Plexus today — a focus on will, confidence and personal power, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      }
+    ]
+  },
+  {
+    "id": "solar-plexus__pluto",
+    "chakra": "solar-plexus",
+    "chakraName": "Solar Plexus",
+    "sanskrit": "Manipura",
+    "note": "E",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 528,
+    "planetToneHz": 140.25,
+    "color": "#facc15",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I trust my own fire.",
+    "guidance": "Pluto transforms the Solar Plexus today — a focus on will, confidence and personal power, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Citrine",
+        "color": "#facc15",
+        "effect": "rekindles confidence and radiant will"
+      },
+      {
+        "name": "Tiger's Eye",
+        "color": "#b45309",
+        "effect": "grounds courage into balanced action"
+      },
+      {
+        "name": "Obsidian",
+        "color": "#111827",
+        "effect": "mirrors the shadow for an honest reckoning"
+      }
+    ]
+  },
+  {
+    "id": "heart__sun",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 639,
+    "planetToneHz": 126.22,
+    "color": "#34d399",
+    "accentColor": "#fca311",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Sun illuminates the Heart today — a focus on compassion, connection and forgiveness, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Sunstone",
+        "color": "#fca311",
+        "effect": "restores optimism and personal light"
+      }
+    ]
+  },
+  {
+    "id": "heart__moon",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 639,
+    "planetToneHz": 210.42,
+    "color": "#34d399",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Moon softens the Heart today — a focus on compassion, connection and forgiveness, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Moonstone",
+        "color": "#cbd5e1",
+        "effect": "attunes you to cycles and inner tides"
+      }
+    ]
+  },
+  {
+    "id": "heart__mercury",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 639,
+    "planetToneHz": 141.27,
+    "color": "#34d399",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Mercury quickens the Heart today — a focus on compassion, connection and forgiveness, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Blue Lace Agate",
+        "color": "#93c5fd",
+        "effect": "gentles anxious speech into calm"
+      }
+    ]
+  },
+  {
+    "id": "heart__venus",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 639,
+    "planetToneHz": 221.23,
+    "color": "#34d399",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Venus sweetens the Heart today — a focus on compassion, connection and forgiveness, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      }
+    ]
+  },
+  {
+    "id": "heart__mars",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 639,
+    "planetToneHz": 144.72,
+    "color": "#34d399",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Mars fires the Heart today — a focus on compassion, connection and forgiveness, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Bloodstone",
+        "color": "#166534",
+        "effect": "renews courage and physical resolve"
+      }
+    ]
+  },
+  {
+    "id": "heart__jupiter",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 639,
+    "planetToneHz": 183.58,
+    "color": "#34d399",
+    "accentColor": "#e0b15e",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Jupiter expands the Heart today — a focus on compassion, connection and forgiveness, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      }
+    ]
+  },
+  {
+    "id": "heart__saturn",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 639,
+    "planetToneHz": 147.85,
+    "color": "#34d399",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Saturn tempers the Heart today — a focus on compassion, connection and forgiveness, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      }
+    ]
+  },
+  {
+    "id": "heart__uranus",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 639,
+    "planetToneHz": 207.36,
+    "color": "#34d399",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Uranus electrifies the Heart today — a focus on compassion, connection and forgiveness, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Labradorite",
+        "color": "#64748b",
+        "effect": "guards the aura and reveals hidden currents"
+      }
+    ]
+  },
+  {
+    "id": "heart__neptune",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 639,
+    "planetToneHz": 211.44,
+    "color": "#34d399",
+    "accentColor": "#6c8cff",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Neptune dissolves the edges of the Heart today — a focus on compassion, connection and forgiveness, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      }
+    ]
+  },
+  {
+    "id": "heart__pluto",
+    "chakra": "heart",
+    "chakraName": "Heart",
+    "sanskrit": "Anahata",
+    "note": "F",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 639,
+    "planetToneHz": 140.25,
+    "color": "#34d399",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I give and receive love freely.",
+    "guidance": "Pluto transforms the Heart today — a focus on compassion, connection and forgiveness, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      },
+      {
+        "name": "Green Aventurine",
+        "color": "#4ade80",
+        "effect": "opens the heart to new opportunity"
+      },
+      {
+        "name": "Obsidian",
+        "color": "#111827",
+        "effect": "mirrors the shadow for an honest reckoning"
+      }
+    ]
+  },
+  {
+    "id": "throat__sun",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 741,
+    "planetToneHz": 126.22,
+    "color": "#38bdf8",
+    "accentColor": "#fca311",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Sun illuminates the Throat today — a focus on truth, voice and clear expression, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Sunstone",
+        "color": "#fca311",
+        "effect": "restores optimism and personal light"
+      }
+    ]
+  },
+  {
+    "id": "throat__moon",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 741,
+    "planetToneHz": 210.42,
+    "color": "#38bdf8",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Moon softens the Throat today — a focus on truth, voice and clear expression, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Moonstone",
+        "color": "#cbd5e1",
+        "effect": "attunes you to cycles and inner tides"
+      }
+    ]
+  },
+  {
+    "id": "throat__mercury",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 741,
+    "planetToneHz": 141.27,
+    "color": "#38bdf8",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Mercury quickens the Throat today — a focus on truth, voice and clear expression, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Aquamarine",
+        "color": "#22d3ee",
+        "effect": "cools the throat and steadies true speech"
+      }
+    ]
+  },
+  {
+    "id": "throat__venus",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 741,
+    "planetToneHz": 221.23,
+    "color": "#38bdf8",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Venus sweetens the Throat today — a focus on truth, voice and clear expression, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      }
+    ]
+  },
+  {
+    "id": "throat__mars",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 741,
+    "planetToneHz": 144.72,
+    "color": "#38bdf8",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Mars fires the Throat today — a focus on truth, voice and clear expression, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Bloodstone",
+        "color": "#166534",
+        "effect": "renews courage and physical resolve"
+      }
+    ]
+  },
+  {
+    "id": "throat__jupiter",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 741,
+    "planetToneHz": 183.58,
+    "color": "#38bdf8",
+    "accentColor": "#e0b15e",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Jupiter expands the Throat today — a focus on truth, voice and clear expression, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Turquoise",
+        "color": "#14b8a6",
+        "effect": "bridges heart and voice with protection"
+      }
+    ]
+  },
+  {
+    "id": "throat__saturn",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 741,
+    "planetToneHz": 147.85,
+    "color": "#38bdf8",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Saturn tempers the Throat today — a focus on truth, voice and clear expression, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      }
+    ]
+  },
+  {
+    "id": "throat__uranus",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 741,
+    "planetToneHz": 207.36,
+    "color": "#38bdf8",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Uranus electrifies the Throat today — a focus on truth, voice and clear expression, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Labradorite",
+        "color": "#64748b",
+        "effect": "guards the aura and reveals hidden currents"
+      }
+    ]
+  },
+  {
+    "id": "throat__neptune",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 741,
+    "planetToneHz": 211.44,
+    "color": "#38bdf8",
+    "accentColor": "#6c8cff",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Neptune dissolves the edges of the Throat today — a focus on truth, voice and clear expression, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Aquamarine",
+        "color": "#22d3ee",
+        "effect": "cools the throat and steadies true speech"
+      }
+    ]
+  },
+  {
+    "id": "throat__pluto",
+    "chakra": "throat",
+    "chakraName": "Throat",
+    "sanskrit": "Vishuddha",
+    "note": "G",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 741,
+    "planetToneHz": 140.25,
+    "color": "#38bdf8",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I speak my truth with ease.",
+    "guidance": "Pluto transforms the Throat today — a focus on truth, voice and clear expression, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Obsidian",
+        "color": "#111827",
+        "effect": "mirrors the shadow for an honest reckoning"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__sun",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 852,
+    "planetToneHz": 126.22,
+    "color": "#6366f1",
+    "accentColor": "#fca311",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Sun illuminates the Third Eye today — a focus on insight, imagination and inner sight, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Sunstone",
+        "color": "#fca311",
+        "effect": "restores optimism and personal light"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__moon",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 852,
+    "planetToneHz": 210.42,
+    "color": "#6366f1",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Moon softens the Third Eye today — a focus on insight, imagination and inner sight, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Moonstone",
+        "color": "#cbd5e1",
+        "effect": "attunes you to cycles and inner tides"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__mercury",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 852,
+    "planetToneHz": 141.27,
+    "color": "#6366f1",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Mercury quickens the Third Eye today — a focus on insight, imagination and inner sight, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Sodalite",
+        "color": "#2563eb",
+        "effect": "calms the mind and orders scattered thought"
+      },
+      {
+        "name": "Fluorite",
+        "color": "#a855f7",
+        "effect": "clears mental fog and sharpens focus"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__venus",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 852,
+    "planetToneHz": 221.23,
+    "color": "#6366f1",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Venus sweetens the Third Eye today — a focus on insight, imagination and inner sight, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__mars",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 852,
+    "planetToneHz": 144.72,
+    "color": "#6366f1",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Mars fires the Third Eye today — a focus on insight, imagination and inner sight, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Bloodstone",
+        "color": "#166534",
+        "effect": "renews courage and physical resolve"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__jupiter",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 852,
+    "planetToneHz": 183.58,
+    "color": "#6366f1",
+    "accentColor": "#e0b15e",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Jupiter expands the Third Eye today — a focus on insight, imagination and inner sight, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__saturn",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 852,
+    "planetToneHz": 147.85,
+    "color": "#6366f1",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Saturn tempers the Third Eye today — a focus on insight, imagination and inner sight, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__uranus",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 852,
+    "planetToneHz": 207.36,
+    "color": "#6366f1",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Uranus electrifies the Third Eye today — a focus on insight, imagination and inner sight, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Labradorite",
+        "color": "#64748b",
+        "effect": "guards the aura and reveals hidden currents"
+      },
+      {
+        "name": "Fluorite",
+        "color": "#a855f7",
+        "effect": "clears mental fog and sharpens focus"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__neptune",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 852,
+    "planetToneHz": 211.44,
+    "color": "#6366f1",
+    "accentColor": "#6c8cff",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Neptune dissolves the edges of the Third Eye today — a focus on insight, imagination and inner sight, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      }
+    ]
+  },
+  {
+    "id": "third-eye__pluto",
+    "chakra": "third-eye",
+    "chakraName": "Third Eye",
+    "sanskrit": "Ajna",
+    "note": "A",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 852,
+    "planetToneHz": 140.25,
+    "color": "#6366f1",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I trust what I see within.",
+    "guidance": "Pluto transforms the Third Eye today — a focus on insight, imagination and inner sight, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      },
+      {
+        "name": "Obsidian",
+        "color": "#111827",
+        "effect": "mirrors the shadow for an honest reckoning"
+      }
+    ]
+  },
+  {
+    "id": "crown__sun",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Sun",
+    "planetSymbol": "☉",
+    "frequency": 963,
+    "planetToneHz": 126.22,
+    "color": "#a78bfa",
+    "accentColor": "#fca311",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Sun illuminates the Crown today — a focus on meaning, unity and connection to the whole, coloured by vitality, identity and the courage to be seen.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Sunstone",
+        "color": "#fca311",
+        "effect": "restores optimism and personal light"
+      }
+    ]
+  },
+  {
+    "id": "crown__moon",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Moon",
+    "planetSymbol": "☽",
+    "frequency": 963,
+    "planetToneHz": 210.42,
+    "color": "#a78bfa",
+    "accentColor": "#c9d1ff",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Moon softens the Crown today — a focus on meaning, unity and connection to the whole, coloured by emotion, memory and the body’s tides.",
+    "crystals": [
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Howlite",
+        "color": "#e5e7eb",
+        "effect": "quiets an overactive mind before rest"
+      }
+    ]
+  },
+  {
+    "id": "crown__mercury",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Mercury",
+    "planetSymbol": "☿",
+    "frequency": 963,
+    "planetToneHz": 141.27,
+    "color": "#a78bfa",
+    "accentColor": "#8ad7c1",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Mercury quickens the Crown today — a focus on meaning, unity and connection to the whole, coloured by thought, language and the quick mind.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Blue Lace Agate",
+        "color": "#93c5fd",
+        "effect": "gentles anxious speech into calm"
+      }
+    ]
+  },
+  {
+    "id": "crown__venus",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Venus",
+    "planetSymbol": "♀",
+    "frequency": 963,
+    "planetToneHz": 221.23,
+    "color": "#a78bfa",
+    "accentColor": "#f7a8c4",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Venus sweetens the Crown today — a focus on meaning, unity and connection to the whole, coloured by love, beauty and what you hold dear.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Rose Quartz",
+        "color": "#f9a8d4",
+        "effect": "softens the heart and invites gentleness"
+      }
+    ]
+  },
+  {
+    "id": "crown__mars",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Mars",
+    "planetSymbol": "♂",
+    "frequency": 963,
+    "planetToneHz": 144.72,
+    "color": "#a78bfa",
+    "accentColor": "#ef5b5b",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Mars fires the Crown today — a focus on meaning, unity and connection to the whole, coloured by drive, desire and decisive action.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Bloodstone",
+        "color": "#166534",
+        "effect": "renews courage and physical resolve"
+      }
+    ]
+  },
+  {
+    "id": "crown__jupiter",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Jupiter",
+    "planetSymbol": "♃",
+    "frequency": 963,
+    "planetToneHz": 183.58,
+    "color": "#a78bfa",
+    "accentColor": "#e0b15e",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Jupiter expands the Crown today — a focus on meaning, unity and connection to the whole, coloured by growth, faith and the wider view.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "color": "#3b82f6",
+        "effect": "awakens inner sight and honest speech"
+      }
+    ]
+  },
+  {
+    "id": "crown__saturn",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Saturn",
+    "planetSymbol": "♄",
+    "frequency": 963,
+    "planetToneHz": 147.85,
+    "color": "#a78bfa",
+    "accentColor": "#9aa7b1",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Saturn tempers the Crown today — a focus on meaning, unity and connection to the whole, coloured by structure, limits and earned mastery.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Black Tourmaline",
+        "color": "#1f2937",
+        "effect": "forms a boundary against dense energy"
+      }
+    ]
+  },
+  {
+    "id": "crown__uranus",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Uranus",
+    "planetSymbol": "♅",
+    "frequency": 963,
+    "planetToneHz": 207.36,
+    "color": "#a78bfa",
+    "accentColor": "#5fd0e0",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Uranus electrifies the Crown today — a focus on meaning, unity and connection to the whole, coloured by awakening, disruption and sudden clarity.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Lepidolite",
+        "color": "#d8b4fe",
+        "effect": "eases the nervous system into stillness"
+      }
+    ]
+  },
+  {
+    "id": "crown__neptune",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Neptune",
+    "planetSymbol": "♆",
+    "frequency": 963,
+    "planetToneHz": 211.44,
+    "color": "#a78bfa",
+    "accentColor": "#6c8cff",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Neptune dissolves the edges of the Crown today — a focus on meaning, unity and connection to the whole, coloured by dreams, dissolution and mystic longing.",
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "color": "#a78bfa",
+        "effect": "calms mental noise and opens intuition"
+      },
+      {
+        "name": "Charoite",
+        "color": "#7c3aed",
+        "effect": "links intuition with grounded wisdom"
+      }
+    ]
+  },
+  {
+    "id": "crown__pluto",
+    "chakra": "crown",
+    "chakraName": "Crown",
+    "sanskrit": "Sahasrara",
+    "note": "B",
+    "planet": "Pluto",
+    "planetSymbol": "♇",
+    "frequency": 963,
+    "planetToneHz": 140.25,
+    "color": "#a78bfa",
+    "accentColor": "#8a5a9e",
+    "affirmation": "I am part of something vast.",
+    "guidance": "Pluto transforms the Crown today — a focus on meaning, unity and connection to the whole, coloured by depth, power and irreversible change.",
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "color": "#e5e7eb",
+        "effect": "amplifies intention and clarifies the field"
+      },
+      {
+        "name": "Selenite",
+        "color": "#f1f5f9",
+        "effect": "clears dense energy and lifts the vibration"
+      },
+      {
+        "name": "Obsidian",
+        "color": "#111827",
+        "effect": "mirrors the shadow for an honest reckoning"
+      }
+    ]
+  }
+]

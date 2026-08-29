@@ -1,0 +1,198 @@
+@import 'tailwindcss';
+
+/* Self-hosted fonts — the app must render fully offline inside Capacitor,
+   so no Google Fonts CDN. Installed via:
+   npm i @fontsource/cormorant-garamond @fontsource-variable/inter */
+@import '@fontsource-variable/inter';
+@import '@fontsource/cormorant-garamond/400.css';
+@import '@fontsource/cormorant-garamond/500.css';
+@import '@fontsource/cormorant-garamond/600.css';
+@import '@fontsource/cormorant-garamond/700.css';
+
+/* Tailwind v4 pulls the Midnight/Classic palette, fonts and motion
+   tokens from the legacy config file. */
+@config '../tailwind.config.js';
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    /* rgb channels, so utilities can alpha-composite the accents */
+    --gold-rgb: 212 175 55;
+    --midnight-rgb: 7 11 28;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background-color: #03040c;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100dvh;
+    font-family:
+      'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto,
+      sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgb(233 237 250 / 0.92);
+    /* Deep midnight — layered radial "nebula" glow over a vertical void gradient */
+    background:
+      radial-gradient(
+        ellipse 90% 55% at 50% -10%,
+        rgb(var(--gold-rgb) / 0.13),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 75% 50% at 100% 0%,
+        rgba(37, 53, 111, 0.38),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 90% 70% at 0% 100%,
+        rgba(11, 18, 48, 0.55),
+        transparent 60%
+      ),
+      linear-gradient(180deg, #070b1c 0%, #05070f 55%, #03040c 100%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-synthesis: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0.005em;
+    color: #f6f1e4;
+  }
+
+  ::selection {
+    background: rgb(var(--gold-rgb) / 0.28);
+    color: #fff;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #root {
+    min-height: 100dvh;
+    isolation: isolate;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  Reusable surfaces & accents
+ * ------------------------------------------------------------------ */
+
+/* Dark blurred glass with a hairline gold frame.
+   Usage: <div class="glass-panel p-4"> ... </div> */
+@utility glass-panel {
+  position: relative;
+  border-radius: 1.5rem;
+  border: 1px solid rgb(var(--gold-rgb) / 0.18);
+  background-color: rgba(11, 18, 48, 0.45);
+  background-image: linear-gradient(
+    160deg,
+    rgba(26, 38, 87, 0.55) 0%,
+    rgba(7, 11, 28, 0.35) 100%
+  );
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow:
+    0 24px 70px -24px rgba(2, 4, 12, 0.85),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+
+  /* gilded light bleeding down from the top edge */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--gold-rgb) / 0.55),
+      rgb(var(--gold-rgb) / 0) 42%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* Add alongside `.glass-panel` for active / selected cards. */
+@utility glass-panel-active {
+  border-color: rgb(var(--gold-rgb) / 0.5);
+  background-image: linear-gradient(
+    160deg,
+    rgba(43, 58, 120, 0.6) 0%,
+    rgba(11, 16, 40, 0.4) 100%
+  );
+}
+
+/* Composable glow (filter, so it stacks with any box-shadow). */
+@utility glow-gold {
+  filter: drop-shadow(0 0 10px rgb(var(--gold-rgb) / 0.4))
+    drop-shadow(0 0 30px rgb(var(--gold-rgb) / 0.25));
+}
+
+@utility text-glow {
+  text-shadow:
+    0 0 18px rgb(var(--gold-rgb) / 0.45),
+    0 0 4px rgb(var(--gold-rgb) / 0.3);
+}
+
+/* Sharp, high-contrast gold heading treatment. */
+@utility text-gilded {
+  background: linear-gradient(135deg, #f7e9c4 0%, #d4af37 45%, #8f6d25 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Small-caps label used above data blocks. */
+@utility eyebrow {
+  font-family:
+    'Inter Variable', Inter, system-ui, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: rgb(154 166 201 / 0.9);
+}
+
+/* Edge-to-edge horizontal strips without a visible scrollbar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
