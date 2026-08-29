@@ -1,5 +1,6 @@
 import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
+import { clockHM, geoContext } from '../lib/geo'
 import { chakraColor } from '../lib/resonanceData'
 
 interface HoroscopeProps {
@@ -14,9 +15,12 @@ export function Horoscope({ onBack }: HoroscopeProps) {
   const sky = useAppStore((s) => s.sky)
   const hasNatal = useAppStore((s) => s.hasNatal)
   const suggestedPattern = useAppStore((s) => s.suggestedPattern)
+  const profile = useAppStore((s) => s.profile)
   const editProfile = useAppStore((s) => s.editProfile)
 
   if (!transit || !chakra) return null
+
+  const geo = geoContext(profile)
 
   const horoscope = buildHoroscope({
     transit,
@@ -84,6 +88,29 @@ export function Horoscope({ onBack }: HoroscopeProps) {
           </p>
         </section>
       )}
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow">Where you are</p>
+        {geo.hasLocation && (
+          <p className="mt-2 text-sm text-haze-300">
+            {geo.season} · sun {clockHM(geo.sunrise)}–{clockHM(geo.sunset)}
+            {geo.dayLengthHours != null &&
+              ` · ${geo.dayLengthHours.toFixed(1)} h of light`}
+          </p>
+        )}
+        <p className="mt-2 text-sm leading-relaxed text-haze-200">
+          {geo.grounding}
+        </p>
+        {!geo.hasLocation && (
+          <button
+            type="button"
+            onClick={editProfile}
+            className="mt-2 text-xs uppercase tracking-[0.14em] text-gold-300"
+          >
+            Add a birth place for local sun times →
+          </button>
+        )}
+      </section>
 
       <section className="glass-panel glass-panel-active p-5">
         <p className="eyebrow">Today’s practice</p>

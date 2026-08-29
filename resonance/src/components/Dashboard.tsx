@@ -12,7 +12,9 @@ import { PlayIcon } from './icons'
 
 interface DashboardProps {
   onNavigate: (tab: TabKey) => void
-  onOpen: (view: 'chart' | 'horoscope' | 'journal' | 'mood') => void
+  onOpen: (
+    view: 'chart' | 'horoscope' | 'journal' | 'mood' | 'market' | 'settings',
+  ) => void
   onStartRitual: () => void
 }
 
@@ -41,6 +43,7 @@ export function Dashboard({ onNavigate, onOpen, onStartRitual }: DashboardProps)
   const hasNatal = useAppStore((s) => s.hasNatal)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
+  const biometricLog = useAppStore((s) => s.biometricLog)
 
   const streak = practiceStreak(sessionLog)
   const doneToday = practicedToday(sessionLog)
@@ -49,7 +52,7 @@ export function Dashboard({ onNavigate, onOpen, onStartRitual }: DashboardProps)
   const accent = chakraColor(focusChakra)
   const pattern = BREATH_PATTERNS[breathPattern]
   const chakraHz = chakra?.frequency ?? transit?.recommendedFrequency ?? frequency
-  const aura = computeAura(focusChakra, sessionLog, moodLog)
+  const aura = computeAura(focusChakra, sessionLog, moodLog, biometricLog)
   const hasMoodToday = moodLog.some((m) => m.day === localDayKey())
 
   const focusPlanet = sky.find((p) => p.body === transit?.body)
@@ -82,7 +85,11 @@ export function Dashboard({ onNavigate, onOpen, onStartRitual }: DashboardProps)
               {Math.round(aura.score * 100)}%
             </span>
           </p>
-          {hasMoodToday && aura.mood ? (
+          {aura.needsRest ? (
+            <p className="mt-0.5 text-xs text-red-300">
+              Body’s run down — keep today restorative
+            </p>
+          ) : hasMoodToday && aura.mood ? (
             <p className="mt-0.5 text-xs text-haze-300">
               Feeling {MOOD_META[aura.mood].label.toLowerCase()} ·{' '}
               {streak > 0 ? `${streak}-day streak` : 'begin a streak today'}

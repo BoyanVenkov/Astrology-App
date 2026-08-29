@@ -170,6 +170,45 @@ export interface PracticeSession {
   completed: boolean
 }
 
+/* --------------------------------------------------------------- biometrics */
+
+/**
+ * A body reading — from Apple Health / Google Fit on device, or entered by
+ * hand. HRV (ms) is the primary stress signal.
+ */
+export interface BiometricReading {
+  at: string
+  day: string
+  /** Heart-rate variability, ms (RMSSD). Higher = more recovered. */
+  hrv?: number
+  /** Resting heart rate, bpm. */
+  restingHr?: number
+  /** Last night's sleep, hours. */
+  sleepHours?: number
+  /** How it was captured. */
+  source: 'manual' | 'health'
+}
+
+/* ------------------------------------------------------------ notifications */
+
+export interface NotificationPreferences {
+  enabled: boolean
+  /** Morning "today's reading is ready", `HH:mm` local. */
+  dailyReading: boolean
+  dailyReadingTime: string
+  /** Alert on New / Full Moon. */
+  moonPhases: boolean
+  /** Alert when the Moon changes sign (a "reset" moment). */
+  moonSignChange: boolean
+  /** Evening nudge to check in + practise, `HH:mm`. */
+  eveningWind: boolean
+  eveningWindTime: string
+}
+
+/* ------------------------------------------------------------------ premium */
+
+export type PremiumTier = 'free' | 'pro'
+
 /* --------------------------------------------------------------- navigation */
 
 export type TabKey = 'dashboard' | 'frequencies' | 'breathwork' | 'apothecary'
@@ -210,4 +249,11 @@ export interface ResonanceSession {
   sessionLog: PracticeSession[]
   /** Daily mood check-ins (most recent last), capped. */
   moodLog: MoodEntry[]
+  /** Body readings (most recent last), capped. */
+  biometricLog: BiometricReading[]
+  /** Whether the user has connected on-device health data. */
+  healthConnected: boolean
+  notifications: NotificationPreferences
+  /** Entitlement tier. `pro` unlocks the full library, houses, deep history. */
+  tier: PremiumTier
 }

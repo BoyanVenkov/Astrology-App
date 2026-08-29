@@ -133,3 +133,34 @@ export function moonState(date: Date): MoonState {
   const index = Math.floor(((angle + 22.5) % 360) / 45) % 8
   return { name: MOON_PHASES[index], illumination, angle }
 }
+
+/** Upcoming instants when the Moon crosses into a new sign (step + bisect). */
+export function nextMoonSignChanges(from: Date, count: number): {
+  at: Date
+  sign: string
+}[] {
+  const out: { at: Date; sign: string }[] = []
+  let t = from.getTime()
+  const stepMs = 2 * 3_600_000 // the Moon moves ~1° in 2h
+  let prevSign = Math.floor(eclipticLongitude('Moon', new Date(t)) / 30)
+
+  for (let guard = 0; guard < 400 && out.length < count; guard += 1) {
+    const next = t + stepMs
+    const sign = Math.floor(eclipticLongitude('Moon', new Date(next)) / 30)
+    if (sign !== prevSign) {
+      // bisect the 2h window down to ~1 minute
+      let lo = t
+      let hi = next
+      while (hi - lo > 60_000) {
+        const mid = (lo + hi) / 2
+        const s = Math.floor(eclipticLongitude('Moon', new Date(mid)) / 30)
+        if (s === prevSign) lo = mid
+        else hi = mid
+      }
+      out.push({ at: new Date(hi), sign: SIGNS[sign % 12] })
+      prevSign = sign
+    }
+    t = next
+  }
+  return out
+}

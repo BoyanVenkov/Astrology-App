@@ -4,12 +4,15 @@ import type {
   AstrologicalTransit,
   AudioMode,
   AudioPreferences,
+  BiometricReading,
   BirthProfile,
   BreathPatternKey,
   ChakraState,
   Crystal,
   MoodEntry,
+  NotificationPreferences,
   PracticeSession,
+  PremiumTier,
   ResonanceSession,
   SolfeggioFrequency,
 } from '../types/resonance'
@@ -24,6 +27,16 @@ const DEFAULT_AUDIO: AudioPreferences = {
   ambientPadLevel: 0.12,
   fadeSeconds: 2,
   breathVoice: true,
+}
+
+const DEFAULT_NOTIFICATIONS: NotificationPreferences = {
+  enabled: false,
+  dailyReading: true,
+  dailyReadingTime: '08:00',
+  moonPhases: true,
+  moonSignChange: false,
+  eveningWind: true,
+  eveningWindTime: '21:00',
 }
 
 const SESSION_LOG_CAP = 120
@@ -91,6 +104,10 @@ const createSession = (): ResonanceSession & SkyState => {
     lastCompletedAt: null,
     sessionLog: [],
     moodLog: [],
+    biometricLog: [],
+    healthConnected: false,
+    notifications: DEFAULT_NOTIFICATIONS,
+    tier: 'free',
   }
 }
 
@@ -113,6 +130,14 @@ interface ResonanceActions {
   logPractice: (session: PracticeSession) => void
   /** Record today's mood check-in (replaces any earlier one for the same day). */
   logMood: (entry: MoodEntry) => void
+  /** Record a body reading (replaces any earlier one for the same day). */
+  logBiometrics: (reading: BiometricReading) => void
+  /** Mark on-device health data as connected / disconnected. */
+  setHealthConnected: (connected: boolean) => void
+  /** Patch notification preferences. */
+  updateNotificationPrefs: (prefs: Partial<NotificationPreferences>) => void
+  /** Set the entitlement tier (called by the purchase flow / dev unlock). */
+  setTier: (tier: PremiumTier) => void
   /** Save natal data and recompute today's reading against it. */
   setProfile: (profile: BirthProfile) => void
   /** Re-open the birth-details form. */
@@ -173,6 +198,23 @@ export const useAppStore = create<AppStore>()(
             entry,
           ].slice(-SESSION_LOG_CAP),
         })),
+
+      logBiometrics: (reading) =>
+        set((state) => ({
+          biometricLog: [
+            ...state.biometricLog.filter((b) => b.day !== reading.day),
+            reading,
+          ].slice(-SESSION_LOG_CAP),
+        })),
+
+      setHealthConnected: (healthConnected) => set({ healthConnected }),
+
+      updateNotificationPrefs: (prefs) =>
+        set((state) => ({
+          notifications: { ...state.notifications, ...prefs },
+        })),
+
+      setTier: (tier) => set({ tier }),
 
       setProfile: (profile) =>
         set((state) => {
@@ -235,6 +277,10 @@ export const useAppStore = create<AppStore>()(
         lastCompletedAt: state.lastCompletedAt,
         sessionLog: state.sessionLog,
         moodLog: state.moodLog,
+        biometricLog: state.biometricLog,
+        healthConnected: state.healthConnected,
+        notifications: state.notifications,
+        tier: state.tier,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>
@@ -256,6 +302,7 @@ export const useAppStore = create<AppStore>()(
               ? saved.frequency
               : slice.transit.recommendedFrequency,
           audio: { ...current.audio, ...saved.audio },
+          notifications: { ...current.notifications, ...saved.notifications },
           isPlaying: false,
         }
       },

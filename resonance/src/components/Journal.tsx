@@ -3,6 +3,7 @@ import { useAppStore } from '../store/useAppStore'
 import { Aura } from './Aura'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { auraLabel, computeAura, MOOD_META } from '../lib/aura'
+import { useEntitlements } from '../lib/premium'
 import { chakraName } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
@@ -10,6 +11,7 @@ import type { Mood } from '../types/resonance'
 
 interface JournalProps {
   onBack: () => void
+  onUpgrade: (reason?: string) => void
 }
 
 interface DayCell {
@@ -26,15 +28,18 @@ const dayKeyOffset = (offset: number): string => {
   return localDayKey(d)
 }
 
-export function Journal({ onBack }: JournalProps) {
+export function Journal({ onBack, onUpgrade }: JournalProps) {
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
+  const biometricLog = useAppStore((s) => s.biometricLog)
+  const { isPro, freeHistoryDays } = useEntitlements()
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
-  const aura = computeAura(focusChakra, sessionLog, moodLog)
+  const aura = computeAura(focusChakra, sessionLog, moodLog, biometricLog)
   const streak = practiceStreak(sessionLog)
+  const gridDays = isPro ? 28 : Math.min(28, freeHistoryDays)
 
   const totalMinutes = sessionLog
     .filter((s) => s.completed)
@@ -52,7 +57,7 @@ export function Journal({ onBack }: JournalProps) {
 
     const today = localDayKey()
     const cells: DayCell[] = []
-    for (let i = -27; i <= 0; i += 1) {
+    for (let i = -(gridDays - 1); i <= 0; i += 1) {
       const key = dayKeyOffset(i)
       cells.push({
         key,
@@ -63,9 +68,9 @@ export function Journal({ onBack }: JournalProps) {
       })
     }
     return cells
-  }, [sessionLog, moodLog])
+  }, [sessionLog, moodLog, gridDays])
 
-  const recent = [...sessionLog].reverse().slice(0, 12)
+  const recent = [...sessionLog].reverse().slice(0, isPro ? 30 : 6)
 
   return (
     <div className="flex flex-col gap-5">
@@ -106,9 +111,20 @@ export function Journal({ onBack }: JournalProps) {
         </div>
       </section>
 
-      {/* 4-week grid */}
+      {/* practice grid */}
       <section className="glass-panel p-4">
-        <p className="eyebrow">Last 4 weeks</p>
+        <div className="flex items-center justify-between">
+          <p className="eyebrow">Last {gridDays === 28 ? '4 weeks' : `${gridDays} days`}</p>
+          {!isPro && (
+            <button
+              type="button"
+              onClick={() => onUpgrade('Unlimited journal history')}
+              className="text-[10px] uppercase tracking-[0.14em] text-gold-300"
+            >
+              full history →
+            </button>
+          )}
+        </div>
         <div className="mt-3 grid grid-cols-7 gap-1.5">
           {grid.map((cell) => {
             const strength = Math.min(1, cell.minutes / 10)

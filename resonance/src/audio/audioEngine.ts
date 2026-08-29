@@ -66,8 +66,10 @@ export class AudioEngine {
   private padGain: GainNode | null = null
 
   private breathSource: AudioBufferSourceNode | null = null
-  private breathBand: BiquadFilterNode | null = null
-  private breathGain: GainNode | null = null
+  private breathBand: BiquadFilterNode | null = null // "body" formant, swept per phase
+  private breathAir: BiquadFilterNode | null = null // high "hiss" formant
+  private breathAirGain: GainNode | null = null
+  private breathGain: GainNode | null = null // shared envelope
 
   private brownNoise: AudioBuffer | null = null
   private pinkNoise: AudioBuffer | null = null
@@ -176,37 +178,46 @@ export class AudioEngine {
     const now = this.ctx.currentTime
     const g = this.breathGain.gain
     const f = this.breathBand.frequency
+    const air = this.breathAirGain?.gain
     g.cancelScheduledValues(now)
     f.cancelScheduledValues(now)
+    air?.cancelScheduledValues(now)
     g.setValueAtTime(Math.max(g.value, MIN_GAIN), now)
     f.setValueAtTime(Math.max(f.value, 60), now)
+    if (air) air.setValueAtTime(Math.max(air.value, MIN_GAIN), now)
+    const dur = Math.max(seconds, 0.1)
 
     switch (kind) {
       case 'inhale': {
-        // air drawn in: quick swell, brief hold, soft taper; filter opens up
+        // air drawn in: quick swell, brief hold, soft taper; body formant opens,
+        // more hiss up top
         g.exponentialRampToValueAtTime(BREATH_PEAK, now + seconds * 0.6)
         g.setValueAtTime(BREATH_PEAK, now + seconds * 0.82)
         g.exponentialRampToValueAtTime(BREATH_PEAK * 0.5, now + seconds)
         f.setValueAtTime(430, now)
-        f.linearRampToValueAtTime(1200, now + Math.max(seconds, 0.1))
+        f.linearRampToValueAtTime(1150, now + dur)
+        air?.linearRampToValueAtTime(0.5, now + dur * 0.5)
         break
       }
       case 'exhale': {
-        // released breath: louder onset, long warm decay; filter closes down
+        // released breath: louder onset, long warm decay; body drops, less hiss
         g.exponentialRampToValueAtTime(BREATH_PEAK * 1.1, now + seconds * 0.22)
         g.exponentialRampToValueAtTime(MIN_GAIN, now + seconds)
-        f.setValueAtTime(950, now)
-        f.linearRampToValueAtTime(270, now + Math.max(seconds, 0.1))
+        f.setValueAtTime(900, now)
+        f.linearRampToValueAtTime(260, now + dur)
+        air?.linearRampToValueAtTime(0.18, now + dur * 0.4)
         break
       }
       case 'hold': {
         g.exponentialRampToValueAtTime(0.006, now + 0.5) // faint held breath
         f.setValueAtTime(500, now)
+        air?.linearRampToValueAtTime(0.12, now + 0.5)
         break
       }
       case 'pump': {
         // Kapalabhati: rapid sharp exhales
-        f.setValueAtTime(780, now)
+        f.setValueAtTime(760, now)
+        air?.setValueAtTime(0.4, now)
         const rate = 1.6
         const count = Math.max(1, Math.floor(seconds * rate))
         const dt = 1 / rate
@@ -348,17 +359,34 @@ export class AudioEngine {
     const src = ctx.createBufferSource()
     src.buffer = this.getPinkNoise(ctx)
     src.loop = true
+
+    const envelope = ctx.createGain()
+    envelope.gain.setValueAtTime(MIN_GAIN, now) // silent until breathePhase
+
+    // "body" of the breath — a resonant formant swept per phase
     const band = ctx.createBiquadFilter()
     band.type = 'bandpass'
     band.frequency.value = 600
     band.Q.value = 1.1
-    const gain = ctx.createGain()
-    gain.gain.setValueAtTime(MIN_GAIN, now) // stays silent until breathePhase
-    src.connect(band).connect(gain).connect(master)
+    src.connect(band).connect(envelope)
+
+    // "air" — a breathier high formant, louder on the inhale
+    const air = ctx.createBiquadFilter()
+    air.type = 'bandpass'
+    air.frequency.value = 1750
+    air.Q.value = 0.7
+    const airGain = ctx.createGain()
+    airGain.gain.setValueAtTime(0.32, now)
+    src.connect(air).connect(airGain).connect(envelope)
+
+    envelope.connect(master)
     src.start(now)
+
     this.breathSource = src
     this.breathBand = band
-    this.breathGain = gain
+    this.breathAir = air
+    this.breathAirGain = airGain
+    this.breathGain = envelope
   }
 
   private duckVoice(gain: GainNode | null, seconds: number): void {
@@ -437,6 +465,8 @@ export class AudioEngine {
       this.padGain,
       this.breathSource,
       this.breathBand,
+      this.breathAir,
+      this.breathAirGain,
       this.breathGain,
     ]
     for (const node of nodes) {
@@ -453,6 +483,8 @@ export class AudioEngine {
     this.padGain = null
     this.breathSource = null
     this.breathBand = null
+    this.breathAir = null
+    this.breathAirGain = null
     this.breathGain = null
   }
 }

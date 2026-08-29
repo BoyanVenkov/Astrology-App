@@ -5,11 +5,13 @@ import {
   BreathIcon,
   DashboardIcon,
   FrequenciesIcon,
+  GearIcon,
 } from './icons'
 
 interface LayoutProps {
   active: TabKey
   onTabChange: (tab: TabKey) => void
+  onOpenSettings: () => void
   children: ReactNode
 }
 
@@ -26,14 +28,30 @@ const TABS: TabDef[] = [
   { key: 'apothecary', label: 'Apothecary', Icon: ApothecaryIcon },
 ]
 
-export function Layout({ active, onTabChange, children }: LayoutProps) {
+export function Layout({
+  active,
+  onTabChange,
+  onOpenSettings,
+  children,
+}: LayoutProps) {
   return (
     <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col">
       {/* iOS notch / status-bar spacer */}
       <div style={{ height: 'env(safe-area-inset-top)' }} aria-hidden />
 
+      <div className="flex justify-end px-3 pt-1.5">
+        <button
+          type="button"
+          onClick={onOpenSettings}
+          aria-label="Settings"
+          className="rounded-full p-1.5 text-haze-400 active:text-haze-100"
+        >
+          <GearIcon className="h-5 w-5" />
+        </button>
+      </div>
+
       <main
-        className="flex-1 px-4 pt-3"
+        className="flex-1 px-4 pt-1"
         style={{ paddingBottom: 'calc(6rem + env(safe-area-inset-bottom))' }}
       >
         {children}
