@@ -15,6 +15,7 @@ import type {
   PracticeSession,
   PremiumTier,
   ResonanceSession,
+  SavedPerson,
   SolfeggioFrequency,
 } from '../types/resonance'
 import { computeDailyReading, type Aspect } from '../lib/astrology'
@@ -128,6 +129,7 @@ const createSession = (): ResonanceSession & SkyState => {
     tier: 'free',
     tarotDrawnDay: null,
     moodGateDay: null,
+    people: [],
   }
 }
 
@@ -170,6 +172,10 @@ interface ResonanceActions {
   markTarotDrawn: () => void
   /** Mark today's mood gate handled (answered or skipped) so it stops asking. */
   dismissMoodGate: () => void
+  /** Save someone for chart-compatibility readings. */
+  addPerson: (person: SavedPerson) => void
+  /** Forget a saved person. */
+  removePerson: (id: string) => void
   /** Mark the current session finished and start a fresh one. */
   endSession: () => void
 }
@@ -282,6 +288,17 @@ export const useAppStore = create<AppStore>()(
 
       dismissMoodGate: () => set({ moodGateDay: localDayKey() }),
 
+      addPerson: (person) =>
+        set((state) => ({
+          people: [
+            person,
+            ...state.people.filter((p) => p.id !== person.id),
+          ].slice(0, 12),
+        })),
+
+      removePerson: (id) =>
+        set((state) => ({ people: state.people.filter((p) => p.id !== id) })),
+
       endSession: () =>
         set((state) => ({
           ...createSession(),
@@ -293,6 +310,7 @@ export const useAppStore = create<AppStore>()(
           onboardingComplete: state.onboardingComplete,
           tarotDrawnDay: state.tarotDrawnDay,
           moodGateDay: state.moodGateDay,
+          people: state.people,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -324,6 +342,7 @@ export const useAppStore = create<AppStore>()(
         tier: state.tier,
         tarotDrawnDay: state.tarotDrawnDay,
         moodGateDay: state.moodGateDay,
+        people: state.people,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>
@@ -347,6 +366,7 @@ export const useAppStore = create<AppStore>()(
               : slice.transit.recommendedFrequency,
           audio: { ...current.audio, ...saved.audio },
           notifications: { ...current.notifications, ...saved.notifications },
+          people: saved.people ?? current.people,
           isPlaying: false,
         }
       },

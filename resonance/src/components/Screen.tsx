@@ -55,8 +55,8 @@ export function Screen({
       <header className="flex items-start gap-2">
         {onBack && <BackButton onClick={onBack} />}
         <div className="min-w-0 flex-1 pt-0.5">
-          {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-          <h1 className="mt-0.5 font-serif text-2xl leading-tight text-gilded">
+          {eyebrow && <p className="eyebrow-hue">{eyebrow}</p>}
+          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
             {title}
           </h1>
           {subtitle && (

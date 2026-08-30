@@ -52,21 +52,26 @@ function Tab({
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className="relative flex min-h-[3.4rem] flex-1 flex-col items-center justify-center gap-[3px] rounded-2xl px-1 py-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] transition-[color,transform] active:scale-95"
+      className="relative flex min-h-[3.4rem] flex-1 flex-col items-center justify-center gap-[3px] rounded-xl px-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] transition-[color,transform] active:scale-95"
       style={{
-        color: active ? 'var(--rz-hue)' : 'rgba(147,159,193,0.6)',
-        filter: active ? 'drop-shadow(0 0 9px var(--rz-glow))' : undefined,
+        color: active ? 'var(--rz-hue)' : 'rgba(193,203,228,0.94)',
       }}
     >
-      <Icon className="h-[1.45rem] w-[1.45rem]" />
-      <span>{def.label}</span>
+      {/* active chip — an unmistakable "you are here" */}
       <span
-        className="absolute bottom-0 h-[3px] w-[3px] rounded-full transition-opacity"
+        aria-hidden
+        className="absolute inset-x-1 inset-y-0.5 rounded-xl transition-opacity"
         style={{
-          background: 'var(--rz-hue)',
           opacity: active ? 1 : 0,
+          background: 'color-mix(in srgb, var(--rz-hue) 15%, transparent)',
+          boxShadow:
+            'inset 0 0 0 1px color-mix(in srgb, var(--rz-hue) 34%, transparent)',
         }}
       />
+      <span className="relative flex flex-col items-center gap-[3px]">
+        <Icon className="h-[1.5rem] w-[1.5rem]" />
+        <span>{def.label}</span>
+      </span>
     </button>
   )
 }
@@ -93,15 +98,15 @@ export function Layout({
 
       <div style={{ height: 'env(safe-area-inset-top)' }} aria-hidden />
       {onSettings ? (
-        <div className="relative z-10 flex items-center justify-center px-3 py-2.5">
+        <div className="relative z-10 flex items-center justify-center px-3 py-3">
           <ResonanceLockup />
           <button
             type="button"
             onClick={onSettings}
             aria-label="Settings"
-            className="absolute right-2 grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-haze-300 transition active:scale-90 active:bg-white/10"
+            className="absolute right-2 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/[0.06] text-haze-100 transition active:scale-90 active:bg-white/15"
           >
-            <GearIcon className="h-[1.2rem] w-[1.2rem]" />
+            <GearIcon className="h-[1.25rem] w-[1.25rem]" />
           </button>
         </div>
       ) : (
@@ -116,10 +121,11 @@ export function Layout({
       </main>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.06] backdrop-blur-2xl"
+        className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.1] backdrop-blur-2xl"
         style={{
           background:
-            'linear-gradient(180deg, rgba(6,9,22,0.72) 0%, rgba(3,4,12,0.96) 100%)',
+            'linear-gradient(180deg, rgba(8,12,28,0.86) 0%, rgba(3,4,12,0.98) 100%)',
+          boxShadow: '0 -1px 0 0 rgba(255,255,255,0.05) inset',
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
       >

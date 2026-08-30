@@ -109,6 +109,39 @@ const ordinal = (aspectName: string): string =>
       ? 'opposite'
       : aspectName
 
+/** A three-line read of the day — the free-tier horoscope. */
+export interface QuickHoroscope {
+  /** The dominant transit, in plain language. */
+  sky: string
+  /** What today asks of the user's focus centre. */
+  body: string
+  /** The Moon's mood. */
+  moon: string
+}
+
+export function buildQuickHoroscope(reading: HoroscopeInput): QuickHoroscope {
+  const { transit, chakra, aspects, sky, hasNatal } = reading
+  const moonPos = sky.find((p) => p.body === 'Moon')
+  const vulnerable = chakra.balance < 50
+  const focus = chakraName(chakra.key)
+  const top = aspects[0]
+
+  const skyLine =
+    hasNatal && top
+      ? `${top.transiting} is ${MANNER[top.def.harmony]} your ${top.other} — ${SHORT[top.transiting]} in the mix, ${top.applying ? 'still building' : 'easing off'}.`
+      : `${transit.title}. ${transit.influence.split('.')[0]}.`
+
+  const bodyLine = vulnerable
+    ? `Your ${focus} is tender today — move slower than feels necessary and protect it.`
+    : `Your ${focus} is charged — put it to use before the window closes.`
+
+  const moonLine = moonPos
+    ? `Moon in ${moonPos.sign}: ${MOON_SIGN[moonPos.sign] ?? 'a shifting mood'}.`
+    : ''
+
+  return { sky: skyLine, body: bodyLine, moon: moonLine }
+}
+
 export function buildHoroscope(reading: HoroscopeInput): DailyHoroscope {
   const { transit, chakra, aspects, sky, hasNatal, suggestedPattern } = reading
   const moonPos = sky.find((p) => p.body === 'Moon')

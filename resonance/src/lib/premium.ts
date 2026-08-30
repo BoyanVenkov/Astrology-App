@@ -15,11 +15,12 @@ export const PRO_PRICING = {
 }
 
 export const PRO_FEATURES = [
+  'Compatibility readings for anyone in your life',
+  'The full Chakra Field — every centre, decoded',
   'Every breath pattern, meditation & Solfeggio tone',
-  'The 3-card & Celtic Cross tarot spreads',
+  'The 3-card & Celtic Cross spreads, and the Oracle',
   'Your full daily horoscope, in depth',
   'Unlimited journal history & aura trends',
-  'Deep natal-chart integration & every transit',
 ]
 
 /**

@@ -247,7 +247,7 @@ export function Onboarding() {
       <button
         type="button"
         onClick={skipOnboarding}
-        className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-500 active:text-haze-300"
+        className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
       >
         Skip — use today’s sky only
       </button>

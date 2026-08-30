@@ -2,13 +2,16 @@ import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { HOUSE_ARENA, ORDINAL } from '../lib/astrology'
 import { useChakraField, type ChakraContact, type ChakraReading } from '../lib/chakraField'
+import { useEntitlements } from '../lib/premium'
 import { ChakraColumn } from './ChakraColumn'
+import { LockIcon } from './icons'
 import { Screen } from './Screen'
 import type { RitualPreset } from '../types/resonance'
 
 interface ChakraFieldProps {
   onBack: () => void
   onRitual: (preset: RitualPreset) => void
+  onUpgrade: (reason?: string) => void
 }
 
 const ASPECT_GLYPH: Record<string, string> = {
@@ -37,11 +40,13 @@ function contactLine(c: ChakraContact): string {
 function ChakraRow({
   c,
   open,
+  locked,
   onToggle,
   onRitual,
 }: {
   c: ChakraReading
   open: boolean
+  locked: boolean
   onToggle: () => void
   onRitual: (preset: RitualPreset) => void
 }) {
@@ -53,12 +58,14 @@ function ChakraRow({
 
   return (
     <div
-      className={`glass-panel overflow-hidden ${c.focus ? 'glass-panel-active' : ''}`}
+      className={`glass-panel overflow-hidden ${c.focus ? 'glass-panel-active' : ''} ${
+        locked ? 'opacity-70' : ''
+      }`}
     >
       <button
         type="button"
         onClick={onToggle}
-        aria-expanded={open}
+        aria-expanded={locked ? undefined : open}
         className="flex w-full items-center gap-3 p-4 text-left active:scale-[0.995]"
       >
         <span
@@ -80,17 +87,20 @@ function ChakraRow({
             {driverText}
           </span>
         </span>
-        <span className="shrink-0 text-right">
-          <span
-            className="block text-[11px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: TONE_COLOR[c.tone] }}
-          >
-            {c.state}
+        <span className="flex shrink-0 items-center gap-2 text-right">
+          <span>
+            <span
+              className="block text-[11px] font-semibold uppercase tracking-[0.12em]"
+              style={{ color: TONE_COLOR[c.tone] }}
+            >
+              {c.state}
+            </span>
+            <span className="data block text-[11px] text-haze-400">
+              {c.charge}
+              {c.driver ? ` · ${c.driver.orbDelta.toFixed(1)}°` : ''}
+            </span>
           </span>
-          <span className="data block text-[11px] text-haze-400">
-            {c.charge}
-            {c.driver ? ` · ${c.driver.orbDelta.toFixed(1)}°` : ''}
-          </span>
+          {locked && <LockIcon className="h-4 w-4 shrink-0 text-haze-400" />}
         </span>
       </button>
 
@@ -166,10 +176,11 @@ function ChakraRow({
   )
 }
 
-export function ChakraField({ onBack, onRitual }: ChakraFieldProps) {
+export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
   const field = useChakraField()
   const hasNatal = useAppStore((s) => s.hasNatal)
   const editProfile = useAppStore((s) => s.editProfile)
+  const { isPro } = useEntitlements()
   const [open, setOpen] = useState<ChakraReading['key'] | null>(null)
 
   const focus = field.find((c) => c.focus) ?? field[3]
@@ -226,16 +237,44 @@ export function ChakraField({ onBack, onRitual }: ChakraFieldProps) {
       <p className="px-1 text-sm leading-relaxed text-haze-300">{summary}</p>
 
       <div className="flex flex-col gap-2.5">
-        {field.map((c) => (
-          <ChakraRow
-            key={c.key}
-            c={c}
-            open={open === c.key}
-            onToggle={() => setOpen((cur) => (cur === c.key ? null : c.key))}
-            onRitual={onRitual}
-          />
-        ))}
+        {field.map((c) => {
+          const locked = !isPro && !c.focus
+          return (
+            <ChakraRow
+              key={c.key}
+              c={c}
+              locked={locked}
+              open={open === c.key}
+              onToggle={() =>
+                locked
+                  ? onUpgrade('The full Chakra Field')
+                  : setOpen((cur) => (cur === c.key ? null : c.key))
+              }
+              onRitual={onRitual}
+            />
+          )
+        })}
       </div>
+
+      {!isPro && (
+        <button
+          type="button"
+          onClick={() => onUpgrade('The full Chakra Field')}
+          className="glass-panel glass-panel-active flex items-center justify-between gap-3 p-4 text-left active:scale-[0.99]"
+        >
+          <span>
+            <span className="flex items-center gap-1.5 font-serif text-lg text-white">
+              <LockIcon className="h-4 w-4 text-gold-300" />
+              Open every centre
+            </span>
+            <span className="mt-0.5 block text-xs text-haze-300">
+              Why each is charged, all its transits, and a tone to tune it —
+              Resonance Pro
+            </span>
+          </span>
+          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+        </button>
+      )}
 
       <p className="px-1 pb-2 text-[11px] leading-relaxed text-haze-500">
         Each planet resonates with one centre; its aspects to your chart charge

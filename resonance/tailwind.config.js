@@ -41,12 +41,14 @@ export default {
           800: '#6b5020',
           900: '#4a3717',
         },
-        /* Muted ink for body copy / secondary UI data. */
+        /* Muted ink for body copy / secondary UI data. Kept legible against the
+           near-black ground — 400/500 are the "quiet" steps, still readable. */
         haze: {
           100: '#e9edfa',
-          200: '#c7cfe6',
-          300: '#9aa6c9',
-          400: '#6f7da8',
+          200: '#cbd3e8',
+          300: '#a6b1d1',
+          400: '#8794b6',
+          500: '#727f9f',
         },
       },
       fontFamily: {

@@ -387,7 +387,7 @@ export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps
         <button
           type="button"
           onClick={() => enterPhase('retention')}
-          className="text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+          className="text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
         >
           Skip to the hold →
         </button>

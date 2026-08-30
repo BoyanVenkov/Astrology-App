@@ -222,6 +222,12 @@ export interface BirthProfile {
   utc: string
 }
 
+/** Someone the user has saved to compare charts with. */
+export interface SavedPerson extends BirthProfile {
+  id: string
+  name: string
+}
+
 /* ----------------------------------------------------------------- practice */
 
 export type Mood = 'bright' | 'calm' | 'clear' | 'heavy' | 'anxious' | 'tired'
@@ -376,4 +382,6 @@ export interface ResonanceSession {
   tarotDrawnDay: string | null
   /** Local day the daily mood gate was answered or dismissed — `null` if never. */
   moodGateDay: string | null
+  /** People saved for chart-compatibility readings. */
+  people: SavedPerson[]
 }

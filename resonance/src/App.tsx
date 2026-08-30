@@ -3,12 +3,14 @@ import { AudioBridge } from './audio/AudioBridge'
 import { Apothecary } from './components/Apothecary'
 import { BodyCheckIn } from './components/BodyCheckIn'
 import { ChakraField } from './components/ChakraField'
+import { Compatibility } from './components/Compatibility'
 import { Dashboard } from './components/Dashboard'
 import { Horoscope } from './components/Horoscope'
 import { Journal } from './components/Journal'
 import { Layout } from './components/Layout'
 import { MoodCheckIn } from './components/MoodCheckIn'
 import { MoodGate } from './components/MoodGate'
+import { MoonScreen } from './components/MoonScreen'
 import { NatalChart } from './components/NatalChart'
 import { Onboarding } from './components/Onboarding'
 import { Paywall } from './components/Paywall'
@@ -18,6 +20,7 @@ import { Ritual } from './components/Ritual'
 import { Settings } from './components/Settings'
 import { SkyView } from './components/SkyView'
 import { TarotReader } from './components/TarotReader'
+import { Transits } from './components/Transits'
 import { YouView } from './components/YouView'
 import { useLiveLocation, useLiveSky } from './lib/liveSky'
 import { syncNotifications } from './lib/notifications'
@@ -38,6 +41,9 @@ type Sub =
   | 'chart'
   | 'horoscope'
   | 'chakras'
+  | 'compat'
+  | 'transits'
+  | 'moon'
   | 'stones'
   | 'library'
   | 'journal'
@@ -111,8 +117,15 @@ function App() {
           <Horoscope onBack={back} onRitual={launchRitual} />
         )}
         {sub === 'chakras' && (
-          <ChakraField onBack={back} onRitual={launchRitual} />
+          <ChakraField
+            onBack={back}
+            onRitual={launchRitual}
+            onUpgrade={openPaywall}
+          />
         )}
+        {sub === 'compat' && <Compatibility onBack={back} />}
+        {sub === 'transits' && <Transits onBack={back} />}
+        {sub === 'moon' && <MoonScreen onBack={back} />}
         {sub === 'stones' && (
           <Apothecary
             onBack={back}
@@ -144,12 +157,13 @@ function App() {
         )}
         {sub === null && tab === 'sky' && (
           <SkyView
-            onTab={goTab}
             onOpenChart={() => setSub('chart')}
             onOpenHoroscope={() => setSub('horoscope')}
-            onOpenStones={() => setSub('stones')}
             onOpenChakras={() => setSub('chakras')}
-            onRitual={launchRitual}
+            onOpenCompat={() => setSub('compat')}
+            onOpenTransits={() => setSub('transits')}
+            onOpenMoon={() => setSub('moon')}
+            onOpenStones={() => setSub('stones')}
             onUpgrade={openPaywall}
           />
         )}
@@ -160,11 +174,7 @@ function App() {
           />
         )}
         {sub === null && tab === 'you' && (
-          <YouView
-            onOpen={setSub}
-            onUpgrade={() => openPaywall()}
-            onRitual={launchRitual}
-          />
+          <YouView onOpen={setSub} onUpgrade={() => openPaywall()} />
         )}
       </Layout>
 

@@ -134,7 +134,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
       <button
         type="button"
         onClick={commit}
-        className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-500 active:text-haze-300"
+        className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
       >
         Skip for today
       </button>

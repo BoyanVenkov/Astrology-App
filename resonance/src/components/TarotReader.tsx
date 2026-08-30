@@ -2,8 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import {
   dailySeed,
+  drawOracle,
   drawReading,
   freshSeed,
+  oracleAnswer,
   SPREADS,
   spreadOf,
   type DrawnCard,
@@ -22,7 +24,7 @@ interface TarotReaderProps {
   onUpgrade?: (reason?: string) => void
 }
 
-type View = 'daily' | 'choose' | 'table'
+type View = 'daily' | 'choose' | 'table' | 'oracle'
 
 /* --------------------------------------------------------------- one card */
 
@@ -116,6 +118,10 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
   const [flipped, setFlipped] = useState<Set<number>>(new Set())
   const [shuffling, setShuffling] = useState(false)
 
+  const [question, setQuestion] = useState('')
+  const [oracle, setOracle] = useState<{ q: string; card: DrawnCard } | null>(null)
+  const [oracleUp, setOracleUp] = useState(false)
+
   useEffect(() => {
     if (!shuffling) return
     const id = window.setTimeout(() => setShuffling(false), 1200)
@@ -128,6 +134,13 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
     setFlipped(new Set())
     setShuffling(true)
     setView('table')
+  }
+
+  const consultOracle = () => {
+    const q = question.trim()
+    if (q.length < 8) return
+    setOracle({ q, card: drawOracle(q, profile) })
+    setOracleUp(false)
   }
 
   const flip = (i: number) =>
@@ -145,7 +158,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
         {onBack && <BackButton onClick={onBack} />}
 
         <header className="px-1">
-          <p className="eyebrow">Tarot</p>
+          <p className="eyebrow-hue">Tarot</p>
           <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
             Your card for today
           </h1>
@@ -188,6 +201,118 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
           </span>
           <span style={{ color: 'var(--rz-hue)' }}>›</span>
         </button>
+
+        <button
+          type="button"
+          onClick={() =>
+            isPro
+              ? setView('oracle')
+              : onUpgrade?.('Ask the Oracle')
+          }
+          className="glass-panel flex items-center justify-between p-4 text-left active:scale-[0.99]"
+        >
+          <span>
+            <span className="flex items-center gap-1.5 font-serif text-lg text-white">
+              Ask the Oracle
+              {!isPro && <LockIcon className="h-4 w-4 text-haze-400" />}
+            </span>
+            <span className="block text-xs text-haze-300">
+              One card, one clear answer to your question
+            </span>
+          </span>
+          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+        </button>
+      </div>
+    )
+  }
+
+  /* ------------------------------------------------------------ oracle */
+  if (view === 'oracle') {
+    return (
+      <div className="flex flex-col gap-4">
+        <BackButton
+          onClick={() => {
+            setView('daily')
+            setOracle(null)
+          }}
+        />
+
+        <header className="px-1">
+          <p className="eyebrow-hue">Tarot · The Oracle</p>
+          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+            Ask the Oracle
+          </h1>
+          <p className="mt-1 text-sm text-haze-300">
+            Hold one clear question in mind — a “what” or a “how”, not a yes / no —
+            and put it into words.
+          </p>
+        </header>
+
+        <textarea
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          rows={3}
+          placeholder="What do I need to understand about…"
+          className="w-full resize-none rounded-2xl border border-white/12 bg-midnight-950/60 p-4 text-sm text-white outline-none transition focus:border-white/30"
+        />
+
+        <button
+          type="button"
+          onClick={consultOracle}
+          disabled={question.trim().length < 8}
+          className={`rounded-[0.9rem] px-4 py-3.5 text-sm uppercase ${
+            question.trim().length < 8 ? 'btn-ghost opacity-55' : 'btn-primary'
+          }`}
+        >
+          {oracle ? 'Ask again' : 'Consult the Oracle'}
+        </button>
+
+        {oracle && (
+          <>
+            <div className="mx-auto mt-1 w-[210px]">
+              <button
+                type="button"
+                onClick={() => setOracleUp(true)}
+                disabled={oracleUp}
+                className="tf-scene block w-full"
+                aria-label={oracleUp ? oracle.card.card.name : 'Turn the card'}
+              >
+                <div
+                  className={`tf-card aspect-[200/340] ${oracleUp ? 'is-face' : ''}`}
+                >
+                  <div className="tf-side">
+                    <TarotCardBack className="h-full w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]" />
+                  </div>
+                  <div className="tf-side tf-side-face">
+                    <TarotCardFace
+                      card={oracle.card.card}
+                      reversed={oracle.card.reversed}
+                      className="h-full w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+                    />
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            {oracleUp ? (
+              <article className="glass-panel animate-rise-in p-4">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-haze-500">
+                  You asked
+                </p>
+                <p className="mt-1 font-serif text-lg leading-snug text-white">
+                  “{oracle.q}”
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-haze-100">
+                  {oracleAnswer(oracle.card)}
+                </p>
+              </article>
+            ) : (
+              <p className="text-center text-sm text-haze-400">
+                Tap the card to turn it.
+              </p>
+            )}
+          </>
+        )}
       </div>
     )
   }
@@ -199,7 +324,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
         <BackButton onClick={() => setView('daily')} />
 
         <header className="px-1">
-          <p className="eyebrow">Tarot</p>
+          <p className="eyebrow-hue">Tarot</p>
           <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
             Choose a spread
           </h1>
@@ -263,7 +388,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
       <BackButton onClick={() => setView('choose')} />
 
       <header className="px-1">
-        <p className="eyebrow">Tarot · {spread.name}</p>
+        <p className="eyebrow-hue">Tarot · {spread.name}</p>
         <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
           {shuffling
             ? 'Shuffling the deck…'

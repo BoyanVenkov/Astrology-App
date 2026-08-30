@@ -429,7 +429,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         <button
           type="button"
           onClick={onExit}
-          className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+          className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
         >
           Not now
         </button>
@@ -444,7 +444,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         <button
           type="button"
           onClick={endEarly}
-          className="self-start py-2 text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+          className="self-start py-2 text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
         >
           ‹ End session
         </button>

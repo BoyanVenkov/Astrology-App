@@ -251,3 +251,33 @@ export function dailySeed(profile: BirthProfile | null, date: Date = new Date())
 export function freshSeed(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 }
+
+/* ---------------------------------------------------------------- oracle */
+
+/** Seed for a one-card Oracle pull — stable for the same question on the same day. */
+export function oracleSeed(
+  question: string,
+  profile: BirthProfile | null,
+  date: Date = new Date(),
+): string {
+  const q = question.trim().toLowerCase().replace(/\s+/g, ' ')
+  return `${localDayKey(date)}|${profile?.utc ?? 'no-natal'}|oracle|${q}`
+}
+
+/** A single-card Oracle draw for a question. */
+export function drawOracle(question: string, profile: BirthProfile | null): DrawnCard {
+  return drawReading(spreadOf('one'), oracleSeed(question, profile)).cards[0]
+}
+
+/** Compose the Oracle's answer from the drawn card. */
+export function oracleAnswer(drawn: DrawnCard): string {
+  const { card, reversed } = drawn
+  const meaning = reversed ? card.reversed : card.upright
+  const stance = reversed
+    ? 'reversed — the force is here, but blocked, turned inward, or overdone'
+    : 'upright — the way is open to you directly'
+  const close = reversed
+    ? 'Where is this question really asking you to stop pushing, or to look at what you have been avoiding?'
+    : 'Take one concrete step in this direction; the rest of the road usually appears once you move.'
+  return `The Oracle draws ${card.name}, ${stance}. ${meaning} The thread running through it: ${card.keywords.join(', ')}. ${close}`
+}

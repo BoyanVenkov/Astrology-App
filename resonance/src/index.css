@@ -180,15 +180,28 @@
   color: transparent;
 }
 
-/* Small-caps label used above data blocks. */
+/* Small-caps label above data blocks / sections. */
 @utility eyebrow {
   font-family:
     'Inter Variable', Inter, system-ui, sans-serif;
-  font-size: 0.66rem;
-  font-weight: 600;
+  font-size: 0.68rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: rgb(154 166 201 / 0.85);
+  letter-spacing: 0.17em;
+  color: rgb(184 195 224 / 0.96);
+}
+
+/* The screen-identity label — top of a screen, next to the title. Carries the
+   day's hue so each screen reads its colour at a glance. */
+@utility eyebrow-hue {
+  font-family:
+    'Inter Variable', Inter, system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.17em;
+  color: var(--rz-hue);
+  text-shadow: 0 0 18px var(--rz-glow);
 }
 
 /* The big serif moments — mantra, hero headings. Softer + a touch of wonk

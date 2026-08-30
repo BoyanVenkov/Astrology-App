@@ -82,16 +82,19 @@ export function ResonanceLockup({
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
       <ResonanceMark
-        className={compact ? 'h-4 w-4' : 'h-[18px] w-[18px]'}
-        style={{ filter: 'drop-shadow(0 0 10px var(--rz-glow))' }}
+        className={compact ? 'h-4 w-4' : 'h-5 w-5'}
+        style={{
+          color: 'var(--rz-hue)',
+          filter: 'drop-shadow(0 0 12px var(--rz-glow))',
+        }}
       />
       <span
-        className={`font-semibold uppercase text-haze-300 ${
+        className={`text-gilded font-bold uppercase ${
           compact
-            ? 'text-[10px] tracking-[0.34em]'
-            : 'text-[11px] tracking-[0.38em]'
+            ? 'text-[10px] tracking-[0.32em]'
+            : 'text-[12px] tracking-[0.34em]'
         }`}
-        style={{ marginRight: '-0.38em', textShadow: '0 0 14px var(--rz-glow)' }}
+        style={{ marginRight: '-0.34em' }}
       >
         Resonance
       </span>

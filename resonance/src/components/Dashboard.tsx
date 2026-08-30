@@ -93,9 +93,7 @@ export function Dashboard({
       )}
 
       <header className="px-1 pt-1">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-haze-500">
-          {when.greeting} · {when.date}
-        </p>
+        <p className="eyebrow-hue">{when.greeting} · {when.date}</p>
         <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.12] text-gilded">
           {transit ? rx.headline : 'Attuning to the sky…'}
         </h1>
@@ -121,7 +119,7 @@ export function Dashboard({
       <button
         type="button"
         onClick={onPracticeSheet}
-        className="-mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+        className="-mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
       >
         {doneToday ? 'Practise again' : 'More ways to practise'} →
       </button>
