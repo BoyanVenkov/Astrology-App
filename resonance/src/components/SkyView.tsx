@@ -5,10 +5,12 @@ import { moonVoidOfCourseCached, upcomingMoonPhases } from '../lib/lunar'
 import { chakraName, zodiacGlyph } from '../lib/resonanceData'
 import { planetSymbol } from '../data/esoteric'
 import { SIGNS } from '../lib/ephemeris'
+import { CardsIcon } from './icons'
 
 interface SkyViewProps {
   onOpenChart: () => void
   onOpenHoroscope: () => void
+  onOpenOracle: () => void
 }
 
 const ASPECT_GLYPH: Record<string, string> = {
@@ -29,7 +31,11 @@ const PHASE_LABEL: Record<string, string> = {
 const fmtDay = (d: Date): string =>
   d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
-export function SkyView({ onOpenChart, onOpenHoroscope }: SkyViewProps) {
+export function SkyView({
+  onOpenChart,
+  onOpenHoroscope,
+  onOpenOracle,
+}: SkyViewProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
@@ -160,6 +166,24 @@ export function SkyView({ onOpenChart, onOpenHoroscope }: SkyViewProps) {
           <p className="mt-3 text-sm text-haze-400">No aspects within orb.</p>
         )}
       </section>
+
+      <button
+        type="button"
+        onClick={onOpenOracle}
+        className="glass-panel glass-panel-active flex items-center gap-3 p-4 text-left active:scale-[0.99]"
+      >
+        <CardsIcon className="h-6 w-6" style={{ color: 'var(--rz-hue)' }} />
+        <div className="min-w-0 flex-1">
+          <p className="eyebrow">Natal Oracle</p>
+          <p className="mt-0.5 font-serif text-lg text-white">
+            Draw today’s cards
+          </p>
+          <p className="text-xs text-haze-300">
+            Three cards from your chart and today’s sky
+          </p>
+        </div>
+        <span style={{ color: 'var(--rz-hue)' }}>›</span>
+      </button>
 
       <div className="grid grid-cols-2 gap-3">
         <button

@@ -118,6 +118,11 @@ export default {
           '0%, 100%': { opacity: '0.9', transform: 'scale(1)' },
           '50%': { opacity: '1', transform: 'scale(1.03)' },
         },
+        /* content settling into place — oracle cards, revealed panels */
+        'rise-in': {
+          from: { opacity: '0', transform: 'translateY(10px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
@@ -127,6 +132,7 @@ export default {
         'float-slow': 'float-slow 7s ease-in-out infinite',
         twinkle: 'twinkle 5s ease-in-out infinite',
         hum: 'hum 5s ease-in-out infinite',
+        'rise-in': 'rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both',
       },
       transitionTimingFunction: {
         resonance: 'cubic-bezier(0.22, 1, 0.36, 1)',

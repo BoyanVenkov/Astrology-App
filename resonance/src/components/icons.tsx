@@ -109,3 +109,13 @@ export function SkyIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function CardsIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="3" y="7" width="11" height="14" rx="2" transform="rotate(-9 8.5 14)" />
+      <rect x="10" y="4" width="11" height="14" rx="2" transform="rotate(9 15.5 11)" />
+      <path d="M15 9.5 15.6 11l1.5.6-1.5.6-.6 1.5-.6-1.5L12.4 12l1.5-.9Z" />
+    </svg>
+  )
+}

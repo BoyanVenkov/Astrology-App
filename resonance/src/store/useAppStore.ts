@@ -123,6 +123,7 @@ const createSession = (): ResonanceSession & SkyState => {
     currentLocation: null,
     notifications: DEFAULT_NOTIFICATIONS,
     tier: 'free',
+    oracleRevealedDay: null,
   }
 }
 
@@ -163,6 +164,8 @@ interface ResonanceActions {
   skipOnboarding: () => void
   /** Recompute the daily transit / chakra / crystals (call when the day rolls over). */
   refreshDailyTransit: () => void
+  /** Mark today's Natal Oracle as drawn. */
+  revealOracle: () => void
   /** Mark the current session finished and start a fresh one. */
   endSession: () => void
 }
@@ -273,6 +276,8 @@ export const useAppStore = create<AppStore>()(
           }
         }),
 
+      revealOracle: () => set({ oracleRevealedDay: localDayKey() }),
+
       endSession: () =>
         set((state) => ({
           ...createSession(),
@@ -282,6 +287,7 @@ export const useAppStore = create<AppStore>()(
           profile: state.profile,
           currentLocation: state.currentLocation,
           onboardingComplete: state.onboardingComplete,
+          oracleRevealedDay: state.oracleRevealedDay,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -312,6 +318,7 @@ export const useAppStore = create<AppStore>()(
         currentLocation: state.currentLocation,
         notifications: state.notifications,
         tier: state.tier,
+        oracleRevealedDay: state.oracleRevealedDay,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>

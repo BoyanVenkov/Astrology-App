@@ -275,4 +275,6 @@ export interface ResonanceSession {
   notifications: NotificationPreferences
   /** Entitlement tier. `pro` unlocks the full library, houses, deep history. */
   tier: PremiumTier
+  /** Local day `YYYY-MM-DD` the Natal Oracle was last drawn — `null` if never. */
+  oracleRevealedDay: string | null
 }

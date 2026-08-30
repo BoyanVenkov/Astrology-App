@@ -10,6 +10,7 @@ import { Marketplace } from './components/Marketplace'
 import { MoodCheckIn } from './components/MoodCheckIn'
 import { NatalChart } from './components/NatalChart'
 import { Onboarding } from './components/Onboarding'
+import { OracleReader } from './components/OracleReader'
 import { Paywall } from './components/Paywall'
 import { PracticeSheet, type RitualLaunch } from './components/PracticeSheet'
 import { Ritual, type RitualPreset } from './components/Ritual'
@@ -55,6 +56,7 @@ type Sub =
   | null
   | 'chart'
   | 'horoscope'
+  | 'oracle'
   | 'journal'
   | 'mood'
   | 'body'
@@ -106,6 +108,12 @@ function App() {
       >
         {sub === 'chart' && <NatalChart onBack={back} />}
         {sub === 'horoscope' && <Horoscope onBack={back} />}
+        {sub === 'oracle' && (
+          <OracleReader
+            onBack={back}
+            onPractice={() => setPracticeOpen(true)}
+          />
+        )}
         {sub === 'journal' && <Journal onBack={back} onUpgrade={openPaywall} />}
         {sub === 'mood' && <MoodCheckIn onDone={back} />}
         {sub === 'body' && <BodyCheckIn onDone={back} />}
@@ -122,12 +130,14 @@ function App() {
             onRitual={launchRitual}
             onPracticeSheet={() => setPracticeOpen(true)}
             onTab={goTab}
+            onOracle={() => setSub('oracle')}
           />
         )}
         {sub === null && tab === 'sky' && (
           <SkyView
             onOpenChart={() => setSub('chart')}
             onOpenHoroscope={() => setSub('horoscope')}
+            onOpenOracle={() => setSub('oracle')}
           />
         )}
         {sub === null && tab === 'apothecary' && (

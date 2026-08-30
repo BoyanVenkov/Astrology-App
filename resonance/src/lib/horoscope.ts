@@ -7,7 +7,7 @@ import type {
 import type { Aspect } from './astrology'
 import type { BodyName, BodyPosition } from './ephemeris'
 import { BREATH_PATTERNS } from './breathwork'
-import { chakraName } from './resonanceData'
+import { chakraMantra, chakraName } from './resonanceData'
 
 /** The slice of a `DailyReading` the horoscope narrative needs — all in the store. */
 export interface HoroscopeInput {
@@ -146,18 +146,6 @@ export function buildHoroscope(reading: HoroscopeInput): DailyHoroscope {
     sections,
     moon,
     practice,
-    affirmation: sky.length ? affirmationFor(chakra.key) : '',
+    affirmation: sky.length ? chakraMantra(chakra.key) : '',
   }
 }
-
-const AFFIRMATIONS: Record<string, string> = {
-  root: 'I am safe, supported and here.',
-  sacral: 'I let life move through me.',
-  'solar-plexus': 'I trust my own fire.',
-  heart: 'I give and receive love freely.',
-  throat: 'I speak my truth with ease.',
-  'third-eye': 'I trust what I see within.',
-  crown: 'I am part of something vast.',
-}
-
-const affirmationFor = (key: string): string => AFFIRMATIONS[key] ?? ''

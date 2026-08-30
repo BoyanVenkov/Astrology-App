@@ -6,21 +6,24 @@ import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
 import { chakraName, zodiacGlyph } from '../lib/resonanceData'
 import { practicedToday } from '../lib/streak'
+import { localDayKey } from '../lib/timezone'
 import { planetSymbol } from '../data/esoteric'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
-import { PlayIcon } from './icons'
+import { CardsIcon, PlayIcon } from './icons'
 
 interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
   onPracticeSheet: () => void
   onTab: (tab: TabKey) => void
+  onOracle: () => void
 }
 
 export function Dashboard({
   onRitual,
   onPracticeSheet,
   onTab,
+  onOracle,
 }: DashboardProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
@@ -29,6 +32,7 @@ export function Dashboard({
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
   const biometricLog = useAppStore((s) => s.biometricLog)
+  const oracleRevealedDay = useAppStore((s) => s.oracleRevealedDay)
 
   const [bucket, setBucket] = useState(() => Math.floor(Date.now() / 300_000))
   useEffect(() => {
@@ -51,6 +55,7 @@ export function Dashboard({
 
   const heroStone = rx.stones[0]
   const vocSoon = voc.active || (voc.hoursUntil != null && voc.hoursUntil < 4)
+  const oracleDrawn = oracleRevealedDay === localDayKey()
 
   return (
     <div className="flex flex-col gap-4">
@@ -139,30 +144,59 @@ export function Dashboard({
         </div>
       </section>
 
-      {/* aura strip */}
+      {/* aura + the day's mantra */}
+      <div className="flex flex-col gap-2.5">
+        <button
+          type="button"
+          onClick={() => onTab('you')}
+          className="glass-panel flex items-center gap-4 p-4 text-left active:scale-[0.99]"
+        >
+          <Aura state={aura} size={72} className="h-16 w-16 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="eyebrow">Your aura</p>
+            <p className="font-serif text-lg text-white">
+              {auraLabel(aura.score)}
+              <span className="ml-2 text-sm text-haze-400">
+                {Math.round(aura.score * 100)}%
+              </span>
+            </p>
+            {aura.needsRest ? (
+              <p className="text-xs text-red-300">Body’s run down — go gently</p>
+            ) : (
+              <p className="text-xs text-haze-400">
+                {aura.streak > 0
+                  ? `${aura.streak}-day streak`
+                  : 'Begin a streak today'}
+              </p>
+            )}
+          </div>
+          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+        </button>
+
+        {rx.mantra && (
+          <div className="pt-1 text-center">
+            <p className="eyebrow">Today’s mantra</p>
+            <p className="mt-1.5 px-2 font-serif text-xl leading-snug text-gilded">
+              “{rx.mantra}”
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* natal oracle */}
       <button
         type="button"
-        onClick={() => onTab('you')}
-        className="glass-panel flex items-center gap-4 p-4 text-left active:scale-[0.99]"
+        onClick={onOracle}
+        className="glass-panel flex items-center gap-3 p-4 text-left active:scale-[0.99]"
       >
-        <Aura state={aura} size={72} className="h-16 w-16 shrink-0" />
+        <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
         <div className="min-w-0 flex-1">
-          <p className="eyebrow">Your aura</p>
-          <p className="font-serif text-lg text-white">
-            {auraLabel(aura.score)}
-            <span className="ml-2 text-sm text-haze-400">
-              {Math.round(aura.score * 100)}%
-            </span>
+          <p className="font-serif text-lg text-white">Natal oracle</p>
+          <p className="text-xs text-haze-300">
+            {oracleDrawn
+              ? 'See today’s three cards'
+              : 'Draw three cards for today'}
           </p>
-          {aura.needsRest ? (
-            <p className="text-xs text-red-300">Body’s run down — go gently</p>
-          ) : (
-            <p className="text-xs text-haze-400">
-              {aura.streak > 0
-                ? `${aura.streak}-day streak`
-                : 'Begin a streak today'}
-            </p>
-          )}
         </div>
         <span style={{ color: 'var(--rz-hue)' }}>›</span>
       </button>

@@ -153,11 +153,6 @@ export function Horoscope({ onBack }: HoroscopeProps) {
         <p className="mt-2 text-sm leading-relaxed text-haze-100">
           {horoscope.practice}
         </p>
-        {horoscope.affirmation && (
-          <p className="mt-3 font-serif text-lg text-gilded">
-            “{horoscope.affirmation}”
-          </p>
-        )}
       </section>
     </div>
   )

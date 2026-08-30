@@ -7,7 +7,7 @@ import type {
 import { useAppStore } from '../store/useAppStore'
 import { computeAura, type AuraState } from './aura'
 import { BREATH_PATTERNS } from './breathwork'
-import { chakraName } from './resonanceData'
+import { chakraMantra, chakraName } from './resonanceData'
 
 export interface PrescribedStone {
   name: string
@@ -28,6 +28,8 @@ export interface Prescription {
   headline: string
   /** One sentence that reads like the vision's "The Prescription". */
   directive: string
+  /** The day's short mantra for the focus chakra. */
+  mantra: string
   /** Body signals say to restore before anything else. */
   urgent: boolean
 }
@@ -92,6 +94,7 @@ export function buildPrescription(
     stones,
     headline,
     directive,
+    mantra: chakraMantra(input.chakra),
     urgent,
   }
 }
