@@ -171,7 +171,7 @@ export function SkyView({
                   {hasNatal ? 'natal ' : ''}
                   {a.other}
                 </span>
-                <span className="shrink-0 whitespace-nowrap tabular-nums text-xs text-haze-400">
+                <span className="data shrink-0 whitespace-nowrap text-xs text-haze-400">
                   {a.orbDelta.toFixed(1)}°{' '}
                   <span aria-hidden>{a.applying ? '↑' : '↓'}</span>
                   <span className="sr-only">
@@ -195,7 +195,7 @@ export function SkyView({
           }
           className="glass-panel p-4 text-left active:scale-[0.99]"
         >
-          <span className="flex items-center gap-1.5 font-serif text-lg text-white">
+          <span className="flex items-center gap-1.5 font-serif text-base leading-tight text-white">
             Full horoscope
             {!isPro && <LockIcon className="h-3.5 w-3.5 text-haze-400" />}
           </span>
@@ -208,7 +208,7 @@ export function SkyView({
           onClick={onOpenChart}
           className="glass-panel p-4 text-left active:scale-[0.99]"
         >
-          <span className="font-serif text-lg text-white">
+          <span className="font-serif text-base leading-tight text-white">
             {hasNatal ? 'Natal chart' : 'Birth chart'}
           </span>
           <span className="block text-xs text-haze-300">
@@ -230,7 +230,7 @@ export function SkyView({
               }}
             />
             <span className="min-w-0">
-              <span className="block font-serif text-lg text-white">Stones</span>
+              <span className="block font-serif text-base leading-tight text-white">Stones</span>
               <span className="block truncate text-xs text-haze-300">
                 {dailyCrystals
                   .slice(0, 2)
@@ -247,7 +247,7 @@ export function SkyView({
         >
           <CardsIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--rz-hue)' }} />
           <span className="min-w-0">
-            <span className="block font-serif text-lg text-white">Tarot</span>
+            <span className="block font-serif text-base leading-tight text-white">Tarot</span>
             <span className="block text-xs text-haze-300">Today’s card & spreads</span>
           </span>
         </button>

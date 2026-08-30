@@ -50,10 +50,11 @@ export default {
         },
       },
       fontFamily: {
-        /* Mystical / classic — headings. */
-        serif: ['"Cormorant Garamond"', 'Georgia', '"Times New Roman"', 'serif'],
-        display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
-        /* Clean, high-legibility — UI + data. */
+        /* Mystical / editorial — headings, mantra. Old-style serif with soft
+           terminals + optical sizing; SOFT/WONK set in index.css. */
+        serif: ['"Fraunces Variable"', '"Cormorant Garamond"', 'Georgia', 'serif'],
+        display: ['"Fraunces Variable"', 'Georgia', 'serif'],
+        /* Clean, high-legibility — UI + body copy. */
         sans: [
           '"Inter Variable"',
           'Inter',
@@ -62,6 +63,14 @@ export default {
           '"Segoe UI"',
           'Roboto',
           'sans-serif',
+        ],
+        /* Instrument data — degrees, orbs, Hz, times, dates. */
+        mono: [
+          '"Space Mono"',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'monospace',
         ],
       },
       letterSpacing: {

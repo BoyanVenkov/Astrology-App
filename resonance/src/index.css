@@ -2,12 +2,12 @@
 
 /* Self-hosted fonts — the app must render fully offline inside Capacitor,
    so no Google Fonts CDN. Installed via:
-   npm i @fontsource/cormorant-garamond @fontsource-variable/inter */
+   npm i @fontsource-variable/inter @fontsource-variable/fraunces @fontsource/space-mono
+   Fraunces `full.css` carries the opsz + SOFT + WONK axes (one variable file,
+   every weight); family name is 'Fraunces Variable'. */
 @import '@fontsource-variable/inter';
-@import '@fontsource/cormorant-garamond/400.css';
-@import '@fontsource/cormorant-garamond/500.css';
-@import '@fontsource/cormorant-garamond/600.css';
-@import '@fontsource/cormorant-garamond/700.css';
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource/space-mono/400.css';
 
 /* Tailwind v4 pulls the Midnight/Classic palette, fonts and motion
    tokens from the legacy config file. */
@@ -76,10 +76,13 @@
   h3,
   h4,
   h5 {
-    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-family: 'Fraunces Variable', 'Cormorant Garamond', Georgia, serif;
     font-weight: 600;
-    line-height: 1.12;
-    letter-spacing: -0.012em;
+    font-optical-sizing: auto;
+    /* soft terminals, a hair of wonk — the "old almanac" character */
+    font-variation-settings: 'SOFT' 40, 'WONK' 1;
+    line-height: 1.14;
+    letter-spacing: -0.011em;
     color: #f6f1e4;
   }
 
@@ -188,12 +191,23 @@
   color: rgb(154 166 201 / 0.85);
 }
 
-/* The big serif moments — mantra, hero headings. */
+/* The big serif moments — mantra, hero headings. Softer + a touch of wonk
+   so the largest type carries the most personality. */
 @utility display {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.018em;
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-weight: 500;
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 55, 'WONK' 1;
+  line-height: 1.1;
+  letter-spacing: -0.016em;
+}
+
+/* Instrument data — degrees, aspect orbs, Hz, rise/set times, dates.
+   Reads like an ephemeris table, not prose. */
+@utility data {
+  font-family: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 /* Primary action — the day's hue as a soft metallic pill. */

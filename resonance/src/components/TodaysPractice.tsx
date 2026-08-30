@@ -112,7 +112,7 @@ export function TodaysPractice({
               {o.label}
             </span>
             <span
-              className={`text-[10px] tabular-nums ${o.accent ? 'text-[#05070f]/70' : 'text-haze-400'}`}
+              className={`data text-[10px] ${o.accent ? 'text-[#05070f]/70' : 'text-haze-400'}`}
             >
               {o.sub}
             </span>

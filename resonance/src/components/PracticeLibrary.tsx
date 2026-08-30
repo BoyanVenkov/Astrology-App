@@ -207,7 +207,7 @@ export function PracticeLibrary({
                   />
                   <h2 className="font-serif text-lg text-white">{b.name}</h2>
                   {unlocked ? (
-                    <span className="ml-auto shrink-0 text-xs tabular-nums text-haze-400">
+                    <span className="data ml-auto shrink-0 text-xs text-haze-400">
                       {b.ratio}
                     </span>
                   ) : (
@@ -302,7 +302,7 @@ export function PracticeLibrary({
                       boxShadow: `0 0 10px ${p.color}`,
                     }}
                   />
-                  <h2 className="font-serif text-lg tabular-nums text-white">
+                  <h2 className="data text-base font-normal text-white">
                     {p.frequency} Hz
                   </h2>
                   {isToday ? (

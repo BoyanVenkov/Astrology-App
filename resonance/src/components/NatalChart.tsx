@@ -309,7 +309,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
                 {BODY_SYMBOL[p.body]}
               </span>
               <span className="text-haze-100">{p.body}</span>
-              <span className="ml-auto tabular-nums text-haze-400">
+              <span className="data ml-auto text-xs text-haze-400">
                 {Math.floor(p.signDegree)}° {p.sign.slice(0, 3)}
                 {p.retrograde ? ' ℞' : ''}
                 {cusps ? ` · H${houseOf(p.longitude, cusps)}` : ''}
@@ -331,7 +331,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
               <span className="text-haze-100">
                 {a.transiting} {aspectMark(a.def.name)} {a.other}
               </span>
-              <span className="tabular-nums text-xs text-haze-400">
+              <span className="data text-xs text-haze-400">
                 {a.def.name} · {a.orbDelta.toFixed(1)}°
               </span>
             </li>

@@ -110,13 +110,13 @@ export function FrequencySession({
         <div>
           <p className="eyebrow">Frequency</p>
           <h2
-            className="mt-1 font-serif text-2xl tabular-nums"
+            className="data mt-1 text-xl font-normal"
             style={{ color: tint }}
           >
             {frequency} Hz
           </h2>
         </div>
-        <span className="rounded-full border border-white/15 px-3 py-1 text-xs tracking-[0.12em] text-haze-200">
+        <span className="data rounded-full border border-white/15 px-3 py-1 text-xs text-haze-200">
           {mmss(elapsed)} / {mmss(totalSeconds)}
         </span>
       </div>
