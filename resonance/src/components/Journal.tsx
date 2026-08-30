@@ -173,7 +173,10 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
                 className="flex items-center justify-between"
               >
                 <span className="text-haze-100">
-                  {s.day.slice(5)} · {BREATH_PATTERNS[s.pattern]?.name ?? s.pattern}
+                  {s.day.slice(5)} ·{' '}
+                  {s.kind === 'meditation'
+                    ? 'Meditation'
+                    : (BREATH_PATTERNS[s.pattern]?.name ?? s.pattern)}
                 </span>
                 <span className="tabular-nums text-xs text-haze-400">
                   {chakraName(s.chakra)} · {s.minutes} min

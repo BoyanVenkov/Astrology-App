@@ -2,24 +2,43 @@ import { useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import { BreathVisualizer } from './BreathVisualizer'
+import { Meditation } from './Meditation'
 import { MoodCheckIn } from './MoodCheckIn'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { buildHoroscope } from '../lib/horoscope'
 import { chakraColor, chakraName } from '../lib/resonanceData'
+import { speechAvailable } from '../lib/speech'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
+import type { PracticeKind } from '../types/resonance'
 
 interface RitualProps {
   onExit: () => void
 }
 
-const DURATIONS = [3, 6, 10]
+const BREATH_DURATIONS = [3, 6, 10]
+const MEDITATION_DURATIONS = [5, 10, 15]
 
-const shell =
-  'mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5'
+const shell = 'mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5'
 const shellStyle = {
   paddingTop: 'max(1rem, env(safe-area-inset-top))',
   paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+}
+
+function Switch({ on }: { on: boolean }) {
+  return (
+    <span
+      className={`h-5 w-9 shrink-0 rounded-full p-0.5 transition ${
+        on ? 'bg-gold-500/60' : 'bg-white/15'
+      }`}
+    >
+      <span
+        className={`block h-4 w-4 rounded-full bg-white transition-transform ${
+          on ? 'translate-x-4' : ''
+        }`}
+      />
+    </span>
+  )
 }
 
 export function Ritual({ onExit }: RitualProps) {
@@ -36,8 +55,11 @@ export function Ritual({ onExit }: RitualProps) {
   const toggleAudio = useAppStore((s) => s.toggleAudio)
 
   const [screen, setScreen] = useState<'intro' | 'practice' | 'done'>('intro')
-  const [minutes, setMinutes] = useState(6)
+  const [mode, setMode] = useState<PracticeKind>('breath')
+  const [breathMin, setBreathMin] = useState(6)
+  const [medMin, setMedMin] = useState(10)
   const [withTone, setWithTone] = useState(false)
+  const [withVoice, setWithVoice] = useState(true)
   const [doneMinutes, setDoneMinutes] = useState(0)
   const startedAtRef = useRef(0)
 
@@ -62,6 +84,7 @@ export function Ritual({ onExit }: RitualProps) {
   const pattern = BREATH_PATTERNS[patternKey]
   const accent = chakraColor(chakra.key)
   const focus = chakraName(chakra.key)
+  const minutes = mode === 'breath' ? breathMin : medMin
   const horoscope = buildHoroscope({
     transit,
     chakra,
@@ -78,6 +101,7 @@ export function Ritual({ onExit }: RitualProps) {
     logPractice({
       at: new Date().toISOString(),
       day: localDayKey(),
+      kind: mode,
       chakra: chakra.key,
       frequency,
       pattern: patternKey,
@@ -109,6 +133,7 @@ export function Ritual({ onExit }: RitualProps) {
 
   /* ---------------------------------------------------------------- intro */
   if (screen === 'intro') {
+    const durations = mode === 'breath' ? BREATH_DURATIONS : MEDITATION_DURATIONS
     return (
       <div className={`${shell} justify-center`} style={shellStyle}>
         <p className="eyebrow">Today’s Practice</p>
@@ -119,60 +144,99 @@ export function Ritual({ onExit }: RitualProps) {
           {horoscope.greeting}
         </p>
 
-        <div className="mt-6 glass-panel p-5">
+        {/* mode */}
+        <div className="mt-5 grid grid-cols-2 gap-2">
+          {(['breath', 'meditation'] as PracticeKind[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={`rounded-2xl border px-3 py-3 text-sm font-semibold capitalize transition ${
+                m === mode
+                  ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
+                  : 'border-white/12 bg-white/5 text-haze-300'
+              }`}
+            >
+              {m === 'breath' ? 'Breathwork' : 'Meditation'}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-4 glass-panel p-5">
           <div className="flex items-center gap-2">
             <span
               className="h-3 w-3 rounded-full"
               style={{ background: accent, boxShadow: `0 0 12px ${accent}` }}
             />
-            <p className="font-serif text-lg text-white">{pattern.name}</p>
-            <span className="ml-auto text-xs text-haze-400">{pattern.ratio}</span>
+            <p className="font-serif text-lg text-white">
+              {mode === 'breath' ? pattern.name : `${focus} meditation`}
+            </p>
+            {mode === 'breath' && (
+              <span className="ml-auto text-xs text-haze-400">
+                {pattern.ratio}
+              </span>
+            )}
           </div>
-          <p className="mt-2 text-sm text-haze-300">{pattern.tagline}</p>
+          <p className="mt-2 text-sm text-haze-300">
+            {mode === 'breath'
+              ? pattern.tagline
+              : `A guided sit shaped by ${transit.body} and your natal chart.`}
+          </p>
           <p className="mt-3 text-xs uppercase tracking-[0.12em] text-haze-400">
             {frequency} Hz · {focus}
             {stones.length > 0 && ` · ${stones.join(' / ')}`}
           </p>
         </div>
 
-        <p className="mt-6 eyebrow">Length</p>
+        <p className="mt-5 eyebrow">Length</p>
         <div className="mt-2 flex gap-2">
-          {DURATIONS.map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => setMinutes(m)}
-              className={`flex-1 rounded-2xl border px-3 py-3 text-sm font-semibold transition ${
-                m === minutes
-                  ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
-                  : 'border-white/12 bg-white/5 text-haze-300'
-              }`}
-            >
-              {m} min
-            </button>
-          ))}
+          {durations.map((m) => {
+            const selected = m === minutes
+            return (
+              <button
+                key={m}
+                type="button"
+                onClick={() =>
+                  mode === 'breath' ? setBreathMin(m) : setMedMin(m)
+                }
+                className={`flex-1 rounded-2xl border px-3 py-3 text-sm font-semibold transition ${
+                  selected
+                    ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
+                    : 'border-white/12 bg-white/5 text-haze-300'
+                }`}
+              >
+                {m} min
+              </button>
+            )
+          })}
         </div>
 
-        <button
-          type="button"
-          onClick={() => setWithTone((v) => !v)}
-          className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-haze-200"
-        >
-          <span>
-            Add {frequency} Hz tone under the breath
-          </span>
-          <span
-            className={`h-5 w-9 rounded-full p-0.5 transition ${
-              withTone ? 'bg-gold-500/60' : 'bg-white/15'
-            }`}
+        {mode === 'breath' ? (
+          <button
+            type="button"
+            onClick={() => setWithTone((v) => !v)}
+            className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-haze-200"
           >
-            <span
-              className={`block h-4 w-4 rounded-full bg-white transition-transform ${
-                withTone ? 'translate-x-4' : ''
-              }`}
-            />
-          </span>
-        </button>
+            <span>Add {frequency} Hz tone under the breath</span>
+            <Switch on={withTone} />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setWithVoice((v) => !v)}
+            className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-haze-200"
+          >
+            <span>
+              Spoken guidance
+              {!speechAvailable() && (
+                <span className="block text-[11px] text-haze-500">
+                  not available here — words show on screen
+                </span>
+              )}
+            </span>
+            <Switch on={withVoice} />
+          </button>
+        )}
 
         <button
           type="button"
@@ -204,15 +268,24 @@ export function Ritual({ onExit }: RitualProps) {
           ‹ End session
         </button>
         <div className="flex flex-1 items-center">
-          <BreathVisualizer
-            key={patternKey}
-            pattern={patternKey}
-            autoStart
-            audioMode={withTone ? 'both' : 'breath'}
-            sessionSeconds={minutes * 60}
-            onComplete={handleComplete}
-            className="w-full"
-          />
+          {mode === 'breath' ? (
+            <BreathVisualizer
+              key={patternKey}
+              pattern={patternKey}
+              autoStart
+              audioMode={withTone ? 'both' : 'breath'}
+              sessionSeconds={minutes * 60}
+              onComplete={handleComplete}
+              className="w-full"
+            />
+          ) : (
+            <Meditation
+              minutes={minutes}
+              withVoice={withVoice}
+              onComplete={handleComplete}
+              className="w-full"
+            />
+          )}
         </div>
       </div>
     )
@@ -235,7 +308,8 @@ export function Ritual({ onExit }: RitualProps) {
       </div>
       <h1 className="mt-5 font-serif text-3xl text-gilded">Practice complete</h1>
       <p className="mt-2 text-sm text-haze-300">
-        {doneMinutes} min · {focus} · {pattern.name}
+        {doneMinutes} min · {focus} ·{' '}
+        {mode === 'breath' ? pattern.name : 'meditation'}
       </p>
 
       {horoscope.affirmation && (

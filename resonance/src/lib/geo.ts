@@ -1,13 +1,17 @@
 import * as Astronomy from 'astronomy-engine'
-import type { BirthProfile } from '../types/resonance'
+import type { BirthProfile, GeoPoint } from '../types/resonance'
 import { eclipticLongitude } from './ephemeris'
 
 export interface GeoContext {
   hasLocation: boolean
+  /** 'current' when a live fix is used, 'birth' when falling back to the birth place. */
+  source: 'current' | 'birth' | 'none'
   latitude: number | null
   longitude: number | null
   sunrise: Date | null
   sunset: Date | null
+  moonrise: Date | null
+  moonset: Date | null
   dayLengthHours: number | null
   season: 'spring' | 'summer' | 'autumn' | 'winter'
   hemisphere: 'northern' | 'southern'
@@ -46,16 +50,23 @@ const grounding = (
 }
 
 /**
- * Local sky context. Uses the birth place as the location proxy (the only
- * coordinates we have without device geolocation) — swap in `@capacitor/geolocation`
- * later for "where you are now".
+ * Local sky context. Prefers the user's current location; falls back to the
+ * birth place; otherwise season-only.
  */
 export function geoContext(
   profile: BirthProfile | null,
+  currentLocation: GeoPoint | null = null,
   now: Date = new Date(),
 ): GeoContext {
-  const lat = profile?.lat ?? null
-  const lon = profile?.lon ?? null
+  const here =
+    currentLocation != null
+      ? { lat: currentLocation.lat, lon: currentLocation.lon, source: 'current' as const }
+      : profile?.lat != null && profile?.lon != null
+        ? { lat: profile.lat, lon: profile.lon, source: 'birth' as const }
+        : null
+
+  const lat = here?.lat ?? null
+  const lon = here?.lon ?? null
 
   const sunLon = eclipticLongitude('Sun', now)
   const hemisphere: GeoContext['hemisphere'] =
@@ -64,16 +75,31 @@ export function geoContext(
 
   let sunrise: Date | null = null
   let sunset: Date | null = null
+  let moonrise: Date | null = null
+  let moonset: Date | null = null
   let dayLengthHours: number | null = null
 
   if (lat != null && lon != null) {
     const observer = new Astronomy.Observer(lat, lon, 0)
     const dayStart = new Date(now)
     dayStart.setHours(0, 0, 0, 0)
-    const rise = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, 1, dayStart, 2)
-    const set = Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, -1, rise?.date ?? dayStart, 2)
-    sunrise = rise?.date ?? null
-    sunset = set?.date ?? null
+    sunrise =
+      Astronomy.SearchRiseSet(Astronomy.Body.Sun, observer, 1, dayStart, 2)?.date ??
+      null
+    sunset =
+      Astronomy.SearchRiseSet(
+        Astronomy.Body.Sun,
+        observer,
+        -1,
+        sunrise ?? dayStart,
+        2,
+      )?.date ?? null
+    moonrise =
+      Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, 1, now, 2)?.date ??
+      null
+    moonset =
+      Astronomy.SearchRiseSet(Astronomy.Body.Moon, observer, -1, now, 2)?.date ??
+      null
     if (sunrise && sunset) {
       dayLengthHours = (sunset.getTime() - sunrise.getTime()) / 3_600_000
       if (dayLengthHours < 0) dayLengthHours += 24
@@ -82,10 +108,13 @@ export function geoContext(
 
   return {
     hasLocation: lat != null && lon != null,
+    source: here?.source ?? 'none',
     latitude: lat,
     longitude: lon,
     sunrise,
     sunset,
+    moonrise,
+    moonset,
     dayLengthHours,
     season,
     hemisphere,

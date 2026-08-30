@@ -6,6 +6,7 @@ import {
   ensureNotificationPermission,
   syncNotifications,
 } from '../lib/notifications'
+import { locationIsFresh, requestCurrentLocation } from '../lib/location'
 import { useEntitlements } from '../lib/premium'
 
 interface SettingsProps {
@@ -85,10 +86,27 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
   const logBiometrics = useAppStore((s) => s.logBiometrics)
   const tier = useAppStore((s) => s.tier)
   const setTier = useAppStore((s) => s.setTier)
+  const currentLocation = useAppStore((s) => s.currentLocation)
+  const setCurrentLocation = useAppStore((s) => s.setCurrentLocation)
   const { isPro } = useEntitlements()
 
   const [showBody, setShowBody] = useState(false)
   const [healthMsg, setHealthMsg] = useState<string | null>(null)
+  const [locMsg, setLocMsg] = useState<string | null>(null)
+  const [locBusy, setLocBusy] = useState(false)
+
+  const refreshLocation = async () => {
+    setLocBusy(true)
+    setLocMsg(null)
+    const point = await requestCurrentLocation()
+    setLocBusy(false)
+    if (point) {
+      setCurrentLocation(point)
+      setLocMsg('Location updated — your reading now reflects where you are.')
+    } else {
+      setLocMsg('Couldn’t get a location. Check the app’s location permission.')
+    }
+  }
 
   const body = bodyState(biometricLog)
 
@@ -304,6 +322,52 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
             </button>
           </div>
         </Row>
+      </Section>
+
+      <Section title="Location">
+        <Row>
+          <div className="flex items-center justify-between py-3 text-sm">
+            <span>
+              <span className="text-haze-100">
+                {currentLocation
+                  ? locationIsFresh(currentLocation)
+                    ? `${currentLocation.lat.toFixed(2)}, ${currentLocation.lon.toFixed(2)}`
+                    : 'Stored fix is stale'
+                  : profile?.lat != null
+                    ? 'Using your birth place'
+                    : 'Not set'}
+              </span>
+              <span className="block text-xs text-haze-400">
+                Powers “the sky above you now”, local sun times and a more
+                precise reading
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={() => void refreshLocation()}
+              disabled={locBusy}
+              className="shrink-0 rounded-full border border-gold-400/50 bg-gold-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100 disabled:opacity-50"
+            >
+              {locBusy ? '…' : 'Update'}
+            </button>
+          </div>
+        </Row>
+        {currentLocation && (
+          <Row>
+            <button
+              type="button"
+              onClick={() => setCurrentLocation(null)}
+              className="w-full py-3 text-left text-xs text-haze-400"
+            >
+              Clear location · fall back to birth place
+            </button>
+          </Row>
+        )}
+        {locMsg && (
+          <Row>
+            <p className="py-3 text-xs text-haze-400">{locMsg}</p>
+          </Row>
+        )}
       </Section>
 
       <Section title="Body & recovery">

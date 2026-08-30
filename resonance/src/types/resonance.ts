@@ -155,19 +155,34 @@ export interface MoodEntry {
   note?: string
 }
 
+export type PracticeKind = 'breath' | 'meditation'
+
 /** A completed guided practice session, kept for streaks / history. */
 export interface PracticeSession {
   /** ISO timestamp of completion. */
   at: string
   /** Local day `YYYY-MM-DD`. */
   day: string
+  kind: PracticeKind
   chakra: ChakraKey
   frequency: SolfeggioFrequency
+  /** The breath pattern, for `kind: 'breath'`. */
   pattern: BreathPatternKey
   /** Minutes actually practised. */
   minutes: number
   /** false if the user exited early. */
   completed: boolean
+}
+
+/* ------------------------------------------------------------------ location */
+
+/** A geographic point — the user's current location, or a fallback. */
+export interface GeoPoint {
+  lat: number
+  lon: number
+  label?: string
+  /** ISO timestamp of the fix. */
+  at: string
 }
 
 /* --------------------------------------------------------------- biometrics */
@@ -253,6 +268,8 @@ export interface ResonanceSession {
   biometricLog: BiometricReading[]
   /** Whether the user has connected on-device health data. */
   healthConnected: boolean
+  /** The user's current location — powers the "sky above you now" + local times. */
+  currentLocation: GeoPoint | null
   notifications: NotificationPreferences
   /** Entitlement tier. `pro` unlocks the full library, houses, deep history. */
   tier: PremiumTier

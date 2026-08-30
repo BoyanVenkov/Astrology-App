@@ -5,6 +5,7 @@ import type {
   ChakraKey,
   ChakraState,
   Crystal,
+  GeoPoint,
 } from '../types/resonance'
 import {
   bodyPosition,
@@ -14,7 +15,7 @@ import {
   type BodyName,
   type BodyPosition,
 } from './ephemeris'
-import { computeChartAngles, type ChartAngles } from './houses'
+import { computeChartAngles, houseOf, type ChartAngles } from './houses'
 import { entryFor, entryToCrystals } from '../data/esoteric'
 import { localDayKey } from './timezone'
 
@@ -141,8 +142,14 @@ export interface DailyReading {
   natal: BodyPosition[]
   /** Aspects within the natal chart itself. */
   natalAspects: Aspect[]
-  /** Ascendant / MC / house cusps — null until birth place (lat/lon) is set. */
+  /** Natal Ascendant / MC / house cusps — null until birth place (lat/lon) is set. */
   angles: ChartAngles | null
+  /** The chart of *this moment* over the user's current location. */
+  nowAngles: ChartAngles | null
+  /** Which natal house each transiting body is moving through right now. */
+  transitHouses: Partial<Record<BodyName, number>>
+  /** True when we know where the user is (current location or birth place). */
+  hasLocation: boolean
   suggestedPattern: BreathPatternKey
   hasNatal: boolean
 }
@@ -234,21 +241,57 @@ function pickDominant(
   }
 }
 
+const ORDINAL = [
+  '',
+  '1st',
+  '2nd',
+  '3rd',
+  '4th',
+  '5th',
+  '6th',
+  '7th',
+  '8th',
+  '9th',
+  '10th',
+  '11th',
+  '12th',
+]
+
+const HOUSE_ARENA: Record<number, string> = {
+  1: 'your body and how you meet the world',
+  2: 'money, resources and self-worth',
+  3: 'your daily mind, siblings and short trips',
+  4: 'home, family and your inner foundations',
+  5: 'creativity, romance and play',
+  6: 'work, routine and health',
+  7: 'partnership and close others',
+  8: 'shared resources, intimacy and change',
+  9: 'meaning, travel and the bigger picture',
+  10: 'career, reputation and your public role',
+  11: 'friendships, groups and hopes',
+  12: 'rest, retreat and the unconscious',
+}
+
 function composeInfluence(
   base: string,
   dominant: Dominant,
   vulnerable: boolean,
   planetPos: BodyPosition,
+  house: number | undefined,
 ): string {
   const retro = planetPos.retrograde ? `, retrograde,` : ''
   const headline =
     dominant.aspectName === 'in'
       ? `${dominant.planet}${retro} moving through ${planetPos.sign}`
       : `${dominant.trigger ? `${dominant.trigger} ` : 'Transiting '}${dominant.planet}${retro} ${dominant.aspectName} ${dominant.targetLabel}`
+  const houseClause =
+    house && HOUSE_ARENA[house]
+      ? ` It's crossing your ${ORDINAL[house]} house — ${HOUSE_ARENA[house]}.`
+      : ''
   const guidance = vulnerable
-    ? 'This centre is under pressure today — favour grounding, slow breath and restorative sound over pushing forward.'
-    : 'This centre is well-supported today — a good window to amplify it with focused practice.'
-  return `${headline}. ${base} ${guidance}`
+    ? 'Favour grounding, slow breath and restorative sound over pushing forward.'
+    : 'A good window to amplify this with focused practice.'
+  return `${headline}.${houseClause} ${base} ${guidance}`
 }
 
 /**
@@ -259,9 +302,14 @@ function composeInfluence(
 export function computeDailyReading(
   profile: BirthProfile | null,
   now: Date = new Date(),
+  currentLocation: GeoPoint | null = null,
 ): DailyReading {
   const birthUtc = profile ? new Date(profile.utc) : null
-  const geo = geoOf(profile)
+  const birthGeo = geoOf(profile)
+  // where the user is now — current fix, else fall back to the birth place
+  const hereGeo = currentLocation
+    ? { lat: currentLocation.lat, lon: currentLocation.lon }
+    : birthGeo
 
   const sky = chartPositions(now)
   const moon = moonState(now)
@@ -272,7 +320,20 @@ export function computeDailyReading(
     ? findAspects(natal, natal, { sameSet: true })
     : []
   const angles =
-    birthUtc && geo ? computeChartAngles(birthUtc, geo.lat, geo.lon) : null
+    birthUtc && birthGeo
+      ? computeChartAngles(birthUtc, birthGeo.lat, birthGeo.lon)
+      : null
+
+  // Chart of the moment — the sky rising over the user right now.
+  const nowAngles = hereGeo
+    ? computeChartAngles(now, hereGeo.lat, hereGeo.lon)
+    : null
+
+  // Place each transiting body in the user's natal houses.
+  const transitHouses: Partial<Record<BodyName, number>> = {}
+  if (angles) {
+    for (const p of sky) transitHouses[p.body] = houseOf(p.longitude, angles.cusps)
+  }
 
   const planetPos =
     sky.find((p) => p.body === dominant.planet) ?? bodyPosition(dominant.planet, now)
@@ -297,7 +358,13 @@ export function computeDailyReading(
     target: dominant.targetLabel,
     moonPhase: moon.name,
     illumination: moon.illumination,
-    influence: composeInfluence(entry.guidance, dominant, vulnerable, planetPos),
+    influence: composeInfluence(
+      entry.guidance,
+      dominant,
+      vulnerable,
+      planetPos,
+      transitHouses[dominant.planet],
+    ),
     resonantChakra: dominant.chakra,
     recommendedFrequency: entry.frequency,
     window: { start: from.toISOString(), end: to.toISOString() },
@@ -335,6 +402,9 @@ export function computeDailyReading(
     natal,
     natalAspects,
     angles,
+    nowAngles,
+    transitHouses,
+    hasLocation: hereGeo != null,
     suggestedPattern,
     hasNatal,
   }

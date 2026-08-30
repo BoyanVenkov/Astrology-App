@@ -9,6 +9,7 @@ import type {
   BreathPatternKey,
   ChakraState,
   Crystal,
+  GeoPoint,
   MoodEntry,
   NotificationPreferences,
   PracticeSession,
@@ -17,7 +18,7 @@ import type {
   SolfeggioFrequency,
 } from '../types/resonance'
 import { computeDailyReading, type Aspect } from '../lib/astrology'
-import type { BodyPosition } from '../lib/ephemeris'
+import type { BodyName, BodyPosition } from '../lib/ephemeris'
 import type { ChartAngles } from '../lib/houses'
 import { localDayKey } from '../lib/timezone'
 
@@ -51,6 +52,9 @@ export interface SkyState {
   natal: BodyPosition[]
   natalAspects: Aspect[]
   angles: ChartAngles | null
+  nowAngles: ChartAngles | null
+  transitHouses: Partial<Record<BodyName, number>>
+  hasLocation: boolean
   hasNatal: boolean
 }
 
@@ -62,8 +66,11 @@ interface ReadingSlice extends SkyState {
   suggestedPattern: BreathPatternKey
 }
 
-const readingSlice = (profile: BirthProfile | null): ReadingSlice => {
-  const reading = computeDailyReading(profile)
+const readingSlice = (
+  profile: BirthProfile | null,
+  currentLocation: GeoPoint | null,
+): ReadingSlice => {
+  const reading = computeDailyReading(profile, new Date(), currentLocation)
   return {
     transit: reading.transit,
     chakra: reading.chakra,
@@ -74,18 +81,24 @@ const readingSlice = (profile: BirthProfile | null): ReadingSlice => {
     natal: reading.natal,
     natalAspects: reading.natalAspects,
     angles: reading.angles,
+    nowAngles: reading.nowAngles,
+    transitHouses: reading.transitHouses,
+    hasLocation: reading.hasLocation,
     hasNatal: reading.hasNatal,
   }
 }
 
 const createSession = (): ResonanceSession & SkyState => {
-  const slice = readingSlice(null)
+  const slice = readingSlice(null, null)
   return {
     aspects: slice.aspects,
     sky: slice.sky,
     natal: slice.natal,
     natalAspects: slice.natalAspects,
     angles: slice.angles,
+    nowAngles: slice.nowAngles,
+    transitHouses: slice.transitHouses,
+    hasLocation: slice.hasLocation,
     hasNatal: slice.hasNatal,
     id: newSessionId(),
     startedAt: new Date().toISOString(),
@@ -106,6 +119,7 @@ const createSession = (): ResonanceSession & SkyState => {
     moodLog: [],
     biometricLog: [],
     healthConnected: false,
+    currentLocation: null,
     notifications: DEFAULT_NOTIFICATIONS,
     tier: 'free',
   }
@@ -138,6 +152,8 @@ interface ResonanceActions {
   updateNotificationPrefs: (prefs: Partial<NotificationPreferences>) => void
   /** Set the entitlement tier (called by the purchase flow / dev unlock). */
   setTier: (tier: PremiumTier) => void
+  /** Update the current location and recompute the reading against it. */
+  setCurrentLocation: (location: GeoPoint | null) => void
   /** Save natal data and recompute today's reading against it. */
   setProfile: (profile: BirthProfile) => void
   /** Re-open the birth-details form. */
@@ -216,9 +232,21 @@ export const useAppStore = create<AppStore>()(
 
       setTier: (tier) => set({ tier }),
 
+      setCurrentLocation: (currentLocation) =>
+        set((state) => {
+          const slice = readingSlice(state.profile, currentLocation)
+          return {
+            currentLocation,
+            ...slice,
+            frequency: state.isPlaying
+              ? state.frequency
+              : slice.transit.recommendedFrequency,
+          }
+        }),
+
       setProfile: (profile) =>
         set((state) => {
-          const slice = readingSlice(profile)
+          const slice = readingSlice(profile, state.currentLocation)
           return {
             profile,
             onboardingComplete: true,
@@ -235,7 +263,7 @@ export const useAppStore = create<AppStore>()(
 
       refreshDailyTransit: () =>
         set((state) => {
-          const slice = readingSlice(state.profile)
+          const slice = readingSlice(state.profile, state.currentLocation)
           return {
             ...slice,
             frequency: state.isPlaying
@@ -251,10 +279,11 @@ export const useAppStore = create<AppStore>()(
           audio: state.audio,
           breathPattern: state.breathPattern,
           profile: state.profile,
+          currentLocation: state.currentLocation,
           onboardingComplete: state.onboardingComplete,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
-          ...readingSlice(state.profile),
+          ...readingSlice(state.profile, state.currentLocation),
         })),
     }),
     {
@@ -279,16 +308,18 @@ export const useAppStore = create<AppStore>()(
         moodLog: state.moodLog,
         biometricLog: state.biometricLog,
         healthConnected: state.healthConnected,
+        currentLocation: state.currentLocation,
         notifications: state.notifications,
         tier: state.tier,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>
         const profile = saved.profile ?? null
+        const location = saved.currentLocation ?? null
 
         // The reading is deterministic and cheap — always recompute it fresh
-        // for the current day / natal chart rather than trusting stale storage.
-        const slice = readingSlice(profile)
+        // for the current day / natal chart / location.
+        const slice = readingSlice(profile, location)
 
         return {
           ...current,

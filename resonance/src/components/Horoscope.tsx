@@ -7,6 +7,9 @@ interface HoroscopeProps {
   onBack: () => void
 }
 
+const ORD = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th']
+const ordinal = (n: number): string => ORD[n] ?? `${n}th`
+
 export function Horoscope({ onBack }: HoroscopeProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
@@ -16,11 +19,33 @@ export function Horoscope({ onBack }: HoroscopeProps) {
   const hasNatal = useAppStore((s) => s.hasNatal)
   const suggestedPattern = useAppStore((s) => s.suggestedPattern)
   const profile = useAppStore((s) => s.profile)
+  const currentLocation = useAppStore((s) => s.currentLocation)
+  const transitHouses = useAppStore((s) => s.transitHouses)
+  const nowAngles = useAppStore((s) => s.nowAngles)
   const editProfile = useAppStore((s) => s.editProfile)
 
   if (!transit || !chakra) return null
 
-  const geo = geoContext(profile)
+  const geo = geoContext(profile, currentLocation)
+  const dominantBody = transit.body
+  const dominantHouse = transitHouses[dominantBody as keyof typeof transitHouses]
+  const risingNow =
+    nowAngles != null
+      ? [
+          'Aries',
+          'Taurus',
+          'Gemini',
+          'Cancer',
+          'Leo',
+          'Virgo',
+          'Libra',
+          'Scorpio',
+          'Sagittarius',
+          'Capricorn',
+          'Aquarius',
+          'Pisces',
+        ][Math.floor(nowAngles.ascendant / 30)]
+      : null
 
   const horoscope = buildHoroscope({
     transit,
@@ -90,12 +115,23 @@ export function Horoscope({ onBack }: HoroscopeProps) {
       )}
 
       <section className="glass-panel p-4">
-        <p className="eyebrow">Where you are</p>
+        <p className="eyebrow">The sky above you</p>
+        {risingNow && (
+          <p className="mt-2 text-sm text-haze-200">
+            {risingNow} is rising over you right now.
+          </p>
+        )}
+        {dominantHouse && (
+          <p className="mt-1 text-sm text-haze-200">
+            {dominantBody} is transiting your {ordinal(dominantHouse)} house.
+          </p>
+        )}
         {geo.hasLocation && (
           <p className="mt-2 text-sm text-haze-300">
             {geo.season} · sun {clockHM(geo.sunrise)}–{clockHM(geo.sunset)}
             {geo.dayLengthHours != null &&
               ` · ${geo.dayLengthHours.toFixed(1)} h of light`}
+            {geo.source === 'birth' && ' · using your birth place'}
           </p>
         )}
         <p className="mt-2 text-sm leading-relaxed text-haze-200">
@@ -107,7 +143,7 @@ export function Horoscope({ onBack }: HoroscopeProps) {
             onClick={editProfile}
             className="mt-2 text-xs uppercase tracking-[0.14em] text-gold-300"
           >
-            Add a birth place for local sun times →
+            Add a birth place, or share your location in Settings →
           </button>
         )}
       </section>
