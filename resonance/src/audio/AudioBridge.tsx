@@ -18,7 +18,6 @@ export function AudioBridge() {
   const ambientPadEnabled = useAppStore((s) => s.audio.ambientPadEnabled)
   const ambientPadLevel = useAppStore((s) => s.audio.ambientPadLevel)
   const breathVoice = useAppStore((s) => s.audio.breathVoice)
-
   // Play / stop / re-mix.
   useEffect(() => {
     let cancelled = false

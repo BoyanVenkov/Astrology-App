@@ -119,7 +119,12 @@ export function Dashboard({
       <button
         type="button"
         onClick={onPracticeSheet}
-        className="-mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
+        className="-mt-1.5 self-center rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition active:scale-95"
+        style={{
+          color: 'var(--rz-hue)',
+          borderColor: 'color-mix(in srgb, var(--rz-hue) 42%, transparent)',
+          background: 'color-mix(in srgb, var(--rz-hue) 9%, transparent)',
+        }}
       >
         {doneToday ? 'Practise again' : 'More ways to practise'} →
       </button>
