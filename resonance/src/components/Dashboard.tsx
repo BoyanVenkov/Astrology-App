@@ -53,14 +53,7 @@ export function Dashboard({
   const vocSoon = voc.active || (voc.hoursUntil != null && voc.hoursUntil < 4)
 
   return (
-    <div
-      className="flex flex-col gap-4"
-      style={{
-        // faint daily wash behind the Today screen
-        background:
-          'radial-gradient(120% 40% at 50% -5%, var(--rz-hue-soft), transparent 70%)',
-      }}
-    >
+    <div className="flex flex-col gap-4">
       {/* void of course */}
       {vocSoon && (
         <button

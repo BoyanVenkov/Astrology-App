@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import type { TabKey } from '../types/resonance'
 import { useDayHue } from '../lib/dayhue'
+import { ResonanceLockup } from './Logo'
+import { TabBackdrop } from './TabBackdrop'
 import { ApothecaryIcon, DashboardIcon, SkyIcon } from './icons'
 
 interface LayoutProps {
@@ -78,18 +80,21 @@ export function Layout({
 
   return (
     <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col">
+      {/* per-tab atmosphere, pinned to the viewport behind everything */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 z-0 mx-auto h-[100dvh] w-full max-w-md overflow-hidden"
+      >
+        <TabBackdrop tab={active} />
+      </div>
+
       <div style={{ height: 'env(safe-area-inset-top)' }} aria-hidden />
-      <div className="flex items-center justify-center py-2">
-        <span
-          className="text-[10px] font-semibold uppercase tracking-[0.4em] text-haze-500"
-          style={{ textShadow: '0 0 14px var(--rz-glow)' }}
-        >
-          Resonance
-        </span>
+      <div className="relative z-10 flex items-center justify-center py-2.5">
+        <ResonanceLockup />
       </div>
 
       <main
-        className="flex-1 px-4"
+        className="relative z-10 flex-1 px-4"
         style={{ paddingBottom: 'calc(6.5rem + env(safe-area-inset-bottom))' }}
       >
         {children}

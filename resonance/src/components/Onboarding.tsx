@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { deviceTimeZone, listTimeZones, zonedWallTimeToUtc } from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
+import { ResonanceMark } from './Logo'
 
 const todayKey = (): string => {
   const n = new Date()
@@ -86,7 +87,10 @@ export function Onboarding() {
         paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
       }}
     >
-      <p className="eyebrow">Resonance</p>
+      <div className="mb-1 flex items-center gap-2.5">
+        <ResonanceMark className="h-7 w-7 text-gold-300" animated />
+        <span className="eyebrow">Resonance</span>
+      </div>
       <h1 className="mt-2 font-serif text-3xl leading-tight text-gilded">
         Your natal chart
       </h1>

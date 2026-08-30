@@ -108,6 +108,16 @@ export default {
           from: { transform: 'rotate(0deg)' },
           to: { transform: 'rotate(360deg)' },
         },
+        /* backdrop star accents — opacity only, so it never shifts layout */
+        twinkle: {
+          '0%, 100%': { opacity: '0.18' },
+          '50%': { opacity: '0.55' },
+        },
+        /* brand mark on splash / onboarding — a barely-there breath */
+        hum: {
+          '0%, 100%': { opacity: '0.9', transform: 'scale(1)' },
+          '50%': { opacity: '1', transform: 'scale(1.03)' },
+        },
       },
       animation: {
         'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
@@ -115,6 +125,8 @@ export default {
         'aura-orbit': 'aura-orbit 44s linear infinite',
         shimmer: 'shimmer 6s linear infinite',
         'float-slow': 'float-slow 7s ease-in-out infinite',
+        twinkle: 'twinkle 5s ease-in-out infinite',
+        hum: 'hum 5s ease-in-out infinite',
       },
       transitionTimingFunction: {
         resonance: 'cubic-bezier(0.22, 1, 0.36, 1)',

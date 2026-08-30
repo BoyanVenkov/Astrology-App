@@ -6,6 +6,7 @@ import { Meditation } from './Meditation'
 import { MoodCheckIn } from './MoodCheckIn'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { buildHoroscope } from '../lib/horoscope'
+import { ResonanceMark } from './Logo'
 import { chakraColor, chakraName } from '../lib/resonanceData'
 import { speechAvailable } from '../lib/speech'
 import { practiceStreak } from '../lib/streak'
@@ -304,15 +305,17 @@ export function Ritual({ onExit, preset }: RitualProps) {
   return (
     <div className={`${shell} justify-center text-center`} style={shellStyle}>
       <div
-        className="mx-auto grid h-20 w-20 place-items-center rounded-full"
+        className="mx-auto grid h-24 w-24 place-items-center rounded-full"
         style={{
           background: `radial-gradient(circle, ${accent}44, transparent 70%)`,
           boxShadow: `0 0 50px ${accent}55`,
         }}
       >
-        <span className="text-3xl" style={{ color: accent }}>
-          ✦
-        </span>
+        <ResonanceMark
+          className="h-12 w-12"
+          style={{ color: accent }}
+          animated
+        />
       </div>
       <h1 className="mt-5 font-serif text-3xl text-gilded">Practice complete</h1>
       <p className="mt-2 text-sm text-haze-300">
