@@ -8,11 +8,7 @@ import {
   MIN_BREATH_SCALE,
   resolveBreath,
 } from '../lib/breathwork'
-import type {
-  AudioMode,
-  BreathPatternKey,
-  BreathPhaseKind,
-} from '../types/resonance'
+import type { BreathPatternKey, BreathPhaseKind } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
 
 /**
@@ -29,8 +25,6 @@ interface BreathVisualizerProps {
    *  matching `key` so a pattern change remounts with a clean timeline. */
   pattern?: BreathPatternKey
   autoStart?: boolean
-  /** Audio voicing while running — `breath` (default), or `both` to add the tone. */
-  audioMode?: AudioMode
   /** When set, the session auto-stops after this many seconds. */
   sessionSeconds?: number
   onComplete?: (minutesPractised: number) => void
@@ -57,7 +51,6 @@ const mmss = (s: number): string => {
 export function BreathVisualizer({
   pattern,
   autoStart = false,
-  audioMode = 'breath',
   sessionSeconds,
   onComplete,
   className = '',
@@ -197,7 +190,7 @@ export function BreathVisualizer({
 
     if (running) {
       startedByUsRef.current = true
-      useAppStore.getState().setAudioMode(audioMode)
+      useAppStore.getState().setAudioMode('breath')
       setAudioPlaying(true) // → AudioBridge → breath voice + pad, fade-in
     } else if (startedByUsRef.current) {
       startedByUsRef.current = false
@@ -216,7 +209,7 @@ export function BreathVisualizer({
         progressRef.current.style.strokeDashoffset = String(RING_CIRCUMFERENCE)
       }
     }
-  }, [running, setAudioPlaying, restingScale, audioMode])
+  }, [running, setAudioPlaying, restingScale])
 
   // Leaving the screen ends the guided session.
   useEffect(() => {

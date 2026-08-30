@@ -28,10 +28,9 @@ export function AudioBridge() {
         if (cancelled) return
         void audioEngine.play({
           frequency: freq,
-          tone: mode !== 'breath',
-          toneLevel: mode === 'both' ? 0.32 : undefined,
+          tone: mode === 'tone',
           pad: true,
-          breath: mode !== 'tone' && audio.breathVoice,
+          breath: mode === 'breath' && audio.breathVoice,
         })
       })
     } else {
@@ -44,7 +43,7 @@ export function AudioBridge() {
 
   // Live retune while a tone is sounding.
   useEffect(() => {
-    if (isPlaying && audioMode !== 'breath') audioEngine.setFrequency(frequency)
+    if (isPlaying && audioMode === 'tone') audioEngine.setFrequency(frequency)
   }, [frequency, isPlaying, audioMode])
 
   // Preference changes.

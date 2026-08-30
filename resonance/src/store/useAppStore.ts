@@ -36,6 +36,7 @@ const DEFAULT_NOTIFICATIONS: NotificationPreferences = {
   dailyReadingTime: '08:00',
   moonPhases: true,
   moonSignChange: false,
+  voidOfCourse: true,
   eveningWind: true,
   eveningWindTime: '21:00',
 }

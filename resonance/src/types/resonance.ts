@@ -82,8 +82,8 @@ export interface AudioPreferences {
   breathVoice: boolean
 }
 
-/** What the audio engine is voicing: pure tone, breath sounds, or both. */
-export type AudioMode = 'tone' | 'breath' | 'both'
+/** What the audio engine is voicing: a pure tone (Frequencies) or breath sounds (Breathwork). */
+export type AudioMode = 'tone' | 'breath'
 
 /* ---------------------------------------------------------------- breathwork */
 
@@ -215,6 +215,8 @@ export interface NotificationPreferences {
   moonPhases: boolean
   /** Alert when the Moon changes sign (a "reset" moment). */
   moonSignChange: boolean
+  /** Alert shortly before the Moon goes void of course ("ground your energy"). */
+  voidOfCourse: boolean
   /** Evening nudge to check in + practise, `HH:mm`. */
   eveningWind: boolean
   eveningWindTime: string
@@ -226,7 +228,7 @@ export type PremiumTier = 'free' | 'pro'
 
 /* --------------------------------------------------------------- navigation */
 
-export type TabKey = 'dashboard' | 'frequencies' | 'breathwork' | 'apothecary'
+export type TabKey = 'today' | 'sky' | 'apothecary' | 'you'
 
 /**
  * The persisted, resumable state of a user's alignment session.

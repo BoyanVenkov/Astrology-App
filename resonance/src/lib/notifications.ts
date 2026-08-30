@@ -3,6 +3,7 @@ import { LocalNotifications } from '@capacitor/local-notifications'
 import * as Astronomy from 'astronomy-engine'
 import type { NotificationPreferences } from '../types/resonance'
 import { nextMoonSignChanges } from './ephemeris'
+import { upcomingVoidOfCourse } from './lunar'
 
 /**
  * Local notifications, all computed on-device from the ephemeris — no server.
@@ -29,6 +30,7 @@ const ID_DAILY = 100
 const ID_EVENING = 101
 const ID_MOON_PHASE = 200 // 200..205
 const ID_MOON_SIGN = 300 // 300..305
+const ID_VOC = 400 // 400..402
 
 const parseHM = (hm: string): { hour: number; minute: number } => {
   const [h, m] = hm.split(':').map(Number)
@@ -94,6 +96,19 @@ function buildSchedule(prefs: NotificationPreferences): Scheduled[] {
     })
   }
 
+  if (prefs.voidOfCourse) {
+    upcomingVoidOfCourse(now, 3).forEach((voc, i) => {
+      const fireAt = new Date(voc.since.getTime() - 15 * 60_000)
+      if (fireAt.getTime() <= now.getTime()) return
+      out.push({
+        id: ID_VOC + i,
+        title: 'Moon going void of course',
+        body: 'The void begins in 15 minutes. Ground your energy — rest, don’t begin.',
+        schedule: { at: fireAt },
+      })
+    })
+  }
+
   return out
 }
 
@@ -102,6 +117,7 @@ const ALL_IDS = [
   ID_EVENING,
   ...Array.from({ length: 6 }, (_, i) => ID_MOON_PHASE + i),
   ...Array.from({ length: 6 }, (_, i) => ID_MOON_SIGN + i),
+  ...Array.from({ length: 3 }, (_, i) => ID_VOC + i),
 ]
 
 /** Re-schedule everything to match `prefs`. Safe to call often. */

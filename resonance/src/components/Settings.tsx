@@ -294,6 +294,14 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
                 onChange={(v) => patchNotif({ moonSignChange: v })}
               />
             </Row>
+            <Row>
+              <Toggle
+                label="Void-of-course Moon"
+                hint="A cue to ground, not to begin"
+                on={notifications.voidOfCourse}
+                onChange={(v) => patchNotif({ voidOfCourse: v })}
+              />
+            </Row>
           </>
         )}
       </Section>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AudioBridge } from './audio/AudioBridge'
 import { audioEngine, SOLFEGGIO_PRESETS } from './audio/audioEngine'
-import { BreathVisualizer } from './components/BreathVisualizer'
+import { BodyCheckIn } from './components/BodyCheckIn'
 import { Dashboard } from './components/Dashboard'
 import { Horoscope } from './components/Horoscope'
 import { Journal } from './components/Journal'
@@ -11,12 +11,15 @@ import { MoodCheckIn } from './components/MoodCheckIn'
 import { NatalChart } from './components/NatalChart'
 import { Onboarding } from './components/Onboarding'
 import { Paywall } from './components/Paywall'
-import { Ritual } from './components/Ritual'
+import { PracticeSheet, type RitualLaunch } from './components/PracticeSheet'
+import { Ritual, type RitualPreset } from './components/Ritual'
 import { Settings } from './components/Settings'
+import { SkyView } from './components/SkyView'
+import { YouView } from './components/YouView'
 import { LockIcon, PauseIcon, PlayIcon } from './components/icons'
 import { ALL_CRYSTALS } from './data/esoteric'
-import { BREATH_PATTERNS } from './lib/breathwork'
 import { syncNotifications } from './lib/notifications'
+import { usePrescription } from './lib/prescription'
 import { useEntitlements } from './lib/premium'
 import { chakraName } from './lib/resonanceData'
 import { localDayKey } from './lib/timezone'
@@ -30,10 +33,17 @@ function useMidnightRefresh() {
     if (transit && localDayKey(new Date(transit.window.start)) !== localDayKey()) {
       refreshDailyTransit()
     }
+    const onFocus = () => {
+      const t = useAppStore.getState().transit
+      if (t && localDayKey(new Date(t.window.start)) !== localDayKey()) {
+        useAppStore.getState().refreshDailyTransit()
+      }
+    }
+    window.addEventListener('visibilitychange', onFocus)
+    return () => window.removeEventListener('visibilitychange', onFocus)
   }, [transit, refreshDailyTransit])
 }
 
-/** Keep OS notifications in step with the user's preferences (no-op on web). */
 function useNotificationSync() {
   const notifications = useAppStore((s) => s.notifications)
   useEffect(() => {
@@ -41,33 +51,39 @@ function useNotificationSync() {
   }, [notifications])
 }
 
-type DashView =
-  | 'home'
+type Sub =
+  | null
   | 'chart'
   | 'horoscope'
   | 'journal'
   | 'mood'
-  | 'settings'
+  | 'body'
   | 'market'
+  | 'settings'
+  | 'frequency'
 
 function App() {
-  const [tab, setTab] = useState<TabKey>('dashboard')
-  const [dashView, setDashView] = useState<DashView>('home')
-  const [ritual, setRitual] = useState(false)
+  const [tab, setTab] = useState<TabKey>('today')
+  const [sub, setSub] = useState<Sub>(null)
+  const [practiceOpen, setPracticeOpen] = useState(false)
+  const [ritual, setRitual] = useState<RitualPreset | null>(null)
   const [paywall, setPaywall] = useState<string | null>(null)
   const onboardingComplete = useAppStore((s) => s.onboardingComplete)
+
   useMidnightRefresh()
   useNotificationSync()
 
-  const openPaywall = (reason?: string) => setPaywall(reason ?? 'Unlock Resonance Pro')
+  const openPaywall = (reason?: string) =>
+    setPaywall(reason ?? 'Unlock Resonance Pro')
   const goTab = (next: TabKey) => {
     setTab(next)
-    setDashView('home')
+    setSub(null)
+    setPracticeOpen(false)
   }
-  const home = () => setDashView('home')
-  const openSettings = () => {
-    setTab('dashboard')
-    setDashView('settings')
+  const back = () => setSub(null)
+  const launchRitual = (preset: RitualPreset) => {
+    setPracticeOpen(false)
+    setRitual(preset)
   }
 
   if (!onboardingComplete) return <Onboarding />
@@ -75,58 +91,90 @@ function App() {
     return (
       <>
         <AudioBridge />
-        <Ritual onExit={() => setRitual(false)} />
+        <Ritual preset={ritual} onExit={() => setRitual(null)} />
       </>
     )
 
   return (
     <>
       <AudioBridge />
-      <Layout active={tab} onTabChange={goTab} onOpenSettings={openSettings}>
-        {tab === 'dashboard' && dashView === 'home' && (
+      <Layout
+        active={tab}
+        onTabChange={goTab}
+        onPractice={() => setPracticeOpen(true)}
+        practiceLabel="today's ritual"
+      >
+        {sub === 'chart' && <NatalChart onBack={back} />}
+        {sub === 'horoscope' && <Horoscope onBack={back} />}
+        {sub === 'journal' && <Journal onBack={back} onUpgrade={openPaywall} />}
+        {sub === 'mood' && <MoodCheckIn onDone={back} />}
+        {sub === 'body' && <BodyCheckIn onDone={back} />}
+        {sub === 'market' && <Marketplace onBack={back} />}
+        {sub === 'settings' && (
+          <Settings onBack={back} onUpgrade={() => openPaywall()} />
+        )}
+        {sub === 'frequency' && (
+          <FrequenciesView onBack={back} onUpgrade={openPaywall} />
+        )}
+
+        {sub === null && tab === 'today' && (
           <Dashboard
-            onNavigate={goTab}
-            onOpen={setDashView}
-            onStartRitual={() => setRitual(true)}
+            onRitual={launchRitual}
+            onPracticeSheet={() => setPracticeOpen(true)}
+            onTab={goTab}
           />
         )}
-        {tab === 'dashboard' && dashView === 'chart' && (
-          <NatalChart onBack={home} />
+        {sub === null && tab === 'sky' && (
+          <SkyView
+            onOpenChart={() => setSub('chart')}
+            onOpenHoroscope={() => setSub('horoscope')}
+          />
         )}
-        {tab === 'dashboard' && dashView === 'horoscope' && (
-          <Horoscope onBack={home} />
+        {sub === null && tab === 'apothecary' && (
+          <ApothecaryView
+            onOpenShop={() => setSub('market')}
+            onPractice={() => setPracticeOpen(true)}
+          />
         )}
-        {tab === 'dashboard' && dashView === 'journal' && (
-          <Journal onBack={home} onUpgrade={openPaywall} />
-        )}
-        {tab === 'dashboard' && dashView === 'mood' && (
-          <MoodCheckIn onDone={home} />
-        )}
-        {tab === 'dashboard' && dashView === 'market' && (
-          <Marketplace onBack={home} />
-        )}
-        {tab === 'dashboard' && dashView === 'settings' && (
-          <Settings onBack={home} onUpgrade={() => openPaywall()} />
-        )}
-        {tab === 'frequencies' && <FrequenciesView onUpgrade={openPaywall} />}
-        {tab === 'breathwork' && (
-          <BreathworkView onStartRitual={() => setRitual(true)} />
-        )}
-        {tab === 'apothecary' && (
-          <ApothecaryView onOpenShop={() => setDashView('market')} onNavigate={goTab} />
+        {sub === null && tab === 'you' && (
+          <YouView onOpen={setSub} onUpgrade={() => openPaywall()} />
         )}
       </Layout>
 
-      {paywall && (
-        <Paywall reason={paywall} onClose={() => setPaywall(null)} />
+      {practiceOpen && (
+        <PracticeLauncher
+          onClose={() => setPracticeOpen(false)}
+          onRitual={(l) => launchRitual(l)}
+          onFrequency={() => {
+            setPracticeOpen(false)
+            setSub('frequency')
+          }}
+        />
       )}
+
+      {paywall && <Paywall reason={paywall} onClose={() => setPaywall(null)} />}
     </>
   )
 }
 
+function PracticeLauncher(props: {
+  onClose: () => void
+  onRitual: (l: RitualLaunch) => void
+  onFrequency: () => void
+}) {
+  const prescription = usePrescription()
+  return <PracticeSheet prescription={prescription} {...props} />
+}
+
 /* ------------------------------------------------------------ frequencies */
 
-function FrequenciesView({ onUpgrade }: { onUpgrade: (reason?: string) => void }) {
+function FrequenciesView({
+  onBack,
+  onUpgrade,
+}: {
+  onBack: () => void
+  onUpgrade: (reason?: string) => void
+}) {
   const frequency = useAppStore((s) => s.frequency)
   const setFrequency = useAppStore((s) => s.setFrequency)
   const isPlaying = useAppStore((s) => s.isPlaying)
@@ -144,11 +192,16 @@ function FrequenciesView({ onUpgrade }: { onUpgrade: (reason?: string) => void }
 
   return (
     <div className="flex flex-col gap-4">
+      <button
+        type="button"
+        onClick={onBack}
+        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
+      >
+        ‹ Back
+      </button>
       <header className="px-1">
         <p className="eyebrow">Solfeggio</p>
-        <h1 className="mt-1 font-serif text-2xl text-gilded">
-          Frequency Library
-        </h1>
+        <h1 className="mt-1 font-serif text-2xl text-gilded">Frequency Library</h1>
       </header>
 
       <button
@@ -165,7 +218,10 @@ function FrequenciesView({ onUpgrade }: { onUpgrade: (reason?: string) => void }
           {isPlaying ? 'Playing' : 'Paused'} ·{' '}
           <span className="tabular-nums text-gilded">{frequency} Hz</span>
         </span>
-        <span className="grid h-10 w-10 place-items-center rounded-full bg-gold-500/20 text-gold-100">
+        <span
+          className="grid h-10 w-10 place-items-center rounded-full text-midnight-void"
+          style={{ background: 'var(--rz-hue)' }}
+        >
           {isPlaying ? (
             <PauseIcon className="h-4 w-4" />
           ) : (
@@ -200,9 +256,8 @@ function FrequenciesView({ onUpgrade }: { onUpgrade: (reason?: string) => void }
                 </div>
                 {unlocked ? (
                   <span
-                    className={`text-[10px] uppercase tracking-[0.14em] ${
-                      active ? 'text-gold-300' : 'text-haze-400'
-                    }`}
+                    className="text-[10px] uppercase tracking-[0.14em]"
+                    style={{ color: active ? 'var(--rz-hue)' : undefined }}
                   >
                     {active ? 'Active' : 'Tune'}
                   </span>
@@ -227,78 +282,23 @@ function FrequenciesView({ onUpgrade }: { onUpgrade: (reason?: string) => void }
   )
 }
 
-/* -------------------------------------------------------------- breathwork */
-
-function BreathworkView({ onStartRitual }: { onStartRitual: () => void }) {
-  const transit = useAppStore((s) => s.transit)
-  const breathPattern = useAppStore((s) => s.breathPattern)
-  const suggestedPattern = useAppStore((s) => s.suggestedPattern)
-  const setBreathPattern = useAppStore((s) => s.setBreathPattern)
-
-  const suggested = BREATH_PATTERNS[suggestedPattern]
-  const showNudge = suggestedPattern !== breathPattern
-
-  return (
-    <div className="flex flex-col gap-4">
-      <header className="px-1">
-        <p className="eyebrow">Guided Practice</p>
-        <h1 className="mt-1 font-serif text-2xl text-gilded">Breathwork</h1>
-        {transit && (
-          <p className="mt-1 text-sm text-haze-300">
-            Breathe along — the sound follows each inhale and exhale
-          </p>
-        )}
-      </header>
-
-      <button
-        type="button"
-        onClick={onStartRitual}
-        className="glass-panel glass-panel-active flex items-center justify-between p-4 text-left active:scale-[0.99]"
-      >
-        <span>
-          <span className="font-serif text-lg text-white">
-            Start a timed session
-          </span>
-          <span className="block text-xs text-haze-300">
-            {suggested.name} · 3, 6 or 10 min · logged to your streak
-          </span>
-        </span>
-        <span className="text-gold-300">›</span>
-      </button>
-
-      {showNudge && (
-        <button
-          type="button"
-          onClick={() => setBreathPattern(suggestedPattern)}
-          className="glass-panel flex items-center justify-between gap-3 p-3 text-left active:scale-[0.99]"
-        >
-          <span className="text-sm text-haze-200">
-            Today’s sky suggests{' '}
-            <span className="text-gold-200">{suggested.name}</span> ({suggested.ratio})
-          </span>
-          <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-gold-300">
-            Use it
-          </span>
-        </button>
-      )}
-
-      {/* open-ended practice; remount on pattern change for a clean timeline */}
-      <BreathVisualizer key={breathPattern} />
-    </div>
-  )
-}
-
 /* -------------------------------------------------------------- apothecary */
 
 function ApothecaryView({
   onOpenShop,
-  onNavigate,
+  onPractice,
 }: {
   onOpenShop: () => void
-  onNavigate: (tab: TabKey) => void
+  onPractice: () => void
 }) {
   const dailyCrystals = useAppStore((s) => s.dailyCrystals)
+  const transit = useAppStore((s) => s.transit)
   const todayNames = new Set(dailyCrystals.map((crystal) => crystal.name))
+
+  const featured = [
+    ...ALL_CRYSTALS.filter((c) => todayNames.has(c.name)),
+    ...ALL_CRYSTALS.filter((c) => !todayNames.has(c.name)),
+  ]
 
   return (
     <div className="flex flex-col gap-4">
@@ -309,7 +309,9 @@ function ApothecaryView({
             Crystal Companions
           </h1>
           <p className="mt-1 text-sm text-haze-300">
-            Highlighted stones resonate with today’s transit.
+            {transit
+              ? `Stones for ${chakraName(transit.resonantChakra)} work today.`
+              : 'Highlighted stones resonate with today’s transit.'}
           </p>
         </div>
         <button
@@ -322,7 +324,7 @@ function ApothecaryView({
       </header>
 
       <div className="flex flex-col gap-3">
-        {ALL_CRYSTALS.map((crystal) => {
+        {featured.map((crystal) => {
           const isToday = todayNames.has(crystal.name)
           return (
             <article
@@ -357,10 +359,10 @@ function ApothecaryView({
 
       <button
         type="button"
-        onClick={() => onNavigate('breathwork')}
+        onClick={onPractice}
         className="text-center text-xs uppercase tracking-[0.14em] text-haze-500"
       >
-        pair a stone with today’s breathwork →
+        pair a stone with today’s practice →
       </button>
     </div>
   )

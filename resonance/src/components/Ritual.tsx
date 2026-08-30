@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import { BreathVisualizer } from './BreathVisualizer'
@@ -12,8 +12,16 @@ import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import type { PracticeKind } from '../types/resonance'
 
+export interface RitualPreset {
+  mode: PracticeKind
+  minutes: number
+  /** Jump straight into the practice, skipping the setup screen. */
+  skipIntro?: boolean
+}
+
 interface RitualProps {
   onExit: () => void
+  preset?: RitualPreset
 }
 
 const BREATH_DURATIONS = [3, 6, 10]
@@ -41,7 +49,7 @@ function Switch({ on }: { on: boolean }) {
   )
 }
 
-export function Ritual({ onExit }: RitualProps) {
+export function Ritual({ onExit, preset }: RitualProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const frequency = useAppStore((s) => s.frequency)
@@ -54,14 +62,24 @@ export function Ritual({ onExit }: RitualProps) {
   const logPractice = useAppStore((s) => s.logPractice)
   const toggleAudio = useAppStore((s) => s.toggleAudio)
 
-  const [screen, setScreen] = useState<'intro' | 'practice' | 'done'>('intro')
-  const [mode, setMode] = useState<PracticeKind>('breath')
-  const [breathMin, setBreathMin] = useState(6)
-  const [medMin, setMedMin] = useState(10)
-  const [withTone, setWithTone] = useState(false)
+  const [screen, setScreen] = useState<'intro' | 'practice' | 'done'>(
+    preset?.skipIntro ? 'practice' : 'intro',
+  )
+  const [mode, setMode] = useState<PracticeKind>(preset?.mode ?? 'breath')
+  const [breathMin, setBreathMin] = useState(
+    preset && preset.mode === 'breath' ? preset.minutes : 6,
+  )
+  const [medMin, setMedMin] = useState(
+    preset && preset.mode === 'meditation' ? preset.minutes : 10,
+  )
   const [withVoice, setWithVoice] = useState(true)
   const [doneMinutes, setDoneMinutes] = useState(0)
   const startedAtRef = useRef(0)
+  useEffect(() => {
+    if (preset?.skipIntro && !startedAtRef.current) {
+      startedAtRef.current = Date.now()
+    }
+  }, [preset])
 
   if (!transit || !chakra) {
     return (
@@ -211,16 +229,7 @@ export function Ritual({ onExit }: RitualProps) {
           })}
         </div>
 
-        {mode === 'breath' ? (
-          <button
-            type="button"
-            onClick={() => setWithTone((v) => !v)}
-            className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-haze-200"
-          >
-            <span>Add {frequency} Hz tone under the breath</span>
-            <Switch on={withTone} />
-          </button>
-        ) : (
+        {mode === 'meditation' && (
           <button
             type="button"
             onClick={() => setWithVoice((v) => !v)}
@@ -273,7 +282,6 @@ export function Ritual({ onExit }: RitualProps) {
               key={patternKey}
               pattern={patternKey}
               autoStart
-              audioMode={withTone ? 'both' : 'breath'}
               sessionSeconds={minutes * 60}
               onComplete={handleComplete}
               className="w-full"

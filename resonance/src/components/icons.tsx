@@ -100,3 +100,12 @@ export function PulseIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function SkyIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M17 15A7 7 0 0 1 9 4a7 7 0 1 0 8 11Z" />
+      <path d="M18 4.5 18.6 6l1.5.6-1.5.6L18 8.7l-.6-1.5L15.9 6l1.5-.6Z" />
+    </svg>
+  )
+}
