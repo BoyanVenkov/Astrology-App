@@ -11,7 +11,7 @@ import { planetSymbol } from '../data/esoteric'
 import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
-import { CardsIcon } from './icons'
+import { CardsIcon, SparkIcon } from './icons'
 
 interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
@@ -89,23 +89,26 @@ export function Dashboard({
         </button>
       )}
 
-      <header className="px-1">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-haze-500">
+      <header className="px-1 pt-1">
+        <p className="text-[11px] uppercase tracking-[0.18em] text-haze-500">
           {when.greeting} · {when.date}
         </p>
-        <h1 className="mt-1.5 font-serif text-[1.7rem] leading-tight text-gilded">
+        <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.12] text-gilded">
           {transit ? rx.headline : 'Attuning to the sky…'}
         </h1>
       </header>
 
       {/* the quiet centre of the day */}
       {rx.mantra && (
-        <div className="px-3 text-center">
-          <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+        <div className="px-2 py-1 text-center">
+          <div className="mx-auto mb-3.5 flex items-center justify-center gap-2.5">
+            <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/20" />
+            <SparkIcon className="h-2.5 w-2.5" style={{ color: 'var(--rz-hue)' }} />
+            <span className="h-px w-9 bg-gradient-to-l from-transparent to-white/20" />
+          </div>
+          <p className="display text-[1.8rem] text-gilded">“{rx.mantra}”</p>
+          <p className="mt-3 eyebrow" style={{ color: 'var(--rz-hue)' }}>
             Today’s mantra
-          </p>
-          <p className="mt-2 font-serif text-[1.6rem] leading-snug text-gilded">
-            “{rx.mantra}”
           </p>
         </div>
       )}

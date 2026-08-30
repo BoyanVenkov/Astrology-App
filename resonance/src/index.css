@@ -32,12 +32,14 @@
   html {
     background-color: #03040c;
     -webkit-text-size-adjust: 100%;
+    overflow-x: clip;
   }
 
   body {
     margin: 0;
     min-width: 320px;
     min-height: 100dvh;
+    overflow-x: clip;
     font-family:
       'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Roboto,
       sans-serif;
@@ -76,9 +78,13 @@
   h5 {
     font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
     font-weight: 600;
-    line-height: 1.15;
-    letter-spacing: 0.005em;
+    line-height: 1.12;
+    letter-spacing: -0.012em;
     color: #f6f1e4;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
@@ -110,54 +116,40 @@
  *  Reusable surfaces & accents
  * ------------------------------------------------------------------ */
 
-/* Dark blurred glass with a hairline gold frame.
-   Usage: <div class="glass-panel p-4"> ... </div> */
+/* The default surface — deep, near-black glass with a single white hairline
+   and a soft, low shadow. Gold is an accent, not a frame — it lives on the
+   active state, headings and CTAs only. */
 @utility glass-panel {
   position: relative;
-  border-radius: 1.5rem;
-  border: 1px solid rgb(var(--gold-rgb) / 0.18);
-  background-color: rgba(11, 18, 48, 0.45);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background-color: rgba(9, 14, 34, 0.55);
   background-image: linear-gradient(
-    160deg,
-    rgba(26, 38, 87, 0.55) 0%,
-    rgba(7, 11, 28, 0.35) 100%
+    180deg,
+    rgba(255, 255, 255, 0.028) 0%,
+    rgba(255, 255, 255, 0) 40%
   );
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
-    0 24px 70px -24px rgba(2, 4, 12, 0.85),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+    0 14px 44px -20px rgba(0, 0, 0, 0.7);
   overflow: hidden;
-
-  /* gilded light bleeding down from the top edge */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      180deg,
-      rgb(var(--gold-rgb) / 0.55),
-      rgb(var(--gold-rgb) / 0) 42%
-    );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
 }
 
-/* Add alongside `.glass-panel` for active / selected cards. */
+/* The chosen / hero surface — a whisper of the day's hue as a ring + glow. */
 @utility glass-panel-active {
-  border-color: rgb(var(--gold-rgb) / 0.5);
+  border-color: color-mix(in srgb, var(--rz-hue) 32%, transparent);
   background-image: linear-gradient(
-    160deg,
-    rgba(43, 58, 120, 0.6) 0%,
-    rgba(11, 16, 40, 0.4) 100%
+    180deg,
+    color-mix(in srgb, var(--rz-hue) 9%, transparent) 0%,
+    rgba(255, 255, 255, 0) 55%
   );
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px color-mix(in srgb, var(--rz-hue) 14%, transparent),
+    0 18px 50px -20px rgba(0, 0, 0, 0.6),
+    0 0 40px -16px var(--rz-glow);
 }
 
 /* Composable glow (filter, so it stacks with any box-shadow). */
@@ -172,9 +164,14 @@
     0 0 4px rgb(var(--gold-rgb) / 0.3);
 }
 
-/* Sharp, high-contrast gold heading treatment. */
+/* Warm gilded heading treatment — light, not muddy. */
 @utility text-gilded {
-  background: linear-gradient(135deg, #f7e9c4 0%, #d4af37 45%, #8f6d25 100%);
+  background: linear-gradient(
+    140deg,
+    #f8edcf 0%,
+    #eccd82 44%,
+    #cba659 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -184,11 +181,53 @@
 @utility eyebrow {
   font-family:
     'Inter Variable', Inter, system-ui, sans-serif;
-  font-size: 0.625rem;
+  font-size: 0.66rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.3em;
-  color: rgb(154 166 201 / 0.9);
+  letter-spacing: 0.2em;
+  color: rgb(154 166 201 / 0.85);
+}
+
+/* The big serif moments — mantra, hero headings. */
+@utility display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+}
+
+/* Primary action — the day's hue as a soft metallic pill. */
+@utility btn-primary {
+  border-radius: 0.9rem;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--rz-hue) 82%, #fff 16%),
+    var(--rz-hue)
+  );
+  color: #05070f;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  box-shadow: 0 8px 24px -10px var(--rz-glow);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* A quiet secondary action. */
+@utility btn-ghost {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgb(199 207 230 / 0.9);
+  transition: background 0.15s ease;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
 /* Edge-to-edge horizontal strips without a visible scrollbar. */

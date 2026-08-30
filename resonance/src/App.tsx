@@ -8,6 +8,7 @@ import { Journal } from './components/Journal'
 import { Layout } from './components/Layout'
 import { Marketplace } from './components/Marketplace'
 import { MoodCheckIn } from './components/MoodCheckIn'
+import { MoodGate } from './components/MoodGate'
 import { NatalChart } from './components/NatalChart'
 import { Onboarding } from './components/Onboarding'
 import { Paywall } from './components/Paywall'
@@ -18,29 +19,12 @@ import { Settings } from './components/Settings'
 import { SkyView } from './components/SkyView'
 import { TarotReader } from './components/TarotReader'
 import { YouView } from './components/YouView'
+import { useLiveLocation, useLiveSky } from './lib/liveSky'
 import { syncNotifications } from './lib/notifications'
 import { usePrescription } from './lib/prescription'
 import { localDayKey } from './lib/timezone'
 import { useAppStore } from './store/useAppStore'
 import type { RitualPreset, TabKey } from './types/resonance'
-
-function useMidnightRefresh() {
-  const transit = useAppStore((s) => s.transit)
-  const refreshDailyTransit = useAppStore((s) => s.refreshDailyTransit)
-  useEffect(() => {
-    if (transit && localDayKey(new Date(transit.window.start)) !== localDayKey()) {
-      refreshDailyTransit()
-    }
-    const onFocus = () => {
-      const t = useAppStore.getState().transit
-      if (t && localDayKey(new Date(t.window.start)) !== localDayKey()) {
-        useAppStore.getState().refreshDailyTransit()
-      }
-    }
-    window.addEventListener('visibilitychange', onFocus)
-    return () => window.removeEventListener('visibilitychange', onFocus)
-  }, [transit, refreshDailyTransit])
-}
 
 function useNotificationSync() {
   const notifications = useAppStore((s) => s.notifications)
@@ -69,8 +53,13 @@ function App() {
   const [ritual, setRitual] = useState<RitualPreset | null>(null)
   const [paywall, setPaywall] = useState<string | null>(null)
   const onboardingComplete = useAppStore((s) => s.onboardingComplete)
+  const moodGateDay = useAppStore((s) => s.moodGateDay)
+  const hasMoodToday = useAppStore((s) =>
+    s.moodLog.some((m) => m.day === localDayKey()),
+  )
 
-  useMidnightRefresh()
+  useLiveSky()
+  useLiveLocation()
   useNotificationSync()
 
   const openPaywall = (reason?: string) =>
@@ -88,6 +77,13 @@ function App() {
   }
 
   if (!onboardingComplete) return <Onboarding />
+
+  const moodGateOpen =
+    !ritual && !hasMoodToday && moodGateDay !== localDayKey()
+  if (moodGateOpen) {
+    return <MoodGate onDone={() => setTabNonce((n) => n + 1)} />
+  }
+
   if (ritual)
     return (
       <>

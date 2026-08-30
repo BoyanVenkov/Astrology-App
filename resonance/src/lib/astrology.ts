@@ -279,11 +279,13 @@ function composeInfluence(
   planetPos: BodyPosition,
   house: number | undefined,
 ): string {
-  const retro = planetPos.retrograde ? `, retrograde,` : ''
+  const retro = planetPos.retrograde ? ', retrograde,' : ''
   const headline =
     dominant.aspectName === 'in'
       ? `${dominant.planet}${retro} moving through ${planetPos.sign}`
-      : `${dominant.trigger ? `${dominant.trigger} ` : 'Transiting '}${dominant.planet}${retro} ${dominant.aspectName} ${dominant.targetLabel}`
+      : dominant.trigger
+        ? `${dominant.trigger} ${dominant.aspectName} ${dominant.targetLabel}`
+        : `Transiting ${dominant.planet}${retro} ${dominant.aspectName} ${dominant.targetLabel}`
   const houseClause =
     house && HOUSE_ARENA[house]
       ? ` It's crossing your ${ORDINAL[house]} house — ${HOUSE_ARENA[house]}.`
@@ -347,7 +349,9 @@ export function computeDailyReading(
   const title =
     dominant.aspectName === 'in'
       ? `${dominant.planet} in ${planetPos.sign}`
-      : `${dominant.trigger ? `${dominant.trigger} ` : ''}${dominant.planet} ${dominant.aspectName} ${dominant.targetLabel}`
+      : dominant.trigger
+        ? `${dominant.trigger} ${dominant.aspectName} ${dominant.targetLabel}`
+        : `${dominant.planet} ${dominant.aspectName} ${dominant.targetLabel}`
 
   const transit: AstrologicalTransit = {
     id: `transit-${localDayKey(from)}-${dominant.chakra}-${dominant.planet}`,

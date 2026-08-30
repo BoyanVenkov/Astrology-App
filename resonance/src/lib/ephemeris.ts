@@ -31,17 +31,19 @@ export const BODIES: BodyName[] = [
   'Pluto',
 ]
 
+// U+FE0E (text presentation selector) keeps ♀ ♂ ♃ … from rendering as colour
+// emoji on platforms that default those codepoints to an emoji font.
 export const BODY_SYMBOL: Record<BodyName, string> = {
-  Sun: '☉',
-  Moon: '☽',
-  Mercury: '☿',
-  Venus: '♀',
-  Mars: '♂',
-  Jupiter: '♃',
-  Saturn: '♄',
-  Uranus: '♅',
-  Neptune: '♆',
-  Pluto: '♇',
+  Sun: '☉︎',
+  Moon: '☽︎',
+  Mercury: '☿︎',
+  Venus: '♀︎',
+  Mars: '♂︎',
+  Jupiter: '♃︎',
+  Saturn: '♄︎',
+  Uranus: '♅︎',
+  Neptune: '♆︎',
+  Pluto: '♇︎',
 }
 
 export const SIGNS = [

@@ -230,7 +230,11 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
     return (
       <div className={`${shell} justify-center`} style={shellStyle}>
         <p className="eyebrow">
-          {specificPractice ? 'From the library' : 'Today’s Practice'}
+          {preset?.personalised
+            ? 'Today’s Practice'
+            : specificPractice
+              ? 'From the library'
+              : 'Today’s Practice'}
         </p>
         <h1 className="mt-2 font-serif text-3xl leading-tight text-gilded">
           {title}

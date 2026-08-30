@@ -28,11 +28,11 @@ const ASPECT_STROKE: Record<string, string> = {
   neutral: 'rgba(212,175,55,0.55)',
 }
 const ASPECT_MARK: Record<string, string> = {
-  conjunction: '☌',
-  opposition: '☍',
-  square: '□',
-  trine: '△',
-  sextile: '⚹',
+  conjunction: '☌︎',
+  opposition: '☍︎',
+  square: '□︎',
+  trine: '△︎',
+  sextile: '⚹︎',
 }
 const aspectMark = (name: string): string => ASPECT_MARK[name] ?? '·'
 

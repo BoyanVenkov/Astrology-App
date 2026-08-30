@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
+import { useDayHue } from '../lib/dayhue'
 import { deviceTimeZone, listTimeZones, zonedWallTimeToUtc } from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
 import { ResonanceMark } from './Logo'
@@ -12,9 +13,10 @@ const todayKey = (): string => {
 }
 
 const field =
-  'rounded-2xl border border-white/12 bg-midnight-950/60 px-4 py-3 text-white outline-none focus:border-gold-400/60'
+  'w-full min-w-0 rounded-xl border border-white/[0.09] bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.05]'
 
 export function Onboarding() {
+  useDayHue()
   const profile = useAppStore((s) => s.profile)
   const setProfile = useAppStore((s) => s.setProfile)
   const skipOnboarding = useAppStore((s) => s.skipOnboarding)
@@ -87,16 +89,20 @@ export function Onboarding() {
         paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
       }}
     >
-      <div className="mb-1 flex items-center gap-2.5">
-        <ResonanceMark className="h-7 w-7 text-gold-300" animated />
-        <span className="eyebrow">Resonance</span>
-      </div>
-      <h1 className="mt-2 font-serif text-3xl leading-tight text-gilded">
-        Your natal chart
+      <ResonanceMark
+        className="mb-5 h-9 w-9"
+        style={{ color: 'var(--rz-hue)' }}
+        animated
+      />
+      <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+        Welcome to Resonance
+      </p>
+      <h1 className="mt-2 font-serif text-[2.1rem] leading-[1.1] text-gilded">
+        Let’s find your sky
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-haze-300">
-        Birth date, time and place let Resonance track real planetary transits
-        against your chart — and draw your Ascendant and houses.
+      <p className="mt-2.5 text-sm leading-relaxed text-haze-300">
+        Your birth date, time and place let Resonance track the real planets
+        against your own chart — and shape each day’s practice around them.
       </p>
 
       <div className="mt-6 flex flex-col gap-4">
@@ -232,14 +238,16 @@ export function Onboarding() {
         type="button"
         onClick={reveal}
         disabled={!canSubmit}
-        className="mt-6 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+        className={`mt-6 px-4 py-3.5 text-sm uppercase ${
+          canSubmit ? 'btn-primary' : 'btn-ghost opacity-55'
+        }`}
       >
         Reveal my chart
       </button>
       <button
         type="button"
         onClick={skipOnboarding}
-        className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+        className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-500 active:text-haze-300"
       >
         Skip — use today’s sky only
       </button>

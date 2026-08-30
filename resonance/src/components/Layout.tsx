@@ -3,7 +3,14 @@ import type { TabKey } from '../types/resonance'
 import { useDayHue } from '../lib/dayhue'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
-import { DashboardIcon, GearIcon, SkyIcon, TarotIcon } from './icons'
+import {
+  DashboardIcon,
+  GearIcon,
+  SkyIcon,
+  SparkIcon,
+  TarotIcon,
+  YouIcon,
+} from './icons'
 
 interface LayoutProps {
   active: TabKey
@@ -20,20 +27,6 @@ type TabDef = {
   label: string
   Icon: (props: { className?: string }) => ReactNode
 }
-
-const YouIcon = (props: { className?: string }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={1.75}
-    strokeLinecap="round"
-    className={props.className}
-  >
-    <circle cx="12" cy="8" r="3.5" />
-    <path d="M5 20c1.2-3.5 4-5 7-5s5.8 1.5 7 5" />
-  </svg>
-)
 
 const LEFT: TabDef[] = [
   { key: 'today', label: 'Today', Icon: DashboardIcon },
@@ -59,20 +52,21 @@ function Tab({
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className="relative flex min-h-[3.25rem] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors"
+      className="relative flex min-h-[3.4rem] flex-1 flex-col items-center justify-center gap-[3px] rounded-2xl px-1 py-1.5 text-[9.5px] font-semibold uppercase tracking-[0.14em] transition-[color,transform] active:scale-95"
       style={{
-        color: active ? 'var(--rz-hue)' : 'rgba(154,166,201,0.7)',
-        filter: active ? 'drop-shadow(0 0 8px var(--rz-glow))' : undefined,
+        color: active ? 'var(--rz-hue)' : 'rgba(147,159,193,0.6)',
+        filter: active ? 'drop-shadow(0 0 9px var(--rz-glow))' : undefined,
       }}
     >
-      <Icon className="h-[1.35rem] w-[1.35rem]" />
+      <Icon className="h-[1.45rem] w-[1.45rem]" />
       <span>{def.label}</span>
-      {active && (
-        <span
-          className="absolute -bottom-0.5 h-1 w-1 rounded-full"
-          style={{ background: 'var(--rz-hue)' }}
-        />
-      )}
+      <span
+        className="absolute bottom-0 h-[3px] w-[3px] rounded-full transition-opacity"
+        style={{
+          background: 'var(--rz-hue)',
+          opacity: active ? 1 : 0,
+        }}
+      />
     </button>
   )
 }
@@ -115,22 +109,21 @@ export function Layout({
       )}
 
       <main
-        className="relative z-10 flex-1 px-4"
+        className="relative z-10 min-w-0 flex-1 px-4"
         style={{ paddingBottom: 'calc(6.5rem + env(safe-area-inset-bottom))' }}
       >
         {children}
       </main>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t backdrop-blur-xl"
+        className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.06] backdrop-blur-2xl"
         style={{
           background:
-            'linear-gradient(180deg, rgba(7,11,28,0.78), rgba(3,4,12,0.94))',
-          borderColor: 'color-mix(in srgb, var(--rz-hue) 22%, transparent)',
+            'linear-gradient(180deg, rgba(6,9,22,0.72) 0%, rgba(3,4,12,0.96) 100%)',
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
       >
-        <div className="flex items-end px-2 pb-1 pt-1.5">
+        <div className="flex items-end px-1.5 pb-1 pt-1.5">
           {LEFT.map((d) => (
             <Tab
               key={d.key}
@@ -146,16 +139,20 @@ export function Layout({
               type="button"
               onClick={onPractice}
               aria-label={`Begin practice — ${practiceLabel}`}
-              className="-mt-7 flex h-16 w-16 flex-col items-center justify-center rounded-full border text-[9px] font-semibold uppercase tracking-[0.1em] text-white transition active:scale-95"
+              className="relative -mt-7 grid h-[3.6rem] w-[3.6rem] place-items-center rounded-full border transition active:scale-95"
               style={{
                 background:
-                  'radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--rz-hue) 65%, #fff 10%), color-mix(in srgb, var(--rz-hue) 40%, #03040c))',
-                borderColor: 'color-mix(in srgb, var(--rz-hue) 55%, transparent)',
+                  'radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--rz-hue) 72%, #fff 16%), color-mix(in srgb, var(--rz-hue) 38%, #05070f) 78%)',
+                borderColor: 'color-mix(in srgb, var(--rz-hue) 45%, transparent)',
                 boxShadow:
-                  '0 0 26px var(--rz-glow), inset 0 1px 0 rgba(255,255,255,0.25)',
+                  '0 0 30px -4px var(--rz-glow), 0 8px 20px -6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.3)',
               }}
             >
-              <span className="animate-pulse-glow text-lg leading-none">✦</span>
+              <span
+                aria-hidden
+                className="absolute inset-1.5 rounded-full border border-white/15"
+              />
+              <SparkIcon className="h-6 w-6 animate-pulse-glow text-[#05070f]" />
             </button>
           </div>
 

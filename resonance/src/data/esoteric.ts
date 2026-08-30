@@ -49,7 +49,10 @@ export const PLANET_SYMBOL: Record<string, string> = Object.fromEntries(
   ESOTERIC_ENTRIES.map((e) => [e.planet, e.planetSymbol]),
 )
 
-export const planetSymbol = (name: string): string => PLANET_SYMBOL[name] ?? '✷'
+// Trailing U+FE0E pins the flat text glyph (♀ ♂ ♃ … would otherwise show as
+// colour emoji on some platforms).
+export const planetSymbol = (name: string): string =>
+  `${PLANET_SYMBOL[name] ?? '✷'}︎`
 
 const slug = (value: string): string =>
   value

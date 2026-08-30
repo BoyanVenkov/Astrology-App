@@ -250,6 +250,8 @@ export interface RitualPreset {
   meditationStyle?: MeditationStyleKey
   /** For `mode: 'frequency'` — the tone to sit with; else today's recommended. */
   frequency?: SolfeggioFrequency
+  /** This IS today's chart+mood prescription — frame it as such, not "from the library". */
+  personalised?: boolean
 }
 
 /** A completed guided practice session, kept for streaks / history. */
@@ -374,4 +376,6 @@ export interface ResonanceSession {
   tier: PremiumTier
   /** Local day `YYYY-MM-DD` the daily tarot card was last turned — `null` if never. */
   tarotDrawnDay: string | null
+  /** Local day the daily mood gate was answered or dismissed — `null` if never. */
+  moodGateDay: string | null
 }

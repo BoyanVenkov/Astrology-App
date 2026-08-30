@@ -41,21 +41,36 @@ export function TodaysPractice({
       label: 'Meditate',
       sub: `${rx.minutes} min`,
       accent: !rx.urgent,
-      preset: { mode: 'meditation', minutes: rx.minutes },
+      preset: {
+        mode: 'meditation',
+        minutes: rx.minutes,
+        meditationStyle: rx.meditationStyle,
+        personalised: true,
+      },
     },
     {
       key: 'breath',
       label: 'Breathe',
       sub: rx.breathRatio,
       accent: rx.urgent,
-      preset: { mode: 'breath', minutes: breathMin },
+      preset: {
+        mode: 'breath',
+        minutes: breathMin,
+        breathPattern: rx.breathPattern,
+        personalised: true,
+      },
     },
     {
       key: 'frequency',
       label: 'Frequency',
       sub: `${rx.frequency} Hz`,
       accent: false,
-      preset: { mode: 'frequency', minutes: 12 },
+      preset: {
+        mode: 'frequency',
+        minutes: Math.max(10, rx.minutes),
+        frequency: rx.frequency,
+        personalised: true,
+      },
     },
   ]
 
@@ -75,26 +90,29 @@ export function TodaysPractice({
             key={o.key}
             type="button"
             onClick={() => onLaunch(o.preset)}
-            className={`flex flex-col items-center gap-1 rounded-2xl border px-1.5 py-3 text-center transition active:scale-[0.97] ${
+            className={`flex flex-col items-center gap-1.5 rounded-[0.9rem] px-1 py-3.5 text-center transition active:scale-[0.97] ${
               o.accent
-                ? 'border-transparent text-midnight-void'
-                : 'border-white/12 bg-white/5 text-haze-100'
+                ? ''
+                : 'border border-white/[0.08] bg-white/[0.035] text-haze-100'
             }`}
             style={
               o.accent
                 ? {
                     background:
-                      'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 80%, #fff 15%), var(--rz-hue))',
+                      'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 84%, #fff 16%), var(--rz-hue))',
+                    color: '#05070f',
+                    boxShadow:
+                      '0 8px 22px -10px var(--rz-glow), inset 0 1px 0 rgba(255,255,255,0.35)',
                   }
                 : undefined
             }
           >
-            <I className="h-4 w-4" />
-            <span className="text-xs font-semibold uppercase tracking-[0.1em]">
+            <I className="h-[18px] w-[18px]" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">
               {o.label}
             </span>
             <span
-              className={`text-[10px] tabular-nums ${o.accent ? 'text-midnight-void/70' : 'text-haze-400'}`}
+              className={`text-[10px] tabular-nums ${o.accent ? 'text-[#05070f]/70' : 'text-haze-400'}`}
             >
               {o.sub}
             </span>

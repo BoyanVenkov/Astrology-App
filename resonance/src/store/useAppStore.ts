@@ -46,7 +46,7 @@ const SESSION_LOG_CAP = 120
 const newSessionId = (): string =>
   globalThis.crypto?.randomUUID?.() ?? `session_${Date.now().toString(36)}`
 
-/** Derived sky data — recomputed on every load, never persisted. */
+/** Derived sky data — recomputed on every load + on the live-sky ticker, never persisted. */
 export interface SkyState {
   aspects: Aspect[]
   sky: BodyPosition[]
@@ -57,6 +57,8 @@ export interface SkyState {
   transitHouses: Partial<Record<BodyName, number>>
   hasLocation: boolean
   hasNatal: boolean
+  /** epoch ms — when the sky/transit/reading was last computed. */
+  skyComputedAt: number
 }
 
 /** Everything the daily transit computation produces, ready to spread into state. */
@@ -86,6 +88,7 @@ const readingSlice = (
     transitHouses: reading.transitHouses,
     hasLocation: reading.hasLocation,
     hasNatal: reading.hasNatal,
+    skyComputedAt: Date.now(),
   }
 }
 
@@ -101,6 +104,7 @@ const createSession = (): ResonanceSession & SkyState => {
     transitHouses: slice.transitHouses,
     hasLocation: slice.hasLocation,
     hasNatal: slice.hasNatal,
+    skyComputedAt: slice.skyComputedAt,
     id: newSessionId(),
     startedAt: new Date().toISOString(),
     chakra: slice.chakra,
@@ -124,6 +128,7 @@ const createSession = (): ResonanceSession & SkyState => {
     notifications: DEFAULT_NOTIFICATIONS,
     tier: 'free',
     tarotDrawnDay: null,
+    moodGateDay: null,
   }
 }
 
@@ -166,6 +171,8 @@ interface ResonanceActions {
   refreshDailyTransit: () => void
   /** Mark that today's daily tarot card has been turned. */
   markTarotDrawn: () => void
+  /** Mark today's mood gate handled (answered or skipped) so it stops asking. */
+  dismissMoodGate: () => void
   /** Mark the current session finished and start a fresh one. */
   endSession: () => void
 }
@@ -278,6 +285,8 @@ export const useAppStore = create<AppStore>()(
 
       markTarotDrawn: () => set({ tarotDrawnDay: localDayKey() }),
 
+      dismissMoodGate: () => set({ moodGateDay: localDayKey() }),
+
       endSession: () =>
         set((state) => ({
           ...createSession(),
@@ -288,6 +297,7 @@ export const useAppStore = create<AppStore>()(
           currentLocation: state.currentLocation,
           onboardingComplete: state.onboardingComplete,
           tarotDrawnDay: state.tarotDrawnDay,
+          moodGateDay: state.moodGateDay,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -319,6 +329,7 @@ export const useAppStore = create<AppStore>()(
         notifications: state.notifications,
         tier: state.tier,
         tarotDrawnDay: state.tarotDrawnDay,
+        moodGateDay: state.moodGateDay,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>

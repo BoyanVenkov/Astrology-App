@@ -51,4 +51,7 @@ const GLYPHS: Record<string, string> = {
   Pisces: '♓',
 }
 
-export const zodiacGlyph = (signName: string): string => GLYPHS[signName] ?? '✷'
+// U+FE0E forces the flat text glyph — several sign codepoints (♐ ♑ ♒ …)
+// otherwise render as colour emoji on Android / some desktop platforms.
+export const zodiacGlyph = (signName: string): string =>
+  `${GLYPHS[signName] ?? '✷'}︎`

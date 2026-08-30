@@ -17,12 +17,13 @@ interface SkyViewProps {
   onRitual: (preset: RitualPreset) => void
 }
 
+// Trailing U+FE0E keeps these as flat text glyphs, not colour emoji.
 const ASPECT_GLYPH: Record<string, string> = {
-  conjunction: '☌',
-  opposition: '☍',
-  square: '□',
-  trine: '△',
-  sextile: '⚹',
+  conjunction: '☌︎',
+  opposition: '☍︎',
+  square: '□︎',
+  trine: '△︎',
+  sextile: '⚹︎',
 }
 
 const PHASE_LABEL: Record<string, string> = {
@@ -166,8 +167,12 @@ export function SkyView({
                   {hasNatal ? 'natal ' : ''}
                   {a.other}
                 </span>
-                <span className="tabular-nums text-xs text-haze-400">
-                  {a.orbDelta.toFixed(1)}° {a.applying ? 'applying' : 'separating'}
+                <span className="shrink-0 whitespace-nowrap tabular-nums text-xs text-haze-400">
+                  {a.orbDelta.toFixed(1)}°{' '}
+                  <span aria-hidden>{a.applying ? '↑' : '↓'}</span>
+                  <span className="sr-only">
+                    {a.applying ? 'applying' : 'separating'}
+                  </span>
                 </span>
               </li>
             ))}

@@ -2,12 +2,22 @@ import type {
   BreathPatternKey,
   ChakraKey,
   Crystal,
+  MeditationStyleKey,
+  Mood,
   SolfeggioFrequency,
 } from '../types/resonance'
 import { useAppStore } from '../store/useAppStore'
 import { computeAura, type AuraState } from './aura'
 import { BREATH_PATTERNS } from './breathwork'
+import {
+  MOOD_NEED,
+  moodBreath,
+  moodClause,
+  moodMeditation,
+  moodMinutesScale,
+} from './moodPractice'
 import { chakraMantra, chakraName } from './resonanceData'
+import { localDayKey } from './timezone'
 
 export interface PrescribedStone {
   name: string
@@ -19,10 +29,13 @@ export interface Prescription {
   chakra: ChakraKey
   chakraLabel: string
   frequency: SolfeggioFrequency
+  /** Breath pattern, already bent by today's mood. */
   breathPattern: BreathPatternKey
   breathLabel: string
   breathRatio: string
-  /** Recommended meditation length in minutes. */
+  /** Meditation style, bent by today's mood (else the chart-tuned 'chakra'). */
+  meditationStyle: MeditationStyleKey
+  /** Recommended session length in minutes. */
   minutes: number
   stones: PrescribedStone[]
   headline: string
@@ -30,7 +43,9 @@ export interface Prescription {
   directive: string
   /** The day's short mantra for the focus chakra. */
   mantra: string
-  /** Body signals say to restore before anything else. */
+  /** Today's logged mood, if any — the prescription is tuned to it. */
+  mood: Mood | null
+  /** Body signals (or an anxious arrival on a fragile day) say to restore first. */
   urgent: boolean
 }
 
@@ -51,18 +66,29 @@ interface PrescriptionInput {
   crystals: Crystal[]
   transitTitle: string
   vulnerable: boolean
+  mood: Mood | null
 }
+
+const clampMinutes = (n: number): number => Math.max(3, Math.min(25, Math.round(n)))
 
 export function buildPrescription(
   input: PrescriptionInput,
   aura: AuraState,
 ): Prescription {
   const label = chakraName(input.chakra)
-  const pattern = BREATH_PATTERNS[input.suggestedPattern]
-  const urgent = aura.needsRest || (input.vulnerable && aura.score < 0.28)
+  const { mood } = input
 
-  // restorative days get a shorter, softer sit; strong days can go longer
-  const minutes = urgent ? 5 : input.vulnerable ? 10 : 12
+  const breathKey = moodBreath(input.suggestedPattern, mood)
+  const pattern = BREATH_PATTERNS[breathKey]
+  const meditationStyle = moodMeditation(mood)
+
+  const urgent =
+    aura.needsRest ||
+    (input.vulnerable && aura.score < 0.28) ||
+    (mood === 'anxious' && input.vulnerable)
+
+  const base = urgent ? 5 : input.vulnerable ? 10 : 12
+  const minutes = clampMinutes(base * moodMinutesScale(mood))
 
   const stones: PrescribedStone[] = input.crystals.slice(0, 2).map((c) => ({
     name: c.name,
@@ -79,27 +105,38 @@ export function buildPrescription(
       ? ` Keep ${stones.map((s) => s.name).join(' or ')} ${PLACEMENT[input.chakra].replace(/,.*/, '')}.`
       : ''
 
-  const directive = urgent
-    ? `Your system is depleted. Start with a ${minutes}-minute ${input.frequency} Hz restorative sit and slow ${pattern.name} breathing before the day asks anything of you.${stoneText}`
-    : `A ${minutes}-minute ${input.frequency} Hz meditation for the ${label}, ${pattern.name} breathing (${pattern.ratio}), and time with your stones.${stoneText}`
+  const arriving = moodClause(mood)
+  const need = mood ? MOOD_NEED[mood] : null
+  const soften = need === 'settle' || need === 'ground' || need === 'restore'
+
+  let directive: string
+  if (urgent) {
+    directive = `${arriving ? `You’re ${arriving}, and your ` : 'Your '}system is depleted. Start with a ${minutes}-minute ${input.frequency} Hz restorative sit and slow ${pattern.name} breathing before the day asks anything of you.${stoneText}`
+  } else if (soften) {
+    directive = `You’re ${arriving}. With ${input.transitTitle} in the sky, the move is ${pattern.name} breathing (${pattern.ratio}) and ${input.frequency} Hz to settle into the ${label} — ${minutes} minutes.${stoneText}`
+  } else {
+    directive = `${arriving ? `You’re ${arriving} — a` : 'A'} ${minutes}-minute ${input.frequency} Hz meditation for the ${label}, ${pattern.name} breathing (${pattern.ratio}), and time with your stones.${stoneText}`
+  }
 
   return {
     chakra: input.chakra,
     chakraLabel: label,
     frequency: input.frequency,
-    breathPattern: input.suggestedPattern,
+    breathPattern: breathKey,
     breathLabel: pattern.name,
     breathRatio: pattern.ratio,
+    meditationStyle,
     minutes,
     stones,
     headline,
     directive,
     mantra: chakraMantra(input.chakra),
+    mood,
     urgent,
   }
 }
 
-/** Today's prescription, derived from the store. */
+/** Today's prescription, derived from the live reading + today's mood. */
 export function usePrescription(): Prescription {
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
@@ -112,6 +149,7 @@ export function usePrescription(): Prescription {
 
   const focus = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focus, sessionLog, moodLog, biometricLog)
+  const mood = moodLog.find((m) => m.day === localDayKey())?.mood ?? null
 
   return buildPrescription(
     {
@@ -121,6 +159,7 @@ export function usePrescription(): Prescription {
       crystals,
       transitTitle: transit?.title ?? 'today',
       vulnerable: (chakra?.balance ?? 50) < 50,
+      mood,
     },
     aura,
   )
