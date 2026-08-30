@@ -7,10 +7,10 @@ import { moonVoidOfCourseCached } from '../lib/lunar'
 import { chakraName } from '../lib/resonanceData'
 import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
-import { planetSymbol } from '../data/esoteric'
 import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
+import { useChakraField } from '../lib/chakraField'
 import { CardsIcon, SparkIcon } from './icons'
 
 interface DashboardProps {
@@ -18,6 +18,7 @@ interface DashboardProps {
   onPracticeSheet: () => void
   onTab: (tab: TabKey) => void
   onStones: () => void
+  onChakras: () => void
 }
 
 const greetingFor = (h: number): string =>
@@ -28,9 +29,11 @@ export function Dashboard({
   onPracticeSheet,
   onTab,
   onStones,
+  onChakras,
 }: DashboardProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
+  const chakraField = useChakraField()
   const sky = useAppStore((s) => s.sky)
   const hasNatal = useAppStore((s) => s.hasNatal)
   const sessionLog = useAppStore((s) => s.sessionLog)
@@ -138,13 +141,25 @@ export function Dashboard({
         </button>
         <button
           type="button"
-          onClick={() => onTab('sky')}
+          onClick={onChakras}
           className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
         >
-          <span className="text-xl leading-none text-haze-100" aria-hidden>
-            {transit ? planetSymbol(transit.body) : '✦'}
+          <span className="flex h-10 items-center gap-[3px]">
+            {[...chakraField].reverse().map((c) => (
+              <span
+                key={c.key}
+                className="rounded-full"
+                style={{
+                  width: 4 + (c.charge / 100) * 4,
+                  height: 4 + (c.charge / 100) * 4,
+                  background: c.color,
+                  opacity: c.tone === 'quiet' ? 0.4 : 1,
+                  boxShadow: c.focus ? `0 0 8px ${c.color}` : undefined,
+                }}
+              />
+            ))}
           </span>
-          <span className="eyebrow">Sky</span>
+          <span className="eyebrow">Field</span>
           <span className="truncate text-xs text-haze-300">
             {chakraName(focusChakra)}
             {focusPlanet?.retrograde ? ' ℞' : ''}

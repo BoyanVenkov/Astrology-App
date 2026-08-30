@@ -5,7 +5,9 @@ import { moonVoidOfCourseCached, upcomingMoonPhases } from '../lib/lunar'
 import { chakraName, zodiacGlyph } from '../lib/resonanceData'
 import { planetSymbol } from '../data/esoteric'
 import { SIGNS } from '../lib/ephemeris'
+import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
+import { ChakraColumn } from './ChakraColumn'
 import { CardsIcon, LockIcon } from './icons'
 import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset, TabKey } from '../types/resonance'
@@ -15,6 +17,7 @@ interface SkyViewProps {
   onOpenChart: () => void
   onOpenHoroscope: () => void
   onOpenStones: () => void
+  onOpenChakras: () => void
   onRitual: (preset: RitualPreset) => void
   onUpgrade: (reason?: string) => void
 }
@@ -43,10 +46,12 @@ export function SkyView({
   onOpenChart,
   onOpenHoroscope,
   onOpenStones,
+  onOpenChakras,
   onRitual,
   onUpgrade,
 }: SkyViewProps) {
   const { isPro } = useEntitlements()
+  const chakraField = useChakraField()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
@@ -186,6 +191,27 @@ export function SkyView({
         )}
       </section>
 
+      {/* chakra field — the transits, decoded into the body */}
+      <button
+        type="button"
+        onClick={onOpenChakras}
+        className="glass-panel flex items-center gap-4 p-4 text-left active:scale-[0.99]"
+      >
+        <ChakraColumn field={chakraField} size={62} className="shrink-0" />
+        <span className="min-w-0 flex-1">
+          <span className="eyebrow">The Chakra Field</span>
+          <span className="mt-1 block font-serif text-lg leading-tight text-white">
+            {chakraFieldSummary(chakraField)}
+          </span>
+          <span className="mt-1 block text-xs text-haze-300">
+            All seven centres, decoded from today’s transits
+          </span>
+        </span>
+        <span className="shrink-0 self-center" style={{ color: 'var(--rz-hue)' }}>
+          ›
+        </span>
+      </button>
+
       {/* go deeper */}
       <div className="grid grid-cols-2 gap-3">
         <button
@@ -258,3 +284,18 @@ export function SkyView({
 
 const ORD = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th']
 const ordinal = (n: number): string => ORD[n] ?? `${n}th`
+
+function chakraFieldSummary(field: ChakraReading[]): string {
+  const strained = field.filter(
+    (c) => c.tone === 'blocked' || c.tone === 'strained',
+  )
+  if (strained.length > 0) {
+    return `${strained.map((c) => c.name).join(' & ')} under pressure`
+  }
+  const open = field.filter((c) => c.tone === 'open' || c.tone === 'lit')
+  if (open.length > 0) {
+    return `${open.map((c) => c.name).join(' & ')} wide open`
+  }
+  const focus = field.find((c) => c.focus)
+  return focus ? `${focus.name} carries the day` : 'A settled field today'
+}

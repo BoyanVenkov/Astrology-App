@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AudioBridge } from './audio/AudioBridge'
 import { Apothecary } from './components/Apothecary'
 import { BodyCheckIn } from './components/BodyCheckIn'
+import { ChakraField } from './components/ChakraField'
 import { Dashboard } from './components/Dashboard'
 import { Horoscope } from './components/Horoscope'
 import { Journal } from './components/Journal'
@@ -36,6 +37,7 @@ type Sub =
   | null
   | 'chart'
   | 'horoscope'
+  | 'chakras'
   | 'stones'
   | 'library'
   | 'journal'
@@ -108,6 +110,9 @@ function App() {
         {sub === 'horoscope' && (
           <Horoscope onBack={back} onRitual={launchRitual} />
         )}
+        {sub === 'chakras' && (
+          <ChakraField onBack={back} onRitual={launchRitual} />
+        )}
         {sub === 'stones' && (
           <Apothecary
             onBack={back}
@@ -134,6 +139,7 @@ function App() {
             onPracticeSheet={() => setPracticeOpen(true)}
             onTab={goTab}
             onStones={() => setSub('stones')}
+            onChakras={() => setSub('chakras')}
           />
         )}
         {sub === null && tab === 'sky' && (
@@ -142,6 +148,7 @@ function App() {
             onOpenChart={() => setSub('chart')}
             onOpenHoroscope={() => setSub('horoscope')}
             onOpenStones={() => setSub('stones')}
+            onOpenChakras={() => setSub('chakras')}
             onRitual={launchRitual}
             onUpgrade={openPaywall}
           />

@@ -241,7 +241,7 @@ function pickDominant(
   }
 }
 
-const ORDINAL = [
+export const ORDINAL = [
   '',
   '1st',
   '2nd',
@@ -257,7 +257,8 @@ const ORDINAL = [
   '12th',
 ]
 
-const HOUSE_ARENA: Record<number, string> = {
+/** What each house governs — plain-language, for reading a transit's arena. */
+export const HOUSE_ARENA: Record<number, string> = {
   1: 'your body and how you meet the world',
   2: 'money, resources and self-worth',
   3: 'your daily mind, siblings and short trips',
