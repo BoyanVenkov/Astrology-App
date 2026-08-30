@@ -3,6 +3,7 @@ import { useAppStore } from '../store/useAppStore'
 import { BODY_SYMBOL, SIGNS } from '../lib/ephemeris'
 import { houseOf } from '../lib/houses'
 import { zodiacGlyph } from '../lib/resonanceData'
+import { Screen } from './Screen'
 
 interface NatalChartProps {
   onBack: () => void
@@ -35,18 +36,6 @@ const ASPECT_MARK: Record<string, string> = {
 }
 const aspectMark = (name: string): string => ASPECT_MARK[name] ?? '·'
 
-function BackBar({ onBack }: NatalChartProps) {
-  return (
-    <button
-      type="button"
-      onClick={onBack}
-      className="mb-1 self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-    >
-      ‹ Back
-    </button>
-  )
-}
-
 export function NatalChart({ onBack }: NatalChartProps) {
   const natal = useAppStore((s) => s.natal)
   const natalAspects = useAppStore((s) => s.natalAspects)
@@ -77,12 +66,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
 
   if (!hasNatal) {
     return (
-      <div className="flex flex-col gap-4">
-        <BackBar onBack={onBack} />
-        <header className="px-1">
-          <p className="eyebrow">Natal Chart</p>
-          <h1 className="mt-1 font-serif text-2xl text-gilded">Your birth sky</h1>
-        </header>
+      <Screen eyebrow="Natal Chart" title="Your birth sky" onBack={onBack}>
         <div className="glass-panel p-6 text-sm leading-relaxed text-haze-300">
           <p>
             Add your birth date, time and place and Resonance will draw your natal
@@ -97,7 +81,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
             Add birth details
           </button>
         </div>
-      </div>
+      </Screen>
     )
   }
 
@@ -106,43 +90,39 @@ export function NatalChart({ onBack }: NatalChartProps) {
   const ANGLE_LABELS = ['AC', 'IC', 'DC', 'MC'] // cusps 1, 4, 7, 10
 
   return (
-    <div className="flex flex-col gap-4">
-      <BackBar onBack={onBack} />
-      <header className="px-1">
-        <div className="flex items-start justify-between gap-3">
-          <p className="eyebrow">Natal Chart</p>
-          <button
-            type="button"
-            onClick={editProfile}
-            className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-          >
-            edit
-          </button>
-        </div>
-        <h1 className="mt-1 font-serif text-2xl text-gilded">Your birth sky</h1>
-        {profile && (
-          <p className="mt-1 text-sm text-haze-300">
-            {profile.date} ·{' '}
-            {profile.timeKnown ? profile.time : 'time unknown (noon)'}
-            {profile.placeLabel ? ` · ${profile.placeLabel}` : ''}
-          </p>
-        )}
-        {angles ? (
-          <p className="mt-0.5 text-xs text-haze-400">
-            {fmtDegSign(angles.ascendant)} rising · MC{' '}
-            {fmtDegSign(angles.midheaven)} ·{' '}
-            {angles.system === 'placidus' ? 'Placidus houses' : 'whole-sign houses'}
-          </p>
-        ) : (
-          <button
-            type="button"
-            onClick={editProfile}
-            className="mt-1 text-xs text-gold-300"
-          >
-            Add your birth place for the Ascendant & houses →
-          </button>
-        )}
-      </header>
+    <Screen
+      eyebrow="Natal Chart"
+      title="Your birth sky"
+      onBack={onBack}
+      action={
+        <button
+          type="button"
+          onClick={editProfile}
+          className="text-[10px] uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
+        >
+          edit
+        </button>
+      }
+      subtitle={
+        profile
+          ? `${profile.date} · ${profile.timeKnown ? profile.time : 'time unknown (noon)'}${profile.placeLabel ? ` · ${profile.placeLabel}` : ''}`
+          : undefined
+      }
+    >
+      {angles ? (
+        <p className="-mt-2 px-1 text-xs text-haze-400">
+          {fmtDegSign(angles.ascendant)} rising · MC {fmtDegSign(angles.midheaven)}{' '}
+          · {angles.system === 'placidus' ? 'Placidus houses' : 'whole-sign houses'}
+        </p>
+      ) : (
+        <button
+          type="button"
+          onClick={editProfile}
+          className="-mt-2 px-1 text-left text-xs text-gold-300"
+        >
+          Add your birth place for the Ascendant & houses →
+        </button>
+      )}
 
       {/* ---- the wheel ---- */}
       <div className="glass-panel flex justify-center p-3">
@@ -361,7 +341,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
           )}
         </ul>
       </section>
-    </div>
+    </Screen>
   )
 }
 

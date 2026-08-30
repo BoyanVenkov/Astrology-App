@@ -325,7 +325,7 @@ export type PremiumTier = 'free' | 'pro'
 
 /* --------------------------------------------------------------- navigation */
 
-export type TabKey = 'today' | 'sky' | 'apothecary' | 'you'
+export type TabKey = 'today' | 'sky' | 'tarot' | 'you'
 
 /**
  * The persisted, resumable state of a user's alignment session.

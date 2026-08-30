@@ -1,6 +1,7 @@
 import { useAppStore } from '../store/useAppStore'
 import { ALL_CRYSTALS } from '../data/esoteric'
 import { chakraName } from '../lib/resonanceData'
+import { Screen } from './Screen'
 
 interface MarketplaceProps {
   onBack: () => void
@@ -36,26 +37,12 @@ export function Marketplace({ onBack }: MarketplaceProps) {
   ].slice(0, 10)
 
   return (
-    <div className="flex flex-col gap-5">
-      <button
-        type="button"
-        onClick={onBack}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
-
-      <header className="px-1">
-        <p className="eyebrow">Shop</p>
-        <h1 className="mt-1 font-serif text-2xl text-gilded">
-          The Apothecary Shop
-        </h1>
-        <p className="mt-1 text-sm text-haze-300">
-          Stones for {transit ? chakraName(transit.resonantChakra) : 'your'} work,
-          and deep-dive courses.
-        </p>
-      </header>
-
+    <Screen
+      eyebrow="Shop"
+      title="The Apothecary Shop"
+      subtitle={`Stones for ${transit ? chakraName(transit.resonantChakra) : 'your'} work, and deep-dive courses.`}
+      onBack={onBack}
+    >
       <section>
         <p className="eyebrow mb-2 px-1">Recommended stones</p>
         <div className="flex flex-col gap-2">
@@ -126,6 +113,6 @@ export function Marketplace({ onBack }: MarketplaceProps) {
           One-time purchases · lifetime access. Coming with the next release.
         </p>
       </section>
-    </div>
+    </Screen>
   )
 }

@@ -8,6 +8,7 @@ import {
 } from '../lib/notifications'
 import { locationIsFresh, requestCurrentLocation } from '../lib/location'
 import { useEntitlements } from '../lib/premium'
+import { Screen } from './Screen'
 
 interface SettingsProps {
   onBack: () => void
@@ -155,19 +156,7 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <button
-        type="button"
-        onClick={onBack}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
-      <header className="px-1">
-        <p className="eyebrow">Settings</p>
-        <h1 className="mt-1 font-serif text-2xl text-gilded">Attune the app</h1>
-      </header>
-
+    <Screen eyebrow="Settings" title="Attune the app" onBack={onBack}>
       <Section title="Sound">
         <Row>
           <div className="py-3">
@@ -483,6 +472,6 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
       <p className="px-1 pb-2 text-center text-[11px] text-haze-500">
         Resonance · tier {tier}
       </p>
-    </div>
+    </Screen>
   )
 }

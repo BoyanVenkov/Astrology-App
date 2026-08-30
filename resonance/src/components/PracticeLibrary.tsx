@@ -6,6 +6,7 @@ import { MEDITATION_STYLES } from '../lib/meditation'
 import { useEntitlements } from '../lib/premium'
 import { chakraColor } from '../lib/resonanceData'
 import { LockIcon } from './icons'
+import { Screen } from './Screen'
 import type {
   BreathCategory,
   MeditationCategory,
@@ -135,26 +136,12 @@ export function PracticeLibrary({
   const shownMeds = meditations.filter((m) => cat === 'all' || m.category === cat)
 
   return (
-    <div className="flex flex-col gap-4">
-      <button
-        type="button"
-        onClick={onBack}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
-
-      <header className="px-1">
-        <p className="eyebrow">Practice Library</p>
-        <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
-          Choose how you want to sit
-        </h1>
-        <p className="mt-1 text-sm text-haze-300">
-          {breaths.length} breath patterns · {meditations.length} meditations ·{' '}
-          {SOLFEGGIO_PRESETS.length} tones
-        </p>
-      </header>
-
+    <Screen
+      eyebrow="Practice Library"
+      title="Choose how you want to sit"
+      subtitle={`${breaths.length} breath patterns · ${meditations.length} meditations · ${SOLFEGGIO_PRESETS.length} tones`}
+      onBack={onBack}
+    >
       <div className="grid grid-cols-3 gap-2">
         {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((t) => (
           <button
@@ -315,6 +302,6 @@ export function PracticeLibrary({
             )
           })}
       </div>
-    </div>
+    </Screen>
   )
 }

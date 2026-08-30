@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { TodaysPractice } from './TodaysPractice'
 import type { Prescription } from '../lib/prescription'
@@ -10,30 +11,26 @@ interface PracticeSheetProps {
   onLibrary: () => void
 }
 
-function Item({
+function Row({
   title,
   sub,
   onClick,
-  accent,
 }: {
   title: string
   sub: string
   onClick: () => void
-  accent?: boolean
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`glass-panel flex items-center justify-between p-4 text-left transition active:scale-[0.98] ${
-        accent ? 'glass-panel-active' : ''
-      }`}
+      className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-left transition active:scale-[0.98]"
     >
       <span>
-        <span className="font-serif text-lg text-white">{title}</span>
-        <span className="block text-xs text-haze-300">{sub}</span>
+        <span className="font-serif text-base text-white">{title}</span>
+        <span className="block text-xs text-haze-400">{sub}</span>
       </span>
-      <span style={{ color: 'var(--rz-hue)' }}>›</span>
+      <span className="text-haze-500">›</span>
     </button>
   )
 }
@@ -47,6 +44,13 @@ export function PracticeSheet({
   const doneToday = useAppStore(
     (s) => s.sessionLog.filter((x) => x.completed).length > 0,
   )
+
+  // close on Escape / back gesture without losing the scrim tap
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   return (
     <div
@@ -64,8 +68,11 @@ export function PracticeSheet({
         }}
       >
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20" />
-        <p className="eyebrow">Practice</p>
-        <h2 className="mt-1 font-serif text-2xl text-gilded">
+
+        <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+          {prescription.urgent ? 'Restore first' : "Today's practice"}
+        </p>
+        <h2 className="mt-1 font-serif text-2xl leading-snug text-gilded">
           {prescription.headline}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-haze-300">
@@ -76,24 +83,13 @@ export function PracticeSheet({
           <TodaysPractice variant="inline" onLaunch={onRitual} />
         </div>
 
-        <div className="mt-3 flex flex-col gap-2">
-          <Item
-            title="Practice library"
-            sub="Every breathwork pattern & guided meditation"
+        <div className="mt-4 flex flex-col gap-2">
+          <Row
+            title="Full library"
+            sub="12 breath patterns · 12 meditations · 8 tones"
             onClick={onLibrary}
           />
-          <Item
-            title="Frequency session"
-            sub={`Sit with ${prescription.frequency} Hz for the ${prescription.chakraLabel}`}
-            onClick={() =>
-              onRitual({
-                mode: 'frequency',
-                frequency: prescription.frequency,
-                minutes: 10,
-              })
-            }
-          />
-          <Item
+          <Row
             title="2-minute reset"
             sub={doneToday ? 'A quick top-up' : 'Ground your energy fast'}
             onClick={() =>

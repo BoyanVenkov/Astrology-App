@@ -159,8 +159,8 @@ function SkyScene() {
   )
 }
 
-/** Stones — a crystalline diamond lattice with faceted prisms at the base. */
-function ApothecaryScene() {
+/** Tarot — three faint dealt cards under a lattice of stars. */
+function TarotBackdropScene() {
   return (
     <svg
       viewBox={VB}
@@ -170,36 +170,24 @@ function ApothecaryScene() {
       style={{ color: 'var(--rz-hue)' }}
     >
       <defs>
-        <radialGradient id="rz-stone" cx="50%" cy="100%" r="68%">
+        <radialGradient id="rz-tarot" cx="50%" cy="8%" r="60%">
           <stop offset="0%" stopColor="currentColor" stopOpacity="0.15" />
-          <stop offset="58%" stopColor="currentColor" stopOpacity="0.03" />
+          <stop offset="55%" stopColor="currentColor" stopOpacity="0.03" />
           <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </radialGradient>
-        <pattern
-          id="rz-lattice"
-          width="46"
-          height="46"
-          patternUnits="userSpaceOnUse"
-        >
-          <path
-            d="M23 0 46 23 23 46 0 23Z"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          />
-        </pattern>
       </defs>
-      <rect width="400" height="860" fill="url(#rz-stone)" />
-      <rect width="400" height="860" fill="url(#rz-lattice)" opacity="0.055" />
+      <rect width="400" height="860" fill="url(#rz-tarot)" />
 
-      <g fill="none" stroke="currentColor" strokeOpacity="0.12" strokeLinejoin="round">
-        <path d="M70 860V636l30-52 30 52v224M70 636h60M100 584v276" />
-        <path d="M250 860V700l36-72 36 72v160M250 700h72M286 628v232" />
-        <path d="M182 860v-92l20-34 20 34v92M182 768h40M202 734v126" opacity="0.7" />
+      <g fill="none" stroke="currentColor" strokeOpacity="0.09" strokeLinejoin="round">
+        <rect x="42" y="150" width="150" height="250" rx="14" transform="rotate(-9 117 275)" />
+        <rect x="128" y="120" width="150" height="250" rx="14" />
+        <rect x="214" y="150" width="150" height="250" rx="14" transform="rotate(9 289 275)" />
       </g>
 
-      <Spark x={104} y={150} size={5} twinkle />
-      <Spark x={300} y={250} size={4} opacity={0.3} />
+      <Spark x={200} y={92} size={9} twinkle />
+      <Spark x={70} y={540} size={5} opacity={0.3} />
+      <Spark x={330} y={620} size={6} twinkle delay={1.4} />
+      <Spark x={150} y={730} size={4} opacity={0.26} />
     </svg>
   )
 }
@@ -253,8 +241,8 @@ export function TabBackdrop({ tab }: { tab: TabKey }) {
   switch (tab) {
     case 'sky':
       return <SkyScene />
-    case 'apothecary':
-      return <ApothecaryScene />
+    case 'tarot':
+      return <TarotBackdropScene />
     case 'you':
       return <YouScene />
     default:

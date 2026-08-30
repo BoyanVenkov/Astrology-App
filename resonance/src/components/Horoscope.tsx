@@ -2,6 +2,7 @@ import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
 import { clockHM, geoContext } from '../lib/geo'
 import { chakraColor } from '../lib/resonanceData'
+import { Screen } from './Screen'
 import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset } from '../types/resonance'
 
@@ -62,22 +63,12 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
   const accent = chakraColor(chakra.key)
 
   return (
-    <div className="flex flex-col gap-4">
-      <button
-        type="button"
-        onClick={onBack}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
-
-      <header className="px-1">
-        <p className="eyebrow">Daily Horoscope</p>
-        <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
-          {transit.title}
-        </h1>
-        <p className="mt-1 text-sm text-haze-300">{horoscope.greeting}</p>
-      </header>
+    <Screen
+      eyebrow="Daily Horoscope"
+      title={transit.title}
+      subtitle={horoscope.greeting}
+      onBack={onBack}
+    >
 
       <section className="glass-panel p-5">
         <p className="text-sm leading-relaxed text-haze-200">
@@ -157,12 +148,9 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
           {horoscope.practice}
         </p>
         <div className="mt-4">
-          <TodaysPractice
-            variant="inline"
-            onLaunch={onRitual}
-          />
+          <TodaysPractice variant="inline" onLaunch={onRitual} />
         </div>
       </section>
-    </div>
+    </Screen>
   )
 }

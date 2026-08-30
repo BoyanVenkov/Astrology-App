@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { Aura } from './Aura'
-import { auraLabel, computeAura } from '../lib/aura'
+import { computeAura } from '../lib/aura'
 import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
-import { chakraName, zodiacGlyph } from '../lib/resonanceData'
+import { chakraName } from '../lib/resonanceData'
 import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { planetSymbol } from '../data/esoteric'
@@ -17,14 +17,17 @@ interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
   onPracticeSheet: () => void
   onTab: (tab: TabKey) => void
-  onTarot: () => void
+  onStones: () => void
 }
+
+const greetingFor = (h: number): string =>
+  h < 5 ? 'Still night' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'
 
 export function Dashboard({
   onRitual,
   onPracticeSheet,
   onTab,
-  onTarot,
+  onStones,
 }: DashboardProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
@@ -47,6 +50,13 @@ export function Dashboard({
     () => moonVoidOfCourseCached(new Date(bucket * 300_000)),
     [bucket],
   )
+  const [when] = useState(() => {
+    const d = new Date()
+    return {
+      greeting: greetingFor(d.getHours()),
+      date: d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }),
+    }
+  })
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focusChakra, sessionLog, moodLog, biometricLog)
@@ -59,8 +69,7 @@ export function Dashboard({
   const tarotDrawn = tarotDrawnDay === localDayKey()
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* void of course */}
+    <div className="flex flex-col gap-5">
       {vocSoon && (
         <button
           type="button"
@@ -80,98 +89,87 @@ export function Dashboard({
         </button>
       )}
 
-      {/* the prescription */}
-      <section
-        className="glass-panel glass-panel-active p-5"
-        style={{
-          boxShadow: rx.urgent
-            ? '0 0 40px -8px rgba(248,113,113,0.4)'
-            : '0 0 44px -10px var(--rz-glow)',
-        }}
-      >
-        <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-          {rx.urgent ? 'Restore first' : `Today · ${rx.chakraLabel} focus`}
+      <header className="px-1">
+        <p className="text-[11px] uppercase tracking-[0.16em] text-haze-500">
+          {when.greeting} · {when.date}
         </p>
-        <h1 className="mt-1 font-serif text-2xl leading-snug text-gilded">
+        <h1 className="mt-1.5 font-serif text-[1.7rem] leading-tight text-gilded">
           {transit ? rx.headline : 'Attuning to the sky…'}
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-haze-200">
-          {rx.directive}
-        </p>
+      </header>
 
-        <div className="mt-4 flex flex-wrap gap-2 text-xs">
-          <span className="rounded-full border border-white/12 bg-white/5 px-3 py-1 tabular-nums text-haze-100">
-            {rx.minutes} min · {rx.frequency} Hz
-          </span>
-          <span className="rounded-full border border-white/12 bg-white/5 px-3 py-1 text-haze-100">
-            {rx.breathLabel}
-          </span>
-          {heroStone && (
-            <span className="flex items-center gap-1.5 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-haze-100">
-              <span
-                className="h-2 w-2 rounded-full"
-                style={{ background: heroStone.color }}
-              />
-              {heroStone.name}
-            </span>
-          )}
+      {/* the quiet centre of the day */}
+      {rx.mantra && (
+        <div className="px-3 text-center">
+          <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+            Today’s mantra
+          </p>
+          <p className="mt-2 font-serif text-[1.6rem] leading-snug text-gilded">
+            “{rx.mantra}”
+          </p>
         </div>
+      )}
 
-        <div className="mt-4">
-          <TodaysPractice variant="inline" onLaunch={onRitual} />
-        </div>
-        <button
-          type="button"
-          onClick={onPracticeSheet}
-          className="mt-3 text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
-        >
-          {doneToday ? 'Practise again' : 'More ways to practise'} →
-        </button>
-      </section>
+      {/* the day's one action */}
+      <TodaysPractice variant="full" onLaunch={onRitual} />
+      <button
+        type="button"
+        onClick={onPracticeSheet}
+        className="-mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+      >
+        {doneToday ? 'Practise again' : 'More ways to practise'} →
+      </button>
 
-      {/* aura + the day's mantra */}
-      <div className="flex flex-col gap-2.5">
+      {/* the day at a glance */}
+      <section className="glass-panel grid grid-cols-3 divide-x divide-white/8 p-3">
         <button
           type="button"
           onClick={() => onTab('you')}
-          className="glass-panel flex items-center gap-4 p-4 text-left active:scale-[0.99]"
+          className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
         >
-          <Aura state={aura} size={72} className="h-16 w-16 shrink-0" />
-          <div className="min-w-0 flex-1">
-            <p className="eyebrow">Your aura</p>
-            <p className="font-serif text-lg text-white">
-              {auraLabel(aura.score)}
-              <span className="ml-2 text-sm text-haze-400">
-                {Math.round(aura.score * 100)}%
-              </span>
-            </p>
-            {aura.needsRest ? (
-              <p className="text-xs text-red-300">Body’s run down — go gently</p>
-            ) : (
-              <p className="text-xs text-haze-400">
-                {aura.streak > 0
-                  ? `${aura.streak}-day streak`
-                  : 'Begin a streak today'}
-              </p>
-            )}
-          </div>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          <Aura state={aura} size={40} className="h-10 w-10" />
+          <span className="eyebrow">Aura</span>
+          <span className="text-xs tabular-nums text-haze-300">
+            {Math.round(aura.score * 100)}%
+          </span>
         </button>
+        <button
+          type="button"
+          onClick={() => onTab('sky')}
+          className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
+        >
+          <span className="text-xl leading-none text-haze-100" aria-hidden>
+            {transit ? planetSymbol(transit.body) : '✦'}
+          </span>
+          <span className="eyebrow">Sky</span>
+          <span className="truncate text-xs text-haze-300">
+            {chakraName(focusChakra)}
+            {focusPlanet?.retrograde ? ' ℞' : ''}
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={onStones}
+          className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
+        >
+          <span
+            className="h-4 w-4 rounded-full"
+            style={{
+              background: heroStone?.color ?? 'var(--rz-hue)',
+              boxShadow: `0 0 10px ${heroStone?.color ?? 'var(--rz-glow)'}`,
+            }}
+          />
+          <span className="eyebrow">Stone</span>
+          <span className="w-full truncate px-1 text-center text-xs text-haze-300">
+            {heroStone?.name ?? '—'}
+          </span>
+        </button>
+      </section>
 
-        {rx.mantra && (
-          <div className="pt-1 text-center">
-            <p className="eyebrow">Today’s mantra</p>
-            <p className="mt-1.5 px-2 font-serif text-xl leading-snug text-gilded">
-              “{rx.mantra}”
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* daily tarot */}
+      {/* tarot */}
       <button
         type="button"
-        onClick={onTarot}
+        onClick={() => onTab('tarot')}
         className="glass-panel flex items-center gap-3 p-4 text-left active:scale-[0.99]"
       >
         <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
@@ -186,55 +184,13 @@ export function Dashboard({
         <span style={{ color: 'var(--rz-hue)' }}>›</span>
       </button>
 
-      {/* today's sky */}
-      {transit && (
+      {!hasNatal && (
         <button
           type="button"
           onClick={() => onTab('sky')}
-          className="glass-panel p-4 text-left active:scale-[0.99]"
+          className="text-center text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
         >
-          <p className="eyebrow">Today’s sky</p>
-          <p className="mt-1 font-serif text-lg text-white">
-            {transit.body} <span aria-hidden>{planetSymbol(transit.body)}</span>
-            {focusPlanet?.retrograde && (
-              <span className="ml-1 align-super text-xs text-haze-300">℞</span>
-            )}
-            <span className="text-haze-400"> · </span>
-            {chakraName(focusChakra)}
-          </p>
-          <p className="mt-0.5 text-sm text-haze-300">
-            {transit.title} · {transit.moonPhase} {transit.illumination}%{' '}
-            {focusPlanet && (
-              <span aria-hidden>{zodiacGlyph(focusPlanet.sign)}</span>
-            )}
-          </p>
-          {!hasNatal && (
-            <p className="mt-1 text-xs text-gold-300">
-              Add your birth details for a personal reading →
-            </p>
-          )}
-        </button>
-      )}
-
-      {/* one stone */}
-      {heroStone && (
-        <button
-          type="button"
-          onClick={() => onTab('apothecary')}
-          className="glass-panel flex items-center gap-3 p-4 text-left active:scale-[0.99]"
-        >
-          <span
-            className="h-3 w-3 shrink-0 rounded-full"
-            style={{
-              background: heroStone.color,
-              boxShadow: `0 0 10px ${heroStone.color}`,
-            }}
-          />
-          <div className="min-w-0 flex-1">
-            <p className="font-serif text-lg text-white">{heroStone.name}</p>
-            <p className="text-xs text-haze-300">Keep it {heroStone.placement}</p>
-          </div>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          Add your birth details for a personal reading →
         </button>
       )}
     </div>

@@ -119,3 +119,21 @@ export function CardsIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function TarotIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="5" y="3" width="14" height="18" rx="2.5" />
+      <path d="M12 7.5c.6 2.6 1.7 3.7 4.3 4.3-2.6.6-3.7 1.7-4.3 4.3-.6-2.6-1.7-3.7-4.3-4.3 2.6-.6 3.7-1.7 4.3-4.3Z" />
+    </svg>
+  )
+}
+
+export function CompassIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M15.5 8.5 13 13l-4.5 2.5L11 11Z" />
+    </svg>
+  )
+}

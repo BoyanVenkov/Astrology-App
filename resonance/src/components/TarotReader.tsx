@@ -11,10 +11,12 @@ import {
   type TarotReading,
 } from '../lib/tarot'
 import { localDayKey } from '../lib/timezone'
+import { BackButton } from './Screen'
 import { TarotCardBack, TarotCardFace } from './TarotCard'
 
 interface TarotReaderProps {
-  onBack: () => void
+  /** Only set when Tarot is pushed as a sub-screen; as a tab there's nowhere back. */
+  onBack?: () => void
 }
 
 type View = 'daily' | 'choose' | 'table'
@@ -136,13 +138,7 @@ export function TarotReader({ onBack }: TarotReaderProps) {
     const d = daily.cards[0]
     return (
       <div className="flex flex-col gap-4">
-        <button
-          type="button"
-          onClick={onBack}
-          className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-        >
-          ‹ Back
-        </button>
+        {onBack && <BackButton onClick={onBack} />}
 
         <header className="px-1">
           <p className="eyebrow">Tarot</p>
@@ -196,13 +192,7 @@ export function TarotReader({ onBack }: TarotReaderProps) {
   if (view === 'choose') {
     return (
       <div className="flex flex-col gap-4">
-        <button
-          type="button"
-          onClick={() => setView('daily')}
-          className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-        >
-          ‹ Back
-        </button>
+        <BackButton onClick={() => setView('daily')} />
 
         <header className="px-1">
           <p className="eyebrow">Tarot</p>
@@ -248,13 +238,7 @@ export function TarotReader({ onBack }: TarotReaderProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <button
-        type="button"
-        onClick={() => setView('choose')}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Spreads
-      </button>
+      <BackButton onClick={() => setView('choose')} />
 
       <header className="px-1">
         <p className="eyebrow">Tarot · {spread.name}</p>
@@ -331,7 +315,7 @@ export function TarotReader({ onBack }: TarotReaderProps) {
               </button>
               <button
                 type="button"
-                onClick={onBack}
+                onClick={() => (onBack ? onBack() : setView('daily'))}
                 className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-haze-200"
               >
                 Done

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { bodyState } from '../lib/biometrics'
 import { localDayKey } from '../lib/timezone'
+import { BackButton } from './Screen'
 
 interface BodyCheckInProps {
   onDone: () => void
@@ -122,13 +123,7 @@ export function BodyCheckIn({ onDone, compact = false }: BodyCheckInProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <button
-        type="button"
-        onClick={onDone}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
+      <BackButton onClick={onDone} />
       <header className="px-1">
         <p className="eyebrow">Body reading</p>
         <h1 className="mt-1 font-serif text-2xl text-gilded">

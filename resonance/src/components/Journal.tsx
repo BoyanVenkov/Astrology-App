@@ -8,6 +8,7 @@ import { useEntitlements } from '../lib/premium'
 import { chakraName } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
+import { BackButton } from './Screen'
 import type { Mood } from '../types/resonance'
 
 interface JournalProps {
@@ -75,13 +76,7 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
 
   return (
     <div className="flex flex-col gap-5">
-      <button
-        type="button"
-        onClick={onBack}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
+      <BackButton onClick={onBack} />
 
       <header className="flex flex-col items-center text-center">
         <Aura state={aura} size={200} className="h-48 w-48" />

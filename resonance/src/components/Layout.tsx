@@ -3,13 +3,15 @@ import type { TabKey } from '../types/resonance'
 import { useDayHue } from '../lib/dayhue'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
-import { ApothecaryIcon, DashboardIcon, SkyIcon } from './icons'
+import { DashboardIcon, GearIcon, SkyIcon, TarotIcon } from './icons'
 
 interface LayoutProps {
   active: TabKey
   onTabChange: (tab: TabKey) => void
   onPractice: () => void
   practiceLabel: string
+  /** Renders the settings gear in the top chrome when set (tab roots only). */
+  onSettings?: () => void
   children: ReactNode
 }
 
@@ -38,7 +40,7 @@ const LEFT: TabDef[] = [
   { key: 'sky', label: 'Sky', Icon: SkyIcon },
 ]
 const RIGHT: TabDef[] = [
-  { key: 'apothecary', label: 'Stones', Icon: ApothecaryIcon },
+  { key: 'tarot', label: 'Tarot', Icon: TarotIcon },
   { key: 'you', label: 'You', Icon: YouIcon },
 ]
 
@@ -57,14 +59,20 @@ function Tab({
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className="flex min-h-[3.25rem] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors"
+      className="relative flex min-h-[3.25rem] flex-1 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] transition-colors"
       style={{
-        color: active ? 'var(--rz-hue)' : 'rgba(154,166,201,0.75)',
+        color: active ? 'var(--rz-hue)' : 'rgba(154,166,201,0.7)',
         filter: active ? 'drop-shadow(0 0 8px var(--rz-glow))' : undefined,
       }}
     >
-      <Icon className="h-5 w-5" />
+      <Icon className="h-[1.35rem] w-[1.35rem]" />
       <span>{def.label}</span>
+      {active && (
+        <span
+          className="absolute -bottom-0.5 h-1 w-1 rounded-full"
+          style={{ background: 'var(--rz-hue)' }}
+        />
+      )}
     </button>
   )
 }
@@ -74,6 +82,7 @@ export function Layout({
   onTabChange,
   onPractice,
   practiceLabel,
+  onSettings,
   children,
 }: LayoutProps) {
   useDayHue()
@@ -89,9 +98,21 @@ export function Layout({
       </div>
 
       <div style={{ height: 'env(safe-area-inset-top)' }} aria-hidden />
-      <div className="relative z-10 flex items-center justify-center py-2.5">
-        <ResonanceLockup />
-      </div>
+      {onSettings ? (
+        <div className="relative z-10 flex items-center justify-center px-3 py-2.5">
+          <ResonanceLockup />
+          <button
+            type="button"
+            onClick={onSettings}
+            aria-label="Settings"
+            className="absolute right-2 grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-haze-300 transition active:scale-90 active:bg-white/10"
+          >
+            <GearIcon className="h-[1.2rem] w-[1.2rem]" />
+          </button>
+        </div>
+      ) : (
+        <div className="h-3" aria-hidden />
+      )}
 
       <main
         className="relative z-10 flex-1 px-4"
@@ -105,7 +126,7 @@ export function Layout({
         style={{
           background:
             'linear-gradient(180deg, rgba(7,11,28,0.78), rgba(3,4,12,0.94))',
-          borderColor: 'color-mix(in srgb, var(--rz-hue) 25%, transparent)',
+          borderColor: 'color-mix(in srgb, var(--rz-hue) 22%, transparent)',
           paddingBottom: 'env(safe-area-inset-bottom)',
         }}
       >

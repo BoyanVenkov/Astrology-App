@@ -114,7 +114,7 @@ export function TodaysPractice({
       style={{ boxShadow: '0 0 32px -12px var(--rz-glow)' }}
     >
       <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-        {rx.urgent ? 'Restore first' : `Today · ${rx.chakraLabel} focus`}
+        {rx.urgent ? 'Restore first' : 'Today’s practice'}
       </p>
       {showDirective && (
         <p className="mt-1.5 text-sm leading-relaxed text-haze-200">

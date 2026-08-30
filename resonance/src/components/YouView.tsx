@@ -69,7 +69,11 @@ export function YouView({ onOpen, onUpgrade, onRitual }: YouViewProps) {
         </p>
       </header>
 
-      <TodaysPractice variant="full" onLaunch={onRitual} />
+      <TodaysPractice
+        variant="full"
+        showDirective={false}
+        onLaunch={onRitual}
+      />
 
       <section className="glass-panel grid grid-cols-3 divide-x divide-white/8 p-4">
         <Tile label="day streak" value={String(streak)} onClick={() => onOpen('journal')} />
@@ -111,7 +115,12 @@ export function YouView({ onOpen, onUpgrade, onRitual }: YouViewProps) {
         onClick={() => onOpen('journal')}
         className="glass-panel flex items-center justify-between p-4 text-left"
       >
-        <span className="font-serif text-lg text-white">Journal</span>
+        <span>
+          <span className="font-serif text-lg text-white">Journal</span>
+          <span className="block text-xs text-haze-300">
+            Your practice history & aura over time
+          </span>
+        </span>
         <span style={{ color: 'var(--rz-hue)' }}>›</span>
       </button>
 
@@ -134,9 +143,10 @@ export function YouView({ onOpen, onUpgrade, onRitual }: YouViewProps) {
       <button
         type="button"
         onClick={() => onOpen('settings')}
-        className="text-center text-xs uppercase tracking-[0.14em] text-haze-500"
+        className="glass-panel flex items-center justify-between p-4 text-left"
       >
-        Settings
+        <span className="font-serif text-lg text-white">Settings</span>
+        <span style={{ color: 'var(--rz-hue)' }}>›</span>
       </button>
     </div>
   )

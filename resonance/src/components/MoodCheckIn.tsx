@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { MOOD_LIST, MOOD_META } from '../lib/aura'
 import { localDayKey } from '../lib/timezone'
+import { BackButton } from './Screen'
 import type { Mood } from '../types/resonance'
 
 interface MoodCheckInProps {
@@ -92,13 +93,7 @@ export function MoodCheckIn({
 
   return (
     <div className="flex flex-col gap-4">
-      <button
-        type="button"
-        onClick={onDone}
-        className="self-start text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        ‹ Back
-      </button>
+      <BackButton onClick={onDone} />
 
       <header className="px-1">
         <p className="eyebrow">Evening check-in</p>

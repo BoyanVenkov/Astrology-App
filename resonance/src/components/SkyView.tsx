@@ -7,12 +7,13 @@ import { planetSymbol } from '../data/esoteric'
 import { SIGNS } from '../lib/ephemeris'
 import { CardsIcon } from './icons'
 import { TodaysPractice } from './TodaysPractice'
-import type { RitualPreset } from '../types/resonance'
+import type { RitualPreset, TabKey } from '../types/resonance'
 
 interface SkyViewProps {
+  onTab: (tab: TabKey) => void
   onOpenChart: () => void
   onOpenHoroscope: () => void
-  onOpenTarot: () => void
+  onOpenStones: () => void
   onRitual: (preset: RitualPreset) => void
 }
 
@@ -35,14 +36,16 @@ const fmtDay = (d: Date): string =>
   d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
 export function SkyView({
+  onTab,
   onOpenChart,
   onOpenHoroscope,
-  onOpenTarot,
+  onOpenStones,
   onRitual,
 }: SkyViewProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
+  const dailyCrystals = useAppStore((s) => s.dailyCrystals)
   const sky = useAppStore((s) => s.sky)
   const nowAngles = useAppStore((s) => s.nowAngles)
   const transitHouses = useAppStore((s) => s.transitHouses)
@@ -93,7 +96,7 @@ export function SkyView({
       </header>
 
       {/* practise this sky */}
-      <TodaysPractice variant="full" onLaunch={onRitual} />
+      <TodaysPractice variant="full" showDirective={false} onLaunch={onRitual} />
 
       {/* right now over you */}
       <section className="glass-panel p-4">
@@ -174,29 +177,12 @@ export function SkyView({
         )}
       </section>
 
-      <button
-        type="button"
-        onClick={onOpenTarot}
-        className="glass-panel glass-panel-active flex items-center gap-3 p-4 text-left active:scale-[0.99]"
-      >
-        <CardsIcon className="h-6 w-6" style={{ color: 'var(--rz-hue)' }} />
-        <div className="min-w-0 flex-1">
-          <p className="eyebrow">Tarot</p>
-          <p className="mt-0.5 font-serif text-lg text-white">
-            Your card for today
-          </p>
-          <p className="text-xs text-haze-300">
-            Plus three-card and Celtic Cross spreads
-          </p>
-        </div>
-        <span style={{ color: 'var(--rz-hue)' }}>›</span>
-      </button>
-
+      {/* go deeper */}
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
           onClick={onOpenHoroscope}
-          className="glass-panel p-4 text-left"
+          className="glass-panel p-4 text-left active:scale-[0.99]"
         >
           <span className="font-serif text-lg text-white">Full horoscope</span>
           <span className="block text-xs text-haze-300">Today, in detail</span>
@@ -204,7 +190,7 @@ export function SkyView({
         <button
           type="button"
           onClick={onOpenChart}
-          className="glass-panel p-4 text-left"
+          className="glass-panel p-4 text-left active:scale-[0.99]"
         >
           <span className="font-serif text-lg text-white">
             {hasNatal ? 'Natal chart' : 'Birth chart'}
@@ -212,6 +198,41 @@ export function SkyView({
           <span className="block text-xs text-haze-300">
             {hasNatal ? 'Your birth sky' : 'Add your details'}{' '}
             <span aria-hidden>{zodiacGlyph(transit.sign)}</span>
+          </span>
+        </button>
+        {dailyCrystals.length > 0 && (
+          <button
+            type="button"
+            onClick={onOpenStones}
+            className="glass-panel flex items-center gap-2 p-4 text-left active:scale-[0.99]"
+          >
+            <span
+              className="h-3 w-3 shrink-0 rounded-full"
+              style={{
+                background: dailyCrystals[0].color,
+                boxShadow: `0 0 10px ${dailyCrystals[0].color}`,
+              }}
+            />
+            <span className="min-w-0">
+              <span className="block font-serif text-lg text-white">Stones</span>
+              <span className="block truncate text-xs text-haze-300">
+                {dailyCrystals
+                  .slice(0, 2)
+                  .map((c) => c.name)
+                  .join(' · ')}
+              </span>
+            </span>
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => onTab('tarot')}
+          className="glass-panel flex items-center gap-2 p-4 text-left active:scale-[0.99]"
+        >
+          <CardsIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--rz-hue)' }} />
+          <span className="min-w-0">
+            <span className="block font-serif text-lg text-white">Tarot</span>
+            <span className="block text-xs text-haze-300">Today’s card & spreads</span>
           </span>
         </button>
       </div>
