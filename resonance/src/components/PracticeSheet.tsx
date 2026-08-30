@@ -1,19 +1,13 @@
 import { useAppStore } from '../store/useAppStore'
-import { useEntitlements } from '../lib/premium'
+import { TodaysPractice } from './TodaysPractice'
 import type { Prescription } from '../lib/prescription'
-import type { PracticeKind } from '../types/resonance'
-
-export interface RitualLaunch {
-  mode: PracticeKind
-  minutes: number
-  skipIntro?: boolean
-}
+import type { RitualPreset } from '../types/resonance'
 
 interface PracticeSheetProps {
   prescription: Prescription
   onClose: () => void
-  onRitual: (launch: RitualLaunch) => void
-  onFrequency: () => void
+  onRitual: (launch: RitualPreset) => void
+  onLibrary: () => void
 }
 
 function Item({
@@ -48,12 +42,11 @@ export function PracticeSheet({
   prescription,
   onClose,
   onRitual,
-  onFrequency,
+  onLibrary,
 }: PracticeSheetProps) {
   const doneToday = useAppStore(
     (s) => s.sessionLog.filter((x) => x.completed).length > 0,
   )
-  const { isPro } = useEntitlements()
 
   return (
     <div
@@ -75,32 +68,30 @@ export function PracticeSheet({
         <h2 className="mt-1 font-serif text-2xl text-gilded">
           {prescription.headline}
         </h2>
+        <p className="mt-2 text-sm leading-relaxed text-haze-300">
+          {prescription.directive}
+        </p>
 
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="mt-4">
+          <TodaysPractice variant="inline" onLaunch={onRitual} />
+        </div>
+
+        <div className="mt-3 flex flex-col gap-2">
           <Item
-            accent
-            title={prescription.urgent ? 'Restore now' : "Today's ritual"}
-            sub={`${prescription.minutes} min · ${prescription.frequency} Hz · ${prescription.breathLabel}`}
+            title="Practice library"
+            sub="Every breathwork pattern & guided meditation"
+            onClick={onLibrary}
+          />
+          <Item
+            title="Frequency session"
+            sub={`Sit with ${prescription.frequency} Hz for the ${prescription.chakraLabel}`}
             onClick={() =>
-              onRitual({ mode: 'meditation', minutes: prescription.minutes })
+              onRitual({
+                mode: 'frequency',
+                frequency: prescription.frequency,
+                minutes: 10,
+              })
             }
-          />
-          <Item
-            title="Breathwork"
-            sub={`${prescription.breathLabel} · ${prescription.breathRatio}`}
-            onClick={() => onRitual({ mode: 'breath', minutes: 6 })}
-          />
-          <Item
-            title="Meditation"
-            sub={`Guided · ${prescription.chakraLabel}`}
-            onClick={() => onRitual({ mode: 'meditation', minutes: 10 })}
-          />
-          <Item
-            title="Frequency"
-            sub={
-              isPro ? 'Full Solfeggio library' : `${prescription.frequency} Hz + 2 more`
-            }
-            onClick={onFrequency}
           />
           <Item
             title="2-minute reset"

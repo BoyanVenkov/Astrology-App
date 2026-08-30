@@ -123,6 +123,19 @@ export default {
           from: { opacity: '0', transform: 'translateY(10px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        /* a sound wave rippling outward — the frequency session */
+        'freq-ring': {
+          '0%': { transform: 'scale(0.3)', opacity: '0' },
+          '15%': { opacity: '0.55' },
+          '100%': { transform: 'scale(1.12)', opacity: '0' },
+        },
+        /* the deck riffling during a shuffle */
+        'card-shuffle': {
+          '0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
+          '25%': { transform: 'translateX(-15px) rotate(-7deg)' },
+          '50%': { transform: 'translateX(11px) rotate(5deg)' },
+          '75%': { transform: 'translateX(-6px) rotate(-2deg)' },
+        },
       },
       animation: {
         'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
@@ -133,6 +146,8 @@ export default {
         twinkle: 'twinkle 5s ease-in-out infinite',
         hum: 'hum 5s ease-in-out infinite',
         'rise-in': 'rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'freq-ring': 'freq-ring 6s ease-out infinite',
+        'card-shuffle': 'card-shuffle 0.6s ease-in-out infinite',
       },
       transitionTimingFunction: {
         resonance: 'cubic-bezier(0.22, 1, 0.36, 1)',

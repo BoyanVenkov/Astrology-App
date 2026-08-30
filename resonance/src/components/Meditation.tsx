@@ -3,11 +3,15 @@ import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import { buildMeditation } from '../lib/meditation'
 import { speak, speechAvailable, stopSpeaking } from '../lib/speech'
+import type { MeditationSound, MeditationStyleKey } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
 
 interface MeditationProps {
   minutes: number
   withVoice: boolean
+  style?: MeditationStyleKey
+  /** Sound bed: the frequency tone, soft ambient music, or nothing. */
+  sound?: MeditationSound
   onComplete: (minutesPractised: number) => void
   className?: string
 }
@@ -21,9 +25,13 @@ const mmss = (s: number): string => {
 export function Meditation({
   minutes,
   withVoice,
+  style = 'chakra',
+  sound = 'tone',
   onComplete,
   className = '',
 }: MeditationProps) {
+  // The sound bath is built around the tone — it always plays.
+  const bed: MeditationSound = style === 'sound-bath' ? 'tone' : sound
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
@@ -34,8 +42,12 @@ export function Meditation({
 
   const meditation = useMemo(() => {
     if (!transit || !chakra) return null
-    return buildMeditation({ transit, chakra, aspects, transitHouses, hasNatal }, minutes)
-  }, [transit, chakra, aspects, transitHouses, hasNatal, minutes])
+    return buildMeditation(
+      style,
+      { transit, chakra, aspects, transitHouses, hasNatal },
+      minutes,
+    )
+  }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes])
 
   const totalSeconds = minutes * 60
   const [running, setRunning] = useState(true)
@@ -54,15 +66,19 @@ export function Meditation({
 
   // start the audio bed once
   useEffect(() => {
+    if (bed === 'silent') {
+      // no engine audio — spoken / on-screen guidance only
+      return () => stopSpeaking()
+    }
     audioEngine.unlock().catch(() => undefined)
-    setAudioMode('tone')
+    setAudioMode(bed === 'music' ? 'drone' : 'tone')
     setAudioPlaying(true)
     startedRef.current = true
     return () => {
       stopSpeaking()
       if (startedRef.current) useAppStore.getState().toggleAudio(false)
     }
-  }, [setAudioMode, setAudioPlaying])
+  }, [bed, setAudioMode, setAudioPlaying])
 
   const tick = useCallback(() => {
     if (!meditation) return
@@ -136,7 +152,11 @@ export function Meditation({
           </h2>
         </div>
         <span className="rounded-full border border-gold-500/30 px-3 py-1 text-xs tracking-[0.12em] text-haze-200">
-          {meditation.frequency} Hz
+          {bed === 'tone'
+            ? `${meditation.frequency} Hz`
+            : bed === 'music'
+              ? 'Ambient music'
+              : 'Quiet'}
         </span>
       </div>
 

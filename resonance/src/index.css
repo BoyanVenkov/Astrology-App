@@ -200,3 +200,36 @@
     display: none;
   }
 }
+
+/* ------------------------------------------------------------------ *
+ *  Tarot card flip
+ * ------------------------------------------------------------------ */
+
+.tf-scene {
+  perspective: 1200px;
+}
+.tf-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tf-card.is-face {
+  transform: rotateY(180deg);
+}
+.tf-side {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.tf-side-face {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tf-card {
+    transition-duration: 0.001ms;
+  }
+}

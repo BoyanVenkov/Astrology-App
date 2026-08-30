@@ -4,18 +4,33 @@ export interface SolfeggioPreset {
   frequency: SolfeggioFrequency
   name: string
   intention: string
+  /** Identity colour for the tone. */
+  color: string
 }
 
 export const SOLFEGGIO_PRESETS: SolfeggioPreset[] = [
-  { frequency: 396, name: '396 Hz', intention: 'Release guilt & fear' },
-  { frequency: 417, name: '417 Hz', intention: 'Clear and undo change' },
-  { frequency: 432, name: '432 Hz', intention: 'Natural tuning · calm coherence' },
-  { frequency: 528, name: '528 Hz', intention: 'Transformation & repair' },
-  { frequency: 639, name: '639 Hz', intention: 'Connection & relationship' },
-  { frequency: 741, name: '741 Hz', intention: 'Expression & clarity' },
-  { frequency: 852, name: '852 Hz', intention: 'Intuition & awakening' },
-  { frequency: 963, name: '963 Hz', intention: 'Unity & higher order' },
+  { frequency: 396, name: '396 Hz', intention: 'Release guilt & fear', color: '#ef4444' },
+  { frequency: 417, name: '417 Hz', intention: 'Clear and undo change', color: '#f97316' },
+  { frequency: 432, name: '432 Hz', intention: 'Natural tuning · calm coherence', color: '#eab308' },
+  { frequency: 528, name: '528 Hz', intention: 'Transformation & repair', color: '#22c55e' },
+  { frequency: 639, name: '639 Hz', intention: 'Connection & relationship', color: '#14b8a6' },
+  { frequency: 741, name: '741 Hz', intention: 'Expression & clarity', color: '#38bdf8' },
+  { frequency: 852, name: '852 Hz', intention: 'Intuition & awakening', color: '#6366f1' },
+  { frequency: 963, name: '963 Hz', intention: 'Unity & higher order', color: '#a78bfa' },
 ]
+
+const SOLFEGGIO_EXTRA: Record<number, Omit<SolfeggioPreset, 'frequency'>> = {
+  174: { name: '174 Hz', intention: 'A gentle anaesthetic · ease pain', color: '#9f1239' },
+  285: { name: '285 Hz', intention: 'Restore tissue & field', color: '#be185d' },
+}
+
+/** Name / intention / colour for any Solfeggio value, presets or not. */
+export function solfeggioInfo(hz: number): Omit<SolfeggioPreset, 'frequency'> {
+  return (
+    SOLFEGGIO_PRESETS.find((p) => p.frequency === hz) ??
+    SOLFEGGIO_EXTRA[hz] ?? { name: `${hz} Hz`, intention: 'A tone to rest with', color: '#a78bfa' }
+  )
+}
 
 export interface AudioEngineOptions {
   fadeSeconds?: number
@@ -35,6 +50,8 @@ export interface PlayOptions {
   pad?: boolean
   /** Synthesised breathing sound (driven by `breathePhase`). Default false. */
   breath?: boolean
+  /** Soft, slowly-evolving ambient chord — the "meditation music" voice. Default false. */
+  drone?: boolean
 }
 
 type WebkitWindow = typeof window & {
@@ -70,6 +87,12 @@ export class AudioEngine {
   private breathAir: BiquadFilterNode | null = null // high "hiss" formant
   private breathAirGain: GainNode | null = null
   private breathGain: GainNode | null = null // shared envelope
+
+  private droneOscs: OscillatorNode[] = []
+  private droneLfos: OscillatorNode[] = []
+  private droneFilter: BiquadFilterNode | null = null
+  private droneGain: GainNode | null = null // shared drone level
+  private droneLevel = 0.15
 
   private brownNoise: AudioBuffer | null = null
   private pinkNoise: AudioBuffer | null = null
@@ -122,6 +145,7 @@ export class AudioEngine {
     const wantTone = options.tone ?? true
     const wantPad = options.pad ?? true
     const wantBreath = options.breath ?? false
+    const wantDrone = options.drone ?? false
     const now = ctx.currentTime
 
     if (wantTone) this.startTone(now, options.toneLevel ?? TONE_LEVEL)
@@ -133,8 +157,11 @@ export class AudioEngine {
     if (wantBreath) this.startBreath(now)
     else this.duckVoice(this.breathGain, 0.8)
 
+    if (wantDrone) this.startDrone(now)
+    else this.duckVoice(this.droneGain, 1.2)
+
     this.rampParam(this.master.gain, this.masterVolume, this.fadeSeconds)
-    this.playing = wantTone || wantPad || wantBreath
+    this.playing = wantTone || wantPad || wantBreath || wantDrone
     return true
   }
 
@@ -149,10 +176,13 @@ export class AudioEngine {
     this.fadeToSilence(this.toneGain, now, end)
     this.fadeToSilence(this.padGain, now, end)
     this.fadeToSilence(this.breathGain, now, end)
+    this.fadeToSilence(this.droneGain, now, end)
 
     safeStop(this.toneOsc, end + 0.05)
     safeStop(this.padSource, end + 0.05)
     safeStop(this.breathSource, end + 0.05)
+    for (const osc of this.droneOscs) safeStop(osc, end + 0.05)
+    for (const lfo of this.droneLfos) safeStop(lfo, end + 0.05)
 
     this.playing = false
 
@@ -212,6 +242,15 @@ export class AudioEngine {
         g.exponentialRampToValueAtTime(0.006, now + 0.5) // faint held breath
         f.setValueAtTime(500, now)
         air?.linearRampToValueAtTime(0.12, now + 0.5)
+        break
+      }
+      case 'sip': {
+        // a quick sharp top-up intake at the crest of the inhale
+        g.exponentialRampToValueAtTime(BREATH_PEAK * 0.85, now + dur * 0.4)
+        g.exponentialRampToValueAtTime(BREATH_PEAK * 0.3, now + dur)
+        f.setValueAtTime(700, now)
+        f.linearRampToValueAtTime(1350, now + dur)
+        air?.linearRampToValueAtTime(0.55, now + dur * 0.5)
         break
       }
       case 'pump': {
@@ -389,6 +428,59 @@ export class AudioEngine {
     this.breathGain = envelope
   }
 
+  /**
+   * Soft ambient-music voice — an open Csus2 chord voiced across three octaves,
+   * each note independently swelling on its own slow LFO so the pad never sits
+   * still. Low-passed for warmth. This is the "meditation music" bed.
+   */
+  private startDrone(now: number): void {
+    const ctx = this.ctx
+    const master = this.master
+    if (!ctx || !master) return
+
+    if (this.droneOscs.length === 0) {
+      const filter = ctx.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.value = 900
+      filter.Q.value = 0.4
+      const out = ctx.createGain()
+      out.gain.setValueAtTime(MIN_GAIN, now)
+      filter.connect(out).connect(master)
+
+      // C3 · G3 · C4 · D4 · G4 — an unresolved, restful voicing
+      const notes = [130.81, 196.0, 261.63, 293.66, 392.0]
+      const lfoHz = [0.037, 0.053, 0.041, 0.067, 0.029]
+      notes.forEach((hz, i) => {
+        const osc = ctx.createOscillator()
+        osc.type = i >= 3 ? 'triangle' : 'sine'
+        osc.frequency.value = hz
+        osc.detune.value = (i - 2) * 3
+
+        const base = Math.max(0.08, 0.42 - i * 0.06)
+        const g = ctx.createGain()
+        g.gain.value = base * 0.55
+
+        const lfo = ctx.createOscillator()
+        lfo.type = 'sine'
+        lfo.frequency.value = lfoHz[i]
+        const lfoDepth = ctx.createGain()
+        lfoDepth.gain.value = base * 0.4
+        lfo.connect(lfoDepth).connect(g.gain)
+
+        osc.connect(g).connect(filter)
+        osc.start(now)
+        lfo.start(now)
+        this.droneOscs.push(osc)
+        this.droneLfos.push(lfo)
+      })
+      this.droneFilter = filter
+      this.droneGain = out
+    }
+    if (this.droneGain) {
+      this.rampParam(this.droneGain.gain, this.droneLevel, this.fadeSeconds * 1.5)
+    }
+  }
+
   private duckVoice(gain: GainNode | null, seconds: number): void {
     if (!this.ctx || !gain) return
     const now = this.ctx.currentTime
@@ -468,6 +560,10 @@ export class AudioEngine {
       this.breathAir,
       this.breathAirGain,
       this.breathGain,
+      this.droneFilter,
+      this.droneGain,
+      ...this.droneOscs,
+      ...this.droneLfos,
     ]
     for (const node of nodes) {
       try {
@@ -486,6 +582,10 @@ export class AudioEngine {
     this.breathAir = null
     this.breathAirGain = null
     this.breathGain = null
+    this.droneOscs = []
+    this.droneLfos = []
+    this.droneFilter = null
+    this.droneGain = null
   }
 }
 

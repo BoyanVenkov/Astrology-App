@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { Aura } from './Aura'
 import { BREATH_PATTERNS } from '../lib/breathwork'
+import { MEDITATION_STYLE_MAP } from '../lib/meditation'
 import { auraLabel, computeAura, MOOD_META } from '../lib/aura'
 import { useEntitlements } from '../lib/premium'
 import { chakraName } from '../lib/resonanceData'
@@ -175,8 +176,11 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
                 <span className="text-haze-100">
                   {s.day.slice(5)} ·{' '}
                   {s.kind === 'meditation'
-                    ? 'Meditation'
-                    : (BREATH_PATTERNS[s.pattern]?.name ?? s.pattern)}
+                    ? (MEDITATION_STYLE_MAP[s.style ?? 'chakra']?.name ??
+                      'Meditation')
+                    : s.kind === 'frequency'
+                      ? `${s.frequency} Hz`
+                      : (BREATH_PATTERNS[s.pattern]?.name ?? s.pattern)}
                 </span>
                 <span className="tabular-nums text-xs text-haze-400">
                   {chakraName(s.chakra)} · {s.minutes} min

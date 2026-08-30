@@ -2,15 +2,18 @@ import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
 import { clockHM, geoContext } from '../lib/geo'
 import { chakraColor } from '../lib/resonanceData'
+import { TodaysPractice } from './TodaysPractice'
+import type { RitualPreset } from '../types/resonance'
 
 interface HoroscopeProps {
   onBack: () => void
+  onRitual: (preset: RitualPreset) => void
 }
 
 const ORD = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th']
 const ordinal = (n: number): string => ORD[n] ?? `${n}th`
 
-export function Horoscope({ onBack }: HoroscopeProps) {
+export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const crystals = useAppStore((s) => s.dailyCrystals)
@@ -153,6 +156,12 @@ export function Horoscope({ onBack }: HoroscopeProps) {
         <p className="mt-2 text-sm leading-relaxed text-haze-100">
           {horoscope.practice}
         </p>
+        <div className="mt-4">
+          <TodaysPractice
+            variant="inline"
+            onLaunch={onRitual}
+          />
+        </div>
       </section>
     </div>
   )

@@ -6,11 +6,14 @@ import { chakraName, zodiacGlyph } from '../lib/resonanceData'
 import { planetSymbol } from '../data/esoteric'
 import { SIGNS } from '../lib/ephemeris'
 import { CardsIcon } from './icons'
+import { TodaysPractice } from './TodaysPractice'
+import type { RitualPreset } from '../types/resonance'
 
 interface SkyViewProps {
   onOpenChart: () => void
   onOpenHoroscope: () => void
-  onOpenOracle: () => void
+  onOpenTarot: () => void
+  onRitual: (preset: RitualPreset) => void
 }
 
 const ASPECT_GLYPH: Record<string, string> = {
@@ -34,7 +37,8 @@ const fmtDay = (d: Date): string =>
 export function SkyView({
   onOpenChart,
   onOpenHoroscope,
-  onOpenOracle,
+  onOpenTarot,
+  onRitual,
 }: SkyViewProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
@@ -87,6 +91,9 @@ export function SkyView({
         </h1>
         <p className="mt-1 text-sm text-haze-300">{transit.title}</p>
       </header>
+
+      {/* practise this sky */}
+      <TodaysPractice variant="full" onLaunch={onRitual} />
 
       {/* right now over you */}
       <section className="glass-panel p-4">
@@ -169,17 +176,17 @@ export function SkyView({
 
       <button
         type="button"
-        onClick={onOpenOracle}
+        onClick={onOpenTarot}
         className="glass-panel glass-panel-active flex items-center gap-3 p-4 text-left active:scale-[0.99]"
       >
         <CardsIcon className="h-6 w-6" style={{ color: 'var(--rz-hue)' }} />
         <div className="min-w-0 flex-1">
-          <p className="eyebrow">Natal Oracle</p>
+          <p className="eyebrow">Tarot</p>
           <p className="mt-0.5 font-serif text-lg text-white">
-            Draw today’s cards
+            Your card for today
           </p>
           <p className="text-xs text-haze-300">
-            Three cards from your chart and today’s sky
+            Plus three-card and Celtic Cross spreads
           </p>
         </div>
         <span style={{ color: 'var(--rz-hue)' }}>›</span>

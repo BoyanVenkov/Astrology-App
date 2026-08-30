@@ -31,6 +31,7 @@ export function AudioBridge() {
           tone: mode === 'tone',
           pad: true,
           breath: mode === 'breath' && audio.breathVoice,
+          drone: mode === 'drone',
         })
       })
     } else {

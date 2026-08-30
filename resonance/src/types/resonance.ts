@@ -82,20 +82,61 @@ export interface AudioPreferences {
   breathVoice: boolean
 }
 
-/** What the audio engine is voicing: a pure tone (Frequencies) or breath sounds (Breathwork). */
-export type AudioMode = 'tone' | 'breath'
+/**
+ * What the audio engine is voicing:
+ *  - `tone`   pure Solfeggio sine (Frequencies)
+ *  - `breath` synthesised breathing sound (Breathwork)
+ *  - `drone`  soft evolving ambient chord (meditation "music")
+ */
+export type AudioMode = 'tone' | 'breath' | 'drone'
+
+/** The sound bed under a guided meditation. */
+export type MeditationSound = 'tone' | 'music' | 'silent'
 
 /* ---------------------------------------------------------------- breathwork */
 
-export type BreathPhaseKind = 'inhale' | 'hold' | 'exhale' | 'rest' | 'pump'
+export type BreathPhaseKind =
+  | 'inhale'
+  | 'hold'
+  | 'exhale'
+  | 'rest'
+  | 'pump'
+  | 'sip'
 
-export type BreathPatternKey = 'box' | 'relax' | 'coherent' | 'kapalabhati'
+export type BreathPatternKey =
+  | 'box'
+  | 'relax'
+  | 'coherent'
+  | 'resonant'
+  | 'exhale'
+  | 'sigh'
+  | 'triangle'
+  | 'nadi'
+  | 'ujjayi'
+  | 'energize'
+  | 'kapalabhati'
+  | 'wimhof'
+
+export type BreathCategory = 'calm' | 'balance' | 'energy' | 'advanced'
 
 export interface BreathStep {
   kind: BreathPhaseKind
   seconds: number
   /** Prompt shown in the centre of the ring: "Inhale" | "Hold" | … */
   label: string
+}
+
+/** Round-based practice (Wim Hof) — routed to the journey player, not the ring. */
+export interface BreathRoundSpec {
+  rounds: number
+  /** Power breaths per round. */
+  breaths: number
+  /** Seconds per power breath. */
+  breathSeconds: number
+  /** Retention target per round, seconds — a guide, the user can hold longer. */
+  retentionTargets: number[]
+  /** Recovery hold after the deep inhale, seconds. */
+  recoverySeconds: number
 }
 
 export interface BreathPattern {
@@ -106,7 +147,47 @@ export interface BreathPattern {
   ratio: string
   /** Hex accent that tints the aura ring for this pattern. */
   accent: string
+  category: BreathCategory
+  /** Offered session lengths, minutes. Empty for round-based practices. */
+  durations: number[]
+  /** One sentence of how-to, shown on the setup screen. */
+  guide: string
   steps: BreathStep[]
+  /** Present only for advanced round-based practices. */
+  rounds?: BreathRoundSpec
+}
+
+export type MeditationStyleKey =
+  | 'chakra'
+  | 'body-scan'
+  | 'metta'
+  | 'breath-awareness'
+  | 'sound-bath'
+  | 'gratitude'
+  | 'safe-place'
+  | 'yoga-nidra'
+  | 'morning'
+  | 'evening'
+  | 'mountain'
+  | 'open-awareness'
+
+export type MeditationCategory =
+  | 'grounding'
+  | 'calm'
+  | 'heart'
+  | 'focus'
+  | 'sleep'
+  | 'energy'
+
+export interface MeditationStyle {
+  key: MeditationStyleKey
+  name: string
+  tagline: string
+  category: MeditationCategory
+  /** Offered session lengths, minutes. */
+  durations: number[]
+  /** true → the script is personalised to today's chart. */
+  dynamic?: boolean
 }
 
 /* --------------------------------------------------------------- apothecary */
@@ -155,7 +236,21 @@ export interface MoodEntry {
   note?: string
 }
 
-export type PracticeKind = 'breath' | 'meditation'
+export type PracticeKind = 'breath' | 'meditation' | 'frequency'
+
+/** What launches the guided-practice flow — from the sheet, library, or a nudge. */
+export interface RitualPreset {
+  mode: PracticeKind
+  minutes: number
+  /** Jump straight into the practice, skipping the setup screen. */
+  skipIntro?: boolean
+  /** For `mode: 'breath'` — a specific pattern; else today's suggested one. */
+  breathPattern?: BreathPatternKey
+  /** For `mode: 'meditation'` — a specific style; else `'chakra'`. */
+  meditationStyle?: MeditationStyleKey
+  /** For `mode: 'frequency'` — the tone to sit with; else today's recommended. */
+  frequency?: SolfeggioFrequency
+}
 
 /** A completed guided practice session, kept for streaks / history. */
 export interface PracticeSession {
@@ -168,6 +263,8 @@ export interface PracticeSession {
   frequency: SolfeggioFrequency
   /** The breath pattern, for `kind: 'breath'`. */
   pattern: BreathPatternKey
+  /** The meditation style, for `kind: 'meditation'`. */
+  style?: MeditationStyleKey
   /** Minutes actually practised. */
   minutes: number
   /** false if the user exited early. */
@@ -275,6 +372,6 @@ export interface ResonanceSession {
   notifications: NotificationPreferences
   /** Entitlement tier. `pro` unlocks the full library, houses, deep history. */
   tier: PremiumTier
-  /** Local day `YYYY-MM-DD` the Natal Oracle was last drawn — `null` if never. */
-  oracleRevealedDay: string | null
+  /** Local day `YYYY-MM-DD` the daily tarot card was last turned — `null` if never. */
+  tarotDrawnDay: string | null
 }

@@ -3,7 +3,7 @@ import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import {
   BREATH_PATTERNS,
-  BREATH_PATTERN_LIST,
+  CLASSIC_BREATH_PATTERNS,
   breathScale,
   MIN_BREATH_SCALE,
   resolveBreath,
@@ -40,6 +40,7 @@ const PHASE_HINT: Record<BreathPhaseKind, string> = {
   exhale: 'Let everything go',
   rest: 'Rest in the stillness',
   pump: 'Sharp exhales — pump from the belly',
+  sip: 'A short second sip through the nose',
 }
 
 const mmss = (s: number): string => {
@@ -340,7 +341,7 @@ export function BreathVisualizer({
 
       {!pattern && (
         <div className="flex flex-wrap justify-center gap-2">
-          {BREATH_PATTERN_LIST.map((option) => {
+          {CLASSIC_BREATH_PATTERNS.map((option) => {
             const selected = option.key === activeKey
             return (
               <button

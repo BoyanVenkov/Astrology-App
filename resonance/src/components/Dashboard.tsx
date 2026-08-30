@@ -8,22 +8,23 @@ import { chakraName, zodiacGlyph } from '../lib/resonanceData'
 import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { planetSymbol } from '../data/esoteric'
+import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
-import { CardsIcon, PlayIcon } from './icons'
+import { CardsIcon } from './icons'
 
 interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
   onPracticeSheet: () => void
   onTab: (tab: TabKey) => void
-  onOracle: () => void
+  onTarot: () => void
 }
 
 export function Dashboard({
   onRitual,
   onPracticeSheet,
   onTab,
-  onOracle,
+  onTarot,
 }: DashboardProps) {
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
@@ -32,7 +33,7 @@ export function Dashboard({
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
   const biometricLog = useAppStore((s) => s.biometricLog)
-  const oracleRevealedDay = useAppStore((s) => s.oracleRevealedDay)
+  const tarotDrawnDay = useAppStore((s) => s.tarotDrawnDay)
 
   const [bucket, setBucket] = useState(() => Math.floor(Date.now() / 300_000))
   useEffect(() => {
@@ -55,7 +56,7 @@ export function Dashboard({
 
   const heroStone = rx.stones[0]
   const vocSoon = voc.active || (voc.hoursUntil != null && voc.hoursUntil < 4)
-  const oracleDrawn = oracleRevealedDay === localDayKey()
+  const tarotDrawn = tarotDrawnDay === localDayKey()
 
   return (
     <div className="flex flex-col gap-4">
@@ -116,32 +117,16 @@ export function Dashboard({
           )}
         </div>
 
-        <div className="mt-4 flex gap-2">
-          <button
-            type="button"
-            onClick={() =>
-              onRitual({
-                mode: rx.urgent ? 'breath' : 'meditation',
-                minutes: rx.minutes,
-              })
-            }
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-midnight-void transition active:scale-[0.98]"
-            style={{
-              background:
-                'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 80%, #fff 15%), var(--rz-hue))',
-            }}
-          >
-            <PlayIcon className="h-4 w-4" />
-            {doneToday ? 'Practice again' : 'Begin'}
-          </button>
-          <button
-            type="button"
-            onClick={onPracticeSheet}
-            className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-haze-200"
-          >
-            Options
-          </button>
+        <div className="mt-4">
+          <TodaysPractice variant="inline" onLaunch={onRitual} />
         </div>
+        <button
+          type="button"
+          onClick={onPracticeSheet}
+          className="mt-3 text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+        >
+          {doneToday ? 'Practise again' : 'More ways to practise'} →
+        </button>
       </section>
 
       {/* aura + the day's mantra */}
@@ -183,19 +168,19 @@ export function Dashboard({
         )}
       </div>
 
-      {/* natal oracle */}
+      {/* daily tarot */}
       <button
         type="button"
-        onClick={onOracle}
+        onClick={onTarot}
         className="glass-panel flex items-center gap-3 p-4 text-left active:scale-[0.99]"
       >
         <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
         <div className="min-w-0 flex-1">
-          <p className="font-serif text-lg text-white">Natal oracle</p>
+          <p className="font-serif text-lg text-white">Daily tarot</p>
           <p className="text-xs text-haze-300">
-            {oracleDrawn
-              ? 'See today’s three cards'
-              : 'Draw three cards for today'}
+            {tarotDrawn
+              ? 'See today’s card, or draw a spread'
+              : 'Turn your card for today'}
           </p>
         </div>
         <span style={{ color: 'var(--rz-hue)' }}>›</span>

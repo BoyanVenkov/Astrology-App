@@ -6,10 +6,13 @@ import { chakraName } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { useEntitlements } from '../lib/premium'
+import { TodaysPractice } from './TodaysPractice'
+import type { RitualPreset } from '../types/resonance'
 
 interface YouViewProps {
   onOpen: (view: 'journal' | 'mood' | 'body' | 'settings') => void
   onUpgrade: () => void
+  onRitual: (preset: RitualPreset) => void
 }
 
 function Tile({
@@ -36,7 +39,7 @@ function Tile({
   )
 }
 
-export function YouView({ onOpen, onUpgrade }: YouViewProps) {
+export function YouView({ onOpen, onUpgrade, onRitual }: YouViewProps) {
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
@@ -65,6 +68,8 @@ export function YouView({ onOpen, onUpgrade }: YouViewProps) {
             ` · body ${Math.round(aura.recovery * 100)}%`}
         </p>
       </header>
+
+      <TodaysPractice variant="full" onLaunch={onRitual} />
 
       <section className="glass-panel grid grid-cols-3 divide-x divide-white/8 p-4">
         <Tile label="day streak" value={String(streak)} onClick={() => onOpen('journal')} />
