@@ -5,7 +5,8 @@ import { moonVoidOfCourseCached, upcomingMoonPhases } from '../lib/lunar'
 import { chakraName, zodiacGlyph } from '../lib/resonanceData'
 import { planetSymbol } from '../data/esoteric'
 import { SIGNS } from '../lib/ephemeris'
-import { CardsIcon } from './icons'
+import { useEntitlements } from '../lib/premium'
+import { CardsIcon, LockIcon } from './icons'
 import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset, TabKey } from '../types/resonance'
 
@@ -15,6 +16,7 @@ interface SkyViewProps {
   onOpenHoroscope: () => void
   onOpenStones: () => void
   onRitual: (preset: RitualPreset) => void
+  onUpgrade: (reason?: string) => void
 }
 
 // Trailing U+FE0E keeps these as flat text glyphs, not colour emoji.
@@ -42,7 +44,9 @@ export function SkyView({
   onOpenHoroscope,
   onOpenStones,
   onRitual,
+  onUpgrade,
 }: SkyViewProps) {
+  const { isPro } = useEntitlements()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
@@ -186,11 +190,18 @@ export function SkyView({
       <div className="grid grid-cols-2 gap-3">
         <button
           type="button"
-          onClick={onOpenHoroscope}
+          onClick={
+            isPro ? onOpenHoroscope : () => onUpgrade('Your full daily horoscope')
+          }
           className="glass-panel p-4 text-left active:scale-[0.99]"
         >
-          <span className="font-serif text-lg text-white">Full horoscope</span>
-          <span className="block text-xs text-haze-300">Today, in detail</span>
+          <span className="flex items-center gap-1.5 font-serif text-lg text-white">
+            Full horoscope
+            {!isPro && <LockIcon className="h-3.5 w-3.5 text-haze-400" />}
+          </span>
+          <span className="block text-xs text-haze-300">
+            {isPro ? 'Today, in detail' : 'Today, in depth · Pro'}
+          </span>
         </button>
         <button
           type="button"

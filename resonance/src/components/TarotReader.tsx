@@ -10,13 +10,16 @@ import {
   type Spread,
   type TarotReading,
 } from '../lib/tarot'
+import { spreadUnlocked, useEntitlements } from '../lib/premium'
 import { localDayKey } from '../lib/timezone'
+import { LockIcon } from './icons'
 import { BackButton } from './Screen'
 import { TarotCardBack, TarotCardFace } from './TarotCard'
 
 interface TarotReaderProps {
   /** Only set when Tarot is pushed as a sub-screen; as a tab there's nowhere back. */
   onBack?: () => void
+  onUpgrade?: (reason?: string) => void
 }
 
 type View = 'daily' | 'choose' | 'table'
@@ -93,10 +96,11 @@ function Interpretation({
 
 /* ---------------------------------------------------------------- reader */
 
-export function TarotReader({ onBack }: TarotReaderProps) {
+export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
   const profile = useAppStore((s) => s.profile)
   const drawnDay = useAppStore((s) => s.tarotDrawnDay)
   const markTarotDrawn = useAppStore((s) => s.markTarotDrawn)
+  const { isPro } = useEntitlements()
 
   const today = localDayKey()
   const daily = useMemo(
@@ -205,23 +209,41 @@ export function TarotReader({ onBack }: TarotReaderProps) {
         </header>
 
         <div className="flex flex-col gap-3">
-          {SPREADS.map((s) => (
-            <button
-              key={s.key}
-              type="button"
-              onClick={() => startReading(s)}
-              className="glass-panel p-4 text-left active:scale-[0.99]"
-            >
-              <div className="flex items-center gap-2">
-                <h2 className="font-serif text-lg text-white">{s.name}</h2>
-                <span className="ml-auto text-xs tabular-nums text-haze-400">
-                  {s.positions.length} card{s.positions.length > 1 ? 's' : ''}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-haze-300">{s.blurb}</p>
-            </button>
-          ))}
+          {SPREADS.map((s) => {
+            const unlocked = spreadUnlocked(s.key, isPro)
+            return (
+              <button
+                key={s.key}
+                type="button"
+                onClick={() =>
+                  unlocked
+                    ? startReading(s)
+                    : onUpgrade?.('The 3-card & Celtic Cross spreads')
+                }
+                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                  unlocked ? '' : 'opacity-60'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <h2 className="font-serif text-lg text-white">{s.name}</h2>
+                  {unlocked ? (
+                    <span className="ml-auto text-xs tabular-nums text-haze-400">
+                      {s.positions.length} card{s.positions.length > 1 ? 's' : ''}
+                    </span>
+                  ) : (
+                    <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                  )}
+                </div>
+                <p className="mt-1 text-sm text-haze-300">{s.blurb}</p>
+              </button>
+            )
+          })}
         </div>
+        {!isPro && (
+          <p className="px-1 text-[11px] text-haze-500">
+            The daily card is always free. Spreads are part of Resonance Pro.
+          </p>
+        )}
       </div>
     )
   }

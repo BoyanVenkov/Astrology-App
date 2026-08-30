@@ -23,6 +23,16 @@ export function Paywall({ onClose, reason }: PaywallProps) {
     if (ok) onClose()
   }
 
+  const cta =
+    plan === 'yearly'
+      ? `Start ${PRO_PRICING.trialDays}-day free trial`
+      : `Start Pro · ${PRO_PRICING.monthly}/mo`
+
+  const terms =
+    plan === 'yearly'
+      ? `${PRO_PRICING.trialDays} days free, then ${PRO_PRICING.yearly}/year (${PRO_PRICING.yearlyPerMonth}/mo). Auto-renews — cancel anytime in Google Play.`
+      : `${PRO_PRICING.monthly} billed monthly. Auto-renews — cancel anytime in Google Play.`
+
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
@@ -61,8 +71,12 @@ export function Paywall({ onClose, reason }: PaywallProps) {
                 : 'border-white/12 bg-white/5'
             }`}
           >
-            <p className="text-sm font-semibold text-white">{PRO_PRICING.yearly}/yr</p>
-            <p className="text-[11px] text-gold-300">2 months free</p>
+            <p className="text-sm font-semibold text-white">
+              {PRO_PRICING.yearly}/yr
+            </p>
+            <p className="text-[11px] text-gold-300">
+              {PRO_PRICING.trialDays}-day free trial · save 64%
+            </p>
           </button>
           <button
             type="button"
@@ -86,8 +100,12 @@ export function Paywall({ onClose, reason }: PaywallProps) {
           disabled={busy}
           className="mt-4 w-full rounded-2xl border border-gold-400/50 bg-gold-500/20 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-50"
         >
-          {busy ? 'One moment…' : `Start Pro · ${PRO_PRICING[plan]}`}
+          {busy ? 'One moment…' : cta}
         </button>
+
+        <p className="mt-2.5 text-center text-[11px] leading-relaxed text-haze-500">
+          {terms}
+        </p>
 
         <div className="mt-3 flex items-center justify-between text-[11px] text-haze-400">
           <button type="button" onClick={() => void restorePurchases()}>

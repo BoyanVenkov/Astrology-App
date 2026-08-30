@@ -123,7 +123,6 @@ const createSession = (): ResonanceSession & SkyState => {
     sessionLog: [],
     moodLog: [],
     biometricLog: [],
-    healthConnected: false,
     currentLocation: null,
     notifications: DEFAULT_NOTIFICATIONS,
     tier: 'free',
@@ -153,8 +152,6 @@ interface ResonanceActions {
   logMood: (entry: MoodEntry) => void
   /** Record a body reading (replaces any earlier one for the same day). */
   logBiometrics: (reading: BiometricReading) => void
-  /** Mark on-device health data as connected / disconnected. */
-  setHealthConnected: (connected: boolean) => void
   /** Patch notification preferences. */
   updateNotificationPrefs: (prefs: Partial<NotificationPreferences>) => void
   /** Set the entitlement tier (called by the purchase flow / dev unlock). */
@@ -233,8 +230,6 @@ export const useAppStore = create<AppStore>()(
             reading,
           ].slice(-SESSION_LOG_CAP),
         })),
-
-      setHealthConnected: (healthConnected) => set({ healthConnected }),
 
       updateNotificationPrefs: (prefs) =>
         set((state) => ({
@@ -324,7 +319,6 @@ export const useAppStore = create<AppStore>()(
         sessionLog: state.sessionLog,
         moodLog: state.moodLog,
         biometricLog: state.biometricLog,
-        healthConnected: state.healthConnected,
         currentLocation: state.currentLocation,
         notifications: state.notifications,
         tier: state.tier,

@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { BodyCheckIn } from './BodyCheckIn'
-import { bodyState, connectHealth } from '../lib/biometrics'
+import { bodyState } from '../lib/biometrics'
 import {
   ensureNotificationPermission,
   syncNotifications,
@@ -82,9 +82,6 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
   const angles = useAppStore((s) => s.angles)
   const editProfile = useAppStore((s) => s.editProfile)
   const biometricLog = useAppStore((s) => s.biometricLog)
-  const healthConnected = useAppStore((s) => s.healthConnected)
-  const setHealthConnected = useAppStore((s) => s.setHealthConnected)
-  const logBiometrics = useAppStore((s) => s.logBiometrics)
   const tier = useAppStore((s) => s.tier)
   const setTier = useAppStore((s) => s.setTier)
   const currentLocation = useAppStore((s) => s.currentLocation)
@@ -92,7 +89,7 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
   const { isPro } = useEntitlements()
 
   const [showBody, setShowBody] = useState(false)
-  const [healthMsg, setHealthMsg] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
   const [locMsg, setLocMsg] = useState<string | null>(null)
   const [locBusy, setLocBusy] = useState(false)
 
@@ -120,24 +117,12 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
     if (on) {
       const granted = await ensureNotificationPermission()
       if (!granted) {
-        setHealthMsg('Notifications are blocked in your OS settings.')
+        setNotice('Notifications are blocked in your OS settings.')
         return
       }
     }
+    setNotice(null)
     patchNotif({ enabled: on })
-  }
-
-  const tryHealth = async () => {
-    const reading = await connectHealth()
-    if (reading) {
-      logBiometrics(reading)
-      setHealthConnected(true)
-      setHealthMsg('Synced from your health data.')
-    } else {
-      setHealthMsg(
-        'Health sync needs the installed app on a phone. Log a reading by hand for now.',
-      )
-    }
   }
 
   const resetAll = () => {
@@ -224,6 +209,11 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
             onChange={(v) => void toggleNotifications(v)}
           />
         </Row>
+        {notice && (
+          <Row>
+            <p className="py-3 text-xs text-haze-400">{notice}</p>
+          </Row>
+        )}
         {notifications.enabled && (
           <>
             <Row>
@@ -377,7 +367,8 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
                   : 'No reading yet'}
               </span>
               <span className="block text-xs text-haze-400">
-                {healthConnected ? 'Health data connected' : 'Manual entry'}
+                Enter your HRV, sleep &amp; resting heart rate — a low-recovery
+                day shortens the practice
               </span>
             </span>
             <button
@@ -396,20 +387,6 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
             </div>
           </Row>
         )}
-        <Row>
-          <button
-            type="button"
-            onClick={() => void tryHealth()}
-            className="w-full py-3 text-left text-sm text-gold-300"
-          >
-            Connect Apple Health / Google Fit →
-          </button>
-        </Row>
-        {healthMsg && (
-          <Row>
-            <p className="py-3 text-xs text-haze-400">{healthMsg}</p>
-          </Row>
-        )}
       </Section>
 
       <Section title="Resonance Pro">
@@ -421,7 +398,7 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
               </span>
               <span className="block text-xs text-haze-400">
                 {isPro
-                  ? 'Full library, deep history, health sync'
+                  ? 'Full library, deep history'
                   : '3 tones · 7-day history'}
               </span>
             </span>

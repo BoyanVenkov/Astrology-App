@@ -2,8 +2,7 @@ import type { BiometricReading } from '../types/resonance'
 import { localDayKey } from './timezone'
 
 /**
- * Body state — from a manual check-in now, or Apple Health / Google Fit once
- * the native health plugin is wired (see `connectHealth`). HRV is the primary
+ * Body state — derived from the latest manual Body check-in. HRV is the primary
  * stress signal; sleep and resting HR fill in the picture.
  */
 export interface BodyState {
@@ -74,14 +73,4 @@ export function bodyState(log: BiometricReading[]): BodyState {
     label,
     needsRest: fresh && recovery < 0.34,
   }
-}
-
-/**
- * Placeholder for on-device health data. When you add
- * `@capacitor-community/health` (or HealthKit / Health Connect directly),
- * request permissions here, read the latest HRV / resting HR / sleep, and
- * return a `BiometricReading`. On web / unsupported platforms it stays null.
- */
-export async function connectHealth(): Promise<BiometricReading | null> {
-  return null
 }

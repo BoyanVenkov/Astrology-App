@@ -287,8 +287,8 @@ export interface GeoPoint {
 /* --------------------------------------------------------------- biometrics */
 
 /**
- * A body reading — from Apple Health / Google Fit on device, or entered by
- * hand. HRV (ms) is the primary stress signal.
+ * A body reading entered by hand in the Body check-in. HRV (ms) is the primary
+ * stress signal; sleep and resting HR fill in the picture.
  */
 export interface BiometricReading {
   at: string
@@ -367,8 +367,6 @@ export interface ResonanceSession {
   moodLog: MoodEntry[]
   /** Body readings (most recent last), capped. */
   biometricLog: BiometricReading[]
-  /** Whether the user has connected on-device health data. */
-  healthConnected: boolean
   /** The user's current location — powers the "sky above you now" + local times. */
   currentLocation: GeoPoint | null
   notifications: NotificationPreferences

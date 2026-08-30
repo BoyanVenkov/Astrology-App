@@ -3,7 +3,11 @@ import { SOLFEGGIO_PRESETS } from '../audio/audioEngine'
 import { useAppStore } from '../store/useAppStore'
 import { BREATH_PATTERN_LIST } from '../lib/breathwork'
 import { MEDITATION_STYLES } from '../lib/meditation'
-import { useEntitlements } from '../lib/premium'
+import {
+  breathUnlocked,
+  meditationUnlocked,
+  useEntitlements,
+} from '../lib/premium'
 import { chakraColor } from '../lib/resonanceData'
 import { LockIcon } from './icons'
 import { Screen } from './Screen'
@@ -174,80 +178,100 @@ export function PracticeLibrary({
 
       <div className="flex flex-col gap-3">
         {tab === 'breath' &&
-          shownBreaths.map((b) => (
-            <button
-              key={b.key}
-              type="button"
-              onClick={() =>
-                onLaunch({
-                  mode: 'breath',
-                  breathPattern: b.key,
-                  minutes: midOf(b.durations),
-                })
-              }
-              className="glass-panel p-4 text-left active:scale-[0.99]"
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="h-2.5 w-2.5 shrink-0 rounded-full"
-                  style={{
-                    background: b.accent,
-                    boxShadow: `0 0 10px ${b.accent}`,
-                  }}
-                />
-                <h2 className="font-serif text-lg text-white">{b.name}</h2>
-                <span className="ml-auto shrink-0 text-xs tabular-nums text-haze-400">
-                  {b.ratio}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-haze-300">{b.tagline}</p>
-              <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
-                {BREATH_CAT_LABEL[b.category]} · {lengthLabel(b.durations)}
-              </p>
-            </button>
-          ))}
+          shownBreaths.map((b) => {
+            const unlocked = breathUnlocked(b.key, isPro)
+            return (
+              <button
+                key={b.key}
+                type="button"
+                onClick={() =>
+                  unlocked
+                    ? onLaunch({
+                        mode: 'breath',
+                        breathPattern: b.key,
+                        minutes: midOf(b.durations),
+                      })
+                    : onUpgrade('Every breath pattern')
+                }
+                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                  unlocked ? '' : 'opacity-60'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
+                    style={{
+                      background: b.accent,
+                      boxShadow: `0 0 10px ${b.accent}`,
+                    }}
+                  />
+                  <h2 className="font-serif text-lg text-white">{b.name}</h2>
+                  {unlocked ? (
+                    <span className="ml-auto shrink-0 text-xs tabular-nums text-haze-400">
+                      {b.ratio}
+                    </span>
+                  ) : (
+                    <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                  )}
+                </div>
+                <p className="mt-1 text-sm text-haze-300">{b.tagline}</p>
+                <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
+                  {BREATH_CAT_LABEL[b.category]} · {lengthLabel(b.durations)}
+                </p>
+              </button>
+            )
+          })}
 
         {tab === 'meditation' &&
-          shownMeds.map((m) => (
-            <button
-              key={m.key}
-              type="button"
-              onClick={() =>
-                onLaunch({
-                  mode: 'meditation',
-                  meditationStyle: m.key,
-                  minutes: midOf(m.durations),
-                })
-              }
-              className="glass-panel p-4 text-left active:scale-[0.99]"
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="h-2.5 w-2.5 shrink-0 rounded-full"
-                  style={{
-                    background: 'var(--rz-hue)',
-                    boxShadow: '0 0 10px var(--rz-glow)',
-                  }}
-                />
-                <h2 className="font-serif text-lg text-white">{m.name}</h2>
-                {m.dynamic && (
+          shownMeds.map((m) => {
+            const unlocked = meditationUnlocked(m.key, isPro)
+            return (
+              <button
+                key={m.key}
+                type="button"
+                onClick={() =>
+                  unlocked
+                    ? onLaunch({
+                        mode: 'meditation',
+                        meditationStyle: m.key,
+                        minutes: midOf(m.durations),
+                      })
+                    : onUpgrade('Every guided meditation')
+                }
+                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                  unlocked ? '' : 'opacity-60'
+                }`}
+              >
+                <div className="flex items-center gap-2">
                   <span
-                    className="ml-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
+                    className="h-2.5 w-2.5 shrink-0 rounded-full"
                     style={{
-                      color: chakraColor('third-eye'),
-                      boxShadow: `inset 0 0 0 1px ${chakraColor('third-eye')}66`,
+                      background: 'var(--rz-hue)',
+                      boxShadow: '0 0 10px var(--rz-glow)',
                     }}
-                  >
-                    Your chart
-                  </span>
-                )}
-              </div>
-              <p className="mt-1 text-sm text-haze-300">{m.tagline}</p>
-              <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
-                {MED_CAT_LABEL[m.category]} · {lengthLabel(m.durations)}
-              </p>
-            </button>
-          ))}
+                  />
+                  <h2 className="font-serif text-lg text-white">{m.name}</h2>
+                  {!unlocked ? (
+                    <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                  ) : m.dynamic ? (
+                    <span
+                      className="ml-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
+                      style={{
+                        color: chakraColor('third-eye'),
+                        boxShadow: `inset 0 0 0 1px ${chakraColor('third-eye')}66`,
+                      }}
+                    >
+                      Your chart
+                    </span>
+                  ) : null}
+                </div>
+                <p className="mt-1 text-sm text-haze-300">{m.tagline}</p>
+                <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
+                  {MED_CAT_LABEL[m.category]} · {lengthLabel(m.durations)}
+                </p>
+              </button>
+            )
+          })}
 
         {tab === 'frequency' &&
           SOLFEGGIO_PRESETS.map((p, i) => {

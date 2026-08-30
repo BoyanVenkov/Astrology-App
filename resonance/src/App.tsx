@@ -6,7 +6,6 @@ import { Dashboard } from './components/Dashboard'
 import { Horoscope } from './components/Horoscope'
 import { Journal } from './components/Journal'
 import { Layout } from './components/Layout'
-import { Marketplace } from './components/Marketplace'
 import { MoodCheckIn } from './components/MoodCheckIn'
 import { MoodGate } from './components/MoodGate'
 import { NatalChart } from './components/NatalChart'
@@ -42,7 +41,6 @@ type Sub =
   | 'journal'
   | 'mood'
   | 'body'
-  | 'market'
   | 'settings'
 
 function App() {
@@ -113,7 +111,6 @@ function App() {
         {sub === 'stones' && (
           <Apothecary
             onBack={back}
-            onShop={() => setSub('market')}
             onPractice={() => setPracticeOpen(true)}
           />
         )}
@@ -127,7 +124,6 @@ function App() {
         {sub === 'journal' && <Journal onBack={back} onUpgrade={openPaywall} />}
         {sub === 'mood' && <MoodCheckIn onDone={back} />}
         {sub === 'body' && <BodyCheckIn onDone={back} />}
-        {sub === 'market' && <Marketplace onBack={back} />}
         {sub === 'settings' && (
           <Settings onBack={back} onUpgrade={() => openPaywall()} />
         )}
@@ -147,9 +143,15 @@ function App() {
             onOpenHoroscope={() => setSub('horoscope')}
             onOpenStones={() => setSub('stones')}
             onRitual={launchRitual}
+            onUpgrade={openPaywall}
           />
         )}
-        {sub === null && tab === 'tarot' && <TarotReader key={tabNonce} />}
+        {sub === null && tab === 'tarot' && (
+          <TarotReader
+            key={tabNonce}
+            onUpgrade={() => openPaywall('The 3-card & Celtic Cross spreads')}
+          />
+        )}
         {sub === null && tab === 'you' && (
           <YouView
             onOpen={setSub}

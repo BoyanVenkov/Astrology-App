@@ -5,12 +5,11 @@ import { Screen } from './Screen'
 
 interface ApothecaryProps {
   onBack: () => void
-  onShop: () => void
   onPractice: () => void
 }
 
 /** The crystal apothecary — today's transit-matched stones, then the full catalog. */
-export function Apothecary({ onBack, onShop, onPractice }: ApothecaryProps) {
+export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
   const dailyCrystals = useAppStore((s) => s.dailyCrystals)
   const transit = useAppStore((s) => s.transit)
   const todayNames = new Set(dailyCrystals.map((c) => c.name))
@@ -30,15 +29,6 @@ export function Apothecary({ onBack, onShop, onPractice }: ApothecaryProps) {
           : 'Stones that resonate with today’s transit'
       }
       onBack={onBack}
-      action={
-        <button
-          type="button"
-          onClick={onShop}
-          className="text-[10px] uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-        >
-          Shop ›
-        </button>
-      }
     >
       <div className="flex flex-col gap-3">
         {featured.map((crystal) => {

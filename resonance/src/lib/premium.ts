@@ -1,17 +1,36 @@
 import { useAppStore } from '../store/useAppStore'
-import type { PremiumTier } from '../types/resonance'
+import type {
+  BreathPatternKey,
+  MeditationStyleKey,
+  PremiumTier,
+} from '../types/resonance'
 
 export const PRO_PRICING = {
-  monthly: '$8.99',
-  yearly: '$79',
+  monthly: '$6.99',
+  yearly: '$29.99',
+  /** Effective monthly cost of the annual plan — used on the paywall. */
+  yearlyPerMonth: '$2.50',
+  /** Free-trial length on the annual plan, in days. */
+  trialDays: 7,
 }
 
 export const PRO_FEATURES = [
-  'The full Solfeggio frequency library',
+  'Every breath pattern, meditation & Solfeggio tone',
+  'The 3-card & Celtic Cross tarot spreads',
+  'Your full daily horoscope, in depth',
+  'Unlimited journal history & aura trends',
   'Deep natal-chart integration & every transit',
-  'Unlimited journal history & mood trends',
-  'On-device HRV / sleep sync',
-  'All breathwork patterns & session lengths',
+]
+
+/**
+ * Practices a free account can *choose* from the library. Today's prescribed
+ * practice is always playable whatever it is — this only gates browsing the
+ * rest of the catalogue.
+ */
+export const FREE_BREATH_PATTERNS: BreathPatternKey[] = ['box', 'relax']
+export const FREE_MEDITATION_STYLES: MeditationStyleKey[] = [
+  'chakra',
+  'breath-awareness',
 ]
 
 export interface Entitlements {
@@ -37,6 +56,24 @@ export function useEntitlements(): Entitlements {
   const tier = useAppStore((s) => s.tier)
   return entitlementsFor(tier)
 }
+
+/* ---------------------------------------------------------------- gates */
+
+export const breathUnlocked = (
+  key: BreathPatternKey,
+  isPro: boolean,
+): boolean => isPro || FREE_BREATH_PATTERNS.includes(key)
+
+export const meditationUnlocked = (
+  key: MeditationStyleKey,
+  isPro: boolean,
+): boolean => isPro || FREE_MEDITATION_STYLES.includes(key)
+
+/** Free tarot is the daily one-card draw; spreads are Pro. */
+export const spreadUnlocked = (spreadKey: string, isPro: boolean): boolean =>
+  isPro || spreadKey === 'one'
+
+/* -------------------------------------------------------------- purchase */
 
 /**
  * Complete the purchase. Wire RevenueCat (`@revenuecat/purchases-capacitor`)
