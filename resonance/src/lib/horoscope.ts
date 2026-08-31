@@ -109,11 +109,43 @@ const ordinal = (aspectName: string): string =>
       ? 'opposite'
       : aspectName
 
-/** A three-line read of the day — the free-tier horoscope. */
+/** Short "life area" phrase per body — for the quick read (WHAT is fuller). */
+const AREA: Record<BodyName, string> = {
+  Sun: 'your identity and drive',
+  Moon: 'your feelings and comfort',
+  Mercury: 'your thinking and words',
+  Venus: 'love, money and pleasure',
+  Mars: 'your energy and temper',
+  Jupiter: 'your growth and outlook',
+  Saturn: 'your work and its limits',
+  Uranus: 'your need for freedom',
+  Neptune: 'your imagination and boundaries',
+  Pluto: 'what is ending and changing',
+}
+
+const ASPECT_VERB: Record<string, string> = {
+  conjunction: 'conjunct',
+  opposition: 'opposite',
+  square: 'square',
+  trine: 'trine',
+  sextile: 'sextile',
+}
+
+const QUICK_CUE: Record<'hard' | 'soft' | 'neutral', (o: BodyName) => string> = {
+  hard: (o) => ` to ${AREA[o]} — a test or a delay; don't push it.`,
+  soft: (o) => ` to ${AREA[o]} — an easy opening; take one real step.`,
+  neutral: (o) => ` to ${AREA[o]}, landing all at once but clarifying.`,
+}
+
+const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1)
+
+/** A quick, plain read of the day — synthesised from every transit. Free tier. */
 export interface QuickHoroscope {
-  /** The dominant transit, in plain language. */
-  sky: string
-  /** What today asks of the user's focus centre. */
+  /** One line on the overall weather — the balance of all contacts. */
+  weather: string
+  /** The 2–3 strongest contacts, each in one short line. */
+  notes: { label: string; text: string }[]
+  /** What today asks of the focus centre. */
   body: string
   /** The Moon's mood. */
   moon: string
@@ -124,22 +156,69 @@ export function buildQuickHoroscope(reading: HoroscopeInput): QuickHoroscope {
   const moonPos = sky.find((p) => p.body === 'Moon')
   const vulnerable = chakra.balance < 50
   const focus = chakraName(chakra.key)
-  const top = aspects[0]
 
-  const skyLine =
-    hasNatal && top
-      ? `${top.transiting} is ${MANNER[top.def.harmony]} your ${top.other} — ${SHORT[top.transiting]} in the mix, ${top.applying ? 'still building' : 'easing off'}.`
-      : `${transit.title}. ${transit.influence.split('.')[0]}.`
+  // weigh every contact by how exact it is
+  let hard = 0
+  let soft = 0
+  let neutral = 0
+  for (const a of aspects) {
+    if (a.def.harmony === 'hard') hard += a.exactness
+    else if (a.def.harmony === 'soft') soft += a.exactness
+    else neutral += a.exactness
+  }
+  const tight = aspects.filter((a) => a.exactness > 0.55).length
 
-  const bodyLine = vulnerable
+  let weather: string
+  if (aspects.length === 0) {
+    weather =
+      'A quiet sky — nothing pulls hard on your chart today. A good day to set your own pace.'
+  } else if (soft > hard * 1.6 && soft >= neutral) {
+    weather =
+      'The sky leans supportive today — the easy contacts outweigh the hard ones. Doors open if you actually walk through them.'
+  } else if (hard > soft * 1.6 && hard >= neutral) {
+    weather = `More friction than flow today${
+      tight ? ` — ${tight} contact${tight > 1 ? 's are' : ' is'} close to exact` : ''
+    }. Push gently; don't try to force anything to completion.`
+  } else if (neutral > hard && neutral > soft) {
+    weather =
+      'Several planets sit right on your chart — a lot lands at once. Let the day clarify what actually matters.'
+  } else {
+    weather =
+      'A mixed day — support and friction pulling at the same time. Pick your battles and let the small stuff go.'
+  }
+
+  // one note per natal body, strongest first — spreads the read across life areas
+  const seen = new Set<BodyName>()
+  const notes = aspects
+    .filter((a) => {
+      if (seen.has(a.other)) return false
+      seen.add(a.other)
+      return true
+    })
+    .slice(0, hasNatal ? 3 : 2)
+    .map((a) => ({
+      label: `${a.transiting} ${ASPECT_VERB[a.def.name] ?? a.def.name} ${
+        hasNatal ? 'your ' : ''
+      }${a.other}`,
+      text: `${a.transiting} brings ${SHORT[a.transiting]}${QUICK_CUE[a.def.harmony](a.other)}`,
+    }))
+
+  if (notes.length === 0) {
+    notes.push({
+      label: transit.title,
+      text: cap(transit.influence.split('.')[0]) + '.',
+    })
+  }
+
+  const body = vulnerable
     ? `Your ${focus} is tender today — move slower than feels necessary and protect it.`
     : `Your ${focus} is charged — put it to use before the window closes.`
 
-  const moonLine = moonPos
-    ? `Moon in ${moonPos.sign}: ${MOON_SIGN[moonPos.sign] ?? 'a shifting mood'}.`
+  const moon = moonPos
+    ? `Moon in ${moonPos.sign} — ${MOON_SIGN[moonPos.sign] ?? 'a shifting mood'}.`
     : ''
 
-  return { sky: skyLine, body: bodyLine, moon: moonLine }
+  return { weather, notes, body, moon }
 }
 
 export function buildHoroscope(reading: HoroscopeInput): DailyHoroscope {

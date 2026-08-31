@@ -8,7 +8,7 @@ interface QuickHoroscopeProps {
   className?: string
 }
 
-/** The free three-line read of the day. The deep multi-section horoscope is Pro. */
+/** The free quick read — synthesised from every transit. Deep horoscope is Pro. */
 export function QuickHoroscope({
   onOpenFull,
   isPro,
@@ -34,28 +34,44 @@ export function QuickHoroscope({
     suggestedPattern,
   })
 
-  const lines: { label: string; text: string }[] = [
-    { label: 'Sky', text: q.sky },
-    { label: 'You', text: q.body },
-    ...(q.moon ? [{ label: 'Moon', text: q.moon }] : []),
-  ]
-
   return (
     <section className={`glass-panel p-4 ${className}`}>
       <p className="eyebrow">Today’s horoscope</p>
-      <div className="mt-3 flex flex-col gap-2.5">
-        {lines.map((l) => (
-          <p key={l.label} className="text-sm leading-relaxed text-haze-200">
-            <span
-              className="mr-2 text-[10px] uppercase tracking-[0.16em] text-haze-400"
-              aria-hidden
-            >
-              {l.label}
+
+      <p className="mt-2.5 text-sm leading-relaxed text-haze-100">{q.weather}</p>
+
+      {q.notes.length > 0 && (
+        <ul className="mt-3 flex flex-col gap-2.5">
+          {q.notes.map((n) => (
+            <li key={n.label}>
+              <p className="text-[13px] font-semibold leading-tight text-white">
+                {n.label}
+              </p>
+              <p className="mt-0.5 text-[13px] leading-snug text-haze-300">
+                {n.text}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-3 flex flex-col gap-1.5 border-t border-white/[0.07] pt-3">
+        <p className="text-[13px] leading-snug text-haze-200">
+          <span className="mr-2 text-[10px] uppercase tracking-[0.16em] text-haze-400">
+            You
+          </span>
+          {q.body}
+        </p>
+        {q.moon && (
+          <p className="text-[13px] leading-snug text-haze-200">
+            <span className="mr-2 text-[10px] uppercase tracking-[0.16em] text-haze-400">
+              Moon
             </span>
-            {l.text}
+            {q.moon}
           </p>
-        ))}
+        )}
       </div>
+
       <button
         type="button"
         onClick={onOpenFull}
