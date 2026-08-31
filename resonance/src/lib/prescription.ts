@@ -9,6 +9,7 @@ import type {
 import { useAppStore } from '../store/useAppStore'
 import { computeAura, type AuraState } from './aura'
 import { BREATH_PATTERNS } from './breathwork'
+import { buildDailyMantra } from './mantra'
 import {
   MOOD_NEED,
   moodBreath,
@@ -16,7 +17,7 @@ import {
   moodMeditation,
   moodMinutesScale,
 } from './moodPractice'
-import { chakraMantra, chakraName } from './resonanceData'
+import { chakraName } from './resonanceData'
 import { localDayKey } from './timezone'
 
 export interface PrescribedStone {
@@ -41,7 +42,8 @@ export interface Prescription {
   headline: string
   /** One sentence that reads like the vision's "The Prescription". */
   directive: string
-  /** The day's short mantra for the focus chakra. */
+  /** The day's mantra — chosen for the focus chakra *and* the shape of the day
+   *  (the transit, its harmony, the mood, whether to restore). */
   mantra: string
   /** Today's logged mood, if any — the prescription is tuned to it. */
   mood: Mood | null
@@ -65,6 +67,12 @@ interface PrescriptionInput {
   suggestedPattern: BreathPatternKey
   crystals: Crystal[]
   transitTitle: string
+  /** Dominant transiting planet + aspect — shape the mantra. */
+  planet: string
+  aspect: string
+  retrograde: boolean
+  /** Stable-per-day seed for the mantra pick, `${dayKey}|${profile.utc}`. */
+  mantraSeed: string
   vulnerable: boolean
   mood: Mood | null
 }
@@ -130,7 +138,16 @@ export function buildPrescription(
     stones,
     headline,
     directive,
-    mantra: chakraMantra(input.chakra),
+    mantra: buildDailyMantra({
+      chakra: input.chakra,
+      planet: input.planet,
+      aspect: input.aspect,
+      moodNeed: mood ? MOOD_NEED[mood] : null,
+      moodBright: mood === 'bright',
+      urgent,
+      retrograde: input.retrograde,
+      seed: input.mantraSeed,
+    }),
     mood,
     urgent,
   }
@@ -140,6 +157,8 @@ export function buildPrescription(
 export function usePrescription(): Prescription {
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
+  const sky = useAppStore((s) => s.sky)
+  const profile = useAppStore((s) => s.profile)
   const frequency = useAppStore((s) => s.frequency)
   const suggestedPattern = useAppStore((s) => s.suggestedPattern)
   const crystals = useAppStore((s) => s.dailyCrystals)
@@ -150,6 +169,8 @@ export function usePrescription(): Prescription {
   const focus = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focus, sessionLog, moodLog, biometricLog)
   const mood = moodLog.find((m) => m.day === localDayKey())?.mood ?? null
+  const planet = transit?.body ?? 'Moon'
+  const retrograde = sky.find((p) => p.body === planet)?.retrograde ?? false
 
   return buildPrescription(
     {
@@ -158,6 +179,10 @@ export function usePrescription(): Prescription {
       suggestedPattern,
       crystals,
       transitTitle: transit?.title ?? 'today',
+      planet,
+      aspect: transit?.aspect ?? 'in',
+      retrograde,
+      mantraSeed: `${localDayKey()}|${profile?.utc ?? 'no-natal'}`,
       vulnerable: (chakra?.balance ?? 50) < 50,
       mood,
     },
