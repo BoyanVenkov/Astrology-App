@@ -5,10 +5,11 @@ import {
   drawOracle,
   drawReading,
   freshSeed,
-  oracleAnswer,
+  oracleReading,
   SPREADS,
   spreadOf,
   type DrawnCard,
+  type OracleVerdict,
   type Spread,
   type TarotReading,
 } from '../lib/tarot'
@@ -92,6 +93,60 @@ function Interpretation({
       <p className="mt-2 text-sm leading-relaxed text-haze-100">
         {drawn.reversed ? drawn.card.reversed : drawn.card.upright}
       </p>
+    </article>
+  )
+}
+
+/* -------------------------------------------------------------- the oracle */
+
+const VERDICT_COLOR: Record<OracleVerdict, string> = {
+  yes: '#6ee7b7',
+  no: '#fb923c',
+  wait: '#9aa6c9',
+  both: '#a78bfa',
+}
+
+function OracleResult({ q, card }: { q: string; card: DrawnCard }) {
+  const r = oracleReading(card, q)
+  const parts: { label: string; text: string }[] = [
+    { label: 'The heart of it', text: r.heart },
+    { label: 'What it’s really about', text: r.meaning },
+    { label: 'What to do', text: r.action },
+  ]
+  return (
+    <article className="glass-panel animate-rise-in p-4">
+      <p className="text-[11px] uppercase tracking-[0.14em] text-haze-500">
+        You asked
+      </p>
+      <p className="mt-1 font-serif text-lg leading-snug text-white">“{q}”</p>
+
+      {r.verdictLabel && r.verdict && (
+        <span
+          className="mt-3 inline-block rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
+          style={{
+            color: VERDICT_COLOR[r.verdict],
+            boxShadow: `inset 0 0 0 1px ${VERDICT_COLOR[r.verdict]}66`,
+          }}
+        >
+          {r.verdictLabel}
+        </span>
+      )}
+
+      <div className="mt-3 flex flex-col gap-3">
+        {parts.map((p) => (
+          <div key={p.label}>
+            <p
+              className="text-[10px] uppercase tracking-[0.16em]"
+              style={{ color: 'var(--rz-hue)' }}
+            >
+              {p.label}
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-haze-100">
+              {p.text}
+            </p>
+          </div>
+        ))}
+      </div>
     </article>
   )
 }
@@ -243,8 +298,8 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
             Ask the Oracle
           </h1>
           <p className="mt-1 text-sm text-haze-300">
-            Hold one clear question in mind — a “what” or a “how”, not a yes / no —
-            and put it into words.
+            One clear question — a decision, a “when”, or an open “what should I…”.
+            The Oracle reads the card against what you asked.
           </p>
         </header>
 
@@ -295,17 +350,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
             </div>
 
             {oracleUp ? (
-              <article className="glass-panel animate-rise-in p-4">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-haze-500">
-                  You asked
-                </p>
-                <p className="mt-1 font-serif text-lg leading-snug text-white">
-                  “{oracle.q}”
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-haze-100">
-                  {oracleAnswer(oracle.card)}
-                </p>
-              </article>
+              <OracleResult q={oracle.q} card={oracle.card} />
             ) : (
               <p className="text-center text-sm text-haze-400">
                 Tap the card to turn it.

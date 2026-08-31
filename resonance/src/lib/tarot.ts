@@ -269,15 +269,174 @@ export function drawOracle(question: string, profile: BirthProfile | null): Draw
   return drawReading(spreadOf('one'), oracleSeed(question, profile)).cards[0]
 }
 
-/** Compose the Oracle's answer from the drawn card. */
-export function oracleAnswer(drawn: DrawnCard): string {
+/* --------------------------------------------- reading the question itself */
+
+export type OracleKind = 'decision' | 'timing' | 'open'
+export type OracleDomain = 'love' | 'work' | 'money' | 'home' | 'creative' | 'self'
+
+export interface OracleClass {
+  kind: OracleKind
+  domain: OracleDomain
+  aboutPerson: boolean
+}
+
+// "what/how/where/why/which/who ..." → open, even if it contains "should"
+const OPEN_RE = /\b(what|how|where|why|which|who)\b/
+const TIMING_RE = /\b(when|how long|how soon|by when|until when|how many (days|weeks|months)|timing|will .* happen)\b/
+const DECISION_RE =
+  /\b(should i|shall i|ought i|is it worth|is it (a )?good idea|do i (need|have) to|is now the time|would it be|is it better|worth it|go for it|take (the|this|that|it)|say yes|do it|stay or|move on|is this the right)\b/
+const PERSON_RE =
+  /\b(him|her|them|his|hers|their|he'?s|she'?s|they'?re|my (ex|partner|boyfriend|girlfriend|husband|wife|boss|manager|friend|mother|father|mom|dad|sister|brother|son|daughter|colleague|co-?worker))\b/
+
+const DOMAIN_RE: [OracleDomain, RegExp][] = [
+  ['love', /\b(love|relationship|partner|boyfriend|girlfriend|husband|wife|marriage|marry|dating|romance|romantic|crush|my ex|breakup|break up|feelings for)\b/],
+  ['creative', /\b(art|artist|write|writing|writer|music|song|paint|painting|creative|my book|novel|film|the project|my project)\b/],
+  ['work', /\b(job|work|career|boss|manager|co-?worker|colleague|business|company|client|interview|promotion|quit|resign|hire|hired|fired|the office|my role|startup)\b/],
+  ['money', /\b(money|salary|pay|paid|afford|buy|purchase|invest|debt|loan|finances|financial|savings|rent|budget|price)\b/],
+  ['home', /\b(move|moving|relocat|house|apartment|flat|move (back|out|in)|home town|hometown|family|mother|father|mom|dad|sister|brother|parents|kids|children|son|daughter)\b/],
+]
+
+export function classifyQuestion(q: string): OracleClass {
+  const s = ` ${q.toLowerCase().trim()} `
+  const kind: OracleKind = TIMING_RE.test(s)
+    ? 'timing'
+    : OPEN_RE.test(s)
+      ? 'open'
+      : DECISION_RE.test(s)
+        ? 'decision'
+        : 'open'
+  let domain: OracleDomain = 'self'
+  for (const [d, re] of DOMAIN_RE) {
+    if (re.test(s)) {
+      domain = d
+      break
+    }
+  }
+  return { kind, domain, aboutPerson: PERSON_RE.test(s) }
+}
+
+/* ------------------------------------------------------ the yes / no lean */
+
+// −2 firm no · −1 caution · 0 it depends / wait · +1 forward · +2 clear yes
+const MAJOR_LEAN = [
+  1, 2, 0, 2, 1, 0, 1, 2, 1, -1, 1, 0, 0, -1, 0, -1, -2, 2, -1, 2, 1, 2,
+]
+const PIP_LEAN: Record<Suit, number[]> = {
+  //          A   2   3   4   5   6   7   8   9  10
+  wands: [2, 1, 1, 1, -1, 1, 0, 2, 0, -1],
+  cups: [2, 2, 2, -1, -2, 1, -1, 0, 2, 2],
+  swords: [0, 0, -2, 0, -2, 1, -1, -1, -2, -1],
+  pentacles: [2, 0, 2, -1, -2, 1, 0, 2, 2, 2],
+}
+
+function leanValue(card: TarotCard): number {
+  if (card.arcana === 'major') return MAJOR_LEAN[card.rank] ?? 0
+  if (card.rank >= 11) return 0 // courts describe an approach, not a verdict
+  return PIP_LEAN[card.arcana as Suit][card.rank - 1] ?? 0
+}
+
+export type OracleVerdict = 'yes' | 'no' | 'wait' | 'both'
+
+const VERDICT_LABEL: Record<OracleVerdict, string> = {
+  yes: 'Yes-leaning',
+  no: 'No-leaning',
+  wait: 'Not yet',
+  both: "It's both",
+}
+
+export interface OracleReading {
+  card: TarotCard
+  reversed: boolean
+  class: OracleClass
+  /** Only present for decision questions. */
+  verdict: OracleVerdict | null
+  verdictLabel: string | null
+  /** The card's essence, oriented to the question. */
+  heart: string
+  /** What it is really about. */
+  meaning: string
+  /** What to do. */
+  action: string
+}
+
+const DOMAIN_PHRASE: Record<OracleDomain, string> = {
+  love: 'your relationships and your heart',
+  work: 'your work and where it is heading',
+  money: 'money and what you can build',
+  home: 'home, family and where you belong',
+  creative: 'the creative work you are carrying',
+  self: 'your own path right now',
+}
+
+const FAST = new Set([
+  'major-00', 'major-10', 'major-16', 'major-19',
+  'wands-01', 'wands-08', 'cups-01', 'swords-01', 'pentacles-01',
+])
+const SLOW = new Set([
+  'major-04', 'major-05', 'major-09', 'major-12', 'major-14', 'major-21',
+  'pentacles-04', 'pentacles-07', 'swords-04',
+])
+
+/** Cards that genuinely put the choice back on you. */
+const FORK = new Set(['major-06', 'major-11', 'swords-02', 'cups-07'])
+
+export function oracleReading(drawn: DrawnCard, question: string): OracleReading {
   const { card, reversed } = drawn
+  const cls = classifyQuestion(question)
+  const base = leanValue(card)
+  // reversed dampens a yes and softens a no
+  const lean = reversed
+    ? base > 0
+      ? Math.max(base - 2, -1)
+      : base < 0
+        ? base + 1
+        : 0
+    : base
+
+  let verdict: OracleVerdict | null = null
+  if (cls.kind === 'decision') {
+    verdict = FORK.has(card.id)
+      ? 'both'
+      : lean >= 1
+        ? 'yes'
+        : lean <= -1
+          ? 'no'
+          : 'wait'
+  }
+
+  const stance = reversed ? 'reversed' : 'upright'
+  const heart = `${card.name}, ${stance} — ${card.keywords[0]}. It lands on ${DOMAIN_PHRASE[cls.domain]}.`
   const meaning = reversed ? card.reversed : card.upright
-  const stance = reversed
-    ? 'reversed — the force is here, but blocked, turned inward, or overdone'
-    : 'upright — the way is open to you directly'
-  const close = reversed
-    ? 'Where is this question really asking you to stop pushing, or to look at what you have been avoiding?'
-    : 'Take one concrete step in this direction; the rest of the road usually appears once you move.'
-  return `The Oracle draws ${card.name}, ${stance}. ${meaning} The thread running through it: ${card.keywords.join(', ')}. ${close}`
+
+  let action: string
+  if (verdict === 'yes') {
+    action = `Lean toward yes — but on the card's terms, not by forcing it. Move once, then look again.`
+  } else if (verdict === 'no') {
+    action = `Lean toward no, or at least not like this. The card is closing this door rather than opening one.`
+  } else if (verdict === 'both') {
+    action = `Genuinely both. The card won't choose for you — the deciding is yours, and it wants you to make it consciously.`
+  } else if (verdict === 'wait') {
+    action = `Not yet. The ground isn't set. Give it time and ask again when something has actually moved.`
+  } else if (cls.kind === 'timing') {
+    action = FAST.has(card.id)
+      ? `Sooner than it feels — think weeks, not months. Stay ready.`
+      : SLOW.has(card.id)
+        ? `This takes its own time. Think seasons, not weeks — pushing won't speed it.`
+        : `No fixed date. The timing hangs on a move you haven't made yet — make it, and the clock starts.`
+  } else {
+    action = reversed
+      ? `Turn toward what you've been avoiding here. One honest look changes more than more effort.`
+      : `Put your attention on ${card.keywords.join(', ')}. Take one real step, then re-read the situation.`
+  }
+
+  return {
+    card,
+    reversed,
+    class: cls,
+    verdict,
+    verdictLabel: verdict ? VERDICT_LABEL[verdict] : null,
+    heart,
+    meaning,
+    action,
+  }
 }
