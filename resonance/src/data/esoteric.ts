@@ -1,5 +1,6 @@
 import type { ChakraKey, Crystal, SolfeggioFrequency } from '../types/resonance'
 import esotericData from './esotericData.json'
+import { CRYSTAL_LIBRARY } from './crystalLibrary'
 
 /* ------------------------------------------------------------------- types */
 
@@ -64,6 +65,27 @@ const slug = (value: string): string =>
 const sentence = (value: string): string =>
   `${value.charAt(0).toUpperCase()}${value.slice(1)}.`
 
+const STOP = new Set([
+  'a', 'an', 'the', 'and', 'or', 'of', 'to', 'for', 'in', 'on', 'with',
+  'against', 'into', 'that', 'this', 'your', 'you', 'it', 'its',
+])
+
+/** Two keyword-ish words pulled from a crystal's effect blurb. */
+function effectKeywords(effect: string, chakraName: string): string[] {
+  const skip = new Set([
+    ...STOP,
+    ...chakraName.toLowerCase().split(/\s+/),
+    'chakra',
+    'energy',
+  ])
+  const words = effect
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, '')
+    .split(/\s+/)
+    .filter((w) => w.length > 3 && !skip.has(w))
+  return [...new Set(words)].slice(0, 2)
+}
+
 /** The row for a given chakra × planet — always defined (the DB is the full 7×10 grid). */
 export function entryFor(chakra: ChakraKey, planet: string): EsotericEntry {
   return (
@@ -87,7 +109,8 @@ export function entryToCrystals(entry: EsotericEntry): Crystal[] {
 
 /* -------------------------------------------------- full apothecary catalog */
 
-/** Every distinct crystal in the database, de-duplicated by name. */
+/** Every distinct crystal — the transit-row stones plus the standalone
+ *  library — de-duplicated by name. */
 export const ALL_CRYSTALS: Crystal[] = (() => {
   const byName = new Map<string, Crystal>()
   for (const entry of ESOTERIC_ENTRIES) {
@@ -98,10 +121,13 @@ export const ALL_CRYSTALS: Crystal[] = (() => {
         name: c.name,
         chakra: entry.chakra,
         color: c.color,
-        keywords: [entry.chakraName.toLowerCase()],
+        keywords: effectKeywords(c.effect, entry.chakraName),
         description: sentence(c.effect),
       })
     }
+  }
+  for (const c of CRYSTAL_LIBRARY) {
+    if (!byName.has(c.name)) byName.set(c.name, c)
   }
   return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name))
 })()

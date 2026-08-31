@@ -173,13 +173,17 @@ export function Dashboard({
           onClick={onStones}
           className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
         >
-          <span
-            className="h-4 w-4 rounded-full"
-            style={{
-              background: heroStone?.color ?? 'var(--rz-hue)',
-              boxShadow: `0 0 10px ${heroStone?.color ?? 'var(--rz-glow)'}`,
-            }}
-          />
+          <span className="grid h-10 w-10 place-items-center">
+            <span
+              className="h-[18px] w-[18px] rounded-full"
+              style={{
+                background: `radial-gradient(circle at 34% 28%, rgba(255,255,255,0.85), ${
+                  heroStone?.color ?? 'var(--rz-hue)'
+                } 58%)`,
+                boxShadow: `0 0 12px ${heroStone?.color ?? 'var(--rz-glow)'}, inset 0 0 4px rgba(255,255,255,0.35)`,
+              }}
+            />
+          </span>
           <span className="eyebrow">Stone</span>
           <span className="w-full truncate px-1 text-center text-xs text-haze-300">
             {heroStone?.name ?? '—'}
