@@ -4,6 +4,7 @@ import {
   computeSynastry,
   LENSES,
   type CompatLens,
+  type ConnectionTone,
   type SynastryConnection,
 } from '../lib/synastry'
 import { planetSymbol } from '../data/esoteric'
@@ -25,6 +26,17 @@ const ASPECT_GLYPH: Record<string, string> = {
 
 const scoreColor = (s: number): string =>
   s >= 62 ? '#6ee7b7' : s >= 44 ? '#eccd82' : '#fb923c'
+
+const TONE_COLOR: Record<ConnectionTone, string> = {
+  gift: '#6ee7b7',
+  intense: '#eccd82',
+  friction: '#fb923c',
+}
+const TONE_LABEL: Record<ConnectionTone, string> = {
+  gift: 'Flows',
+  intense: 'Fuses',
+  friction: 'Effort',
+}
 
 function ScoreRing({ score }: { score: number }) {
   const r = 34
@@ -60,25 +72,60 @@ function ScoreRing({ score }: { score: number }) {
   )
 }
 
-function ConnectionRow({ conn }: { conn: SynastryConnection }) {
+function ConnectionRow({
+  conn,
+  open,
+  onToggle,
+}: {
+  conn: SynastryConnection
+  open: boolean
+  onToggle: () => void
+}) {
   const glyph = ASPECT_GLYPH[conn.aspect] ?? '·'
-  const good = conn.weight >= 0
+  const tint = TONE_COLOR[conn.tone]
   return (
-    <li className="glass-panel p-3.5">
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-haze-100">
-          Your <span aria-hidden>{planetSymbol(conn.a)}</span> {conn.a}{' '}
-          <span aria-hidden>{glyph}</span> their{' '}
-          <span aria-hidden>{planetSymbol(conn.b)}</span> {conn.b}
-        </span>
+    <li className="glass-panel overflow-hidden">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 p-3.5 text-left active:scale-[0.995]"
+      >
         <span
-          className="data shrink-0 text-[11px]"
-          style={{ color: good ? '#6ee7b7' : '#fb923c' }}
-        >
-          {conn.orbDelta.toFixed(1)}°
+          className="h-2 w-2 shrink-0 rounded-full"
+          style={{ background: tint, boxShadow: `0 0 8px ${tint}` }}
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm text-haze-100">
+            Your <span aria-hidden>{planetSymbol(conn.a)}</span> {conn.a}{' '}
+            <span aria-hidden>{glyph}</span> their{' '}
+            <span aria-hidden>{planetSymbol(conn.b)}</span> {conn.b}
+          </span>
+          <span className="mt-0.5 block text-xs text-haze-400">
+            {conn.summary}
+          </span>
         </span>
-      </div>
-      <p className="mt-1.5 text-xs leading-relaxed text-haze-300">{conn.text}</p>
+        <span className="shrink-0 text-right">
+          <span
+            className="block text-[10px] font-semibold uppercase tracking-[0.12em]"
+            style={{ color: tint }}
+          >
+            {TONE_LABEL[conn.tone]}
+          </span>
+          <span className="data block text-[11px] text-haze-400">
+            {conn.orbDelta.toFixed(1)}°
+          </span>
+        </span>
+      </button>
+      {open && (
+        <div className="animate-rise-in border-t border-white/[0.06] px-3.5 py-3.5">
+          <p className="text-sm leading-relaxed text-haze-200">{conn.detail}</p>
+          <p className="data mt-2 text-[11px] text-haze-500">
+            {conn.aspect} · {conn.orbDelta.toFixed(1)}° from exact ·{' '}
+            {conn.applying ? 'growing tighter' : 'easing off'}
+          </p>
+        </div>
+      )}
     </li>
   )
 }
@@ -86,6 +133,7 @@ function ConnectionRow({ conn }: { conn: SynastryConnection }) {
 function Reading({ person }: { person: SavedPerson }) {
   const profile = useAppStore((s) => s.profile)
   const [lens, setLens] = useState<CompatLens>('love')
+  const [openConn, setOpenConn] = useState<number | null>(null)
 
   if (!profile) return null
   const reading = computeSynastry(
@@ -101,7 +149,10 @@ function Reading({ person }: { person: SavedPerson }) {
           <button
             key={l.key}
             type="button"
-            onClick={() => setLens(l.key)}
+            onClick={() => {
+              setLens(l.key)
+              setOpenConn(null)
+            }}
             className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] transition"
             style={{
               color: lens === l.key ? 'var(--rz-hue)' : 'rgba(166,177,209,0.9)',
@@ -116,16 +167,59 @@ function Reading({ person }: { person: SavedPerson }) {
         ))}
       </div>
 
-      <section className="glass-panel glass-panel-active flex items-center gap-4 p-4">
-        <ScoreRing score={reading.score} />
-        <span className="min-w-0">
-          <span className="block font-serif text-xl leading-tight text-white">
-            {reading.label}
+      <section className="glass-panel glass-panel-active p-4">
+        <div className="flex items-center gap-4">
+          <ScoreRing score={reading.score} />
+          <span className="min-w-0">
+            <span className="block font-serif text-xl leading-tight text-white">
+              {reading.label}
+            </span>
+            <span className="mt-1 block text-xs text-haze-400">
+              for {LENSES.find((l) => l.key === lens)?.label.toLowerCase()}
+            </span>
           </span>
-          <span className="mt-1 block text-sm leading-relaxed text-haze-200">
-            {reading.summary}
-          </span>
-        </span>
+        </div>
+        <p className="mt-3 text-sm leading-relaxed text-haze-200">
+          {reading.overview}
+        </p>
+      </section>
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow">The texture of it</p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-200">
+          {reading.texture}
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-300">
+          {reading.elements}
+        </p>
+      </section>
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow" style={{ color: '#6ee7b7' }}>
+          What flows
+        </p>
+        <ul className="mt-2 flex flex-col gap-2 text-sm leading-relaxed text-haze-200">
+          {reading.strengths.map((s, i) => (
+            <li key={i} className="flex gap-2">
+              <span style={{ color: '#6ee7b7' }}>✦</span>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow" style={{ color: '#fb923c' }}>
+          What takes work
+        </p>
+        <ul className="mt-2 flex flex-col gap-2 text-sm leading-relaxed text-haze-200">
+          {reading.frictions.map((s, i) => (
+            <li key={i} className="flex gap-2">
+              <span style={{ color: '#fb923c' }}>△</span>
+              <span>{s}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="glass-panel p-4">
@@ -158,7 +252,12 @@ function Reading({ person }: { person: SavedPerson }) {
         {reading.connections.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {reading.connections.map((conn, i) => (
-              <ConnectionRow key={`${conn.a}-${conn.b}-${conn.aspect}-${i}`} conn={conn} />
+              <ConnectionRow
+                key={`${conn.a}-${conn.b}-${conn.aspect}-${i}`}
+                conn={conn}
+                open={openConn === i}
+                onToggle={() => setOpenConn((c) => (c === i ? null : i))}
+              />
             ))}
           </ul>
         ) : (
@@ -167,6 +266,21 @@ function Reading({ person }: { person: SavedPerson }) {
           </p>
         )}
       </div>
+
+      <section
+        className="glass-panel p-4"
+        style={{
+          background:
+            'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 8%, transparent), transparent 70%)',
+        }}
+      >
+        <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+          Making it work
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-100">
+          {reading.advice}
+        </p>
+      </section>
 
       {(!profile.timeKnown || !person.timeKnown) && (
         <p className="px-1 text-[11px] leading-relaxed text-haze-500">
