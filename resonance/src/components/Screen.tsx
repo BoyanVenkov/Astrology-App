@@ -1,20 +1,20 @@
 import type { ReactNode } from 'react'
 
-/** The standard back control — a chevron, aligned to the content edge. */
+/** The standard back control — a chevron in a visible chip, matching the gear. */
 export function BackButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label="Back"
-      className="-ml-1 grid h-9 w-9 shrink-0 place-items-center self-start rounded-full text-haze-300 transition active:scale-90 active:bg-white/5"
+      className="-ml-1 grid h-9 w-9 shrink-0 place-items-center self-start rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-white/15"
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-5 w-5"
+        className="h-[1.15rem] w-[1.15rem]"
         fill="none"
         stroke="currentColor"
-        strokeWidth={2}
+        strokeWidth={2.4}
         strokeLinecap="round"
         strokeLinejoin="round"
       >
