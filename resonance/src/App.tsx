@@ -23,8 +23,9 @@ import { Settings } from './components/Settings'
 import { SkyView } from './components/SkyView'
 import { TarotReader } from './components/TarotReader'
 import { Transits } from './components/Transits'
+import { Welcome, Splash } from './components/Welcome'
 import { YouView } from './components/YouView'
-import { useAuthDeepLink } from './lib/auth'
+import { useAuth, useAuthDeepLink } from './lib/auth'
 import { useLiveLocation, useLiveSky } from './lib/liveSky'
 import { syncNotifications } from './lib/notifications'
 import { useCloudSync } from './lib/sync'
@@ -64,6 +65,7 @@ function App() {
   const [ritual, setRitual] = useState<RitualPreset | null>(null)
   const [paywall, setPaywall] = useState<string | null>(null)
   const [authOpen, setAuthOpen] = useState(false)
+  const auth = useAuth()
   const onboardingComplete = useAppStore((s) => s.onboardingComplete)
   const moodGateDay = useAppStore((s) => s.moodGateDay)
   const hasMoodToday = useAppStore((s) =>
@@ -89,6 +91,10 @@ function App() {
     setPracticeOpen(false)
     setRitual(preset)
   }
+
+  // Every user signs in on their device; Supabase keeps the session after that.
+  if (auth.status === 'loading') return <Splash />
+  if (auth.status === 'signed-out') return <Welcome />
 
   if (!onboardingComplete) return <Onboarding />
 
