@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { App as CapApp } from '@capacitor/app'
 import { AudioBridge } from './audio/AudioBridge'
 import { Apothecary } from './components/Apothecary'
 import { AuthSheet } from './components/AuthSheet'
@@ -79,6 +80,41 @@ function App() {
   useNotificationSync()
   useAuthDeepLink()
   useCloudSync()
+
+  // Android hardware/gesture back: close whatever's on top, else step back
+  // to the home tab, else exit — otherwise the OS just kills the app outright.
+  useEffect(() => {
+    const handle = CapApp.addListener('backButton', () => {
+      if (authOpen) {
+        setAuthOpen(null)
+        return
+      }
+      if (paywall) {
+        setPaywall(null)
+        return
+      }
+      if (practiceOpen) {
+        setPracticeOpen(false)
+        return
+      }
+      if (ritual) {
+        setRitual(null)
+        return
+      }
+      if (sub !== null) {
+        setSub(null)
+        return
+      }
+      if (tab !== 'today') {
+        setTab('today')
+        return
+      }
+      void CapApp.exitApp()
+    })
+    return () => {
+      void handle.then((h) => h.remove())
+    }
+  }, [authOpen, paywall, practiceOpen, ritual, sub, tab])
 
   const openPaywall = (reason?: string) =>
     setPaywall(reason ?? 'Unlock Resonance Pro')

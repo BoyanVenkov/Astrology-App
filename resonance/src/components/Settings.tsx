@@ -501,13 +501,17 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
               </span>
             </span>
             {isPro ? (
-              <button
-                type="button"
-                onClick={() => setTier('free')}
-                className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-haze-200"
-              >
-                Lock (dev)
-              </button>
+              // dev-only escape hatch for testing the free tier — Vite strips
+              // this whole branch from the production bundle (import.meta.env.DEV)
+              import.meta.env.DEV && (
+                <button
+                  type="button"
+                  onClick={() => setTier('free')}
+                  className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-haze-200"
+                >
+                  Lock (dev)
+                </button>
+              )
             ) : (
               <button
                 type="button"
@@ -519,7 +523,8 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
             )}
           </div>
         </Row>
-        {!isPro && (
+        {/* dev-only free-Pro shortcut for testing — never ships to production */}
+        {!isPro && import.meta.env.DEV && (
           <Row>
             <button
               type="button"
