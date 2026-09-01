@@ -66,6 +66,9 @@ export async function signInWithGoogle(): Promise<AuthError | null> {
     options: {
       redirectTo: native ? OAUTH_REDIRECT : `${window.location.origin}`,
       skipBrowserRedirect: native,
+      // always show Google's "choose an account" screen, never silently
+      // reuse whichever account the browser / device is already signed into
+      queryParams: { prompt: 'select_account' },
     },
   })
   if (error) return { message: error.message }
@@ -75,10 +78,39 @@ export async function signInWithGoogle(): Promise<AuthError | null> {
   return null
 }
 
-/** Catch the OAuth redirect deep link and finish the PKCE exchange. */
+// module-level so a StrictMode double-mount can't exchange the code twice
+let webExchangeHandled = false
+
+/**
+ * Finish the OAuth redirect and run the PKCE exchange:
+ * - native: a `com.resonance.app://auth-callback` deep link (Capacitor App plugin)
+ * - web: the provider redirects back to the app origin with `?code=…`
+ * (the client has `detectSessionInUrl: false`, so we do this ourselves).
+ */
 export function useAuthDeepLink(): void {
   useEffect(() => {
-    if (!Capacitor.isNativePlatform()) return
+    if (!Capacitor.isNativePlatform()) {
+      if (webExchangeHandled) return
+      const url = new URL(window.location.href)
+      const code = url.searchParams.get('code')
+      const oauthError = url.searchParams.get('error_description')
+      if (!code && !oauthError) return
+      webExchangeHandled = true
+
+      const clean = () => {
+        for (const k of ['code', 'state', 'error', 'error_description', 'error_code']) {
+          url.searchParams.delete(k)
+        }
+        window.history.replaceState({}, '', url.pathname + url.search + url.hash)
+      }
+      if (code) {
+        void supabase().auth.exchangeCodeForSession(code).finally(clean)
+      } else {
+        clean()
+      }
+      return
+    }
+
     const handle = CapApp.addListener('appUrlOpen', async ({ url }) => {
       if (!url.startsWith(OAUTH_REDIRECT)) return
       const code = new URL(url).searchParams.get('code')
@@ -91,27 +123,6 @@ export function useAuthDeepLink(): void {
       void handle.then((h) => h.remove())
     }
   }, [])
-}
-
-/** Email — sends a 6-digit code (needs `{{ .Token }}` in the Supabase email template). */
-export async function sendEmailCode(email: string): Promise<AuthError | null> {
-  const { error } = await supabase().auth.signInWithOtp({
-    email: email.trim(),
-    options: { shouldCreateUser: true },
-  })
-  return error ? { message: error.message } : null
-}
-
-export async function verifyEmailCode(
-  email: string,
-  code: string,
-): Promise<AuthError | null> {
-  const { error } = await supabase().auth.verifyOtp({
-    email: email.trim(),
-    token: code.trim(),
-    type: 'email',
-  })
-  return error ? { message: error.message } : null
 }
 
 export async function signOut(): Promise<void> {

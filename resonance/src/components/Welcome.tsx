@@ -2,11 +2,7 @@ import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
 import { CHAKRA_ORDER, chakraColor } from '../lib/resonanceData'
-import {
-  sendEmailCode,
-  signInWithGoogle,
-  verifyEmailCode,
-} from '../lib/auth'
+import { signInWithGoogle } from '../lib/auth'
 import { PRIVACY_URL, TERMS_URL, openExternal } from '../lib/links'
 import { ResonanceMark } from './Logo'
 
@@ -169,9 +165,6 @@ export function Splash() {
 
 /* ------------------------------------------------------------------ welcome */
 
-const field =
-  'w-full min-w-0 rounded-xl border border-white/[0.12] bg-midnight-950/50 px-4 py-3.5 text-white outline-none transition focus:border-white/30'
-
 const GoogleG = () => (
   <svg viewBox="0 0 24 24" className="h-[1.15rem] w-[1.15rem]" aria-hidden>
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09Z" />
@@ -181,18 +174,21 @@ const GoogleG = () => (
   </svg>
 )
 
+interface WelcomeProps {
+  /** Enter the app as a guest — sign-in stays available in Settings, and is
+   *  required later to buy Pro. */
+  onSkip: () => void
+}
+
 /**
- * The startup sign-in gate. Every user signs in here; Supabase keeps the
- * session on the device after that, so it only shows on a fresh install or
- * after an explicit sign-out.
+ * The startup sign-in screen. Signing in keeps the session on the device
+ * (Supabase), so it only shows on a fresh install or after a sign-out — or
+ * until the visitor taps "explore without an account".
  */
-export function Welcome() {
+export function Welcome({ onSkip }: WelcomeProps) {
   useDayHue()
   const transit = useAppStore((s) => s.transit)
 
-  const [view, setView] = useState<'choose' | 'email' | 'code'>('choose')
-  const [email, setEmail] = useState('')
-  const [code, setCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
@@ -204,28 +200,6 @@ export function Welcome() {
     if (e) setErr(e.message)
     // native returns via the deep link; web redirects away. On success the
     // auth listener flips App past this gate — no callback needed.
-  }
-
-  const send = async () => {
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setErr('That doesn’t look like an email address.')
-      return
-    }
-    setBusy(true)
-    setErr(null)
-    const e = await sendEmailCode(email)
-    setBusy(false)
-    if (e) setErr(e.message)
-    else setView('code')
-  }
-
-  const verify = async () => {
-    setBusy(true)
-    setErr(null)
-    const e = await verifyEmailCode(email, code)
-    setBusy(false)
-    if (e) setErr(e.message)
-    // success → auth listener advances the app
   }
 
   return (
@@ -267,101 +241,28 @@ export function Welcome() {
       </div>
 
       <div className="shrink-0">
-        {view === 'choose' && (
-          <div className="flex flex-col gap-2.5">
-            <p className="mb-1 text-center text-[11px] leading-relaxed text-haze-500">
-              Sign in to keep your chart, journal and saved people safe across
-              devices — and to hold your subscription if you reinstall.
-            </p>
-            <button
-              type="button"
-              onClick={google}
-              disabled={busy}
-              className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-glow)] transition active:scale-[0.98] disabled:opacity-60"
-            >
-              <GoogleG />
-              {busy ? 'Opening Google…' : 'Continue with Google'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setErr(null)
-                setView('email')
-              }}
-              className="btn-ghost px-4 py-3.5 text-sm font-semibold"
-            >
-              Use an email code instead
-            </button>
-          </div>
-        )}
-
-        {view === 'email' && (
-          <div className="flex flex-col gap-2.5">
-            <input
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className={field}
-            />
-            <button
-              type="button"
-              onClick={send}
-              disabled={busy}
-              className="btn-primary px-4 py-4 text-sm uppercase disabled:opacity-50"
-            >
-              {busy ? 'Sending…' : 'Send me a code'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setErr(null)
-                setView('choose')
-              }}
-              className="text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
-            >
-              ← Back
-            </button>
-          </div>
-        )}
-
-        {view === 'code' && (
-          <div className="flex flex-col gap-2.5">
-            <p className="text-center text-xs text-haze-400">
-              Enter the 6-digit code sent to {email}.
-            </p>
-            <input
-              type="text"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              maxLength={6}
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-              placeholder="••••••"
-              className={`${field} data text-center text-lg tracking-[0.4em]`}
-            />
-            <button
-              type="button"
-              onClick={verify}
-              disabled={busy || code.length < 6}
-              className="btn-primary px-4 py-4 text-sm uppercase disabled:opacity-50"
-            >
-              {busy ? 'Checking…' : 'Sign in'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setErr(null)
-                setView('email')
-              }}
-              className="text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
-            >
-              Wrong email? Go back
-            </button>
-          </div>
-        )}
+        <div className="flex flex-col gap-2.5">
+          <p className="mb-1 text-center text-[11px] leading-relaxed text-haze-500">
+            Sign in to keep your chart, journal and saved people safe across
+            devices — and to hold your subscription if you reinstall.
+          </p>
+          <button
+            type="button"
+            onClick={google}
+            disabled={busy}
+            className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-glow)] transition active:scale-[0.98] disabled:opacity-60"
+          >
+            <GoogleG />
+            {busy ? 'Opening Google…' : 'Continue with Google'}
+          </button>
+          <button
+            type="button"
+            onClick={onSkip}
+            className="mt-1 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
+          >
+            Explore without an account
+          </button>
+        </div>
 
         {err && (
           <p className="mt-3 text-center text-xs text-red-300">{err}</p>

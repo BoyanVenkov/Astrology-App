@@ -130,6 +130,7 @@ const createSession = (): ResonanceSession & SkyState => {
     tarotDrawnDay: null,
     moodGateDay: null,
     people: [],
+    authSkipped: false,
   }
 }
 
@@ -166,6 +167,8 @@ interface ResonanceActions {
   editProfile: () => void
   /** Continue without a natal chart (transit-only readings). */
   skipOnboarding: () => void
+  /** Enter the app without signing in (the Welcome gate stops blocking). */
+  skipAuth: () => void
   /** Recompute the daily transit / chakra / crystals (call when the day rolls over). */
   refreshDailyTransit: () => void
   /** Mark that today's daily tarot card has been turned. */
@@ -273,6 +276,8 @@ export const useAppStore = create<AppStore>()(
 
       skipOnboarding: () => set({ onboardingComplete: true }),
 
+      skipAuth: () => set({ authSkipped: true }),
+
       refreshDailyTransit: () =>
         set((state) => {
           const slice = readingSlice(state.profile, state.currentLocation)
@@ -311,6 +316,7 @@ export const useAppStore = create<AppStore>()(
           tarotDrawnDay: state.tarotDrawnDay,
           moodGateDay: state.moodGateDay,
           people: state.people,
+          authSkipped: state.authSkipped,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -343,6 +349,7 @@ export const useAppStore = create<AppStore>()(
         tarotDrawnDay: state.tarotDrawnDay,
         moodGateDay: state.moodGateDay,
         people: state.people,
+        authSkipped: state.authSkipped,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>

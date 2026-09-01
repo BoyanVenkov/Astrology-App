@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAuth } from '../lib/auth'
 import {
   PRO_FEATURES,
   PRO_PRICING,
@@ -10,21 +11,38 @@ import { LockIcon } from './icons'
 interface PaywallProps {
   onClose: () => void
   reason?: string
+  /** Open the sign-in sheet — a purchase needs an account. */
+  onNeedAuth?: () => void
 }
 
-export function Paywall({ onClose, reason }: PaywallProps) {
+export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
+  const { status } = useAuth()
+  const needsAuth = status !== 'signed-in'
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('yearly')
   const [busy, setBusy] = useState(false)
 
   const buy = async () => {
+    if (needsAuth) {
+      onNeedAuth?.()
+      return
+    }
     setBusy(true)
     const ok = await purchasePro()
     setBusy(false)
     if (ok) onClose()
   }
 
-  const cta =
-    plan === 'yearly'
+  const restore = () => {
+    if (needsAuth) {
+      onNeedAuth?.()
+      return
+    }
+    void restorePurchases()
+  }
+
+  const cta = needsAuth
+    ? 'Sign in to continue'
+    : plan === 'yearly'
       ? `Start ${PRO_PRICING.trialDays}-day free trial`
       : `Start Pro · ${PRO_PRICING.monthly}/mo`
 
@@ -104,11 +122,14 @@ export function Paywall({ onClose, reason }: PaywallProps) {
         </button>
 
         <p className="mt-2.5 text-center text-[11px] leading-relaxed text-haze-500">
+          {needsAuth
+            ? 'A subscription is linked to your account, so it stays with you if you reinstall or switch phones. '
+            : ''}
           {terms}
         </p>
 
         <div className="mt-3 flex items-center justify-between text-[11px] text-haze-400">
-          <button type="button" onClick={() => void restorePurchases()}>
+          <button type="button" onClick={restore}>
             Restore purchases
           </button>
           <button type="button" onClick={onClose}>

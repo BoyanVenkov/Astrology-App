@@ -384,4 +384,6 @@ export interface ResonanceSession {
   moodGateDay: string | null
   /** People saved for chart-compatibility readings. */
   people: SavedPerson[]
+  /** True once the user chose "explore without an account" on the Welcome gate. */
+  authSkipped: boolean
 }

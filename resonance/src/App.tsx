@@ -64,8 +64,10 @@ function App() {
   const [practiceOpen, setPracticeOpen] = useState(false)
   const [ritual, setRitual] = useState<RitualPreset | null>(null)
   const [paywall, setPaywall] = useState<string | null>(null)
-  const [authOpen, setAuthOpen] = useState(false)
+  const [authOpen, setAuthOpen] = useState<'backup' | 'purchase' | null>(null)
   const auth = useAuth()
+  const authSkipped = useAppStore((s) => s.authSkipped)
+  const skipAuth = useAppStore((s) => s.skipAuth)
   const onboardingComplete = useAppStore((s) => s.onboardingComplete)
   const moodGateDay = useAppStore((s) => s.moodGateDay)
   const hasMoodToday = useAppStore((s) =>
@@ -92,9 +94,11 @@ function App() {
     setRitual(preset)
   }
 
-  // Every user signs in on their device; Supabase keeps the session after that.
+  // Sign-in is offered up front, but a guest can choose to explore first.
+  // Buying Pro then requires an account (see the Paywall).
   if (auth.status === 'loading') return <Splash />
-  if (auth.status === 'signed-out') return <Welcome />
+  if (auth.status === 'signed-out' && !authSkipped)
+    return <Welcome onSkip={skipAuth} />
 
   if (!onboardingComplete) return <Onboarding />
 
@@ -163,7 +167,7 @@ function App() {
           <Settings
             onBack={back}
             onUpgrade={() => openPaywall()}
-            onAuth={() => setAuthOpen(true)}
+            onAuth={() => setAuthOpen('backup')}
           />
         )}
 
@@ -198,7 +202,7 @@ function App() {
           <YouView
             onOpen={setSub}
             onUpgrade={() => openPaywall()}
-            onAuth={() => setAuthOpen(true)}
+            onAuth={() => setAuthOpen('backup')}
           />
         )}
       </Layout>
@@ -214,13 +218,19 @@ function App() {
         />
       )}
 
-      {paywall && <Paywall reason={paywall} onClose={() => setPaywall(null)} />}
-
-      {authOpen && (
-        <AuthSheet
-          onClose={() => setAuthOpen(false)}
-          onSignedIn={() => setAuthOpen(false)}
+      {paywall && (
+        <Paywall
+          reason={paywall}
+          onClose={() => {
+            setPaywall(null)
+            setAuthOpen(null)
+          }}
+          onNeedAuth={() => setAuthOpen('purchase')}
         />
+      )}
+
+      {authOpen && auth.status !== 'signed-in' && (
+        <AuthSheet reason={authOpen} onClose={() => setAuthOpen(null)} />
       )}
     </>
   )
