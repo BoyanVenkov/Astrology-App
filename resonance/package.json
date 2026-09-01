@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:review": "tsc -b && vite build --mode review",
     "lint": "oxlint",
     "preview": "vite preview",
     "mobile:sync": "npm run build && npx cap sync android",
+    "review:sync": "npm run build:review && npx cap sync android",
     "android:open": "npm run mobile:sync && npx cap open android"
   },
   "dependencies": {

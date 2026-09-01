@@ -43,8 +43,16 @@ export interface Entitlements {
   freeHistoryDays: number
 }
 
+/**
+ * Review build only. `npm run build:review` (Vite `--mode review`, which loads
+ * `.env.review` with VITE_REVIEW_UNLOCK=1) unlocks every Pro feature so you can
+ * walk the whole app on a device without a real purchase. A normal `vite build`
+ * has no such env var, so this folds to `false` and is dead-code-eliminated.
+ */
+export const REVIEW_UNLOCK = import.meta.env.VITE_REVIEW_UNLOCK === '1'
+
 export function entitlementsFor(tier: PremiumTier): Entitlements {
-  const isPro = tier === 'pro'
+  const isPro = tier === 'pro' || REVIEW_UNLOCK
   return {
     tier,
     isPro,
