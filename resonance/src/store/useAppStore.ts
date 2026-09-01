@@ -373,3 +373,113 @@ export const useAppStore = create<AppStore>()(
     },
   ),
 )
+
+/* ------------------------------------------------------------------ sync */
+
+/** The fields that back up to the cloud (mirror of `partialize`, minus the
+ *  session-specific / recomputed bits). */
+export interface SyncSnapshot {
+  profile: BirthProfile | null
+  onboardingComplete: boolean
+  audio: AudioPreferences
+  breathPattern: BreathPatternKey
+  completedSessions: number
+  lastCompletedAt: string | null
+  sessionLog: PracticeSession[]
+  moodLog: MoodEntry[]
+  biometricLog: BiometricReading[]
+  currentLocation: GeoPoint | null
+  notifications: NotificationPreferences
+  tier: PremiumTier
+  tarotDrawnDay: string | null
+  moodGateDay: string | null
+  people: SavedPerson[]
+}
+
+export function snapshotForSync(): SyncSnapshot {
+  const s = useAppStore.getState()
+  return {
+    profile: s.profile,
+    onboardingComplete: s.onboardingComplete,
+    audio: s.audio,
+    breathPattern: s.breathPattern,
+    completedSessions: s.completedSessions,
+    lastCompletedAt: s.lastCompletedAt,
+    sessionLog: s.sessionLog,
+    moodLog: s.moodLog,
+    biometricLog: s.biometricLog,
+    currentLocation: s.currentLocation,
+    notifications: s.notifications,
+    tier: s.tier,
+    tarotDrawnDay: s.tarotDrawnDay,
+    moodGateDay: s.moodGateDay,
+    people: s.people,
+  }
+}
+
+const unionBy = <T>(a: T[], b: T[], key: (x: T) => string): T[] => {
+  const m = new Map<string, T>()
+  for (const x of [...a, ...b]) m.set(key(x), x)
+  return [...m.values()]
+}
+const laterDay = (a: string | null, b: string | null): string | null =>
+  !a ? b : !b ? a : a >= b ? a : b
+
+/**
+ * Merge a cloud snapshot into local state. Logs always union (no data loss);
+ * scalars take the remote value when the remote row changed after this device
+ * last synced, else keep local.
+ */
+export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): void {
+  useAppStore.setState((s) => {
+    const sessionLog = unionBy(
+      s.sessionLog,
+      remote.sessionLog ?? [],
+      (x) => x.at,
+    ).slice(-SESSION_LOG_CAP)
+    const moodLog = unionBy(s.moodLog, remote.moodLog ?? [], (x) => x.day).slice(
+      -SESSION_LOG_CAP,
+    )
+    const biometricLog = unionBy(
+      s.biometricLog,
+      remote.biometricLog ?? [],
+      (x) => x.day,
+    ).slice(-SESSION_LOG_CAP)
+    const people = unionBy(
+      s.people,
+      remote.people ?? [],
+      (x) => x.id,
+    ).slice(0, 12)
+
+    const takeRemoteScalars = remoteNewer && remote.profile !== undefined
+
+    const profile =
+      s.profile ?? (takeRemoteScalars ? (remote.profile ?? null) : null)
+    const patch: Partial<ReturnType<typeof useAppStore.getState>> = {
+      sessionLog,
+      moodLog,
+      biometricLog,
+      people,
+      completedSessions: Math.max(
+        s.completedSessions,
+        remote.completedSessions ?? 0,
+      ),
+      lastCompletedAt: laterDay(s.lastCompletedAt, remote.lastCompletedAt ?? null),
+      tarotDrawnDay: laterDay(s.tarotDrawnDay, remote.tarotDrawnDay ?? null),
+      moodGateDay: laterDay(s.moodGateDay, remote.moodGateDay ?? null),
+      onboardingComplete: s.onboardingComplete || !!remote.onboardingComplete,
+      tier: s.tier === 'pro' || remote.tier === 'pro' ? 'pro' : s.tier,
+    }
+    if (takeRemoteScalars) {
+      patch.profile = profile ?? remote.profile ?? null
+      patch.audio = { ...s.audio, ...remote.audio }
+      patch.notifications = { ...s.notifications, ...remote.notifications }
+      if (remote.breathPattern) patch.breathPattern = remote.breathPattern
+      if (remote.currentLocation !== undefined)
+        patch.currentLocation = remote.currentLocation
+    } else if (!s.profile && remote.profile) {
+      patch.profile = remote.profile
+    }
+    return patch
+  })
+}

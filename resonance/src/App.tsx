@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AudioBridge } from './audio/AudioBridge'
 import { Apothecary } from './components/Apothecary'
+import { AuthSheet } from './components/AuthSheet'
 import { BodyCheckIn } from './components/BodyCheckIn'
 import { ChakraField } from './components/ChakraField'
 import { Compatibility } from './components/Compatibility'
@@ -22,8 +23,10 @@ import { SkyView } from './components/SkyView'
 import { TarotReader } from './components/TarotReader'
 import { Transits } from './components/Transits'
 import { YouView } from './components/YouView'
+import { useAuthDeepLink } from './lib/auth'
 import { useLiveLocation, useLiveSky } from './lib/liveSky'
 import { syncNotifications } from './lib/notifications'
+import { useCloudSync } from './lib/sync'
 import { usePrescription } from './lib/prescription'
 import { localDayKey } from './lib/timezone'
 import { useAppStore } from './store/useAppStore'
@@ -58,6 +61,7 @@ function App() {
   const [practiceOpen, setPracticeOpen] = useState(false)
   const [ritual, setRitual] = useState<RitualPreset | null>(null)
   const [paywall, setPaywall] = useState<string | null>(null)
+  const [authOpen, setAuthOpen] = useState(false)
   const onboardingComplete = useAppStore((s) => s.onboardingComplete)
   const moodGateDay = useAppStore((s) => s.moodGateDay)
   const hasMoodToday = useAppStore((s) =>
@@ -67,6 +71,8 @@ function App() {
   useLiveSky()
   useLiveLocation()
   useNotificationSync()
+  useAuthDeepLink()
+  useCloudSync()
 
   const openPaywall = (reason?: string) =>
     setPaywall(reason ?? 'Unlock Resonance Pro')
@@ -143,7 +149,11 @@ function App() {
         {sub === 'mood' && <MoodCheckIn onDone={back} />}
         {sub === 'body' && <BodyCheckIn onDone={back} />}
         {sub === 'settings' && (
-          <Settings onBack={back} onUpgrade={() => openPaywall()} />
+          <Settings
+            onBack={back}
+            onUpgrade={() => openPaywall()}
+            onAuth={() => setAuthOpen(true)}
+          />
         )}
 
         {sub === null && tab === 'today' && (
@@ -174,7 +184,11 @@ function App() {
           />
         )}
         {sub === null && tab === 'you' && (
-          <YouView onOpen={setSub} onUpgrade={() => openPaywall()} />
+          <YouView
+            onOpen={setSub}
+            onUpgrade={() => openPaywall()}
+            onAuth={() => setAuthOpen(true)}
+          />
         )}
       </Layout>
 
@@ -190,6 +204,13 @@ function App() {
       )}
 
       {paywall && <Paywall reason={paywall} onClose={() => setPaywall(null)} />}
+
+      {authOpen && (
+        <AuthSheet
+          onClose={() => setAuthOpen(false)}
+          onSignedIn={() => setAuthOpen(false)}
+        />
+      )}
     </>
   )
 }

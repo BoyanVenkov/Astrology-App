@@ -2,6 +2,8 @@ import { useState, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { BodyCheckIn } from './BodyCheckIn'
 import { bodyState } from '../lib/biometrics'
+import { deleteAccount, signOut, useAuth } from '../lib/auth'
+import { backupNow } from '../lib/sync'
 import {
   ensureNotificationPermission,
   syncNotifications,
@@ -13,6 +15,7 @@ import { Screen } from './Screen'
 interface SettingsProps {
   onBack: () => void
   onUpgrade: () => void
+  onAuth: () => void
 }
 
 function Toggle({
@@ -73,7 +76,32 @@ function Section({
 const fieldCls =
   'rounded-xl border border-white/12 bg-midnight-950/60 px-3 py-2 text-sm text-white outline-none focus:border-gold-400/60'
 
-export function Settings({ onBack, onUpgrade }: SettingsProps) {
+export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
+  const { status, user } = useAuth()
+  const [acctBusy, setAcctBusy] = useState<null | 'backup' | 'out' | 'delete'>(
+    null,
+  )
+  const [acctMsg, setAcctMsg] = useState<string | null>(null)
+
+  const doBackup = async () => {
+    setAcctBusy('backup')
+    const ok = await backupNow()
+    setAcctBusy(null)
+    setAcctMsg(ok ? 'Backed up.' : 'Backup failed — check your connection.')
+  }
+  const doDelete = async () => {
+    if (
+      !window.confirm(
+        'Permanently delete your account and everything backed up to the cloud? Data on this device is kept until you also erase it below.',
+      )
+    )
+      return
+    setAcctBusy('delete')
+    const err = await deleteAccount()
+    setAcctBusy(null)
+    setAcctMsg(err ? `Deletion issue: ${err.message}` : 'Account deleted.')
+  }
+
   const audio = useAppStore((s) => s.audio)
   const updateAudioPreferences = useAppStore((s) => s.updateAudioPreferences)
   const notifications = useAppStore((s) => s.notifications)
@@ -142,6 +170,76 @@ export function Settings({ onBack, onUpgrade }: SettingsProps) {
 
   return (
     <Screen eyebrow="Settings" title="Attune the app" onBack={onBack}>
+      <Section title="Account">
+        {status === 'signed-in' && user ? (
+          <>
+            <Row>
+              <div className="flex items-center justify-between py-3 text-sm">
+                <span>
+                  <span className="text-haze-100">Signed in ✦</span>
+                  <span className="block text-xs text-haze-400">
+                    {user.email ?? 'account linked'} · backup on
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => void doBackup()}
+                  disabled={acctBusy !== null}
+                  className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-haze-200 disabled:opacity-50"
+                >
+                  {acctBusy === 'backup' ? '…' : 'Back up now'}
+                </button>
+              </div>
+            </Row>
+            <Row>
+              <button
+                type="button"
+                onClick={() => {
+                  setAcctBusy('out')
+                  void signOut().finally(() => setAcctBusy(null))
+                }}
+                className="w-full py-3 text-left text-sm text-haze-200"
+              >
+                Sign out
+              </button>
+            </Row>
+            <Row>
+              <button
+                type="button"
+                onClick={() => void doDelete()}
+                disabled={acctBusy !== null}
+                className="w-full py-3 text-left text-xs text-red-300 disabled:opacity-50"
+              >
+                {acctBusy === 'delete' ? 'Deleting…' : 'Delete account & cloud data'}
+              </button>
+            </Row>
+          </>
+        ) : (
+          <Row>
+            <div className="flex items-center justify-between py-3 text-sm">
+              <span>
+                <span className="text-haze-100">Not signed in</span>
+                <span className="block text-xs text-haze-400">
+                  Sign in to back up your chart, journal &amp; people
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={onAuth}
+                className="rounded-full border border-gold-400/50 bg-gold-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100"
+              >
+                Sign in
+              </button>
+            </div>
+          </Row>
+        )}
+        {acctMsg && (
+          <Row>
+            <p className="py-3 text-xs text-haze-400">{acctMsg}</p>
+          </Row>
+        )}
+      </Section>
+
       <Section title="Sound">
         <Row>
           <div className="py-3">

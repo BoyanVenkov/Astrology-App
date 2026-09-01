@@ -7,10 +7,12 @@ import { chakraName } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { useEntitlements } from '../lib/premium'
+import { useAuth } from '../lib/auth'
 
 interface YouViewProps {
   onOpen: (view: 'journal' | 'mood' | 'body' | 'settings') => void
   onUpgrade: () => void
+  onAuth: () => void
 }
 
 function Group({ title, children }: { title: string; children: ReactNode }) {
@@ -54,7 +56,8 @@ function Row({
   )
 }
 
-export function YouView({ onOpen, onUpgrade }: YouViewProps) {
+export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
+  const { status, user } = useAuth()
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
@@ -142,6 +145,19 @@ export function YouView({ onOpen, onUpgrade }: YouViewProps) {
       </Group>
 
       <Group title="Account">
+        {status === 'signed-in' ? (
+          <Row
+            title="Backup on ✦"
+            sub={`${user?.email ?? 'Signed in'} · manage in settings`}
+            onClick={() => onOpen('settings')}
+          />
+        ) : (
+          <Row
+            title="Back up & sync"
+            sub="Sign in so your data survives a reinstall"
+            onClick={onAuth}
+          />
+        )}
         <Row
           title={isPro ? 'Resonance Pro ✦' : 'Resonance Pro'}
           sub={isPro ? 'Active · manage in settings' : 'Unlock the full engine'}
