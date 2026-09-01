@@ -8,6 +8,7 @@ import { Screen } from './Screen'
 
 interface MoonScreenProps {
   onBack: () => void
+  onOpenFasting: () => void
 }
 
 const PHASE_LABEL: Record<string, string> = {
@@ -35,7 +36,7 @@ const MOON_SIGN: Record<string, string> = {
 const fmtDay = (d: Date): string =>
   d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })
 
-export function MoonScreen({ onBack }: MoonScreenProps) {
+export function MoonScreen({ onBack, onOpenFasting }: MoonScreenProps) {
   const transit = useAppStore((s) => s.transit)
 
   const [bucket, setBucket] = useState(() => Math.floor(Date.now() / 300_000))
@@ -95,7 +96,7 @@ export function MoonScreen({ onBack }: MoonScreenProps) {
         </ul>
       </section>
 
-      <FastingCard />
+      <FastingCard onOpenGuide={onOpenFasting} />
     </Screen>
   )
 }

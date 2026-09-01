@@ -16,8 +16,13 @@ const fmtDay = (key: string): string => {
   })
 }
 
+interface FastingCardProps {
+  /** Push the full fasting guide (methods, days ahead, how to hold it). */
+  onOpenGuide?: () => void
+}
+
 /** Free — is today a good window to fast, read from the Moon. */
-export function FastingCard() {
+export function FastingCard({ onOpenGuide }: FastingCardProps) {
   const [open, setOpen] = useState(false)
   // computed once on mount — the verdict is a whole-day read
   const [f] = useState(() => computeFasting())
@@ -45,6 +50,12 @@ export function FastingCard() {
 
       <p className="mt-2 text-sm leading-relaxed text-haze-200">{f.reason}</p>
 
+      <p className="mt-2 text-sm text-haze-300">
+        Best kind today:{' '}
+        <span className="text-white">{f.pick.name}</span>
+        <span className="text-haze-500"> · {f.pick.window}</span>
+      </p>
+
       {open && (
         <div className="animate-rise-in mt-3">
           <p className="text-sm leading-relaxed text-haze-300">{f.note}</p>
@@ -70,13 +81,23 @@ export function FastingCard() {
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-      >
-        {open ? 'Less' : 'How to hold it'} →
-      </button>
+      {onOpenGuide ? (
+        <button
+          type="button"
+          onClick={onOpenGuide}
+          className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
+        >
+          The five kinds & the days ahead →
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
+        >
+          {open ? 'Less' : 'How to hold it'} →
+        </button>
+      )}
     </section>
   )
 }

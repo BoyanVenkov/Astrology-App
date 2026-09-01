@@ -12,6 +12,7 @@ import { Layout } from './components/Layout'
 import { MoodCheckIn } from './components/MoodCheckIn'
 import { MoodGate } from './components/MoodGate'
 import { MoonScreen } from './components/MoonScreen'
+import { FastingGuide } from './components/FastingGuide'
 import { NatalChart } from './components/NatalChart'
 import { Onboarding } from './components/Onboarding'
 import { Paywall } from './components/Paywall'
@@ -47,6 +48,7 @@ type Sub =
   | 'compat'
   | 'transits'
   | 'moon'
+  | 'fasting'
   | 'stones'
   | 'library'
   | 'journal'
@@ -131,7 +133,10 @@ function App() {
         )}
         {sub === 'compat' && <Compatibility onBack={back} />}
         {sub === 'transits' && <Transits onBack={back} />}
-        {sub === 'moon' && <MoonScreen onBack={back} />}
+        {sub === 'moon' && (
+          <MoonScreen onBack={back} onOpenFasting={() => setSub('fasting')} />
+        )}
+        {sub === 'fasting' && <FastingGuide onBack={() => setSub('moon')} />}
         {sub === 'stones' && (
           <Apothecary
             onBack={back}
