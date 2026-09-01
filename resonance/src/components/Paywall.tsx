@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../lib/auth'
+import { PRO_FEATURES, PRO_PRICING } from '../lib/premium'
 import {
-  PRO_FEATURES,
-  PRO_PRICING,
-  purchasePro,
-  restorePurchases,
-} from '../lib/premium'
+  buyPackage,
+  fetchProPackages,
+  restoreEntitlement,
+  type ProPackages,
+} from '../lib/revenuecat'
 import { LockIcon } from './icons'
 
 interface PaywallProps {
@@ -19,37 +20,76 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
   const { status } = useAuth()
   const needsAuth = status !== 'signed-in'
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('yearly')
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useState<'buy' | 'restore' | null>(null)
+  const [err, setErr] = useState<string | null>(null)
+  const [packages, setPackages] = useState<ProPackages | null>(null)
+
+  // Real store pricing once the offering loads — the plan strings below are
+  // just the placeholder shown before that (or if RevenueCat isn't configured).
+  useEffect(() => {
+    let cancelled = false
+    void fetchProPackages().then((p) => {
+      if (!cancelled) setPackages(p)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const monthlyPkg = packages?.monthly ?? null
+  const yearlyPkg = packages?.annual ?? null
+  const monthlyPrice = monthlyPkg?.product.priceString ?? PRO_PRICING.monthly
+  const yearlyPrice = yearlyPkg?.product.priceString ?? PRO_PRICING.yearly
+  const yearlyPerMonth =
+    yearlyPkg?.product.pricePerMonthString ?? PRO_PRICING.yearlyPerMonth
+  const savePct =
+    monthlyPkg && yearlyPkg
+      ? Math.round(
+          (1 - yearlyPkg.product.price / (monthlyPkg.product.price * 12)) * 100,
+        )
+      : null
 
   const buy = async () => {
     if (needsAuth) {
       onNeedAuth?.()
       return
     }
-    setBusy(true)
-    const ok = await purchasePro()
-    setBusy(false)
-    if (ok) onClose()
+    const pkg = plan === 'yearly' ? yearlyPkg : monthlyPkg
+    if (!pkg) {
+      setErr('Not available right now — try again in a moment.')
+      return
+    }
+    setBusy('buy')
+    setErr(null)
+    const res = await buyPackage(pkg)
+    setBusy(null)
+    if (res.ok) onClose()
+    else if (!res.cancelled) setErr(res.error ?? 'Something went wrong.')
   }
 
-  const restore = () => {
+  const restore = async () => {
     if (needsAuth) {
       onNeedAuth?.()
       return
     }
-    void restorePurchases()
+    setBusy('restore')
+    setErr(null)
+    const ok = await restoreEntitlement()
+    setBusy(null)
+    if (ok) onClose()
+    else setErr('Nothing to restore on this account.')
   }
 
   const cta = needsAuth
     ? 'Sign in to continue'
     : plan === 'yearly'
       ? `Start ${PRO_PRICING.trialDays}-day free trial`
-      : `Start Pro · ${PRO_PRICING.monthly}/mo`
+      : `Start Pro · ${monthlyPrice}/mo`
 
   const terms =
     plan === 'yearly'
-      ? `${PRO_PRICING.trialDays} days free, then ${PRO_PRICING.yearly}/year (${PRO_PRICING.yearlyPerMonth}/mo). Auto-renews — cancel anytime in Google Play.`
-      : `${PRO_PRICING.monthly} billed monthly. Auto-renews — cancel anytime in Google Play.`
+      ? `${PRO_PRICING.trialDays} days free, then ${yearlyPrice}/year (${yearlyPerMonth}/mo). Auto-renews — cancel anytime in Google Play.`
+      : `${monthlyPrice} billed monthly. Auto-renews — cancel anytime in Google Play.`
 
   return (
     <div
@@ -89,11 +129,10 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
                 : 'border-white/12 bg-white/5'
             }`}
           >
-            <p className="text-sm font-semibold text-white">
-              {PRO_PRICING.yearly}/yr
-            </p>
+            <p className="text-sm font-semibold text-white">{yearlyPrice}/yr</p>
             <p className="text-[11px] text-gold-300">
-              {PRO_PRICING.trialDays}-day free trial · save 64%
+              {PRO_PRICING.trialDays}-day free trial
+              {savePct != null && savePct > 0 ? ` · save ${savePct}%` : ''}
             </p>
           </button>
           <button
@@ -106,7 +145,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
             }`}
           >
             <p className="text-sm font-semibold text-white">
-              {PRO_PRICING.monthly}/mo
+              {monthlyPrice}/mo
             </p>
             <p className="text-[11px] text-haze-400">billed monthly</p>
           </button>
@@ -114,11 +153,11 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
 
         <button
           type="button"
-          onClick={buy}
-          disabled={busy}
+          onClick={() => void buy()}
+          disabled={busy !== null}
           className="mt-4 w-full rounded-2xl border border-gold-400/50 bg-gold-500/20 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-50"
         >
-          {busy ? 'One moment…' : cta}
+          {busy === 'buy' ? 'One moment…' : cta}
         </button>
 
         <p className="mt-2.5 text-center text-[11px] leading-relaxed text-haze-500">
@@ -128,9 +167,17 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
           {terms}
         </p>
 
+        {err && (
+          <p className="mt-2 text-center text-xs text-red-300">{err}</p>
+        )}
+
         <div className="mt-3 flex items-center justify-between text-[11px] text-haze-400">
-          <button type="button" onClick={restore}>
-            Restore purchases
+          <button
+            type="button"
+            onClick={() => void restore()}
+            disabled={busy !== null}
+          >
+            {busy === 'restore' ? 'Checking…' : 'Restore purchases'}
           </button>
           <button type="button" onClick={onClose}>
             Maybe later

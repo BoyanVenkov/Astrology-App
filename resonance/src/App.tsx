@@ -29,6 +29,7 @@ import { YouView } from './components/YouView'
 import { useAuth, useAuthDeepLink } from './lib/auth'
 import { useLiveLocation, useLiveSky } from './lib/liveSky'
 import { syncNotifications } from './lib/notifications'
+import { useRevenueCat } from './lib/revenuecat'
 import { useCloudSync } from './lib/sync'
 import { usePrescription } from './lib/prescription'
 import { localDayKey } from './lib/timezone'
@@ -80,6 +81,7 @@ function App() {
   useNotificationSync()
   useAuthDeepLink()
   useCloudSync()
+  useRevenueCat(auth.user?.id ?? null)
 
   // Android hardware/gesture back: close whatever's on top, else step back
   // to the home tab, else exit — otherwise the OS just kills the app outright.

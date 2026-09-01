@@ -76,17 +76,6 @@ export const spreadUnlocked = (spreadKey: string, isPro: boolean): boolean =>
 
 /* -------------------------------------------------------------- purchase */
 
-/**
- * Complete the purchase. Wire RevenueCat (`@revenuecat/purchases-capacitor`)
- * or StoreKit / Play Billing here; on success call `setTier('pro')`.
- * For now this is the dev unlock.
- */
-export async function purchasePro(): Promise<boolean> {
-  useAppStore.getState().setTier('pro')
-  return true
-}
-
-export async function restorePurchases(): Promise<boolean> {
-  // query the store for an active entitlement, then setTier accordingly
-  return useAppStore.getState().tier === 'pro'
-}
+// The actual purchase flow (Play Billing via RevenueCat) lives in
+// `lib/revenuecat.ts` and is used directly by `Paywall.tsx` — it needs a
+// specific package (monthly/annual) to buy, which this module has no notion of.

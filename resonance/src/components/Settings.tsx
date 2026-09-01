@@ -9,7 +9,9 @@ import {
   syncNotifications,
 } from '../lib/notifications'
 import { locationIsFresh, requestCurrentLocation } from '../lib/location'
+import { openExternal } from '../lib/links'
 import { useEntitlements } from '../lib/premium'
+import { subscriptionManagementUrl } from '../lib/revenuecat'
 import { Screen } from './Screen'
 
 interface SettingsProps {
@@ -120,6 +122,15 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
   const [notice, setNotice] = useState<string | null>(null)
   const [locMsg, setLocMsg] = useState<string | null>(null)
   const [locBusy, setLocBusy] = useState(false)
+  const [manageBusy, setManageBusy] = useState(false)
+
+  const manageSubscription = async () => {
+    setManageBusy(true)
+    const url = await subscriptionManagementUrl()
+    setManageBusy(false)
+    if (url) void openExternal(url)
+    else void openExternal('https://play.google.com/store/account/subscriptions')
+  }
 
   const refreshLocation = async () => {
     setLocBusy(true)
@@ -532,6 +543,18 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
               className="w-full py-3 text-left text-xs text-haze-400"
             >
               Dev: unlock Pro without paying →
+            </button>
+          </Row>
+        )}
+        {isPro && (
+          <Row>
+            <button
+              type="button"
+              onClick={() => void manageSubscription()}
+              disabled={manageBusy}
+              className="w-full py-3 text-left text-xs text-haze-400 disabled:opacity-50"
+            >
+              {manageBusy ? 'Opening…' : 'Manage subscription in Google Play →'}
             </button>
           </Row>
         )}

@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resonance — Privacy &amp; Terms</title>
+<meta name="description" content="Privacy policy and terms of service for the Resonance astrology and wellness app.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,380..600&family=Inter:wght@400;500;600&family=Space+Mono&display=swap">
+<style>
+  :root {
+    --bg: #f4f5fa;
+    --surface: #ffffff;
+    --surface-2: #eceef6;
+    --text: #161a26;
+    --muted: #565d76;
+    --faint: #8388a0;
+    --line: #dcdfec;
+    --accent: #9c7a35;
+    --accent-soft: #f2e6c4;
+    --accent-ink: #55420f;
+    --focus: #6d5420;
+    --shadow: 0 1px 2px rgba(30, 34, 54, 0.04), 0 8px 24px -12px rgba(30, 34, 54, 0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #05070f;
+      --surface: #0c0f20;
+      --surface-2: #11152a;
+      --text: #e9edfa;
+      --muted: #a3aac8;
+      --faint: #6b7290;
+      --line: rgba(255, 255, 255, 0.09);
+      --accent: #dcb96b;
+      --accent-soft: rgba(212, 175, 55, 0.13);
+      --accent-ink: #f3e3bb;
+      --focus: #dcb96b;
+      --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 44px -24px rgba(0, 0, 0, 0.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #05070f;
+    --surface: #0c0f20;
+    --surface-2: #11152a;
+    --text: #e9edfa;
+    --muted: #a3aac8;
+    --faint: #6b7290;
+    --line: rgba(255, 255, 255, 0.09);
+    --accent: #dcb96b;
+    --accent-soft: rgba(212, 175, 55, 0.13);
+    --accent-ink: #f3e3bb;
+    --focus: #dcb96b;
+    --shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 20px 44px -24px rgba(0, 0, 0, 0.7);
+  }
+
+  * { box-sizing: border-box; }
+  img { max-width: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 560;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  p, li { text-wrap: pretty; }
+  a { color: var(--accent-ink); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .mono {
+    font-family: 'Space Mono', ui-monospace, monospace;
+    letter-spacing: -0.01em;
+  }
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--faint);
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.5rem;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--text);
+  }
+  .brand svg { width: 20px; height: 20px; color: var(--accent); flex-shrink: 0; }
+  .brand b {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  nav.tabs {
+    display: flex;
+    gap: 0.35rem;
+    background: var(--surface-2);
+    border-radius: 999px;
+    padding: 0.25rem;
+    border: 1px solid var(--line);
+  }
+  nav.tabs button {
+    all: unset;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    color: var(--muted);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  nav.tabs button[aria-selected="true"] {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  main {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+  .doc-head { margin-bottom: 2.25rem; }
+  .doc-head h1 { font-size: clamp(1.9rem, 5vw, 2.5rem); margin: 0.4rem 0 0; line-height: 1.12; }
+  .doc-head .dek {
+    margin: 0.9rem 0 0;
+    color: var(--muted);
+    font-size: 1.02rem;
+    max-width: 40rem;
+  }
+  .meta {
+    margin-top: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+    font-size: 0.78rem;
+    color: var(--faint);
+  }
+
+  .callout {
+    display: grid;
+    gap: 0.6rem;
+    margin: 1.9rem 0;
+    padding: 1.1rem 1.3rem;
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 0.9rem;
+  }
+  .callout .eyebrow { color: var(--accent-ink); opacity: 0.85; }
+  .callout ul { margin: 0; padding-left: 1.15rem; }
+  .callout li { margin: 0.3rem 0; }
+  .callout li::marker { color: var(--accent); }
+
+  .toc {
+    margin: 2rem 0 2.6rem;
+    padding: 1.1rem 1.3rem;
+    border: 1px solid var(--line);
+    border-radius: 0.9rem;
+    background: var(--surface);
+  }
+  .toc .eyebrow { display: block; margin-bottom: 0.7rem; }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .toc a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.88rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .toc a:hover { color: var(--text); }
+  .toc .n { font-family: 'Space Mono', monospace; color: var(--faint); }
+
+  section.doc-section {
+    padding-top: 1.6rem;
+    margin-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: 5.5rem;
+  }
+  section.doc-section:first-of-type { border-top: none; margin-top: 0; }
+  section.doc-section h2 {
+    font-size: 1.28rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0 0 0.85rem;
+  }
+  section.doc-section h2 .n {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  section.doc-section p { margin: 0.7rem 0; color: var(--text); }
+  section.doc-section h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.96rem;
+    font-weight: 600;
+    margin: 1.1rem 0 0.4rem;
+  }
+  section.doc-section ul { padding-left: 1.2rem; margin: 0.6rem 0; }
+  section.doc-section li { margin: 0.4rem 0; }
+  section.doc-section li::marker { color: var(--faint); }
+  strong { font-weight: 600; }
+
+  footer {
+    max-width: 44rem;
+    margin: 3rem auto 0;
+    padding: 1.6rem 1.5rem 3rem;
+    border-top: 1px solid var(--line);
+    color: var(--faint);
+    font-size: 0.82rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  footer a { color: var(--muted); }
+
+  [hidden] { display: none !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { scroll-behavior: auto !important; transition: none !important; }
+  }
+  @media (max-width: 30rem) {
+    .toc ol { grid-template-columns: 1fr; }
+    header { padding: 0.8rem 1.1rem; }
+    .brand b { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+      <circle cx="24" cy="24" r="22.5" stroke-width="1" opacity="0.32" />
+      <circle cx="24" cy="24" r="18" stroke-dasharray="42 14.55" stroke-dashoffset="28.3" opacity="0.6" />
+      <circle cx="24" cy="24" r="12.5" stroke-dasharray="29 10.27" opacity="0.85" transform="rotate(45 24 24)" />
+      <circle cx="24" cy="6" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="42" cy="24" r="1.1" fill="currentColor" stroke="none" opacity="0.7" />
+      <path d="M24 12c1.2 7.6 4.4 10.8 12 12-7.6 1.2-10.8 4.4-12 12-1.2-7.6-4.4-10.8-12-12 7.6-1.2 10.8-4.4 12-12Z" fill="currentColor" stroke="none" />
+    </svg>
+    <b>Resonance</b>
+  </span>
+  <nav class="tabs" role="tablist" aria-label="Legal document">
+    <button type="button" role="tab" data-doc="privacy" aria-selected="true">Privacy Policy</button>
+    <button type="button" role="tab" data-doc="terms" aria-selected="false">Terms of Service</button>
+  </nav>
+</header>
+
+<main>
+
+<article id="privacy" class="doc">
+  <div class="doc-head">
+    <p class="eyebrow">Privacy Policy</p>
+    <h1>How Resonance handles your data</h1>
+    <p class="dek">Resonance works fully without an account. This page explains exactly what we collect if you choose to sign in, why, and how to remove it.</p>
+    <p class="meta mono"><span>Effective September 1, 2026</span><span>·</span><span>Resonance, an independent app</span></p>
+  </div>
+
+  <div class="callout">
+    <p class="eyebrow">In short</p>
+    <ul>
+      <li>No ads, no analytics, no tracking SDKs of any kind.</li>
+      <li>Your chart, journal, and check-ins stay on your device unless you sign in.</li>
+      <li>Signing in is optional, reversible, and only ever backs up what's already yours.</li>
+      <li>Delete your account and every trace of it in the cloud, anytime, from Settings.</li>
+    </ul>
+  </div>
+
+  <nav class="toc" aria-label="Privacy policy sections">
+    <span class="eyebrow">On this page</span>
+    <ol>
+      <li><a href="#p1"><span class="n">01</span> Information we collect</a></li>
+      <li><a href="#p2"><span class="n">02</span> How we use it</a></li>
+      <li><a href="#p3"><span class="n">03</span> Where it lives</a></li>
+      <li><a href="#p4"><span class="n">04</span> Notifications</a></li>
+      <li><a href="#p5"><span class="n">05</span> Your choices</a></li>
+      <li><a href="#p6"><span class="n">06</span> Children's privacy</a></li>
+      <li><a href="#p7"><span class="n">07</span> Security</a></li>
+      <li><a href="#p8"><span class="n">08</span> Changes &amp; contact</a></li>
+    </ol>
+  </nav>
+
+  <section class="doc-section" id="p1">
+    <h2><span class="n">01</span> Information we collect</h2>
+    <h3>Information you enter</h3>
+    <ul>
+      <li><strong>Birth date, time, and place</strong> — used to calculate your natal chart. Stored on your device, and in our database if you sign in.</li>
+      <li><strong>Birth details for anyone you save</strong> for a compatibility reading — handled the same way as your own.</li>
+      <li><strong>Mood and body check-ins</strong> (energy, sleep, resting heart rate, and similar) that you log yourself.</li>
+      <li><strong>Your practice history</strong> — sessions completed, journal entries, saved preferences.</li>
+    </ul>
+    <h3>Account information</h3>
+    <p>If you sign in with Google, we receive your email address and Google account ID, used only to identify your account and keep your data in sync. We never request or see your Google password.</p>
+    <h3>Location</h3>
+    <p>If you grant permission, Resonance reads your device's location to calculate local sunrise/sunset times and refine your daily reading. This is entirely optional — the app works fully without it. Location is stored on your device and, if you're signed in, in your account. It is never shared with anyone else.</p>
+    <h3>Purchases</h3>
+    <p>If you subscribe to Resonance Pro, Google Play handles your payment directly — we never see or store your card details. Our subscription-management partner, RevenueCat, receives your purchase and subscription status (not your payment details) so the app knows your entitlement is active.</p>
+    <h3>What we don't collect</h3>
+    <p>No analytics SDKs, no advertising identifiers, no third-party trackers. We don't sell, rent, or share your data with advertisers — there simply isn't a pipe for it to travel through.</p>
+  </section>
+
+  <section class="doc-section" id="p2">
+    <h2><span class="n">02</span> How we use your information</h2>
+    <p>To calculate your readings, personalize your daily practice, remember your preferences, keep your data backed up if you sign in, process your subscription, and respond if you contact us. Nothing more.</p>
+  </section>
+
+  <section class="doc-section" id="p3">
+    <h2><span class="n">03</span> Where your data lives</h2>
+    <ul>
+      <li><strong>On your device</strong>, always — the primary copy of your data, whether or not you sign in.</li>
+      <li><strong>In the cloud</strong>, only if you sign in — hosted on Supabase, with row-level security so only your own account can read your own data.</li>
+      <li><strong>Payments</strong> run through Google Play Billing; <strong>subscription status</strong> through RevenueCat. Neither shares your data with us beyond what's described above.</li>
+    </ul>
+  </section>
+
+  <section class="doc-section" id="p4">
+    <h2><span class="n">04</span> Notifications</h2>
+    <p>Every notification — your daily reading, Moon phases, void-of-course alerts — is computed and scheduled entirely on your device from astronomical calculations. Nothing is sent to a server to generate them.</p>
+  </section>
+
+  <section class="doc-section" id="p5">
+    <h2><span class="n">05</span> Your choices</h2>
+    <ul>
+      <li>Use the app with no account at all — your data stays on your device only.</li>
+      <li>Sign in to back it up — undo this anytime by signing out.</li>
+      <li>Delete your account and all associated cloud data anytime, from Settings.</li>
+      <li>Uninstall the app to remove everything stored on your device.</li>
+    </ul>
+  </section>
+
+  <section class="doc-section" id="p6">
+    <h2><span class="n">06</span> Children's privacy</h2>
+    <p>Resonance is not directed at children under 13, and we do not knowingly collect information from them.</p>
+  </section>
+
+  <section class="doc-section" id="p7">
+    <h2><span class="n">07</span> Security</h2>
+    <p>We use industry-standard measures — encrypted connections and row-level access control — to protect your data. No method of storage or transmission is completely secure, but we take reasonable, considered steps to protect what you share with us.</p>
+  </section>
+
+  <section class="doc-section" id="p8">
+    <h2><span class="n">08</span> Changes &amp; contact</h2>
+    <p>We may update this policy as the app changes. We'll update the effective date above whenever we do; continuing to use the app after a change means you accept the update.</p>
+    <p>Questions about this policy or your data? Email <a href="mailto:ludbobo@gmail.com">ludbobo@gmail.com</a>.</p>
+  </section>
+</article>
+
+<article id="terms" class="doc" hidden>
+  <div class="doc-head">
+    <p class="eyebrow">Terms of Service</p>
+    <h1>The terms for using Resonance</h1>
+    <p class="dek">Plain-language terms covering what Resonance is for, how Resonance Pro billing works, and where responsibility sits between you and us.</p>
+    <p class="meta mono"><span>Effective September 1, 2026</span><span>·</span><span>Resonance, an independent app</span></p>
+  </div>
+
+  <div class="callout">
+    <p class="eyebrow">In short</p>
+    <ul>
+      <li>Resonance is for reflection and wellness — not medical, financial, or professional advice.</li>
+      <li>Resonance Pro renews automatically through Google Play until you cancel.</li>
+      <li>Cancel or manage your plan anytime in Google Play — refunds go through Google, not us.</li>
+    </ul>
+  </div>
+
+  <nav class="toc" aria-label="Terms of service sections">
+    <span class="eyebrow">On this page</span>
+    <ol>
+      <li><a href="#t1"><span class="n">01</span> What Resonance is</a></li>
+      <li><a href="#t2"><span class="n">02</span> Your account</a></li>
+      <li><a href="#t3"><span class="n">03</span> Resonance Pro</a></li>
+      <li><a href="#t4"><span class="n">04</span> Acceptable use</a></li>
+      <li><a href="#t5"><span class="n">05</span> Content &amp; accuracy</a></li>
+      <li><a href="#t6"><span class="n">06</span> Disclaimer &amp; liability</a></li>
+      <li><a href="#t7"><span class="n">07</span> Changes &amp; contact</a></li>
+    </ol>
+  </nav>
+
+  <section class="doc-section" id="t1">
+    <h2><span class="n">01</span> What Resonance is</h2>
+    <p>Resonance provides astrological, meditative, and wellness content — natal charts, transits, breathwork, meditation, tarot, and related guidance — for entertainment, reflection, and personal wellness purposes.</p>
+    <p><strong>It is not medical, psychological, financial, or professional advice of any kind</strong>, and shouldn't be treated as a substitute for consulting a qualified professional. Guidance around fasting, breathwork, or body practices is traditional wellness guidance, not medical direction — if you have a health condition, are pregnant, or are otherwise at risk, talk to a doctor before changing your eating or exercise habits.</p>
+  </section>
+
+  <section class="doc-section" id="t2">
+    <h2><span class="n">02</span> Your account</h2>
+    <p>Signing in is optional. If you create an account, you're responsible for keeping your sign-in secure and for all activity that happens under it.</p>
+  </section>
+
+  <section class="doc-section" id="t3">
+    <h2><span class="n">03</span> Resonance Pro</h2>
+    <ul>
+      <li>Resonance Pro is billed through Google Play, at the price and interval shown at checkout.</li>
+      <li>The annual plan includes a 7-day free trial — cancel anytime during the trial and you won't be charged.</li>
+      <li>Subscriptions renew automatically at the end of each period unless cancelled at least 24 hours before renewal.</li>
+      <li>Manage or cancel anytime in Google Play (or via Settings → Manage subscription, in-app).</li>
+      <li>Refunds are handled by Google Play under its standard policies — we don't process refunds directly.</li>
+    </ul>
+  </section>
+
+  <section class="doc-section" id="t4">
+    <h2><span class="n">04</span> Acceptable use</h2>
+    <p>Use Resonance for its intended purpose. Don't try to reverse-engineer, disrupt, or abuse the app or its backend, or use it in a way that violates any applicable law.</p>
+  </section>
+
+  <section class="doc-section" id="t5">
+    <h2><span class="n">05</span> Content &amp; accuracy</h2>
+    <p>Astrological calculations are computed from real astronomical data, but interpretations, guidance, and readings are inherently subjective. We make no guarantee about the accuracy, completeness, or usefulness of any reading — you use the app's guidance at your own discretion.</p>
+  </section>
+
+  <section class="doc-section" id="t6">
+    <h2><span class="n">06</span> Disclaimer &amp; liability</h2>
+    <p>Resonance is provided "as is," without warranties of any kind. To the fullest extent permitted by law, we are not liable for any indirect, incidental, or consequential damages arising from your use of the app.</p>
+  </section>
+
+  <section class="doc-section" id="t7">
+    <h2><span class="n">07</span> Changes &amp; contact</h2>
+    <p>We may update the app or these terms over time. Material changes will update the effective date above.</p>
+    <p>Questions about these terms? Email <a href="mailto:ludbobo@gmail.com">ludbobo@gmail.com</a>.</p>
+  </section>
+</article>
+
+</main>
+
+<footer>
+  <span>© 2026 Resonance</span>
+  <span><a href="mailto:ludbobo@gmail.com">ludbobo@gmail.com</a></span>
+</footer>
+
+<script>
+  (function () {
+    var tabs = document.querySelectorAll('nav.tabs button');
+    var docs = { privacy: document.getElementById('privacy'), terms: document.getElementById('terms') };
+
+    function show(name, push) {
+      Object.keys(docs).forEach(function (key) { docs[key].hidden = key !== name; });
+      tabs.forEach(function (btn) {
+        btn.setAttribute('aria-selected', String(btn.dataset.doc === name));
+      });
+      if (push) history.replaceState(null, '', '#' + name);
+      window.scrollTo({ top: 0 });
+    }
+
+    tabs.forEach(function (btn) {
+      btn.addEventListener('click', function () { show(btn.dataset.doc, true); });
+    });
+
+    var hash = (location.hash || '').replace('#', '');
+    var initial = (hash === 'terms' || hash.charAt(0) === 't') ? 'terms' : 'privacy';
+    show(initial, false);
+    if (hash && hash !== 'privacy' && hash !== 'terms') {
+      var target = document.getElementById(hash);
+      if (target) requestAnimationFrame(function () { target.scrollIntoView(); });
+    }
+  })();
+</script>
+</body>
+</html>
