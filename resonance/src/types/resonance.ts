@@ -363,8 +363,8 @@ export type PremiumTier = 'free' | 'pro'
 
 /* -------------------------------------------------------------------- i18n */
 
-/** UI language. English is the source catalogue (`lib/locales/en.ts`). */
-export type Locale = 'en' | 'bg'
+/** UI language. English is the source catalogue (`lib/locales/en/`). */
+export type Locale = 'en' | 'bg' | 'es' | 'it'
 
 /* --------------------------------------------------------------- navigation */
 

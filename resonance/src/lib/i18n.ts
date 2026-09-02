@@ -10,6 +10,8 @@ import { useAppStore } from '../store/useAppStore'
 import { detectLocale } from './detectLocale'
 import { en, type MessageKey } from './locales/en'
 import { bg } from './locales/bg'
+import { es } from './locales/es'
+import { it } from './locales/it'
 
 export { detectLocale }
 
@@ -20,7 +22,12 @@ export { detectLocale }
  * `{name}` placeholders are substituted by `translate()`.
  */
 
-const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = { en, bg }
+const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = {
+  en,
+  bg,
+  es,
+  it,
+}
 
 export type { Locale }
 export type { MessageKey }
@@ -38,6 +45,8 @@ export interface LocaleInfo {
 export const LOCALES: LocaleInfo[] = [
   { code: 'en', native: 'English', english: 'English', sample: 'The sky, read for you' },
   { code: 'bg', native: 'Български', english: 'Bulgarian', sample: 'Небето, разчетено за теб' },
+  { code: 'es', native: 'Español', english: 'Spanish', sample: 'El cielo, leído para ti' },
+  { code: 'it', native: 'Italiano', english: 'Italian', sample: 'Il cielo, letto per te' },
 ]
 
 export type TranslateParams = Record<string, string | number>
@@ -67,8 +76,13 @@ export const t: TFn = (key, params) =>
   translate(useAppStore.getState().locale, key, params)
 
 /** BCP-47 tag for `Intl` / `toLocale*` formatting. */
-export const localeTag = (locale: Locale): string =>
-  locale === 'bg' ? 'bg-BG' : 'en-US'
+const LOCALE_TAGS: Record<Locale, string> = {
+  en: 'en-US',
+  bg: 'bg-BG',
+  es: 'es-ES',
+  it: 'it-IT',
+}
+export const localeTag = (locale: Locale): string => LOCALE_TAGS[locale]
 
 /** Hook — the BCP-47 tag for the active locale. */
 export function useLocaleTag(): string {
