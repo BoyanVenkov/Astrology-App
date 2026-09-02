@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { zonedWallTimeToUtc } from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
+import { useT } from '../lib/i18n'
 import { DateField, TimeField } from './DateTimeField'
 import type { SavedPerson } from '../types/resonance'
 
@@ -17,6 +18,7 @@ const todayKey = (): string => new Date().toISOString().slice(0, 10)
 
 /** A compact birth-data form for adding someone to compare charts with. */
 export function AddPerson({ onDone, onCancel }: AddPersonProps) {
+  const t = useT()
   const addPerson = useAppStore((s) => s.addPerson)
 
   const [name, setName] = useState('')
@@ -58,44 +60,44 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
   return (
     <div className="flex flex-col gap-4">
       <label className="flex flex-col gap-1.5">
-        <span className="eyebrow">Their name</span>
+        <span className="eyebrow">{t('person.name')}</span>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Alex"
+          placeholder={t('person.namePlaceholder')}
           autoComplete="off"
           className={field}
         />
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="eyebrow">Birth date</span>
+        <span className="eyebrow">{t('onb.birthDate')}</span>
         <DateField value={date} max={todayKey()} onChange={setDate} />
       </label>
 
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <span className="eyebrow">Birth time</span>
+          <span className="eyebrow">{t('onb.birthTime')}</span>
           <button
             type="button"
             onClick={() => setTimeKnown((v) => !v)}
             className="text-[11px] uppercase tracking-[0.12em] text-gold-300"
           >
-            {timeKnown ? 'Don’t know it' : 'I know it'}
+            {timeKnown ? t('onb.dontKnowTime') : t('onb.knowTime')}
           </button>
         </div>
         {timeKnown ? (
           <TimeField value={time} onChange={setTime} />
         ) : (
           <p className="rounded-xl border border-white/[0.08] bg-midnight-950/40 px-4 py-3 text-sm text-haze-400">
-            Using noon — the Moon and rising sign will be approximate.
+            {t('person.noonNote')}
           </p>
         )}
       </div>
 
       <div className="relative flex flex-col gap-1.5">
-        <span className="eyebrow">Birth place</span>
+        <span className="eyebrow">{t('onb.birthPlace')}</span>
         <input
           type="text"
           value={query}
@@ -103,7 +105,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
             setQuery(e.target.value)
             setCity(null)
           }}
-          placeholder="Start typing a city…"
+          placeholder={t('onb.placePlaceholder')}
           autoComplete="off"
           className={field}
         />
@@ -142,7 +144,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
           canSave ? 'btn-primary' : 'btn-ghost opacity-55'
         }`}
       >
-        Save &amp; compare
+        {t('person.save')}
       </button>
       {onCancel && (
         <button
@@ -150,7 +152,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
           onClick={onCancel}
           className="text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       )}
     </div>

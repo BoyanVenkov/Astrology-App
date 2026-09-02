@@ -3,6 +3,7 @@ import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
 import { deviceTimeZone, listTimeZones, zonedWallTimeToUtc } from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
+import { useT } from '../lib/i18n'
 import { DateField, TimeField } from './DateTimeField'
 import { ResonanceMark } from './Logo'
 
@@ -18,6 +19,7 @@ const field =
 
 export function Onboarding() {
   useDayHue()
+  const t = useT()
   const profile = useAppStore((s) => s.profile)
   const setProfile = useAppStore((s) => s.setProfile)
   const skipOnboarding = useAppStore((s) => s.skipOnboarding)
@@ -96,45 +98,44 @@ export function Onboarding() {
         animated
       />
       <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-        Welcome to Resonance
+        {t('onb.eyebrow')}
       </p>
       <h1 className="mt-2 font-serif text-[2.1rem] leading-[1.1] text-gilded">
-        Let’s find your sky
+        {t('onb.title')}
       </h1>
       <p className="mt-2.5 text-sm leading-relaxed text-haze-300">
-        Your birth date, time and place let Resonance track the real planets
-        against your own chart — and shape each day’s practice around them.
+        {t('onb.blurb')}
       </p>
 
       <div className="mt-6 flex flex-col gap-4">
         <label className="flex flex-col gap-1.5">
-          <span className="eyebrow">Birth date</span>
+          <span className="eyebrow">{t('onb.birthDate')}</span>
           <DateField value={date} max={todayKey()} onChange={setDate} />
         </label>
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
-            <span className="eyebrow">Birth time</span>
+            <span className="eyebrow">{t('onb.birthTime')}</span>
             <button
               type="button"
               onClick={() => setTimeKnown((v) => !v)}
               className="text-[11px] uppercase tracking-[0.12em] text-gold-300"
             >
-              {timeKnown ? 'I don’t know it' : 'I know it'}
+              {timeKnown ? t('onb.dontKnowTime') : t('onb.knowTime')}
             </button>
           </div>
           {timeKnown ? (
             <TimeField value={time} onChange={setTime} />
           ) : (
             <p className="rounded-2xl border border-white/8 bg-midnight-950/40 px-4 py-3 text-sm text-haze-400">
-              Using noon — the Ascendant and Moon will be approximate.
+              {t('onb.noonNote')}
             </p>
           )}
         </div>
 
         {/* birth place */}
         <div className="relative flex flex-col gap-1.5">
-          <span className="eyebrow">Birth place</span>
+          <span className="eyebrow">{t('onb.birthPlace')}</span>
           <input
             type="text"
             value={placeQuery}
@@ -142,7 +143,7 @@ export function Onboarding() {
               setPlaceQuery(e.target.value)
               setCity(null)
             }}
-            placeholder="Start typing a city…"
+            placeholder={t('onb.placePlaceholder')}
             autoComplete="off"
             className={field}
           />
@@ -175,7 +176,7 @@ export function Onboarding() {
               onClick={() => setManual((v) => !v)}
               className="self-start text-[11px] uppercase tracking-[0.12em] text-gold-300"
             >
-              {manual ? 'Hide manual entry' : 'Not listed? Enter coordinates'}
+              {manual ? t('onb.hideManual') : t('onb.notListed')}
             </button>
           )}
         </div>
@@ -183,7 +184,7 @@ export function Onboarding() {
         {manual && !city && (
           <div className="grid grid-cols-2 gap-3">
             <label className="flex flex-col gap-1.5">
-              <span className="eyebrow">Latitude °N</span>
+              <span className="eyebrow">{t('onb.latitude')}</span>
               <input
                 type="number"
                 inputMode="decimal"
@@ -194,7 +195,7 @@ export function Onboarding() {
               />
             </label>
             <label className="flex flex-col gap-1.5">
-              <span className="eyebrow">Longitude °E</span>
+              <span className="eyebrow">{t('onb.longitude')}</span>
               <input
                 type="number"
                 inputMode="decimal"
@@ -208,7 +209,7 @@ export function Onboarding() {
         )}
 
         <label className="flex flex-col gap-1.5">
-          <span className="eyebrow">Birth time zone</span>
+          <span className="eyebrow">{t('onb.birthZone')}</span>
           <input
             list="tz-list"
             value={timeZone}
@@ -232,14 +233,14 @@ export function Onboarding() {
           canSubmit ? 'btn-primary' : 'btn-ghost opacity-55'
         }`}
       >
-        Reveal my chart
+        {t('onb.reveal')}
       </button>
       <button
         type="button"
         onClick={skipOnboarding}
         className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
       >
-        Skip — use today’s sky only
+        {t('onb.skip')}
       </button>
     </div>
   )

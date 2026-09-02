@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useT } from '../lib/i18n'
 
 /**
  * Birth date / time inputs styled to the app instead of the OS's default
@@ -140,6 +141,7 @@ function PickerSheet({
   onDone: () => void
   children: React.ReactNode
 }) {
+  const t = useT()
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
@@ -158,7 +160,7 @@ function PickerSheet({
           onClick={onDone}
           className="btn-primary mt-4 w-full px-4 py-3.5 text-sm uppercase"
         >
-          Done
+          {t('common.done')}
         </button>
       </div>
     </div>
@@ -198,6 +200,7 @@ function DateSheet({
   onClose: () => void
   onCommit: (value: string) => void
 }) {
+  const t = useT()
   const [draft, setDraft] = useState<Ymd>(initial)
 
   const years = useMemo(
@@ -228,7 +231,7 @@ function DateSheet({
 
   return (
     <PickerSheet
-      title="Birth date"
+      title={t('picker.birthDate')}
       onClose={onClose}
       onDone={() => onCommit(`${draft.y}-${pad2(draft.m)}-${pad2(draft.d)}`)}
     >
@@ -277,13 +280,14 @@ export function DateField({
     return value && Number.isFinite(y) ? { y, m, d } : null
   }, [value])
 
+  const t = useT()
   const display = current
     ? new Date(current.y, current.m - 1, current.d).toLocaleDateString(undefined, {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
       })
-    : 'Choose a date'
+    : t('picker.chooseDate')
 
   return (
     <>
@@ -349,13 +353,14 @@ function TimeSheet({
 export function TimeField({
   value,
   onChange,
-  label = 'Birth time',
+  label,
 }: {
   /** `HH:MM`, 24-hour. */
   value: string
   onChange: (value: string) => void
   label?: string
 }) {
+  const t = useT()
   const [open, setOpen] = useState(false)
   const [h, m] = value.split(':').map(Number)
   const safeH = Number.isFinite(h) ? h : 12
@@ -372,7 +377,7 @@ export function TimeField({
         <TimeSheet
           initialH={safeH}
           initialM={safeM}
-          label={label}
+          label={label ?? t('picker.birthTime')}
           onClose={() => setOpen(false)}
           onCommit={(v) => {
             onChange(v)

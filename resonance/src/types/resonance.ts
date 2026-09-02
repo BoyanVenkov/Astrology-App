@@ -331,6 +331,11 @@ export interface NotificationPreferences {
 
 export type PremiumTier = 'free' | 'pro'
 
+/* -------------------------------------------------------------------- i18n */
+
+/** UI language. English is the source catalogue (`lib/locales/en.ts`). */
+export type Locale = 'en' | 'bg'
+
 /* --------------------------------------------------------------- navigation */
 
 export type TabKey = 'today' | 'sky' | 'tarot' | 'you'
@@ -386,4 +391,6 @@ export interface ResonanceSession {
   people: SavedPerson[]
   /** True once the user chose "explore without an account" on the Welcome gate. */
   authSkipped: boolean
+  /** UI language. */
+  locale: Locale
 }

@@ -54,8 +54,8 @@ export default {
       fontFamily: {
         /* Mystical / editorial — headings, mantra. Old-style serif with soft
            terminals + optical sizing; SOFT/WONK set in index.css. */
-        serif: ['"Fraunces Variable"', '"Cormorant Garamond"', 'Georgia', 'serif'],
-        display: ['"Fraunces Variable"', 'Georgia', 'serif'],
+        serif: ['"Fraunces Variable"', '"Noto Serif"', '"Cormorant Garamond"', 'Georgia', 'serif'],
+        display: ['"Fraunces Variable"', '"Noto Serif"', 'Georgia', 'serif'],
         /* Clean, high-legibility — UI + body copy. */
         sans: [
           '"Inter Variable"',

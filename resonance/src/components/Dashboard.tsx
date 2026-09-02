@@ -4,7 +4,8 @@ import { Aura } from './Aura'
 import { computeAura } from '../lib/aura'
 import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
-import { chakraName } from '../lib/resonanceData'
+import { chakraLabel, useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { TodaysPractice } from './TodaysPractice'
@@ -21,8 +22,14 @@ interface DashboardProps {
   onChakras: () => void
 }
 
-const greetingFor = (h: number): string =>
-  h < 5 ? 'Still night' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'
+const greetingKey = (h: number): MessageKey =>
+  h < 5
+    ? 'dash.greetingNight'
+    : h < 12
+      ? 'dash.greetingMorning'
+      : h < 18
+        ? 'dash.greetingAfternoon'
+        : 'dash.greetingEvening'
 
 export function Dashboard({
   onRitual,
@@ -31,6 +38,7 @@ export function Dashboard({
   onStones,
   onChakras,
 }: DashboardProps) {
+  const t = useT()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const chakraField = useChakraField()
@@ -55,8 +63,12 @@ export function Dashboard({
   const [when] = useState(() => {
     const d = new Date()
     return {
-      greeting: greetingFor(d.getHours()),
-      date: d.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' }),
+      greetingKey: greetingKey(d.getHours()),
+      date: d.toLocaleDateString(undefined, {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+      }),
     }
   })
 
@@ -92,9 +104,14 @@ export function Dashboard({
       )}
 
       <header className="px-1 pt-1">
-        <p className="eyebrow-hue">{when.greeting} · {when.date}</p>
+        <p className="eyebrow-hue">
+          {t('dash.headerDate', {
+            greeting: t(when.greetingKey),
+            date: when.date,
+          })}
+        </p>
         <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.12] text-gilded">
-          {transit ? rx.headline : 'Attuning to the sky…'}
+          {transit ? rx.headline : t('dash.attuning')}
         </h1>
       </header>
 
@@ -108,7 +125,7 @@ export function Dashboard({
           </div>
           <p className="display text-[1.8rem] text-gilded">“{rx.mantra}”</p>
           <p className="mt-3 eyebrow" style={{ color: 'var(--rz-hue)' }}>
-            Today’s mantra
+            {t('dash.mantra')}
           </p>
         </div>
       )}
@@ -125,7 +142,7 @@ export function Dashboard({
           background: 'color-mix(in srgb, var(--rz-hue) 9%, transparent)',
         }}
       >
-        {doneToday ? 'Practise again' : 'More ways to practise'} →
+        {doneToday ? t('dash.practiseAgain') : t('dash.moreWays')} →
       </button>
 
       {/* the day at a glance */}
@@ -136,7 +153,7 @@ export function Dashboard({
           className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
         >
           <Aura state={aura} size={40} className="h-10 w-10" />
-          <span className="eyebrow">Aura</span>
+          <span className="eyebrow">{t('dash.slotAura')}</span>
           <span className="text-xs tabular-nums text-haze-300">
             {Math.round(aura.score * 100)}%
           </span>
@@ -161,9 +178,9 @@ export function Dashboard({
               />
             ))}
           </span>
-          <span className="eyebrow">Field</span>
+          <span className="eyebrow">{t('dash.slotField')}</span>
           <span className="truncate text-xs text-haze-300">
-            {chakraName(focusChakra)}
+            {chakraLabel(focusChakra, t)}
             {focusPlanet?.retrograde ? ' ℞' : ''}
           </span>
         </button>
@@ -183,7 +200,7 @@ export function Dashboard({
               }}
             />
           </span>
-          <span className="eyebrow">Stone</span>
+          <span className="eyebrow">{t('dash.slotStone')}</span>
           <span className="w-full truncate px-1 text-center text-xs text-haze-300">
             {heroStone?.name ?? '—'}
           </span>
@@ -198,11 +215,9 @@ export function Dashboard({
       >
         <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
         <div className="min-w-0 flex-1">
-          <p className="font-serif text-lg text-white">Daily tarot</p>
+          <p className="font-serif text-lg text-white">{t('dash.dailyTarot')}</p>
           <p className="text-xs text-haze-300">
-            {tarotDrawn
-              ? 'See today’s card, or draw a spread'
-              : 'Turn your card for today'}
+            {tarotDrawn ? t('dash.tarotSeen') : t('dash.tarotNew')}
           </p>
         </div>
         <span style={{ color: 'var(--rz-hue)' }}>›</span>
@@ -214,7 +229,7 @@ export function Dashboard({
           onClick={() => onTab('sky')}
           className="text-center text-xs uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
         >
-          Add your birth details for a personal reading →
+          {t('dash.addBirth')}
         </button>
       )}
     </div>

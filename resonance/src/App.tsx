@@ -8,6 +8,7 @@ import { Compatibility } from './components/Compatibility'
 import { Dashboard } from './components/Dashboard'
 import { Horoscope } from './components/Horoscope'
 import { Journal } from './components/Journal'
+import { LanguageSheet } from './components/LanguageSheet'
 import { Layout } from './components/Layout'
 import { MoodCheckIn } from './components/MoodCheckIn'
 import { MoodGate } from './components/MoodGate'
@@ -26,6 +27,7 @@ import { Transits } from './components/Transits'
 import { Welcome, Splash } from './components/Welcome'
 import { YouView } from './components/YouView'
 import { useAuth, useAuthDeepLink } from './lib/auth'
+import { applyHtmlLang, useT } from './lib/i18n'
 import { useLiveLocation, useLiveSky } from './lib/liveSky'
 import { syncNotifications } from './lib/notifications'
 import { useRevenueCat } from './lib/revenuecat'
@@ -65,9 +67,12 @@ function App() {
   const [ritual, setRitual] = useState<RitualPreset | null>(null)
   const [paywall, setPaywall] = useState<string | null>(null)
   const [authOpen, setAuthOpen] = useState<'backup' | 'purchase' | null>(null)
+  const [langOpen, setLangOpen] = useState(false)
   const auth = useAuth()
+  const t = useT()
   const authSkipped = useAppStore((s) => s.authSkipped)
   const skipAuth = useAppStore((s) => s.skipAuth)
+  const locale = useAppStore((s) => s.locale)
   const onboardingComplete = useAppStore((s) => s.onboardingComplete)
   const moodGateDay = useAppStore((s) => s.moodGateDay)
   const hasMoodToday = useAppStore((s) =>
@@ -81,10 +86,18 @@ function App() {
   useCloudSync()
   useRevenueCat(auth.user?.id ?? null)
 
+  useEffect(() => {
+    applyHtmlLang(locale)
+  }, [locale])
+
   // Android hardware/gesture back: close whatever's on top, else step back
   // to the home tab, else exit — otherwise the OS just kills the app outright.
   useEffect(() => {
     const handle = CapApp.addListener('backButton', () => {
+      if (langOpen) {
+        setLangOpen(false)
+        return
+      }
       if (authOpen) {
         setAuthOpen(null)
         return
@@ -114,10 +127,9 @@ function App() {
     return () => {
       void handle.then((h) => h.remove())
     }
-  }, [authOpen, paywall, practiceOpen, ritual, sub, tab])
+  }, [langOpen, authOpen, paywall, practiceOpen, ritual, sub, tab])
 
-  const openPaywall = (reason?: string) =>
-    setPaywall(reason ?? 'Unlock Resonance Pro')
+  const openPaywall = (reason?: string) => setPaywall(reason ?? t('pay.title'))
   const goTab = (next: TabKey) => {
     if (next === tab && sub === null) setTabNonce((n) => n + 1)
     setTab(next)
@@ -163,7 +175,7 @@ function App() {
         active={tab}
         onTabChange={goTab}
         onPractice={() => setPracticeOpen(true)}
-        practiceLabel="today's ritual"
+        practiceLabel={t('nav.practice')}
         onSettings={sub === null ? () => setSub('settings') : undefined}
       >
         {sub === 'chart' && <NatalChart onBack={back} />}
@@ -203,6 +215,7 @@ function App() {
             onBack={back}
             onUpgrade={() => openPaywall()}
             onAuth={() => setAuthOpen('backup')}
+            onLanguage={() => setLangOpen(true)}
           />
         )}
 
@@ -230,7 +243,7 @@ function App() {
         {sub === null && tab === 'tarot' && (
           <TarotReader
             key={tabNonce}
-            onUpgrade={() => openPaywall('The 3-card & Celtic Cross spreads')}
+            onUpgrade={() => openPaywall(t('pay.reasonSpreads'))}
           />
         )}
         {sub === null && tab === 'you' && (
@@ -267,6 +280,8 @@ function App() {
       {authOpen && auth.status !== 'signed-in' && (
         <AuthSheet reason={authOpen} onClose={() => setAuthOpen(null)} />
       )}
+
+      {langOpen && <LanguageSheet onClose={() => setLangOpen(false)} />}
     </>
   )
 }

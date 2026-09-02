@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { chakraName } from '../lib/resonanceData'
+import { chakraLabel, useT } from '../lib/i18n'
 import { planetSymbol } from '../data/esoteric'
 import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
@@ -72,6 +72,7 @@ export function SkyView({
   onOpenStones,
   onUpgrade,
 }: SkyViewProps) {
+  const t = useT()
   const { isPro } = useEntitlements()
   const chakraField = useChakraField()
   const transit = useAppStore((s) => s.transit)
@@ -88,14 +89,14 @@ export function SkyView({
   return (
     <div className="flex flex-col gap-4">
       <header className="px-1">
-        <p className="eyebrow-hue">The Sky</p>
+        <p className="eyebrow-hue">{t('sky.eyebrow')}</p>
         <h1 className="mt-1.5 font-serif text-2xl leading-tight text-gilded">
           {transit.body} <span aria-hidden>{planetSymbol(transit.body)}</span>
           {focusPlanet?.retrograde && (
             <span className="ml-1 align-super text-sm text-haze-300">℞</span>
           )}
           <span className="text-haze-400"> · </span>
-          {chakraName(chakra.key)}
+          {chakraLabel(chakra.key, t)}
         </h1>
         <p className="mt-1 text-sm text-haze-300">{transit.title}</p>
       </header>
@@ -103,7 +104,7 @@ export function SkyView({
       <QuickHoroscope
         isPro={isPro}
         onOpenFull={
-          isPro ? onOpenHoroscope : () => onUpgrade('Your full daily horoscope')
+          isPro ? onOpenHoroscope : () => onUpgrade(t('sky.reasonHoroscope'))
         }
       />
 
@@ -129,12 +130,12 @@ export function SkyView({
           ))}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="eyebrow">The Chakra Field</span>
+          <span className="eyebrow">{t('sky.chakraField')}</span>
           <span className="mt-1 block font-serif text-lg leading-tight text-white">
             {chakraFieldSummary(chakraField)}
           </span>
           <span className="mt-0.5 block text-xs text-haze-300">
-            All seven centres, decoded from today’s sky
+            {t('sky.chakraFieldSub')}
           </span>
         </span>
         <span className="shrink-0 self-center" style={{ color: 'var(--rz-hue)' }}>
@@ -145,51 +146,49 @@ export function SkyView({
       <div className="grid grid-cols-2 gap-3">
         <Tile
           icon={<CompassIcon className="h-5 w-5" />}
-          title={hasNatal ? 'Birth chart' : 'Add your chart'}
-          sub={hasNatal ? 'Your natal sky, house by house' : 'For a personal reading'}
+          title={hasNatal ? t('sky.tileChart') : t('sky.addChart')}
+          sub={hasNatal ? t('sky.chartSub') : t('sky.addChartSub')}
           onClick={onOpenChart}
         />
         <Tile
           icon={<PulseIcon className="h-5 w-5" />}
-          title="Transits"
+          title={t('sky.tileTransits')}
           sub={
             aspects.length > 0
-              ? `${aspects.length} contact${aspects.length > 1 ? 's' : ''} in orb now`
-              : 'Nothing tight today'
+              ? t('sky.transitsCount', { n: aspects.length })
+              : t('sky.transitsEmpty')
           }
           onClick={onOpenTransits}
         />
         <Tile
           icon={<MoonIcon className="h-5 w-5" />}
-          title="Moon & fasting"
-          sub={`${transit.moonPhase} · is it a day to fast?`}
+          title={t('sky.tileMoon')}
+          sub={t('sky.moonSub', { phase: transit.moonPhase })}
           onClick={onOpenMoon}
         />
         <Tile
           icon={<HeartLinkIcon />}
-          title="Compatibility"
-          sub="Love, friendship, work, family"
+          title={t('sky.tileCompat')}
+          sub={t('sky.tileCompatSub')}
           locked={!isPro}
-          onClick={
-            isPro ? onOpenCompat : () => onUpgrade('Compatibility readings')
-          }
+          onClick={isPro ? onOpenCompat : () => onUpgrade(t('sky.reasonCompat'))}
         />
         <Tile
           icon={<ScrollIcon />}
-          title="Full horoscope"
-          sub={isPro ? 'Today, in depth' : 'Today, in depth · Pro'}
+          title={t('sky.tileHoroscope')}
+          sub={isPro ? t('sky.tileHoroscopeSubPro') : t('sky.tileHoroscopeSub')}
           locked={!isPro}
           onClick={
-            isPro ? onOpenHoroscope : () => onUpgrade('Your full daily horoscope')
+            isPro ? onOpenHoroscope : () => onUpgrade(t('sky.reasonHoroscope'))
           }
         />
         <Tile
           icon={<ApothecaryIcon className="h-5 w-5" />}
-          title="Stones"
+          title={t('sky.tileStones')}
           sub={
             dailyCrystals.length > 0
               ? dailyCrystals.slice(0, 2).map((c) => c.name).join(' · ')
-              : 'Crystals for today’s work'
+              : t('sky.stonesEmpty')
           }
           onClick={onOpenStones}
         />

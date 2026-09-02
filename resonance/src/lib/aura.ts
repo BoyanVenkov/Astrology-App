@@ -95,10 +95,4 @@ export function computeAura(
   }
 }
 
-export const auraLabel = (score: number): string => {
-  if (score >= 0.8) return 'Radiant'
-  if (score >= 0.62) return 'Bright'
-  if (score >= 0.42) return 'Steady'
-  if (score >= 0.25) return 'Dim'
-  return 'Depleted'
-}
+// `auraLabel` moved to `lib/i18n` (it needs the translator).

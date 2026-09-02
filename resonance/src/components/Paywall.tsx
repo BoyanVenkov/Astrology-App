@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../lib/auth'
-import { PRO_FEATURES, PRO_PRICING } from '../lib/premium'
+import { useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
+import { PRO_PRICING } from '../lib/premium'
 import {
   buyPackage,
   fetchProPackages,
@@ -16,7 +18,17 @@ interface PaywallProps {
   onNeedAuth?: () => void
 }
 
+const FEATURE_KEYS: MessageKey[] = [
+  'pay.feat.compat',
+  'pay.feat.chakra',
+  'pay.feat.practice',
+  'pay.feat.tarot',
+  'pay.feat.horoscope',
+  'pay.feat.journal',
+]
+
 export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
+  const t = useT()
   const { status } = useAuth()
   const needsAuth = status !== 'signed-in'
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('yearly')
@@ -56,7 +68,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
     }
     const pkg = plan === 'yearly' ? yearlyPkg : monthlyPkg
     if (!pkg) {
-      setErr('Not available right now — try again in a moment.')
+      setErr(t('pay.notAvailable'))
       return
     }
     setBusy('buy')
@@ -64,7 +76,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
     const res = await buyPackage(pkg)
     setBusy(null)
     if (res.ok) onClose()
-    else if (!res.cancelled) setErr(res.error ?? 'Something went wrong.')
+    else if (!res.cancelled) setErr(res.error ?? t('pay.somethingWrong'))
   }
 
   const restore = async () => {
@@ -77,19 +89,23 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
     const ok = await restoreEntitlement()
     setBusy(null)
     if (ok) onClose()
-    else setErr('Nothing to restore on this account.')
+    else setErr(t('pay.nothingToRestore'))
   }
 
   const cta = needsAuth
-    ? 'Sign in to continue'
+    ? t('pay.ctaSignIn')
     : plan === 'yearly'
-      ? `Start ${PRO_PRICING.trialDays}-day free trial`
-      : `Start Pro · ${monthlyPrice}/mo`
+      ? t('pay.ctaTrial', { days: PRO_PRICING.trialDays })
+      : t('pay.ctaMonthly', { price: monthlyPrice })
 
   const terms =
     plan === 'yearly'
-      ? `${PRO_PRICING.trialDays} days free, then ${yearlyPrice}/year (${yearlyPerMonth}/mo). Auto-renews — cancel anytime in Google Play.`
-      : `${monthlyPrice} billed monthly. Auto-renews — cancel anytime in Google Play.`
+      ? t('pay.termsTrial', {
+          days: PRO_PRICING.trialDays,
+          yearly: yearlyPrice,
+          perMonth: yearlyPerMonth,
+        })
+      : t('pay.termsMonthly', { monthly: monthlyPrice })
 
   return (
     <div
@@ -104,17 +120,17 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20" />
         <div className="flex items-center gap-2">
           <LockIcon className="h-4 w-4 text-gold-300" />
-          <p className="eyebrow">Resonance Pro</p>
+          <p className="eyebrow">{t('pay.eyebrow')}</p>
         </div>
         <h2 className="mt-1 font-serif text-2xl text-gilded">
-          {reason ?? 'Unlock the full engine'}
+          {reason ?? t('pay.title')}
         </h2>
 
         <ul className="mt-4 flex flex-col gap-2 text-sm text-haze-200">
-          {PRO_FEATURES.map((f) => (
-            <li key={f} className="flex gap-2">
+          {FEATURE_KEYS.map((k) => (
+            <li key={k} className="flex gap-2">
               <span className="text-gold-300">✦</span>
-              {f}
+              {t(k)}
             </li>
           ))}
         </ul>
@@ -129,10 +145,14 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
                 : 'border-white/12 bg-white/5'
             }`}
           >
-            <p className="text-sm font-semibold text-white">{yearlyPrice}/yr</p>
+            <p className="text-sm font-semibold text-white">
+              {t('pay.perYear', { price: yearlyPrice })}
+            </p>
             <p className="text-[11px] text-gold-300">
-              {PRO_PRICING.trialDays}-day free trial
-              {savePct != null && savePct > 0 ? ` · save ${savePct}%` : ''}
+              {t('pay.freeTrial', { days: PRO_PRICING.trialDays })}
+              {savePct != null && savePct > 0
+                ? ` · ${t('pay.save', { pct: savePct })}`
+                : ''}
             </p>
           </button>
           <button
@@ -145,9 +165,9 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
             }`}
           >
             <p className="text-sm font-semibold text-white">
-              {monthlyPrice}/mo
+              {t('pay.perMonth', { price: monthlyPrice })}
             </p>
-            <p className="text-[11px] text-haze-400">billed monthly</p>
+            <p className="text-[11px] text-haze-400">{t('pay.billedMonthly')}</p>
           </button>
         </div>
 
@@ -157,13 +177,11 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
           disabled={busy !== null}
           className="mt-4 w-full rounded-2xl border border-gold-400/50 bg-gold-500/20 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-50"
         >
-          {busy === 'buy' ? 'One moment…' : cta}
+          {busy === 'buy' ? t('pay.oneMoment') : cta}
         </button>
 
         <p className="mt-2.5 text-center text-[11px] leading-relaxed text-haze-500">
-          {needsAuth
-            ? 'A subscription is linked to your account, so it stays with you if you reinstall or switch phones. '
-            : ''}
+          {needsAuth ? t('pay.accountNote') : ''}
           {terms}
         </p>
 
@@ -177,10 +195,10 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
             onClick={() => void restore()}
             disabled={busy !== null}
           >
-            {busy === 'restore' ? 'Checking…' : 'Restore purchases'}
+            {busy === 'restore' ? t('pay.restoreChecking') : t('pay.restore')}
           </button>
           <button type="button" onClick={onClose}>
-            Maybe later
+            {t('pay.maybeLater')}
           </button>
         </div>
       </div>

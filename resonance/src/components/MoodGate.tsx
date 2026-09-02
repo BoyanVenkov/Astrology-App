@@ -1,22 +1,15 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
+import { useT } from '../lib/i18n'
 import { MOOD_LIST, MOOD_META } from '../lib/aura'
 import { localDayKey } from '../lib/timezone'
 import { ResonanceMark } from './Logo'
 import type { Mood } from '../types/resonance'
+import type { MessageKey } from '../lib/locales/en'
 
 interface MoodGateProps {
   onDone: () => void
-}
-
-const PREVIEW: Record<Mood, string> = {
-  anxious: 'we’ll slow everything down — 4·7·8 breath and a settling tone',
-  heavy: 'gentle grounding today — slow coherent breath and warmth',
-  tired: 'short and soft — a restorative sit, nothing demanding',
-  bright: 'we’ll lean into the sky’s charge and give you more',
-  clear: 'we’ll follow the sky — a focused, unhurried practice',
-  calm: 'we’ll follow the sky — steady, aligned practice',
 }
 
 /**
@@ -26,6 +19,7 @@ const PREVIEW: Record<Mood, string> = {
  */
 export function MoodGate({ onDone }: MoodGateProps) {
   useDayHue()
+  const t = useT()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const logMood = useAppStore((s) => s.logMood)
@@ -58,18 +52,22 @@ export function MoodGate({ onDone }: MoodGateProps) {
       />
 
       <p className="eyebrow text-center" style={{ color: 'var(--rz-hue)' }}>
-        Before you begin
+        {t('mood.eyebrow')}
       </p>
       <h1 className="mt-2 text-center font-serif text-[2rem] leading-tight text-gilded">
-        How are you arriving?
+        {t('mood.title')}
       </h1>
 
       {transit && (
         <p className="mt-3 text-center text-sm leading-relaxed text-haze-300">
-          The sky today is{' '}
-          <span className="text-haze-100">{transit.title}</span>
-          {chakra ? ` · ${chakra.name} focus` : ''}. Your practice is shaped by
-          that — and by this.
+          {t('mood.skyLine', {
+            title: transit.title,
+            chakra: chakra
+              ? t('mood.skyChakra', {
+                  chakra: t(`chakra.${chakra.key}` as MessageKey),
+                })
+              : '',
+          })}
         </p>
       )}
 
@@ -102,7 +100,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
               <span
                 className={`font-serif text-base ${on ? 'text-white' : 'text-haze-200'}`}
               >
-                {meta.label}
+                {t(`mood.${m}` as MessageKey)}
               </span>
             </button>
           )
@@ -112,7 +110,10 @@ export function MoodGate({ onDone }: MoodGateProps) {
       <div className="mt-6 min-h-[3rem] text-center">
         {mood && (
           <p className="animate-rise-in text-sm leading-relaxed text-haze-300">
-            You’re <span className="text-haze-100">{MOOD_META[mood].label.toLowerCase()}</span> — {PREVIEW[mood]}.
+            {t('mood.you', {
+              mood: t(`mood.${mood}` as MessageKey),
+              preview: t(`mood.preview.${mood}` as MessageKey),
+            })}
           </p>
         )}
       </div>
@@ -129,14 +130,14 @@ export function MoodGate({ onDone }: MoodGateProps) {
           color: mood ? '#03040c' : 'rgba(154,166,201,0.7)',
         }}
       >
-        Enter
+        {t('mood.enter')}
       </button>
       <button
         type="button"
         onClick={commit}
         className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
       >
-        Skip for today
+        {t('mood.skipToday')}
       </button>
     </div>
   )

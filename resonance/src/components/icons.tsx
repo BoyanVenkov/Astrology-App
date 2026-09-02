@@ -23,6 +23,16 @@ const base = (props: IconProps) => ({
 
 const fill = { fill: 'currentColor', fillOpacity: 0.15, stroke: 'none' }
 
+export function GlobeIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="8.5" {...fill} />
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M3.5 12h17M12 3.5c2.4 2.3 3.6 5.2 3.6 8.5S14.4 18.2 12 20.5c-2.4-2.3-3.6-5.2-3.6-8.5S9.6 5.8 12 3.5Z" />
+    </svg>
+  )
+}
+
 /* ---------------------------------------------------------------- nav */
 
 export function DashboardIcon(props: IconProps) {

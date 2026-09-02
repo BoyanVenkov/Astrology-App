@@ -10,6 +10,7 @@ import type {
   ChakraState,
   Crystal,
   GeoPoint,
+  Locale,
   MoodEntry,
   NotificationPreferences,
   PracticeSession,
@@ -19,6 +20,7 @@ import type {
   SolfeggioFrequency,
 } from '../types/resonance'
 import { computeDailyReading, type Aspect } from '../lib/astrology'
+import { detectLocale } from '../lib/detectLocale'
 import type { BodyName, BodyPosition } from '../lib/ephemeris'
 import type { ChartAngles } from '../lib/houses'
 import { localDayKey } from '../lib/timezone'
@@ -131,6 +133,7 @@ const createSession = (): ResonanceSession & SkyState => {
     moodGateDay: null,
     people: [],
     authSkipped: false,
+    locale: detectLocale(),
   }
 }
 
@@ -169,6 +172,8 @@ interface ResonanceActions {
   skipOnboarding: () => void
   /** Enter the app without signing in (the Welcome gate stops blocking). */
   skipAuth: () => void
+  /** Change the UI language. */
+  setLocale: (locale: Locale) => void
   /** Recompute the daily transit / chakra / crystals (call when the day rolls over). */
   refreshDailyTransit: () => void
   /** Mark that today's daily tarot card has been turned. */
@@ -278,6 +283,8 @@ export const useAppStore = create<AppStore>()(
 
       skipAuth: () => set({ authSkipped: true }),
 
+      setLocale: (locale) => set({ locale }),
+
       refreshDailyTransit: () =>
         set((state) => {
           const slice = readingSlice(state.profile, state.currentLocation)
@@ -317,6 +324,7 @@ export const useAppStore = create<AppStore>()(
           moodGateDay: state.moodGateDay,
           people: state.people,
           authSkipped: state.authSkipped,
+          locale: state.locale,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -350,6 +358,7 @@ export const useAppStore = create<AppStore>()(
         moodGateDay: state.moodGateDay,
         people: state.people,
         authSkipped: state.authSkipped,
+        locale: state.locale,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>
@@ -401,6 +410,7 @@ export interface SyncSnapshot {
   tarotDrawnDay: string | null
   moodGateDay: string | null
   people: SavedPerson[]
+  locale: Locale
 }
 
 export function snapshotForSync(): SyncSnapshot {
@@ -421,6 +431,7 @@ export function snapshotForSync(): SyncSnapshot {
     tarotDrawnDay: s.tarotDrawnDay,
     moodGateDay: s.moodGateDay,
     people: s.people,
+    locale: s.locale,
   }
 }
 
@@ -482,6 +493,7 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
       patch.audio = { ...s.audio, ...remote.audio }
       patch.notifications = { ...s.notifications, ...remote.notifications }
       if (remote.breathPattern) patch.breathPattern = remote.breathPattern
+      if (remote.locale) patch.locale = remote.locale
       if (remote.currentLocation !== undefined)
         patch.currentLocation = remote.currentLocation
     } else if (!s.profile && remote.profile) {

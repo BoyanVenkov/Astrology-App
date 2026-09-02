@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import type { TabKey } from '../types/resonance'
 import { useDayHue } from '../lib/dayhue'
+import { useT, type TFn } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
 import {
@@ -24,27 +26,29 @@ interface LayoutProps {
 
 type TabDef = {
   key: TabKey
-  label: string
+  labelKey: MessageKey
   Icon: (props: { className?: string }) => ReactNode
 }
 
 const LEFT: TabDef[] = [
-  { key: 'today', label: 'Today', Icon: DashboardIcon },
-  { key: 'sky', label: 'Sky', Icon: SkyIcon },
+  { key: 'today', labelKey: 'nav.today', Icon: DashboardIcon },
+  { key: 'sky', labelKey: 'nav.sky', Icon: SkyIcon },
 ]
 const RIGHT: TabDef[] = [
-  { key: 'tarot', label: 'Tarot', Icon: TarotIcon },
-  { key: 'you', label: 'You', Icon: YouIcon },
+  { key: 'tarot', labelKey: 'nav.tarot', Icon: TarotIcon },
+  { key: 'you', labelKey: 'nav.you', Icon: YouIcon },
 ]
 
 function Tab({
   def,
   active,
   onClick,
+  t,
 }: {
   def: TabDef
   active: boolean
   onClick: () => void
+  t: TFn
 }) {
   const Icon = def.Icon
   return (
@@ -70,7 +74,7 @@ function Tab({
       />
       <span className="relative flex flex-col items-center gap-[3px]">
         <Icon className="h-[1.5rem] w-[1.5rem]" />
-        <span>{def.label}</span>
+        <span>{t(def.labelKey)}</span>
       </span>
     </button>
   )
@@ -85,6 +89,7 @@ export function Layout({
   children,
 }: LayoutProps) {
   useDayHue()
+  const t = useT()
 
   return (
     <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col">
@@ -103,7 +108,7 @@ export function Layout({
           <button
             type="button"
             onClick={onSettings}
-            aria-label="Settings"
+            aria-label={t('nav.settings')}
             className="absolute right-2 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-white/15"
           >
             <GearIcon className="h-[1.3rem] w-[1.3rem]" strokeWidth={1.8} />
@@ -136,6 +141,7 @@ export function Layout({
               def={d}
               active={active === d.key}
               onClick={() => onTabChange(d.key)}
+              t={t}
             />
           ))}
 
@@ -168,6 +174,7 @@ export function Layout({
               def={d}
               active={active === d.key}
               onClick={() => onTabChange(d.key)}
+              t={t}
             />
           ))}
         </div>

@@ -3,9 +3,9 @@ import { useAppStore } from '../store/useAppStore'
 import { Aura } from './Aura'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { MEDITATION_STYLE_MAP } from '../lib/meditation'
-import { auraLabel, computeAura, MOOD_META } from '../lib/aura'
+import { computeAura, MOOD_META } from '../lib/aura'
+import { auraLabel, chakraLabel, moodLabel, useT } from '../lib/i18n'
 import { useEntitlements } from '../lib/premium'
-import { chakraName } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { BackButton } from './Screen'
@@ -31,6 +31,7 @@ const dayKeyOffset = (offset: number): string => {
 }
 
 export function Journal({ onBack, onUpgrade }: JournalProps) {
+  const t = useT()
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
@@ -79,14 +80,14 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
 
       <header className="flex flex-col items-center text-center">
         <Aura state={aura} size={200} className="h-48 w-48" />
-        <p className="eyebrow mt-1">Your aura</p>
+        <p className="eyebrow mt-1">{t('aura.yours')}</p>
         <h1 className="font-serif text-3xl text-gilded">
-          {auraLabel(aura.score)}
+          {auraLabel(aura.score, t)}
         </h1>
         <p className="mt-1 text-sm text-haze-300">
-          {chakraName(focusChakra)} · {Math.round(aura.score * 100)}%
+          {chakraLabel(focusChakra, t)} · {Math.round(aura.score * 100)}%
           {aura.mood && aura.moodFresh
-            ? ` · feeling ${MOOD_META[aura.mood].label.toLowerCase()}`
+            ? ` · ${moodLabel(aura.mood, t)}`
             : ''}
         </p>
       </header>
@@ -177,7 +178,7 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
                       : (BREATH_PATTERNS[s.pattern]?.name ?? s.pattern)}
                 </span>
                 <span className="tabular-nums text-xs text-haze-400">
-                  {chakraName(s.chakra)} · {s.minutes} min
+                  {chakraLabel(s.chakra, t)} · {s.minutes} min
                   {s.completed ? '' : ' · ended early'}
                 </span>
               </li>

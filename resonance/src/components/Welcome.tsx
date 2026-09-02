@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
+import { useT } from '../lib/i18n'
 import { CHAKRA_ORDER, chakraColor } from '../lib/resonanceData'
 import { signInWithGoogle } from '../lib/auth'
 import { PRIVACY_URL, TERMS_URL, openExternal } from '../lib/links'
+import { GlobeIcon } from './icons'
+import { LanguageSheet } from './LanguageSheet'
 import { ResonanceMark } from './Logo'
 
 /* ----------------------------------------------------------------- backdrop */
@@ -187,10 +190,12 @@ interface WelcomeProps {
  */
 export function Welcome({ onSkip }: WelcomeProps) {
   useDayHue()
+  const t = useT()
   const transit = useAppStore((s) => s.transit)
 
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const [langOpen, setLangOpen] = useState(false)
 
   const google = async () => {
     setBusy(true)
@@ -213,29 +218,34 @@ export function Welcome({ onSkip }: WelcomeProps) {
       <WelcomeSky />
       <PlanetField />
 
+      <button
+        type="button"
+        onClick={() => setLangOpen(true)}
+        aria-label={t('welcome.language')}
+        className="absolute right-5 top-[max(1.25rem,env(safe-area-inset-top))] z-10 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/[0.06] text-haze-200 active:bg-white/[0.12]"
+      >
+        <GlobeIcon className="h-[1.15rem] w-[1.15rem]" />
+      </button>
+
       <div className="flex flex-1 flex-col justify-center py-8">
         <ResonanceMark
           className="mb-7 h-11 w-11 self-center"
           style={{ color: 'var(--rz-hue)', filter: 'drop-shadow(0 0 14px var(--rz-glow))' }}
           animated
         />
-        <p className="eyebrow-hue text-center">Welcome to Resonance</p>
-        <h1 className="display mt-3 text-center text-[2.35rem] leading-[1.08] text-gilded">
-          The sky, read
-          <br />
-          for you
+        <p className="eyebrow-hue text-center">{t('welcome.eyebrow')}</p>
+        <h1 className="display mt-3 whitespace-pre-line text-center text-[2.35rem] leading-[1.08] text-gilded">
+          {t('welcome.title')}
         </h1>
         <p className="mx-auto mt-4 max-w-[19rem] text-center text-sm leading-relaxed text-haze-300">
-          Resonance follows the real planets against your birth chart and turns
-          each day into one practice — a breath, a tone, and the centre asking
-          for attention.
+          {t('welcome.blurb')}
         </p>
 
         <ChakraSpectrum />
 
         {transit && (
           <p className="data mt-7 text-center text-[11px] tracking-wide text-haze-500">
-            Tonight · {transit.title}
+            {t('welcome.tonight', { title: transit.title })}
           </p>
         )}
       </div>
@@ -243,8 +253,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
       <div className="shrink-0">
         <div className="flex flex-col gap-2.5">
           <p className="mb-1 text-center text-[11px] leading-relaxed text-haze-500">
-            Sign in to keep your chart, journal and saved people safe across
-            devices — and to hold your subscription if you reinstall.
+            {t('welcome.pitch')}
           </p>
           <button
             type="button"
@@ -253,14 +262,14 @@ export function Welcome({ onSkip }: WelcomeProps) {
             className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-glow)] transition active:scale-[0.98] disabled:opacity-60"
           >
             <GoogleG />
-            {busy ? 'Opening Google…' : 'Continue with Google'}
+            {busy ? t('welcome.googleOpening') : t('welcome.google')}
           </button>
           <button
             type="button"
             onClick={onSkip}
             className="mt-1 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
           >
-            Explore without an account
+            {t('welcome.explore')}
           </button>
         </div>
 
@@ -269,25 +278,27 @@ export function Welcome({ onSkip }: WelcomeProps) {
         )}
 
         <p className="mx-auto mt-5 max-w-[19rem] text-center text-[11px] leading-relaxed text-haze-500">
-          By continuing you agree to our{' '}
+          {t('welcome.legalPre')}
           <button
             type="button"
             onClick={() => void openExternal(TERMS_URL)}
             className="text-haze-300 underline underline-offset-2 active:text-haze-100"
           >
-            Terms
-          </button>{' '}
-          and{' '}
+            {t('welcome.terms')}
+          </button>
+          {t('welcome.legalMid')}
           <button
             type="button"
             onClick={() => void openExternal(PRIVACY_URL)}
             className="text-haze-300 underline underline-offset-2 active:text-haze-100"
           >
-            Privacy Policy
+            {t('welcome.privacy')}
           </button>
-          .
+          {t('welcome.legalEnd')}
         </p>
       </div>
+
+      {langOpen && <LanguageSheet onClose={() => setLangOpen(false)} />}
     </div>
   )
 }

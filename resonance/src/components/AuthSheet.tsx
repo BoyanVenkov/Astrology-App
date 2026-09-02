@@ -1,23 +1,11 @@
 import { useState } from 'react'
 import { signInWithGoogle } from '../lib/auth'
+import { useT } from '../lib/i18n'
 
 interface AuthSheetProps {
   onClose: () => void
   /** Why the sheet was opened — changes the heading + blurb. */
   reason?: 'backup' | 'purchase'
-}
-
-const COPY: Record<'backup' | 'purchase', { title: string; blurb: string }> = {
-  backup: {
-    title: 'Back up your practice',
-    blurb:
-      'Optional — the app works fine without it. Sign in and your chart, journal and saved people are safe if you change phones or reinstall.',
-  },
-  purchase: {
-    title: 'Sign in to go Pro',
-    blurb:
-      'Your subscription is tied to your account, not this phone — so it stays with you if you reinstall or switch devices. Takes a few seconds.',
-  },
 }
 
 const GoogleG = () => (
@@ -30,7 +18,9 @@ const GoogleG = () => (
 )
 
 export function AuthSheet({ onClose, reason = 'backup' }: AuthSheetProps) {
-  const copy = COPY[reason]
+  const t = useT()
+  const title = reason === 'purchase' ? t('auth.purchaseTitle') : t('auth.backupTitle')
+  const blurb = reason === 'purchase' ? t('auth.purchaseBlurb') : t('auth.backupBlurb')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
@@ -55,11 +45,9 @@ export function AuthSheet({ onClose, reason = 'backup' }: AuthSheetProps) {
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20" />
-        <p className="eyebrow-hue">Your account</p>
-        <h2 className="mt-1 font-serif text-2xl text-gilded">{copy.title}</h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-haze-300">
-          {copy.blurb}
-        </p>
+        <p className="eyebrow-hue">{t('auth.yourAccount')}</p>
+        <h2 className="mt-1 font-serif text-2xl text-gilded">{title}</h2>
+        <p className="mt-1.5 text-sm leading-relaxed text-haze-300">{blurb}</p>
 
         <div className="mt-5 flex flex-col gap-2.5">
           <button
@@ -69,7 +57,7 @@ export function AuthSheet({ onClose, reason = 'backup' }: AuthSheetProps) {
             className="flex items-center justify-center gap-2.5 rounded-[0.9rem] bg-[#f6f4ec] px-4 py-3.5 text-sm font-semibold text-[#1a1c22] active:scale-[0.98] disabled:opacity-50"
           >
             <GoogleG />
-            {busy ? 'Opening Google…' : 'Continue with Google'}
+            {busy ? t('welcome.googleOpening') : t('welcome.google')}
           </button>
         </div>
 
@@ -80,7 +68,7 @@ export function AuthSheet({ onClose, reason = 'backup' }: AuthSheetProps) {
           onClick={onClose}
           className="mt-4 w-full text-center text-[11px] uppercase tracking-[0.14em] text-haze-500"
         >
-          Not now
+          {t('common.notNow')}
         </button>
       </div>
     </div>

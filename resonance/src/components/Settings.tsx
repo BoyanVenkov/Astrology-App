@@ -8,14 +8,18 @@ import {
 } from '../lib/notifications'
 import { locationIsFresh, requestCurrentLocation } from '../lib/location'
 import { openExternal } from '../lib/links'
+import { useT } from '../lib/i18n'
+import { LOCALES } from '../lib/i18n'
 import { useEntitlements } from '../lib/premium'
 import { subscriptionManagementUrl } from '../lib/revenuecat'
+import { GlobeIcon } from './icons'
 import { Screen } from './Screen'
 
 interface SettingsProps {
   onBack: () => void
   onUpgrade: () => void
   onAuth: () => void
+  onLanguage: () => void
 }
 
 function Toggle({
@@ -76,8 +80,11 @@ function Section({
 const fieldCls =
   'rounded-xl border border-white/12 bg-midnight-950/60 px-3 py-2 text-sm text-white outline-none focus:border-gold-400/60'
 
-export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
+export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProps) {
+  const t = useT()
   const { status, user } = useAuth()
+  const locale = useAppStore((s) => s.locale)
+  const languageName = LOCALES.find((l) => l.code === locale)?.native ?? 'English'
   const [acctBusy, setAcctBusy] = useState<null | 'backup' | 'out' | 'delete'>(
     null,
   )
@@ -87,19 +94,16 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
     setAcctBusy('backup')
     const ok = await backupNow()
     setAcctBusy(null)
-    setAcctMsg(ok ? 'Backed up.' : 'Backup failed — check your connection.')
+    setAcctMsg(ok ? t('set.backingUp') : t('set.backupFailed'))
   }
   const doDelete = async () => {
-    if (
-      !window.confirm(
-        'Permanently delete your account and everything backed up to the cloud? Data on this device is kept until you also erase it below.',
-      )
-    )
-      return
+    if (!window.confirm(t('set.confirmDelete'))) return
     setAcctBusy('delete')
     const err = await deleteAccount()
     setAcctBusy(null)
-    setAcctMsg(err ? `Deletion issue: ${err.message}` : 'Account deleted.')
+    setAcctMsg(
+      err ? t('set.deletionIssue', { message: err.message }) : t('set.accountDeleted'),
+    )
   }
 
   const audio = useAppStore((s) => s.audio)
@@ -135,9 +139,9 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
     setLocBusy(false)
     if (point) {
       setCurrentLocation(point)
-      setLocMsg('Location updated — your reading now reflects where you are.')
+      setLocMsg(t('set.locationUpdated'))
     } else {
-      setLocMsg('Couldn’t get a location. Check the app’s location permission.')
+      setLocMsg(t('set.locationFailed'))
     }
   }
 
@@ -150,7 +154,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
     if (on) {
       const granted = await ensureNotificationPermission()
       if (!granted) {
-        setNotice('Notifications are blocked in your OS settings.')
+        setNotice(t('set.notificationsBlocked'))
         return
       }
     }
@@ -159,12 +163,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
   }
 
   const resetAll = () => {
-    if (
-      !window.confirm(
-        'Erase your chart, practice history and preferences on this device?',
-      )
-    )
-      return
+    if (!window.confirm(t('set.confirmErase'))) return
     try {
       localStorage.removeItem('resonance-session')
     } catch {
@@ -174,16 +173,43 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
   }
 
   return (
-    <Screen eyebrow="Settings" title="Attune the app" onBack={onBack}>
-      <Section title="Account">
+    <Screen eyebrow={t('nav.settings')} title={t('set.title')} onBack={onBack}>
+      <Section title={t('set.language')}>
+        <Row>
+          <button
+            type="button"
+            onClick={onLanguage}
+            className="flex w-full items-center justify-between gap-3 py-3 text-left"
+          >
+            <span className="flex items-center gap-3">
+              <GlobeIcon
+                className="h-[1.35rem] w-[1.35rem] shrink-0 text-haze-300"
+              />
+              <span>
+                <span className="block text-sm text-haze-100">
+                  {t('set.language')}
+                </span>
+                <span className="block text-xs text-haze-400">
+                  {t('set.languageSub', { language: languageName })}
+                </span>
+              </span>
+            </span>
+            <span className="shrink-0 text-sm text-haze-400">{languageName}</span>
+          </button>
+        </Row>
+      </Section>
+
+      <Section title={t('set.account')}>
         {status === 'signed-in' && user ? (
           <>
             <Row>
               <div className="flex items-center justify-between py-3 text-sm">
                 <span>
-                  <span className="text-haze-100">Signed in ✦</span>
+                  <span className="text-haze-100">{t('set.signedIn')}</span>
                   <span className="block text-xs text-haze-400">
-                    {user.email ?? 'account linked'} · backup on
+                    {t('set.signedInSub', {
+                      email: user.email ?? t('set.account'),
+                    })}
                   </span>
                 </span>
                 <button
@@ -192,7 +218,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
                   disabled={acctBusy !== null}
                   className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-haze-200 disabled:opacity-50"
                 >
-                  {acctBusy === 'backup' ? '…' : 'Back up now'}
+                  {acctBusy === 'backup' ? '…' : t('set.backUpNow')}
                 </button>
               </div>
             </Row>
@@ -205,7 +231,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
                 }}
                 className="w-full py-3 text-left text-sm text-haze-200"
               >
-                Sign out
+                {t('set.signOut')}
               </button>
             </Row>
             <Row>
@@ -215,7 +241,9 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
                 disabled={acctBusy !== null}
                 className="w-full py-3 text-left text-xs text-red-300 disabled:opacity-50"
               >
-                {acctBusy === 'delete' ? 'Deleting…' : 'Delete account & cloud data'}
+                {acctBusy === 'delete'
+                  ? t('set.deleting')
+                  : t('set.deleteAccount')}
               </button>
             </Row>
           </>
@@ -223,9 +251,9 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
           <Row>
             <div className="flex items-center justify-between py-3 text-sm">
               <span>
-                <span className="text-haze-100">Not signed in</span>
+                <span className="text-haze-100">{t('set.notSignedIn')}</span>
                 <span className="block text-xs text-haze-400">
-                  Sign in to back up your chart, journal &amp; people
+                  {t('set.notSignedInSub')}
                 </span>
               </span>
               <button
@@ -233,7 +261,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
                 onClick={onAuth}
                 className="rounded-full border border-gold-400/50 bg-gold-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100"
               >
-                Sign in
+                {t('set.signIn')}
               </button>
             </div>
           </Row>
@@ -245,11 +273,11 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
         )}
       </Section>
 
-      <Section title="Sound">
+      <Section title={t('set.sound')}>
         <Row>
           <div className="py-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-haze-100">Master volume</span>
+              <span className="text-haze-100">{t('set.masterVolume')}</span>
               <span className="tabular-nums text-haze-400">
                 {Math.round(audio.masterVolume * 100)}%
               </span>
@@ -269,23 +297,23 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
         </Row>
         <Row>
           <Toggle
-            label="Ambient pad"
-            hint="Low brown-noise bed under everything"
+            label={t('set.ambientPad')}
+            hint={t('set.ambientPadSub')}
             on={audio.ambientPadEnabled}
             onChange={(v) => updateAudioPreferences({ ambientPadEnabled: v })}
           />
         </Row>
         <Row>
           <Toggle
-            label="Breathing sound"
-            hint="Synthesised inhale / exhale during breathwork"
+            label={t('set.breathSound')}
+            hint={t('set.breathSoundSub')}
             on={audio.breathVoice}
             onChange={(v) => updateAudioPreferences({ breathVoice: v })}
           />
         </Row>
         <Row>
           <div className="flex items-center justify-between py-3 text-sm">
-            <span className="text-haze-100">Fade in / out</span>
+            <span className="text-haze-100">{t('set.fade')}</span>
             <select
               value={audio.fadeSeconds}
               onChange={(e) =>
@@ -303,11 +331,11 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
         </Row>
       </Section>
 
-      <Section title="Notifications">
+      <Section title={t('set.notifications')}>
         <Row>
           <Toggle
-            label="Enable notifications"
-            hint="Computed on-device from the sky — no server"
+            label={t('set.enableNotifications')}
+            hint={t('set.enableNotificationsSub')}
             on={notifications.enabled}
             onChange={(v) => void toggleNotifications(v)}
           />
@@ -321,7 +349,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
           <>
             <Row>
               <div className="flex items-center justify-between py-3 text-sm">
-                <span className="text-haze-100">Morning reading</span>
+                <span className="text-haze-100">{t('set.morningReading')}</span>
                 <input
                   type="time"
                   value={notifications.dailyReadingTime}
@@ -335,14 +363,14 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
             </Row>
             <Row>
               <Toggle
-                label="Morning reading nudge"
+                label={t('set.morningReadingNudge')}
                 on={notifications.dailyReading}
                 onChange={(v) => patchNotif({ dailyReading: v })}
               />
             </Row>
             <Row>
               <div className="flex items-center justify-between py-3 text-sm">
-                <span className="text-haze-100">Evening wind-down</span>
+                <span className="text-haze-100">{t('set.eveningWind')}</span>
                 <input
                   type="time"
                   value={notifications.eveningWindTime}
@@ -356,30 +384,30 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
             </Row>
             <Row>
               <Toggle
-                label="Evening wind-down"
+                label={t('set.eveningWind')}
                 on={notifications.eveningWind}
                 onChange={(v) => patchNotif({ eveningWind: v })}
               />
             </Row>
             <Row>
               <Toggle
-                label="New & Full Moon"
+                label={t('set.newFullMoon')}
                 on={notifications.moonPhases}
                 onChange={(v) => patchNotif({ moonPhases: v })}
               />
             </Row>
             <Row>
               <Toggle
-                label="Moon changes sign"
-                hint="The emotional weather shifts"
+                label={t('set.moonSign')}
+                hint={t('set.moonSignSub')}
                 on={notifications.moonSignChange}
                 onChange={(v) => patchNotif({ moonSignChange: v })}
               />
             </Row>
             <Row>
               <Toggle
-                label="Void-of-course Moon"
-                hint="A cue to ground, not to begin"
+                label={t('set.voidOfCourse')}
+                hint={t('set.voidOfCourseSub')}
                 on={notifications.voidOfCourse}
                 onChange={(v) => patchNotif({ voidOfCourse: v })}
               />
@@ -388,19 +416,25 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
         )}
       </Section>
 
-      <Section title="Birth chart">
+      <Section title={t('set.birthChart')}>
         <Row>
           <div className="flex items-center justify-between py-3 text-sm">
             <span>
               <span className="text-haze-100">
                 {profile
-                  ? `${profile.date} · ${profile.timeKnown ? profile.time : 'noon'}`
-                  : 'Not set'}
+                  ? `${profile.date} · ${profile.timeKnown ? profile.time : '12:00'}`
+                  : t('set.notSet')}
               </span>
               <span className="block text-xs text-haze-400">
                 {profile?.placeLabel ??
-                  (profile ? 'no birth place' : 'transit-only readings')}
-                {angles ? ` · ${angles.system} houses` : ''}
+                  (profile ? t('set.noBirthPlace') : t('set.transitOnly'))}
+                {angles
+                  ? ` · ${
+                      angles.system === 'placidus'
+                        ? t('set.placidusHouses')
+                        : t('set.wholeSignHouses')
+                    }`
+                  : ''}
               </span>
             </span>
             <button
@@ -408,13 +442,13 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
               onClick={editProfile}
               className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-haze-200"
             >
-              Edit
+              {t('set.edit')}
             </button>
           </div>
         </Row>
       </Section>
 
-      <Section title="Location">
+      <Section title={t('set.location')}>
         <Row>
           <div className="flex items-center justify-between py-3 text-sm">
             <span>
@@ -422,14 +456,13 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
                 {currentLocation
                   ? locationIsFresh(currentLocation)
                     ? `${currentLocation.lat.toFixed(2)}, ${currentLocation.lon.toFixed(2)}`
-                    : 'Stored fix is stale'
+                    : t('set.staleFix')
                   : profile?.lat != null
-                    ? 'Using your birth place'
-                    : 'Not set'}
+                    ? t('set.usingBirthPlace')
+                    : t('set.notSet')}
               </span>
               <span className="block text-xs text-haze-400">
-                Powers “the sky above you now”, local sun times and a more
-                precise reading
+                {t('set.usingBirthPlaceSub')}
               </span>
             </span>
             <button
@@ -438,7 +471,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
               disabled={locBusy}
               className="shrink-0 rounded-full border border-gold-400/50 bg-gold-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100 disabled:opacity-50"
             >
-              {locBusy ? '…' : 'Update'}
+              {locBusy ? '…' : t('set.update')}
             </button>
           </div>
         </Row>
@@ -449,7 +482,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
               onClick={() => setCurrentLocation(null)}
               className="w-full py-3 text-left text-xs text-haze-400"
             >
-              Clear location · fall back to birth place
+              {t('set.clearLocation')}
             </button>
           </Row>
         )}
@@ -460,17 +493,15 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
         )}
       </Section>
 
-      <Section title="Resonance Pro">
+      <Section title={t('set.pro')}>
         <Row>
           <div className="flex items-center justify-between py-3 text-sm">
             <span>
               <span className="text-haze-100">
-                {isPro ? 'Pro active ✦' : 'Free plan'}
+                {isPro ? t('set.proActive') : t('set.freePlan')}
               </span>
               <span className="block text-xs text-haze-400">
-                {isPro
-                  ? 'Full library, deep history'
-                  : '3 tones · 7-day history'}
+                {isPro ? t('set.proActiveSub') : t('set.freePlanSub')}
               </span>
             </span>
             {isPro ? (
@@ -491,7 +522,7 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
                 onClick={onUpgrade}
                 className="rounded-full border border-gold-400/50 bg-gold-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100"
               >
-                Upgrade
+                {t('set.upgrade')}
               </button>
             )}
           </div>
@@ -516,26 +547,26 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
               disabled={manageBusy}
               className="w-full py-3 text-left text-xs text-haze-400 disabled:opacity-50"
             >
-              {manageBusy ? 'Opening…' : 'Manage subscription in Google Play →'}
+              {manageBusy ? t('set.opening') : t('set.manageSubscription')}
             </button>
           </Row>
         )}
       </Section>
 
-      <Section title="Data">
+      <Section title={t('set.data')}>
         <Row>
           <button
             type="button"
             onClick={resetAll}
             className="w-full py-3 text-left text-sm text-red-300"
           >
-            Erase all data on this device
+            {t('set.eraseAll')}
           </button>
         </Row>
       </Section>
 
       <p className="px-1 pb-2 text-center text-[11px] text-haze-500">
-        Resonance · tier {tier}
+        {t('set.tierLine', { tier })}
       </p>
     </Screen>
   )
