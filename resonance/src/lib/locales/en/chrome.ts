@@ -1,12 +1,5 @@
-/**
- * English is the source catalogue — its keys are the type every other locale
- * must satisfy, so a missing translation is a compile error.
- *
- * Keys are `area.thing`. `{name}` placeholders are filled by `translate()`.
- * This covers the app's chrome (navigation, forms, settings, buttons); the
- * generated readings / tarot / mantra text is translated separately.
- */
-export const en = {
+/** App chrome — navigation, forms, settings, buttons, sheets. */
+export const chrome = {
   /* ---- generic ---- */
   'common.done': 'Done',
   'common.save': 'Save',
@@ -303,7 +296,7 @@ export const en = {
 
   /* ---- language sheet ---- */
   'lang.title': 'Language',
-  'lang.blurb': 'Chrome and menus. The daily readings are being translated too.',
+  'lang.blurb': 'Choose the language for the whole app.',
 } as const
 
-export type MessageKey = keyof typeof en
+export type ChromeKey = keyof typeof chrome

@@ -1,7 +1,7 @@
-import type { MessageKey } from './en'
+import type { ChromeKey } from '../en/chrome'
 
-/** Български — the app's chrome. Informal "ти", calm and grounded. */
-export const bg: Record<MessageKey, string> = {
+/** Български — app chrome. Informal "ти", calm and grounded. */
+export const chrome: Record<ChromeKey, string> = {
   /* ---- generic ---- */
   'common.done': 'Готово',
   'common.save': 'Запази',
@@ -297,5 +297,5 @@ export const bg: Record<MessageKey, string> = {
 
   /* ---- language sheet ---- */
   'lang.title': 'Език',
-  'lang.blurb': 'Менютата и бутоните. Дневните прочити също се превеждат.',
+  'lang.blurb': 'Избери езика за цялото приложение.',
 }
