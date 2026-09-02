@@ -12,6 +12,7 @@ import { en, type MessageKey } from './locales/en'
 import { bg } from './locales/bg'
 import { es } from './locales/es'
 import { it } from './locales/it'
+import { fr } from './locales/fr'
 
 export { detectLocale }
 
@@ -27,6 +28,7 @@ const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = {
   bg,
   es,
   it,
+  fr,
 }
 
 export type { Locale }
@@ -47,6 +49,7 @@ export const LOCALES: LocaleInfo[] = [
   { code: 'bg', native: 'Български', english: 'Bulgarian', sample: 'Небето, разчетено за теб' },
   { code: 'es', native: 'Español', english: 'Spanish', sample: 'El cielo, leído para ti' },
   { code: 'it', native: 'Italiano', english: 'Italian', sample: 'Il cielo, letto per te' },
+  { code: 'fr', native: 'Français', english: 'French', sample: 'Le ciel, lu pour toi' },
 ]
 
 export type TranslateParams = Record<string, string | number>
@@ -81,6 +84,7 @@ const LOCALE_TAGS: Record<Locale, string> = {
   bg: 'bg-BG',
   es: 'es-ES',
   it: 'it-IT',
+  fr: 'fr-FR',
 }
 export const localeTag = (locale: Locale): string => LOCALE_TAGS[locale]
 
