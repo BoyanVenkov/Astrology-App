@@ -164,10 +164,9 @@ export function usePrescription(): Prescription {
   const crystals = useAppStore((s) => s.dailyCrystals)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
-  const biometricLog = useAppStore((s) => s.biometricLog)
 
   const focus = chakra?.key ?? transit?.resonantChakra ?? 'heart'
-  const aura = computeAura(focus, sessionLog, moodLog, biometricLog)
+  const aura = computeAura(focus, sessionLog, moodLog)
   const mood = moodLog.find((m) => m.day === localDayKey())?.mood ?? null
   const planet = transit?.body ?? 'Moon'
   const retrograde = sky.find((p) => p.body === planet)?.retrograde ?? false

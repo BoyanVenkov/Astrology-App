@@ -35,11 +35,10 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
-  const biometricLog = useAppStore((s) => s.biometricLog)
   const { isPro, freeHistoryDays } = useEntitlements()
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
-  const aura = computeAura(focusChakra, sessionLog, moodLog, biometricLog)
+  const aura = computeAura(focusChakra, sessionLog, moodLog)
   const streak = practiceStreak(sessionLog)
   const gridDays = isPro ? 28 : Math.min(28, freeHistoryDays)
 

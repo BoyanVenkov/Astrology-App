@@ -3,7 +3,6 @@ import { App as CapApp } from '@capacitor/app'
 import { AudioBridge } from './audio/AudioBridge'
 import { Apothecary } from './components/Apothecary'
 import { AuthSheet } from './components/AuthSheet'
-import { BodyCheckIn } from './components/BodyCheckIn'
 import { ChakraField } from './components/ChakraField'
 import { Compatibility } from './components/Compatibility'
 import { Dashboard } from './components/Dashboard'
@@ -56,7 +55,6 @@ type Sub =
   | 'library'
   | 'journal'
   | 'mood'
-  | 'body'
   | 'settings'
 
 function App() {
@@ -200,7 +198,6 @@ function App() {
         )}
         {sub === 'journal' && <Journal onBack={back} onUpgrade={openPaywall} />}
         {sub === 'mood' && <MoodCheckIn onDone={back} />}
-        {sub === 'body' && <BodyCheckIn onDone={back} />}
         {sub === 'settings' && (
           <Settings
             onBack={back}

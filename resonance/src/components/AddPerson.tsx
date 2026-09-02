@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { zonedWallTimeToUtc } from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
+import { DateField, TimeField } from './DateTimeField'
 import type { SavedPerson } from '../types/resonance'
 
 interface AddPersonProps {
@@ -70,13 +71,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
 
       <label className="flex flex-col gap-1.5">
         <span className="eyebrow">Birth date</span>
-        <input
-          type="date"
-          value={date}
-          max={todayKey()}
-          onChange={(e) => setDate(e.target.value)}
-          className={field}
-        />
+        <DateField value={date} max={todayKey()} onChange={setDate} />
       </label>
 
       <div className="flex flex-col gap-1.5">
@@ -91,12 +86,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
           </button>
         </div>
         {timeKnown ? (
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className={field}
-          />
+          <TimeField value={time} onChange={setTime} />
         ) : (
           <p className="rounded-xl border border-white/[0.08] bg-midnight-950/40 px-4 py-3 text-sm text-haze-400">
             Using noon — the Moon and rising sign will be approximate.

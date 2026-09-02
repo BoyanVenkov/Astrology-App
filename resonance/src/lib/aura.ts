@@ -1,11 +1,9 @@
 import type {
-  BiometricReading,
   ChakraKey,
   Mood,
   MoodEntry,
   PracticeSession,
 } from '../types/resonance'
-import { bodyState } from './biometrics'
 import { chakraColor } from './resonanceData'
 import {
   practiceStreak,
@@ -44,9 +42,7 @@ export interface AuraState {
   mood: Mood | null
   /** The latest mood is from today or yesterday. */
   moodFresh: boolean
-  /** 0–1 body recovery when a fresh biometric reading exists, else null. */
-  recovery: number | null
-  /** Body signals say to keep the day restorative. */
+  /** Today's mood says to keep the day restorative (tired / heavy). */
   needsRest: boolean
 }
 
@@ -64,7 +60,6 @@ export function computeAura(
   focusChakra: ChakraKey,
   sessionLog: PracticeSession[],
   moodLog: MoodEntry[],
-  biometricLog: BiometricReading[] = [],
 ): AuraState {
   const streak = practiceStreak(sessionLog)
   const today = practicedToday(sessionLog)
@@ -86,21 +81,17 @@ export function computeAura(
   score += moodLift
   score = Math.max(0.08, Math.min(1, score))
 
-  // A fresh body reading pulls the aura toward the measured recovery.
-  const body = bodyState(biometricLog)
-  const recovery = body.hasData && body.fresh ? body.recovery : null
-  if (recovery != null) score = score * 0.6 + recovery * 0.4
+  const todayMood = latest && latest.day === todayKey ? latest.mood : null
 
   return {
-    score: Math.max(0.08, Math.min(1, score)),
+    score,
     hue: chakraColor(focusChakra),
     streak,
     practicedToday: today,
     recentDays,
     mood: latest?.mood ?? null,
     moodFresh,
-    recovery,
-    needsRest: body.needsRest,
+    needsRest: todayMood === 'tired' || todayMood === 'heavy',
   }
 }
 

@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { Aura } from './Aura'
 import { auraLabel, computeAura, MOOD_META } from '../lib/aura'
-import { bodyState } from '../lib/biometrics'
 import { chakraName } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
@@ -10,7 +9,7 @@ import { useEntitlements } from '../lib/premium'
 import { useAuth } from '../lib/auth'
 
 interface YouViewProps {
-  onOpen: (view: 'journal' | 'mood' | 'body' | 'settings') => void
+  onOpen: (view: 'journal' | 'mood' | 'settings') => void
   onUpgrade: () => void
   onAuth: () => void
 }
@@ -62,17 +61,15 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
-  const biometricLog = useAppStore((s) => s.biometricLog)
   const { isPro } = useEntitlements()
 
   const focus = chakra?.key ?? transit?.resonantChakra ?? 'heart'
-  const aura = computeAura(focus, sessionLog, moodLog, biometricLog)
+  const aura = computeAura(focus, sessionLog, moodLog)
   const streak = practiceStreak(sessionLog)
   const totalMinutes = sessionLog
     .filter((s) => s.completed)
     .reduce((n, s) => n + s.minutes, 0)
   const totalSessions = sessionLog.filter((s) => s.completed).length
-  const body = bodyState(biometricLog)
   const hasMoodToday = moodLog.some((m) => m.day === localDayKey())
 
   return (
@@ -85,7 +82,6 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
         </h1>
         <p className="mt-1 text-sm text-haze-300">
           {chakraName(focus)} · {Math.round(aura.score * 100)}%
-          {aura.recovery != null && ` · body ${Math.round(aura.recovery * 100)}%`}
         </p>
       </header>
 
@@ -116,32 +112,15 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
       </Group>
 
       <Group title="Check in">
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => onOpen('mood')}
-            className="glass-panel p-4 text-left transition active:scale-[0.98]"
-          >
-            <span className="block font-serif text-lg text-white">Mood</span>
-            <span className="mt-0.5 block text-xs text-haze-300">
-              {hasMoodToday && aura.mood
-                ? `Today: ${MOOD_META[aura.mood].label}`
-                : 'Check in for today'}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpen('body')}
-            className="glass-panel p-4 text-left transition active:scale-[0.98]"
-          >
-            <span className="block font-serif text-lg text-white">Body</span>
-            <span className="mt-0.5 block text-xs text-haze-300">
-              {body.hasData
-                ? `${body.label} · ${Math.round(body.recovery * 100)}%`
-                : 'Log HRV & sleep'}
-            </span>
-          </button>
-        </div>
+        <Row
+          title="Mood"
+          sub={
+            hasMoodToday && aura.mood
+              ? `Today: ${MOOD_META[aura.mood].label}`
+              : 'How are you arriving today?'
+          }
+          onClick={() => onOpen('mood')}
+        />
       </Group>
 
       <Group title="Account">

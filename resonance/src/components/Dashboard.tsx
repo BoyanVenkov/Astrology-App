@@ -38,7 +38,6 @@ export function Dashboard({
   const hasNatal = useAppStore((s) => s.hasNatal)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
-  const biometricLog = useAppStore((s) => s.biometricLog)
   const tarotDrawnDay = useAppStore((s) => s.tarotDrawnDay)
 
   const [bucket, setBucket] = useState(() => Math.floor(Date.now() / 300_000))
@@ -62,7 +61,7 @@ export function Dashboard({
   })
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
-  const aura = computeAura(focusChakra, sessionLog, moodLog, biometricLog)
+  const aura = computeAura(focusChakra, sessionLog, moodLog)
   const doneToday = practicedToday(sessionLog)
   const focusPlanet = sky.find((p) => p.body === transit?.body)
   const rx = usePrescription()

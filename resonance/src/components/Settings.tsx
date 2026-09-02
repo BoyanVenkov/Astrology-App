@@ -1,7 +1,5 @@
 import { useState, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { BodyCheckIn } from './BodyCheckIn'
-import { bodyState } from '../lib/biometrics'
 import { deleteAccount, signOut, useAuth } from '../lib/auth'
 import { backupNow } from '../lib/sync'
 import {
@@ -111,14 +109,12 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
   const profile = useAppStore((s) => s.profile)
   const angles = useAppStore((s) => s.angles)
   const editProfile = useAppStore((s) => s.editProfile)
-  const biometricLog = useAppStore((s) => s.biometricLog)
   const tier = useAppStore((s) => s.tier)
   const setTier = useAppStore((s) => s.setTier)
   const currentLocation = useAppStore((s) => s.currentLocation)
   const setCurrentLocation = useAppStore((s) => s.setCurrentLocation)
   const { isPro } = useEntitlements()
 
-  const [showBody, setShowBody] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
   const [locMsg, setLocMsg] = useState<string | null>(null)
   const [locBusy, setLocBusy] = useState(false)
@@ -144,8 +140,6 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
       setLocMsg('Couldn’t get a location. Check the app’s location permission.')
     }
   }
-
-  const body = bodyState(biometricLog)
 
   const patchNotif = (patch: Partial<typeof notifications>) => {
     updateNotificationPrefs(patch)
@@ -462,38 +456,6 @@ export function Settings({ onBack, onUpgrade, onAuth }: SettingsProps) {
         {locMsg && (
           <Row>
             <p className="py-3 text-xs text-haze-400">{locMsg}</p>
-          </Row>
-        )}
-      </Section>
-
-      <Section title="Body & recovery">
-        <Row>
-          <div className="flex items-center justify-between py-3 text-sm">
-            <span>
-              <span className="text-haze-100">
-                {body.hasData
-                  ? `${body.label} · ${Math.round(body.recovery * 100)}%`
-                  : 'No reading yet'}
-              </span>
-              <span className="block text-xs text-haze-400">
-                Enter your HRV, sleep &amp; resting heart rate — a low-recovery
-                day shortens the practice
-              </span>
-            </span>
-            <button
-              type="button"
-              onClick={() => setShowBody((v) => !v)}
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-haze-200"
-            >
-              {showBody ? 'Close' : 'Log'}
-            </button>
-          </div>
-        </Row>
-        {showBody && (
-          <Row>
-            <div className="py-3">
-              <BodyCheckIn compact onDone={() => setShowBody(false)} />
-            </div>
           </Row>
         )}
       </Section>
