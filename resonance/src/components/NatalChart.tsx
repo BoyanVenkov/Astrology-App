@@ -2,6 +2,13 @@ import { useMemo } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { BODY_SYMBOL, SIGNS } from '../lib/ephemeris'
 import { houseOf } from '../lib/houses'
+import {
+  aspectLabel,
+  planetLabel,
+  signLabel,
+  useT,
+  type TFn,
+} from '../lib/i18n'
 import { zodiacGlyph } from '../lib/resonanceData'
 import { Screen } from './Screen'
 
@@ -36,7 +43,13 @@ const ASPECT_MARK: Record<string, string> = {
 }
 const aspectMark = (name: string): string => ASPECT_MARK[name] ?? '·'
 
+const fmtDegSign = (lon: number, t: TFn): string => {
+  const s = ((lon % 360) + 360) % 360
+  return `${Math.floor(s % 30)}° ${signLabel(SIGNS[Math.floor(s / 30)], t)}`
+}
+
 export function NatalChart({ onBack }: NatalChartProps) {
+  const t = useT()
   const natal = useAppStore((s) => s.natal)
   const natalAspects = useAppStore((s) => s.natalAspects)
   const hasNatal = useAppStore((s) => s.hasNatal)
@@ -66,19 +79,19 @@ export function NatalChart({ onBack }: NatalChartProps) {
 
   if (!hasNatal) {
     return (
-      <Screen eyebrow="Natal Chart" title="Your birth sky" onBack={onBack}>
+      <Screen
+        eyebrow={t('scr.natal.eyebrow')}
+        title={t('scr.natal.title')}
+        onBack={onBack}
+      >
         <div className="glass-panel p-6 text-sm leading-relaxed text-haze-300">
-          <p>
-            Add your birth date, time and place and Resonance will draw your natal
-            chart — the exact position of the Sun, Moon and planets at the moment
-            you were born.
-          </p>
+          <p>{t('scr.natal.blurb')}</p>
           <button
             type="button"
             onClick={editProfile}
             className="mt-4 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100"
           >
-            Add birth details
+            {t('scr.natal.addDetails')}
           </button>
         </div>
       </Screen>
@@ -91,8 +104,8 @@ export function NatalChart({ onBack }: NatalChartProps) {
 
   return (
     <Screen
-      eyebrow="Natal Chart"
-      title="Your birth sky"
+      eyebrow={t('scr.natal.eyebrow')}
+      title={t('scr.natal.title')}
       onBack={onBack}
       action={
         <button
@@ -100,19 +113,25 @@ export function NatalChart({ onBack }: NatalChartProps) {
           onClick={editProfile}
           className="text-[10px] uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
         >
-          edit
+          {t('scr.natal.edit')}
         </button>
       }
       subtitle={
         profile
-          ? `${profile.date} · ${profile.timeKnown ? profile.time : 'time unknown (noon)'}${profile.placeLabel ? ` · ${profile.placeLabel}` : ''}`
+          ? `${profile.date} · ${profile.timeKnown ? profile.time : t('scr.natal.timeUnknown')}${profile.placeLabel ? ` · ${profile.placeLabel}` : ''}`
           : undefined
       }
     >
       {angles ? (
         <p className="-mt-2 px-1 text-xs text-haze-400">
-          {fmtDegSign(angles.ascendant)} rising · MC {fmtDegSign(angles.midheaven)}{' '}
-          · {angles.system === 'placidus' ? 'Placidus houses' : 'whole-sign houses'}
+          {t('scr.natal.angleLine', {
+            asc: fmtDegSign(angles.ascendant, t),
+            mc: fmtDegSign(angles.midheaven, t),
+            system:
+              angles.system === 'placidus'
+                ? t('scr.natal.placidus')
+                : t('scr.natal.wholeSign'),
+          })}
         </p>
       ) : (
         <button
@@ -120,7 +139,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
           onClick={editProfile}
           className="-mt-2 px-1 text-left text-xs text-gold-300"
         >
-          Add your birth place for the Ascendant & houses →
+          {t('scr.natal.addPlace')}
         </button>
       )}
 
@@ -130,7 +149,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           className="h-auto w-full max-w-[360px]"
           role="img"
-          aria-label="Natal chart wheel"
+          aria-label={t('scr.natal.wheelAria')}
         >
           {/* sign band */}
           {SIGNS.map((sign, i) => {
@@ -301,18 +320,20 @@ export function NatalChart({ onBack }: NatalChartProps) {
 
       {/* ---- placements ---- */}
       <section className="glass-panel p-4">
-        <p className="eyebrow">Placements</p>
+        <p className="eyebrow">{t('scr.natal.placements')}</p>
         <ul className="mt-3 grid grid-cols-1 gap-y-2 text-sm sm:grid-cols-2 sm:gap-x-4">
           {natal.map((p) => (
             <li key={p.body} className="flex items-center gap-2">
               <span className="w-4 text-center text-haze-200">
                 {BODY_SYMBOL[p.body]}
               </span>
-              <span className="text-haze-100">{p.body}</span>
+              <span className="text-haze-100">{planetLabel(p.body, t)}</span>
               <span className="data ml-auto text-xs text-haze-400">
-                {Math.floor(p.signDegree)}° {p.sign.slice(0, 3)}
+                {Math.floor(p.signDegree)}° {signLabel(p.sign, t).slice(0, 3)}
                 {p.retrograde ? ' ℞' : ''}
-                {cusps ? ` · H${houseOf(p.longitude, cusps)}` : ''}
+                {cusps
+                  ? ` · ${t('scr.natal.house', { n: houseOf(p.longitude, cusps) })}`
+                  : ''}
               </span>
             </li>
           ))}
@@ -321,7 +342,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
 
       {/* ---- natal aspects ---- */}
       <section className="glass-panel p-4">
-        <p className="eyebrow">Natal aspects</p>
+        <p className="eyebrow">{t('scr.natal.aspects')}</p>
         <ul className="mt-3 flex flex-col gap-2 text-sm">
           {natalAspects.slice(0, 12).map((a) => (
             <li
@@ -329,23 +350,19 @@ export function NatalChart({ onBack }: NatalChartProps) {
               className="flex items-center justify-between"
             >
               <span className="text-haze-100">
-                {a.transiting} {aspectMark(a.def.name)} {a.other}
+                {planetLabel(a.transiting, t)} {aspectMark(a.def.name)}{' '}
+                {planetLabel(a.other, t)}
               </span>
               <span className="data text-xs text-haze-400">
-                {a.def.name} · {a.orbDelta.toFixed(1)}°
+                {aspectLabel(a.def.name, t)} · {a.orbDelta.toFixed(1)}°
               </span>
             </li>
           ))}
           {natalAspects.length === 0 && (
-            <li className="text-haze-400">No major aspects within orb.</li>
+            <li className="text-haze-400">{t('scr.natal.noAspects')}</li>
           )}
         </ul>
       </section>
     </Screen>
   )
-}
-
-const fmtDegSign = (lon: number): string => {
-  const s = ((lon % 360) + 360) % 360
-  return `${Math.floor(s % 30)}° ${SIGNS[Math.floor(s / 30)]}`
 }

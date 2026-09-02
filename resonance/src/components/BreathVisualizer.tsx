@@ -9,6 +9,7 @@ import {
   resolveBreath,
 } from '../lib/breathwork'
 import type { BreathPatternKey, BreathPhaseKind } from '../types/resonance'
+import { breathHint, breathName, breathStep, useT } from '../lib/i18n'
 import { PauseIcon, PlayIcon } from './icons'
 
 /**
@@ -34,15 +35,6 @@ interface BreathVisualizerProps {
 const RING_RADIUS = 46
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
 
-const PHASE_HINT: Record<BreathPhaseKind, string> = {
-  inhale: 'Draw the breath in slowly',
-  hold: 'Keep it soft and still',
-  exhale: 'Let everything go',
-  rest: 'Rest in the stillness',
-  pump: 'Sharp exhales — pump from the belly',
-  sip: 'A short second sip through the nose',
-}
-
 const mmss = (s: number): string => {
   const m = Math.floor(s / 60)
   const sec = Math.floor(s % 60)
@@ -56,6 +48,7 @@ export function BreathVisualizer({
   onComplete,
   className = '',
 }: BreathVisualizerProps) {
+  const t = useT()
   const storedPattern = useAppStore((s) => s.breathPattern)
   const setBreathPattern = useAppStore((s) => s.setBreathPattern)
   const setAudioPlaying = useAppStore((s) => s.toggleAudio)
@@ -234,9 +227,9 @@ export function BreathVisualizer({
     >
       <div className="flex w-full items-center justify-between">
         <div>
-          <p className="eyebrow">Breathwork</p>
+          <p className="eyebrow">{t('breath.eyebrow')}</p>
           <h2 className="mt-1 font-serif text-2xl text-gilded">
-            {activePattern.name}
+            {breathName(activeKey, t)}
           </h2>
         </div>
         <span className="rounded-full border border-gold-500/30 px-3 py-1 text-xs tracking-[0.12em] text-haze-200">
@@ -312,15 +305,15 @@ export function BreathVisualizer({
 
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
           <p className="eyebrow mb-1" style={{ color: accent }}>
-            Round {round}
+            {t('breath.round', { n: round })}
           </p>
           <p className="font-serif text-4xl leading-none text-white text-glow">
-            {label}
+            {breathStep(label, t)}
           </p>
           <p className="mt-2 font-sans text-5xl font-semibold tabular-nums text-white/90">
             {secondsLeft}
           </p>
-          <p className="mt-1 px-6 text-xs text-haze-300">{PHASE_HINT[kind]}</p>
+          <p className="mt-1 px-6 text-xs text-haze-300">{breathHint(kind, t)}</p>
         </div>
       </div>
 
@@ -336,7 +329,7 @@ export function BreathVisualizer({
         ) : (
           <PlayIcon className="h-4 w-4" />
         )}
-        {running ? 'Pause' : 'Begin'}
+        {running ? t('breath.pause') : t('breath.begin')}
       </button>
 
       {!pattern && (
@@ -357,7 +350,7 @@ export function BreathVisualizer({
                     : undefined
                 }
               >
-                {option.name}
+                {breathName(option.key, t)}
               </button>
             )
           })}

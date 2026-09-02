@@ -38,10 +38,11 @@ import { useAppStore } from './store/useAppStore'
 import type { RitualPreset, TabKey } from './types/resonance'
 
 function useNotificationSync() {
+  const t = useT()
   const notifications = useAppStore((s) => s.notifications)
   useEffect(() => {
-    void syncNotifications(notifications)
-  }, [notifications])
+    void syncNotifications(notifications, t)
+  }, [notifications, t])
 }
 
 type Sub =

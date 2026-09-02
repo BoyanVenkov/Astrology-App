@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { ALL_CRYSTALS } from '../data/esoteric'
-import { CHAKRA_ORDER, chakraName } from '../lib/resonanceData'
+import { crystalDesc, crystalKeywords, crystalName } from '../lib/crystals'
+import { chakraLabel, useT } from '../lib/i18n'
+import { CHAKRA_ORDER } from '../lib/resonanceData'
 import { Screen } from './Screen'
 import type { ChakraKey } from '../types/resonance'
 
@@ -12,6 +14,7 @@ interface ApothecaryProps {
 
 /** The crystal apothecary — today's transit-matched stones, then the full catalogue. */
 export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
+  const t = useT()
   const dailyCrystals = useAppStore((s) => s.dailyCrystals)
   const transit = useAppStore((s) => s.transit)
   const todayNames = useMemo(
@@ -26,7 +29,6 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
       filter === 'all'
         ? ALL_CRYSTALS
         : ALL_CRYSTALS.filter((c) => c.chakra === filter)
-    // today's stones first, then the rest (already A–Z within each group)
     return [
       ...pool.filter((c) => todayNames.has(c.name)),
       ...pool.filter((c) => !todayNames.has(c.name)),
@@ -35,12 +37,15 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
 
   return (
     <Screen
-      eyebrow="Apothecary"
-      title="Crystal Companions"
+      eyebrow={t('scr.apoth.eyebrow')}
+      title={t('scr.apoth.title')}
       subtitle={
         transit
-          ? `Stones for ${chakraName(transit.resonantChakra)} work today · ${ALL_CRYSTALS.length} in the cabinet`
-          : `${ALL_CRYSTALS.length} stones in the cabinet`
+          ? t('scr.apoth.subChart', {
+              chakra: chakraLabel(transit.resonantChakra, t),
+              n: ALL_CRYSTALS.length,
+            })
+          : t('scr.apoth.subPlain', { n: ALL_CRYSTALS.length })
       }
       onBack={onBack}
     >
@@ -59,7 +64,7 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
                   : 'inset 0 0 0 1px rgba(255,255,255,0.1)',
             }}
           >
-            {k === 'all' ? 'All' : chakraName(k)}
+            {k === 'all' ? t('scr.apoth.all') : chakraLabel(k, t)}
           </button>
         ))}
       </div>
@@ -81,26 +86,34 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
                   }}
                 />
                 <h3 className="font-serif text-lg leading-tight text-white">
-                  {crystal.name}
+                  {crystalName(crystal.name, t)}
                 </h3>
                 {isToday && (
                   <span className="ml-auto text-[10px] uppercase tracking-[0.14em] text-gold-300">
-                    Today
+                    {t('scr.apoth.today')}
                   </span>
                 )}
               </div>
               <p className="mt-1.5 text-[10px] uppercase tracking-[0.12em] text-haze-400">
-                {chakraName(crystal.chakra)} · {crystal.keywords.join(' · ')}
+                {t('scr.apoth.meta', {
+                  chakra: chakraLabel(crystal.chakra, t),
+                  keywords: crystalKeywords(crystal, t).join(' · '),
+                })}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-haze-200">
-                {crystal.description}
+                {crystalDesc(crystal, t)}
               </p>
             </article>
           )
         })}
         {list.length === 0 && (
           <p className="px-1 text-sm text-haze-400">
-            No stones filed under {filter === 'all' ? 'that' : chakraName(filter)}.
+            {t('scr.apoth.none', {
+              filter:
+                filter === 'all'
+                  ? t('scr.apoth.noneThat')
+                  : chakraLabel(filter, t),
+            })}
           </p>
         )}
       </div>
@@ -110,7 +123,7 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
         onClick={onPractice}
         className="text-center text-xs font-semibold uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
       >
-        pair a stone with today’s practice →
+        {t('scr.apoth.pair')}
       </button>
     </Screen>
   )

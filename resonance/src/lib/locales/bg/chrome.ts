@@ -95,6 +95,12 @@ export const chrome: Record<ChromeKey, string> = {
   'mood.preview.bright': 'ще се опрем на заряда на небето и ще ти дадем повече',
   'mood.preview.clear': 'ще следваме небето — фокусирана, спокойна практика',
   'mood.preview.calm': 'ще следваме небето — стабилна, подредена практика',
+  'mood.phrase.bright': 'Ведър и зареден',
+  'mood.phrase.calm': 'Спокоен и уталожен',
+  'mood.phrase.clear': 'Ясен и фокусиран',
+  'mood.phrase.heavy': 'Натежал или в спад',
+  'mood.phrase.anxious': 'Тревожен или изопнат',
+  'mood.phrase.tired': 'Уморен и изтощен',
 
   /* ---- aura ---- */
   'aura.yours': 'Твоята аура',

@@ -4,7 +4,8 @@ import { Aura } from './Aura'
 import { computeAura } from '../lib/aura'
 import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
-import { chakraLabel, useT } from '../lib/i18n'
+import { chakraLabel, useLocaleTag, useT } from '../lib/i18n'
+import { crystalName } from '../lib/crystals'
 import type { MessageKey } from '../lib/locales/en'
 import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
@@ -39,6 +40,7 @@ export function Dashboard({
   onChakras,
 }: DashboardProps) {
   const t = useT()
+  const localeTag = useLocaleTag()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const chakraField = useChakraField()
@@ -60,17 +62,17 @@ export function Dashboard({
     () => moonVoidOfCourseCached(new Date(bucket * 300_000)),
     [bucket],
   )
-  const [when] = useState(() => {
+  const when = useMemo(() => {
     const d = new Date()
     return {
       greetingKey: greetingKey(d.getHours()),
-      date: d.toLocaleDateString(undefined, {
+      date: d.toLocaleDateString(localeTag, {
         weekday: 'long',
         month: 'long',
         day: 'numeric',
       }),
     }
-  })
+  }, [localeTag])
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focusChakra, sessionLog, moodLog)
@@ -94,11 +96,20 @@ export function Dashboard({
         >
           <span className="text-sm text-amber-200">
             {voc.active
-              ? `Moon void of course — ground, don't begin. Ends ${voc.until ? new Date(voc.until).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : 'soon'}.`
-              : `Moon goes void of course in ${voc.hoursUntil?.toFixed(1)} h.`}
+              ? voc.until
+                ? t('scr.voc.active', {
+                    time: new Date(voc.until).toLocaleTimeString(localeTag, {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    }),
+                  })
+                : t('scr.voc.activeSoon')
+              : t('scr.voc.upcoming', {
+                  hours: voc.hoursUntil?.toFixed(1) ?? '',
+                })}
           </span>
           <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-amber-300">
-            2-min
+            {t('scr.voc.twoMin')}
           </span>
         </button>
       )}
@@ -202,7 +213,7 @@ export function Dashboard({
           </span>
           <span className="eyebrow">{t('dash.slotStone')}</span>
           <span className="w-full truncate px-1 text-center text-xs text-haze-300">
-            {heroStone?.name ?? '—'}
+            {heroStone ? crystalName(heroStone.name, t) : '—'}
           </span>
         </button>
       </section>

@@ -742,13 +742,21 @@ export function TarotScene({
   card,
   reversed,
   color,
+  name,
 }: {
   card: TarotCard
   reversed?: boolean
   color: string
+  /** Localised card name; falls back to the deck's English name. */
+  name?: string
 }) {
   return (
-    <Frame id={card.id} name={card.name} reversed={reversed} color={color}>
+    <Frame
+      id={card.id}
+      name={name ?? card.name}
+      reversed={reversed}
+      color={color}
+    >
       {sceneFor(card)}
     </Frame>
   )

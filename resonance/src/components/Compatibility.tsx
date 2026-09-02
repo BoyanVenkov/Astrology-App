@@ -2,11 +2,19 @@ import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import {
   computeSynastry,
-  LENSES,
+  LENS_KEYS,
+  lensLabel,
   type CompatLens,
   type ConnectionTone,
   type SynastryConnection,
 } from '../lib/synastry'
+import {
+  aspectLabel,
+  planetLabel,
+  useT,
+  type TFn,
+} from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { planetSymbol } from '../data/esoteric'
 import { AddPerson } from './AddPerson'
 import { Screen } from './Screen'
@@ -31,11 +39,6 @@ const TONE_COLOR: Record<ConnectionTone, string> = {
   gift: '#6ee7b7',
   intense: '#eccd82',
   friction: '#fb923c',
-}
-const TONE_LABEL: Record<ConnectionTone, string> = {
-  gift: 'Flows',
-  intense: 'Fuses',
-  friction: 'Effort',
 }
 
 function ScoreRing({ score }: { score: number }) {
@@ -76,10 +79,12 @@ function ConnectionRow({
   conn,
   open,
   onToggle,
+  t,
 }: {
   conn: SynastryConnection
   open: boolean
   onToggle: () => void
+  t: TFn
 }) {
   const glyph = ASPECT_GLYPH[conn.aspect] ?? '·'
   const tint = TONE_COLOR[conn.tone]
@@ -97,9 +102,13 @@ function ConnectionRow({
         />
         <span className="min-w-0 flex-1">
           <span className="block text-sm text-haze-100">
-            Your <span aria-hidden>{planetSymbol(conn.a)}</span> {conn.a}{' '}
-            <span aria-hidden>{glyph}</span> their{' '}
-            <span aria-hidden>{planetSymbol(conn.b)}</span> {conn.b}
+            <span aria-hidden>{planetSymbol(conn.a)}</span>{' '}
+            {t('scr.compat.rowPair', {
+              a: planetLabel(conn.a, t),
+              glyph,
+              b: planetLabel(conn.b, t),
+            })}{' '}
+            <span aria-hidden>{planetSymbol(conn.b)}</span>
           </span>
           <span className="mt-0.5 block text-xs text-haze-400">
             {conn.summary}
@@ -110,7 +119,7 @@ function ConnectionRow({
             className="block text-[10px] font-semibold uppercase tracking-[0.12em]"
             style={{ color: tint }}
           >
-            {TONE_LABEL[conn.tone]}
+            {t(`scr.compat.tone.${conn.tone}` as MessageKey)}
           </span>
           <span className="data block text-[11px] text-haze-400">
             {conn.orbDelta.toFixed(1)}°
@@ -121,8 +130,13 @@ function ConnectionRow({
         <div className="animate-rise-in border-t border-white/[0.06] px-3.5 py-3.5">
           <p className="text-sm leading-relaxed text-haze-200">{conn.detail}</p>
           <p className="data mt-2 text-[11px] text-haze-500">
-            {conn.aspect} · {conn.orbDelta.toFixed(1)}° from exact ·{' '}
-            {conn.applying ? 'growing tighter' : 'easing off'}
+            {t('scr.compat.connMeta', {
+              aspect: aspectLabel(conn.aspect, t),
+              orb: conn.orbDelta.toFixed(1),
+              trend: conn.applying
+                ? t('scr.compat.trendTighter')
+                : t('scr.compat.trendEasing'),
+            })}
           </p>
         </div>
       )}
@@ -131,6 +145,7 @@ function ConnectionRow({
 }
 
 function Reading({ person }: { person: SavedPerson }) {
+  const t = useT()
   const profile = useAppStore((s) => s.profile)
   const [lens, setLens] = useState<CompatLens>('love')
   const [openConn, setOpenConn] = useState<number | null>(null)
@@ -140,29 +155,30 @@ function Reading({ person }: { person: SavedPerson }) {
     new Date(profile.utc),
     new Date(person.utc),
     lens,
+    t,
   )
 
   return (
     <div className="flex flex-col gap-4">
       <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1">
-        {LENSES.map((l) => (
+        {LENS_KEYS.map((key) => (
           <button
-            key={l.key}
+            key={key}
             type="button"
             onClick={() => {
-              setLens(l.key)
+              setLens(key)
               setOpenConn(null)
             }}
             className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] transition"
             style={{
-              color: lens === l.key ? 'var(--rz-hue)' : 'rgba(166,177,209,0.9)',
+              color: lens === key ? 'var(--rz-hue)' : 'rgba(166,177,209,0.9)',
               boxShadow:
-                lens === l.key
+                lens === key
                   ? 'inset 0 0 0 1px color-mix(in srgb, var(--rz-hue) 60%, transparent)'
                   : 'inset 0 0 0 1px rgba(255,255,255,0.1)',
             }}
           >
-            {l.label}
+            {lensLabel(key, t)}
           </button>
         ))}
       </div>
@@ -175,7 +191,9 @@ function Reading({ person }: { person: SavedPerson }) {
               {reading.label}
             </span>
             <span className="mt-1 block text-xs text-haze-400">
-              for {LENSES.find((l) => l.key === lens)?.label.toLowerCase()}
+              {t('scr.compat.forLens', {
+                lens: lensLabel(lens, t).toLowerCase(),
+              })}
             </span>
           </span>
         </div>
@@ -185,7 +203,7 @@ function Reading({ person }: { person: SavedPerson }) {
       </section>
 
       <section className="glass-panel p-4">
-        <p className="eyebrow">The texture of it</p>
+        <p className="eyebrow">{t('scr.compat.texture')}</p>
         <p className="mt-2 text-sm leading-relaxed text-haze-200">
           {reading.texture}
         </p>
@@ -196,7 +214,7 @@ function Reading({ person }: { person: SavedPerson }) {
 
       <section className="glass-panel p-4">
         <p className="eyebrow" style={{ color: '#6ee7b7' }}>
-          What flows
+          {t('scr.compat.flows')}
         </p>
         <ul className="mt-2 flex flex-col gap-2 text-sm leading-relaxed text-haze-200">
           {reading.strengths.map((s, i) => (
@@ -210,7 +228,7 @@ function Reading({ person }: { person: SavedPerson }) {
 
       <section className="glass-panel p-4">
         <p className="eyebrow" style={{ color: '#fb923c' }}>
-          What takes work
+          {t('scr.compat.takesWork')}
         </p>
         <ul className="mt-2 flex flex-col gap-2 text-sm leading-relaxed text-haze-200">
           {reading.frictions.map((s, i) => (
@@ -223,7 +241,7 @@ function Reading({ person }: { person: SavedPerson }) {
       </section>
 
       <section className="glass-panel p-4">
-        <p className="eyebrow">Every lens</p>
+        <p className="eyebrow">{t('scr.compat.everyLens')}</p>
         <div className="mt-3 flex flex-col gap-2.5">
           {reading.facets.map((f) => (
             <div key={f.key} className="flex items-center gap-3">
@@ -248,7 +266,7 @@ function Reading({ person }: { person: SavedPerson }) {
       </section>
 
       <div>
-        <p className="eyebrow mb-2 px-1">The connections</p>
+        <p className="eyebrow mb-2 px-1">{t('scr.compat.connections')}</p>
         {reading.connections.length > 0 ? (
           <ul className="flex flex-col gap-2">
             {reading.connections.map((conn, i) => (
@@ -257,13 +275,12 @@ function Reading({ person }: { person: SavedPerson }) {
                 conn={conn}
                 open={openConn === i}
                 onToggle={() => setOpenConn((c) => (c === i ? null : i))}
+                t={t}
               />
             ))}
           </ul>
         ) : (
-          <p className="px-1 text-sm text-haze-400">
-            No close cross-aspects between your charts — a quiet, low-static match.
-          </p>
+          <p className="px-1 text-sm text-haze-400">{t('scr.compat.noConn')}</p>
         )}
       </div>
 
@@ -275,7 +292,7 @@ function Reading({ person }: { person: SavedPerson }) {
         }}
       >
         <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-          Making it work
+          {t('scr.compat.makeWork')}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-haze-100">
           {reading.advice}
@@ -284,8 +301,11 @@ function Reading({ person }: { person: SavedPerson }) {
 
       {(!profile.timeKnown || !person.timeKnown) && (
         <p className="px-1 text-[11px] leading-relaxed text-haze-500">
-          {!person.timeKnown ? `${person.name}'s` : 'Your'} birth time is set to
-          noon, so Moon-based contacts are approximate.
+          {t('scr.compat.noonNote', {
+            whose: !person.timeKnown
+              ? t('scr.compat.whoseName', { name: person.name })
+              : t('scr.compat.whoseYour'),
+          })}
         </p>
       )}
     </div>
@@ -293,6 +313,7 @@ function Reading({ person }: { person: SavedPerson }) {
 }
 
 export function Compatibility({ onBack }: CompatibilityProps) {
+  const t = useT()
   const profile = useAppStore((s) => s.profile)
   const people = useAppStore((s) => s.people)
   const removePerson = useAppStore((s) => s.removePerson)
@@ -306,20 +327,19 @@ export function Compatibility({ onBack }: CompatibilityProps) {
   if (!profile) {
     return (
       <Screen
-        eyebrow="Compatibility"
-        title="Two charts, side by side"
+        eyebrow={t('scr.compat.eyebrow')}
+        title={t('scr.compat.titleNoProfile')}
         onBack={onBack}
       >
         <p className="text-sm leading-relaxed text-haze-300">
-          Compatibility compares your natal chart with someone else&rsquo;s. Add
-          your own birth details first.
+          {t('scr.compat.noProfileBlurb')}
         </p>
         <button
           type="button"
           onClick={editProfile}
           className="btn-primary mt-2 px-4 py-3.5 text-sm uppercase"
         >
-          Add my birth chart
+          {t('scr.compat.addMyChart')}
         </button>
       </Screen>
     )
@@ -328,8 +348,8 @@ export function Compatibility({ onBack }: CompatibilityProps) {
   if (person) {
     return (
       <Screen
-        eyebrow="Compatibility"
-        title={`You & ${person.name}`}
+        eyebrow={t('scr.compat.eyebrow')}
+        title={t('scr.compat.youAnd', { name: person.name })}
         subtitle={`${person.date}${person.placeLabel ? ` · ${person.placeLabel}` : ''}`}
         onBack={() => setSelected(null)}
         action={
@@ -341,7 +361,7 @@ export function Compatibility({ onBack }: CompatibilityProps) {
             }}
             className="text-[10px] uppercase tracking-[0.14em] text-haze-400"
           >
-            Remove
+            {t('scr.compat.remove')}
           </button>
         }
       >
@@ -353,9 +373,9 @@ export function Compatibility({ onBack }: CompatibilityProps) {
   if (adding || people.length === 0) {
     return (
       <Screen
-        eyebrow="Compatibility"
-        title="Add someone"
-        subtitle="Their birth date and place — a time helps but isn't required"
+        eyebrow={t('scr.compat.eyebrow')}
+        title={t('scr.compat.addSomeone')}
+        subtitle={t('scr.compat.addSub')}
         onBack={people.length === 0 ? onBack : () => setAdding(false)}
       >
         <AddPerson
@@ -371,8 +391,8 @@ export function Compatibility({ onBack }: CompatibilityProps) {
 
   return (
     <Screen
-      eyebrow="Compatibility"
-      title="How your charts meet"
+      eyebrow={t('scr.compat.eyebrow')}
+      title={t('scr.compat.titleList')}
       onBack={onBack}
     >
       <ul className="flex flex-col gap-2">
@@ -388,7 +408,7 @@ export function Compatibility({ onBack }: CompatibilityProps) {
                   {p.name}
                 </span>
                 <span className="data mt-0.5 block truncate text-xs text-haze-400">
-                  {p.date} · {p.placeLabel ?? 'place not set'}
+                  {p.date} · {p.placeLabel ?? t('scr.compat.placeUnset')}
                 </span>
               </span>
               <span style={{ color: 'var(--rz-hue)' }}>›</span>
@@ -402,7 +422,7 @@ export function Compatibility({ onBack }: CompatibilityProps) {
         onClick={() => setAdding(true)}
         className="btn-ghost mt-1 px-4 py-3 text-xs uppercase tracking-[0.14em]"
       >
-        Add someone else
+        {t('scr.compat.addAnother')}
       </button>
     </Screen>
   )

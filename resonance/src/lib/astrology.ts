@@ -6,6 +6,7 @@ import type {
   ChakraState,
   Crystal,
   GeoPoint,
+  TransitParts,
 } from '../types/resonance'
 import {
   bodyPosition,
@@ -173,6 +174,10 @@ interface Dominant {
   trigger: BodyName | null
   aspectName: string
   targetLabel: string
+  /** The aspected body, when it's an aspect to a planet (not a sign). */
+  targetBody: BodyName | null
+  /** True when `targetBody` is a natal position. */
+  targetNatal: boolean
   harmony: AspectHarmony
   exactness: number
 }
@@ -195,6 +200,8 @@ function pickDominant(
           trigger: null,
           aspectName: top.def.name,
           targetLabel: `natal ${top.other}`,
+          targetBody: top.other,
+          targetNatal: true,
           harmony: top.def.harmony,
           exactness: top.exactness,
         },
@@ -219,6 +226,8 @@ function pickDominant(
         trigger: 'Moon',
         aspectName: top.def.name,
         targetLabel: top.other,
+        targetBody: top.other,
+        targetNatal: false,
         harmony: top.def.harmony,
         exactness: top.exactness,
       },
@@ -235,6 +244,8 @@ function pickDominant(
       trigger: null,
       aspectName: 'in',
       targetLabel: moonPos?.sign ?? 'the sky',
+      targetBody: null,
+      targetNatal: false,
       harmony: 'neutral',
       exactness: 0.4,
     },
@@ -354,6 +365,19 @@ export function computeDailyReading(
         ? `${dominant.trigger} ${dominant.aspectName} ${dominant.targetLabel}`
         : `${dominant.planet} ${dominant.aspectName} ${dominant.targetLabel}`
 
+  const parts: TransitParts = {
+    planet: dominant.planet,
+    aspect: dominant.aspectName,
+    trigger: dominant.trigger,
+    targetBody: dominant.targetBody,
+    targetNatal: dominant.targetNatal,
+    sign: planetPos.sign,
+    retrograde: planetPos.retrograde,
+    house: transitHouses[dominant.planet] ?? null,
+    chakra: dominant.chakra,
+    vulnerable,
+  }
+
   const transit: AstrologicalTransit = {
     id: `transit-${localDayKey(from)}-${dominant.chakra}-${dominant.planet}`,
     title,
@@ -370,6 +394,7 @@ export function computeDailyReading(
       planetPos,
       transitHouses[dominant.planet],
     ),
+    parts,
     resonantChakra: dominant.chakra,
     recommendedFrequency: entry.frequency,
     window: { start: from.toISOString(), end: to.toISOString() },

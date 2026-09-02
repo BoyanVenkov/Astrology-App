@@ -1,6 +1,14 @@
 import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
 import { clockHM, geoContext } from '../lib/geo'
+import {
+  ordinal,
+  seasonLabel,
+  signLabel,
+  planetLabel,
+  transitTitle,
+  useT,
+} from '../lib/i18n'
 import { chakraColor } from '../lib/resonanceData'
 import { Screen } from './Screen'
 import { TodaysPractice } from './TodaysPractice'
@@ -11,10 +19,8 @@ interface HoroscopeProps {
   onRitual: (preset: RitualPreset) => void
 }
 
-const ORD = ['', '1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th']
-const ordinal = (n: number): string => ORD[n] ?? `${n}th`
-
 export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
+  const t = useT()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const crystals = useAppStore((s) => s.dailyCrystals)
@@ -33,39 +39,43 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
   const geo = geoContext(profile, currentLocation)
   const dominantBody = transit.body
   const dominantHouse = transitHouses[dominantBody as keyof typeof transitHouses]
+  const SIGN_KEYS = [
+    'Aries',
+    'Taurus',
+    'Gemini',
+    'Cancer',
+    'Leo',
+    'Virgo',
+    'Libra',
+    'Scorpio',
+    'Sagittarius',
+    'Capricorn',
+    'Aquarius',
+    'Pisces',
+  ]
   const risingNow =
     nowAngles != null
-      ? [
-          'Aries',
-          'Taurus',
-          'Gemini',
-          'Cancer',
-          'Leo',
-          'Virgo',
-          'Libra',
-          'Scorpio',
-          'Sagittarius',
-          'Capricorn',
-          'Aquarius',
-          'Pisces',
-        ][Math.floor(nowAngles.ascendant / 30)]
+      ? SIGN_KEYS[Math.floor(nowAngles.ascendant / 30)]
       : null
 
-  const horoscope = buildHoroscope({
-    transit,
-    chakra,
-    crystals,
-    aspects,
-    sky,
-    hasNatal,
-    suggestedPattern,
-  })
+  const horoscope = buildHoroscope(
+    {
+      transit,
+      chakra,
+      crystals,
+      aspects,
+      sky,
+      hasNatal,
+      suggestedPattern,
+    },
+    t,
+  )
   const accent = chakraColor(chakra.key)
 
   return (
     <Screen
-      eyebrow="Daily Horoscope"
-      title={transit.title}
+      eyebrow={t('scr.horo.eyebrow')}
+      title={transitTitle(transit, t)}
       subtitle={horoscope.greeting}
       onBack={onBack}
     >
@@ -80,7 +90,7 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
             onClick={editProfile}
             className="mt-3 text-xs uppercase tracking-[0.14em] text-gold-300"
           >
-            Add birth details →
+            {t('scr.horo.addBirth')}
           </button>
         )}
       </section>
@@ -101,7 +111,7 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
 
       {horoscope.moon && (
         <section className="glass-panel p-4">
-          <p className="eyebrow">The Moon</p>
+          <p className="eyebrow">{t('scr.horo.moonHead')}</p>
           <p className="mt-2 text-sm leading-relaxed text-haze-200">
             {horoscope.moon}
           </p>
@@ -109,27 +119,38 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
       )}
 
       <section className="glass-panel p-4">
-        <p className="eyebrow">The sky above you</p>
+        <p className="eyebrow">{t('scr.horo.skyHead')}</p>
         {risingNow && (
           <p className="mt-2 text-sm text-haze-200">
-            {risingNow} is rising over you right now.
+            {t('scr.horo.risingNow', { sign: signLabel(risingNow, t) })}
           </p>
         )}
         {dominantHouse && (
           <p className="mt-1 text-sm text-haze-200">
-            {dominantBody} is transiting your {ordinal(dominantHouse)} house.
+            {t('scr.horo.transitingHouse', {
+              planet: planetLabel(dominantBody, t),
+              ord: ordinal(dominantHouse, t),
+            })}
           </p>
         )}
         {geo.hasLocation && (
           <p className="mt-2 text-sm text-haze-300">
-            {geo.season} · sun {clockHM(geo.sunrise)}–{clockHM(geo.sunset)}
-            {geo.dayLengthHours != null &&
-              ` · ${geo.dayLengthHours.toFixed(1)} h of light`}
-            {geo.source === 'birth' && ' · using your birth place'}
+            {t('scr.horo.geoLine', {
+              season: seasonLabel(geo.season, t),
+              sunrise: clockHM(geo.sunrise),
+              sunset: clockHM(geo.sunset),
+              light:
+                geo.dayLengthHours != null
+                  ? t('scr.horo.dayLight', {
+                      hours: geo.dayLengthHours.toFixed(1),
+                    })
+                  : '',
+              place: geo.source === 'birth' ? t('scr.horo.birthPlace') : '',
+            })}
           </p>
         )}
         <p className="mt-2 text-sm leading-relaxed text-haze-200">
-          {geo.grounding}
+          {t(geo.groundingKey)}
         </p>
         {!geo.hasLocation && (
           <button
@@ -137,13 +158,13 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
             onClick={editProfile}
             className="mt-2 text-xs uppercase tracking-[0.14em] text-gold-300"
           >
-            Add a birth place, or share your location in Settings →
+            {t('scr.horo.addPlace')}
           </button>
         )}
       </section>
 
       <section className="glass-panel glass-panel-active p-5">
-        <p className="eyebrow">Today’s practice</p>
+        <p className="eyebrow">{t('scr.horo.practiceHead')}</p>
         <p className="mt-2 text-sm leading-relaxed text-haze-100">
           {horoscope.practice}
         </p>

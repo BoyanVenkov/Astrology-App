@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useT } from '../lib/i18n'
 import type { ChakraKey } from '../types/resonance'
 import type { ChakraReading } from '../lib/chakraField'
 
@@ -35,6 +36,7 @@ export function ChakraColumn({
   className = '',
 }: ChakraColumnProps) {
   const reduced = useReducedMotion()
+  const t = useT()
 
   const W = labels ? 300 : 116
   const H = labels ? 416 : 356
@@ -53,7 +55,7 @@ export function ChakraColumn({
       height={(size * H) / W}
       className={className}
       role="img"
-      aria-label="The seven chakras and their charge today"
+      aria-label={t('field.svgAria')}
     >
       <defs>
         <linearGradient id="cf-channel" x1="0" y1="1" x2="0" y2="0">

@@ -1,6 +1,7 @@
 import * as Astronomy from 'astronomy-engine'
 import type { BirthProfile, GeoPoint } from '../types/resonance'
 import { eclipticLongitude } from './ephemeris'
+import type { MessageKey } from './locales/en'
 
 export interface GeoContext {
   hasLocation: boolean
@@ -15,8 +16,10 @@ export interface GeoContext {
   dayLengthHours: number | null
   season: 'spring' | 'summer' | 'autumn' | 'winter'
   hemisphere: 'northern' | 'southern'
-  /** A grounding suggestion tied to the local light + season. */
+  /** A grounding suggestion tied to the local light + season. English. */
   grounding: string
+  /** Catalogue key for the grounding suggestion — resolve with `t()`. */
+  groundingKey: MessageKey
 }
 
 const seasonFromSun = (
@@ -47,6 +50,15 @@ const grounding = (
     autumn: 'The light is drawing in — favour slower, warming practices and an earlier wind-down.',
     winter: 'The dark half — rest is productive now; keep practices short, restorative and candle-lit.',
   }[season]
+}
+
+const groundingKey = (
+  season: GeoContext['season'],
+  dayLength: number | null,
+): MessageKey => {
+  if (dayLength != null && dayLength < 9.5) return 'geo.ground.scarce'
+  if (dayLength != null && dayLength > 14.5) return 'geo.ground.long'
+  return `geo.ground.${season}` as MessageKey
 }
 
 /**
@@ -119,6 +131,7 @@ export function geoContext(
     season,
     hemisphere,
     grounding: grounding(season, dayLengthHours),
+    groundingKey: groundingKey(season, dayLengthHours),
   }
 }
 

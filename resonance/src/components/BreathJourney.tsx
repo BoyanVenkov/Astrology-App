@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import { BREATH_PATTERNS, breathScale, MIN_BREATH_SCALE } from '../lib/breathwork'
+import { useT } from '../lib/i18n'
 import type { BreathRoundSpec } from '../types/resonance'
 import { PlayIcon } from './icons'
 
@@ -36,6 +37,7 @@ const mmss = (s: number): string => {
 }
 
 export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps) {
+  const t = useT()
   const setAudioPlaying = useAppStore((s) => s.toggleAudio)
 
   const reducedMotion = useMemo(
@@ -234,21 +236,21 @@ export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps
     >
       <div className="flex w-full items-center justify-between">
         <div>
-          <p className="eyebrow">Wim Hof Method</p>
+          <p className="eyebrow">{t('bj.eyebrow')}</p>
           <h2 className="mt-1 font-serif text-2xl text-gilded">
-            Round {round} of {SPEC.rounds}
+            {t('bj.roundOf', { n: round, total: SPEC.rounds })}
           </h2>
         </div>
         <span className="rounded-full border border-white/15 px-3 py-1 text-xs tracking-[0.12em] text-haze-200">
           {phase === 'breaths'
-            ? `${count} / ${SPEC.breaths}`
+            ? t('bj.count', { n: count, total: SPEC.breaths })
             : phase === 'retention'
-              ? 'Hold'
+              ? t('bj.tag.hold')
               : phase === 'recovery'
-                ? 'Recover'
+                ? t('bj.tag.recover')
                 : phase === 'done'
-                  ? 'Complete'
-                  : 'Ready'}
+                  ? t('bj.tag.complete')
+                  : t('bj.tag.ready')}
         </span>
       </div>
 
@@ -305,56 +307,55 @@ export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps
           {phase === 'ready' && (
             <>
               <p className="font-serif text-3xl leading-tight text-white text-glow">
-                Round {round}
+                {t('bj.round', { n: round })}
               </p>
               <p className="mt-2 text-xs leading-relaxed text-haze-300">
-                {SPEC.breaths} full breaths, then exhale and hold. Sit or lie
-                down — never in water.
+                {t('bj.readyBlurb', { n: SPEC.breaths })}
               </p>
             </>
           )}
           {phase === 'breaths' && (
             <>
               <p className="eyebrow mb-1" style={{ color: ACCENT }}>
-                Breath {count} / {SPEC.breaths}
+                {t('bj.breathCount', { n: count, total: SPEC.breaths })}
               </p>
               <p className="font-serif text-4xl leading-none text-white text-glow">
-                {breathHalf === 'in' ? 'In' : 'Out'}
+                {breathHalf === 'in' ? t('bj.in') : t('bj.out')}
               </p>
               <p className="mt-2 px-4 text-xs text-haze-300">
-                Full breath in — let the exhale fall out on its own
+                {t('bj.breathsCue')}
               </p>
             </>
           )}
           {phase === 'retention' && (
             <>
               <p className="eyebrow mb-1" style={{ color: ACCENT }}>
-                Hold · empty
+                {t('bj.holdEmpty')}
               </p>
               <p className="font-sans text-5xl font-semibold tabular-nums text-white/90">
                 {mmss(timer)}
               </p>
               <p className="mt-2 px-2 text-xs text-haze-300">
-                Aim for around {retentionTarget}s. Tap when you need to breathe.
+                {t('bj.holdEmptyCue', { n: retentionTarget })}
               </p>
             </>
           )}
           {phase === 'recovery' && (
             <>
               <p className="eyebrow mb-1" style={{ color: ACCENT }}>
-                Hold · full
+                {t('bj.holdFull')}
               </p>
               <p className="font-sans text-5xl font-semibold tabular-nums text-white/90">
                 {timer}
               </p>
               <p className="mt-2 px-4 text-xs text-haze-300">
-                Big breath in — hold it while the ring empties
+                {t('bj.holdFullCue')}
               </p>
             </>
           )}
           {phase === 'done' && (
             <p className="font-serif text-2xl leading-tight text-white text-glow">
-              All three rounds complete
+              {t('bj.done')}
             </p>
           )}
         </div>
@@ -368,7 +369,7 @@ export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps
           style={{ borderColor: `${ACCENT}66`, background: `${ACCENT}1f` }}
         >
           <PlayIcon className="h-4 w-4" />
-          Begin round {round}
+          {t('bj.beginRound', { n: round })}
         </button>
       )}
 
@@ -379,7 +380,7 @@ export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps
           className="rounded-full border px-8 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white transition active:scale-95"
           style={{ borderColor: `${ACCENT}66`, background: `${ACCENT}1f` }}
         >
-          Breathe in
+          {t('bj.breatheIn')}
         </button>
       )}
 
@@ -389,7 +390,7 @@ export function BreathJourney({ onComplete, className = '' }: BreathJourneyProps
           onClick={() => enterPhase('retention')}
           className="text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
         >
-          Skip to the hold →
+          {t('bj.skipHold')}
         </button>
       )}
     </section>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import { buildMeditation } from '../lib/meditation'
+import { useLocaleTag, useT } from '../lib/i18n'
 import { speak, speechAvailable, stopSpeaking } from '../lib/speech'
 import type { MeditationSound, MeditationStyleKey } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
@@ -30,6 +31,8 @@ export function Meditation({
   onComplete,
   className = '',
 }: MeditationProps) {
+  const t = useT()
+  const localeTag = useLocaleTag()
   // The sound bath is built around the tone — it always plays.
   const bed: MeditationSound = style === 'sound-bath' ? 'tone' : sound
   const transit = useAppStore((s) => s.transit)
@@ -46,8 +49,9 @@ export function Meditation({
       style,
       { transit, chakra, aspects, transitHouses, hasNatal },
       minutes,
+      t,
     )
-  }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes])
+  }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes, t])
 
   const totalSeconds = minutes * 60
   const [running, setRunning] = useState(true)
@@ -98,7 +102,7 @@ export function Meditation({
       nextStepRef.current += 1
       setStepIndex(idx)
       if (withVoice && speechAvailable()) {
-        speak(meditation.steps[idx].text, { rate: 0.8 })
+        speak(meditation.steps[idx].text, { rate: 0.8, lang: localeTag })
       }
     }
 
@@ -108,7 +112,7 @@ export function Meditation({
       stopSpeaking()
       onCompleteRef.current?.(minutes)
     }
-  }, [meditation, withVoice, totalSeconds, minutes])
+  }, [meditation, withVoice, totalSeconds, minutes, localeTag])
 
   useEffect(() => {
     if (!running) return
@@ -131,7 +135,7 @@ export function Meditation({
   if (!meditation) {
     return (
       <div className={`glass-panel p-6 text-center text-sm text-haze-300 ${className}`}>
-        Attuning to the sky…
+        {t('medp.attuning')}
       </div>
     )
   }
@@ -146,7 +150,7 @@ export function Meditation({
     >
       <div className="flex w-full items-center justify-between">
         <div>
-          <p className="eyebrow">Meditation</p>
+          <p className="eyebrow">{t('medp.eyebrow')}</p>
           <h2 className="mt-1 font-serif text-2xl text-gilded">
             {meditation.title}
           </h2>
@@ -155,8 +159,8 @@ export function Meditation({
           {bed === 'tone'
             ? `${meditation.frequency} Hz`
             : bed === 'music'
-              ? 'Ambient music'
-              : 'Quiet'}
+              ? t('medp.ambient')
+              : t('medp.quiet')}
         </span>
       </div>
 
@@ -210,14 +214,12 @@ export function Meditation({
           ) : (
             <PlayIcon className="h-4 w-4" />
           )}
-          {running ? 'Pause' : 'Resume'}
+          {running ? t('medp.pause') : t('medp.resume')}
         </button>
       </div>
 
       {withVoice && !speechAvailable() && (
-        <p className="text-xs text-haze-400">
-          Voice isn’t available here — follow the words on screen.
-        </p>
+        <p className="text-xs text-haze-400">{t('medp.noVoice')}</p>
       )}
     </section>
   )

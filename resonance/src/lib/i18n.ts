@@ -1,5 +1,11 @@
 import { useCallback } from 'react'
-import type { ChakraKey, Locale, Mood } from '../types/resonance'
+import type {
+  AstrologicalTransit,
+  ChakraKey,
+  Locale,
+  Mood,
+  TransitParts,
+} from '../types/resonance'
 import { useAppStore } from '../store/useAppStore'
 import { detectLocale } from './detectLocale'
 import { en, type MessageKey } from './locales/en'
@@ -60,6 +66,15 @@ export function useT(): TFn {
 export const t: TFn = (key, params) =>
   translate(useAppStore.getState().locale, key, params)
 
+/** BCP-47 tag for `Intl` / `toLocale*` formatting. */
+export const localeTag = (locale: Locale): string =>
+  locale === 'bg' ? 'bg-BG' : 'en-US'
+
+/** Hook — the BCP-47 tag for the active locale. */
+export function useLocaleTag(): string {
+  return localeTag(useAppStore((s) => s.locale))
+}
+
 /** Keep `<html lang>` in step so fonts / hyphenation resolve per script. */
 export function applyHtmlLang(locale: Locale): void {
   try {
@@ -87,6 +102,8 @@ export const auraLabel = (score: number, tr: TFn): string => {
 
 export const signLabel = (sign: string, tr: TFn): string =>
   tr(`sign.${sign}` as MessageKey)
+export const seasonLabel = (season: string, tr: TFn): string =>
+  tr(`geo.season.${season}` as MessageKey)
 export const planetLabel = (body: string, tr: TFn): string =>
   tr(`planet.${body}` as MessageKey)
 export const phaseLabel = (phase: string, tr: TFn): string =>
@@ -110,3 +127,117 @@ export const medName = (key: string, tr: TFn): string =>
   tr(`med.${key}.name` as MessageKey)
 export const medTag = (key: string, tr: TFn): string =>
   tr(`med.${key}.tag` as MessageKey)
+export const breathHint = (kind: string, tr: TFn): string =>
+  tr(`breath.hint.${kind}` as MessageKey)
+
+const KNOWN_HZ = new Set([174, 285, 396, 417, 432, 528, 639, 741, 852, 963])
+export const solfeggioIntention = (hz: number, tr: TFn): string =>
+  KNOWN_HZ.has(hz)
+    ? tr(`freq.intention.${hz}` as MessageKey)
+    : tr('freq.intention.default')
+
+/* ---- generated reading text — recomposed per locale at display ---- */
+
+/** The chakra's localised detail (name, sanskrit, element, location, theme). */
+export const chakraDetail = (
+  key: ChakraKey,
+  tr: TFn,
+): {
+  name: string
+  sanskrit: string
+  element: string
+  location: string
+  theme: string
+} => ({
+  name: tr(`chakra.${key}` as MessageKey),
+  sanskrit: tr(`chakra.${key}.sanskrit` as MessageKey),
+  element: tr(`chakra.${key}.element` as MessageKey),
+  location: tr(`chakra.${key}.location` as MessageKey),
+  theme: tr(`chakra.${key}.theme` as MessageKey),
+})
+
+/** The esoteric guidance line — composed from planet × chakra pieces. */
+export const esotericGuidance = (
+  chakra: ChakraKey,
+  planet: string,
+  tr: TFn,
+): string =>
+  tr('esoteric.line', {
+    planet: planetLabel(planet, tr),
+    verb: tr(`esoteric.verb.${planet}` as MessageKey),
+    chakra: tr(`chakra.${chakra}` as MessageKey),
+    focus: tr(`esoteric.focus.${chakra}` as MessageKey),
+    colour: tr(`esoteric.colour.${planet}` as MessageKey),
+  })
+
+export const transitTarget = (p: TransitParts, tr: TFn): string => {
+  const body = p.targetBody
+    ? planetLabel(p.targetBody, tr)
+    : signLabel(p.sign, tr)
+  return p.targetNatal ? tr('transit.natalTarget', { body }) : body
+}
+
+/** The day's transit as a headline — "Saturn square natal Neptune". */
+export const transitTitle = (
+  transit: Pick<AstrologicalTransit, 'title' | 'parts'>,
+  tr: TFn,
+): string => {
+  const p = transit.parts
+  if (!p) return transit.title
+  if (p.aspect === 'in') {
+    return tr('transit.title.inSign', {
+      planet: planetLabel(p.planet, tr),
+      sign: signLabel(p.sign, tr),
+    })
+  }
+  return tr('transit.title.aspect', {
+    a: planetLabel(p.trigger ?? p.planet, tr),
+    rel: tr(`transit.rel.${p.aspect}` as MessageKey),
+    b: transitTarget(p, tr),
+  })
+}
+
+/** The day's transit as a paragraph — headline, house, guidance, closing cue. */
+export const transitInfluence = (
+  transit: Pick<AstrologicalTransit, 'influence' | 'parts'>,
+  tr: TFn,
+): string => {
+  const p = transit.parts
+  if (!p) return transit.influence
+  const rx = p.retrograde ? tr('transit.rx') : ''
+  const rel = tr(`transit.rel.${p.aspect}` as MessageKey)
+  let headline: string
+  if (p.aspect === 'in') {
+    headline = tr('transit.headline.inSign', {
+      planet: planetLabel(p.planet, tr),
+      rx,
+      sign: signLabel(p.sign, tr),
+    })
+  } else if (p.trigger) {
+    headline = tr('transit.headline.trigger', {
+      a: planetLabel(p.trigger, tr),
+      rel,
+      b: transitTarget(p, tr),
+    })
+  } else {
+    headline = tr('transit.headline.aspect', {
+      planet: planetLabel(p.planet, tr),
+      rx,
+      rel,
+      b: transitTarget(p, tr),
+    })
+  }
+  const house =
+    p.house != null && p.house >= 1
+      ? tr('transit.house', {
+          ord: ordinal(p.house, tr),
+          arena: houseArena(p.house, tr),
+        })
+      : ''
+  return tr('transit.influence', {
+    headline,
+    house,
+    esoteric: esotericGuidance(p.chakra, p.planet, tr),
+    guide: p.vulnerable ? tr('transit.guide.ground') : tr('transit.guide.amplify'),
+  })
+}

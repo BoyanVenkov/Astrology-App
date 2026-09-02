@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { MOOD_LIST, MOOD_META } from '../lib/aura'
+import { moodLabel, useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { localDayKey } from '../lib/timezone'
 import { BackButton } from './Screen'
 import type { Mood } from '../types/resonance'
@@ -15,9 +17,11 @@ interface MoodCheckInProps {
 
 export function MoodCheckIn({
   onDone,
-  title = 'How are you feeling?',
+  title,
   compact = false,
 }: MoodCheckInProps) {
+  const t = useT()
+  const heading = title ?? t('scr.moodci.default')
   const moodLog = useAppStore((s) => s.moodLog)
   const logMood = useAppStore((s) => s.logMood)
 
@@ -67,7 +71,7 @@ export function MoodCheckIn({
                 boxShadow: selected ? `0 0 12px ${meta.color}` : undefined,
               }}
             />
-            {meta.label}
+            {moodLabel(m, t)}
           </button>
         )
       })}
@@ -77,7 +81,7 @@ export function MoodCheckIn({
   if (compact) {
     return (
       <div className="w-full">
-        <p className="eyebrow text-center">{title}</p>
+        <p className="eyebrow text-center">{heading}</p>
         <div className="mt-3">{grid}</div>
         <button
           type="button"
@@ -85,7 +89,7 @@ export function MoodCheckIn({
           disabled={!mood || saved}
           className="mt-4 w-full rounded-2xl border border-gold-400/40 bg-gold-500/10 px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100 transition disabled:opacity-40"
         >
-          {saved ? 'Logged ✦' : 'Log this'}
+          {saved ? t('scr.moodci.logged') : t('scr.moodci.logThis')}
         </button>
       </div>
     )
@@ -96,26 +100,26 @@ export function MoodCheckIn({
       <BackButton onClick={onDone} />
 
       <header className="px-1">
-        <p className="eyebrow">Evening check-in</p>
-        <h1 className="mt-1 font-serif text-2xl text-gilded">{title}</h1>
-        <p className="mt-1 text-sm text-haze-300">
-          One tap. It shapes tomorrow’s aura and your mood trend.
-        </p>
+        <p className="eyebrow">{t('scr.moodci.eyebrow')}</p>
+        <h1 className="mt-1 font-serif text-2xl text-gilded">{heading}</h1>
+        <p className="mt-1 text-sm text-haze-300">{t('scr.moodci.blurb')}</p>
       </header>
 
       <section className="glass-panel p-4">{grid}</section>
 
       {mood && (
-        <p className="px-1 text-sm text-haze-300">{MOOD_META[mood].phrase}</p>
+        <p className="px-1 text-sm text-haze-300">
+          {t(`mood.phrase.${mood}` as MessageKey)}
+        </p>
       )}
 
       <label className="flex flex-col gap-1.5">
-        <span className="eyebrow">Note (optional)</span>
+        <span className="eyebrow">{t('scr.moodci.noteLabel')}</span>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={3}
-          placeholder="Anything on your mind…"
+          placeholder={t('scr.moodci.notePlaceholder')}
           className="resize-none rounded-2xl border border-white/12 bg-midnight-950/60 px-4 py-3 text-sm text-white outline-none focus:border-gold-400/60"
         />
       </label>
@@ -126,7 +130,7 @@ export function MoodCheckIn({
         disabled={!mood}
         className="rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
       >
-        {existing ? 'Update check-in' : 'Save check-in'}
+        {existing ? t('scr.moodci.update') : t('scr.moodci.save')}
       </button>
     </div>
   )

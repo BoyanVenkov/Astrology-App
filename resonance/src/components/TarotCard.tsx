@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
-import type { Suit, TarotCard } from '../lib/tarot'
+import { cardName, type Suit, type TarotCard } from '../lib/tarot'
+import { useT } from '../lib/i18n'
 import { GOLD, INK } from './tarotArt'
 import { TarotScene } from './tarotScenes'
 
@@ -27,6 +28,8 @@ export function TarotCardFace({
   className?: string
   style?: CSSProperties
 }) {
+  const t = useT()
+  const name = cardName(card, t)
   const color = card.arcana === 'major' ? GOLD : SUIT_COLOR[card.arcana]
   return (
     <svg
@@ -34,9 +37,9 @@ export function TarotCardFace({
       className={className}
       style={style}
       role="img"
-      aria-label={`${card.name}${reversed ? ', reversed' : ''}`}
+      aria-label={reversed ? t('or.stance.reversed') + ' — ' + name : name}
     >
-      <TarotScene card={card} reversed={reversed} color={color} />
+      <TarotScene card={card} reversed={reversed} color={color} name={name} />
     </svg>
   )
 }

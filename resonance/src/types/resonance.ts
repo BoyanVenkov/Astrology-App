@@ -43,9 +43,37 @@ export interface ChakraState {
   active: boolean
 }
 
+/**
+ * Structured pieces of the day's dominant transit, kept so the title and
+ * influence can be recomposed in any language at display time (see
+ * `transitTitle` / `transitInfluence` in `lib/i18n`). The `title` / `influence`
+ * strings below are the English rendering, kept as a fallback.
+ */
+export interface TransitParts {
+  /** Primary moving body, e.g. "Saturn". */
+  planet: string
+  /** `'in'` when the body is just moving through a sign, else the aspect name. */
+  aspect: string
+  /** Fallback trigger body when there's no natal chart — e.g. "Moon". */
+  trigger: string | null
+  /** The body the transit aspects, when it's an aspect. */
+  targetBody: string | null
+  /** True when `targetBody` is a natal position. */
+  targetNatal: boolean
+  /** The sign the moving body occupies. */
+  sign: string
+  retrograde: boolean
+  /** Natal house the moving body falls in, when known. */
+  house: number | null
+  /** The chakra + planet that drive the esoteric guidance line. */
+  chakra: ChakraKey
+  /** Favour grounding (hard / neutral contact) over amplifying (soft). */
+  vulnerable: boolean
+}
+
 export interface AstrologicalTransit {
   id: string
-  /** Human-readable summary, e.g. "Moon trine Venus". */
+  /** Human-readable summary, e.g. "Moon trine Venus". English fallback. */
   title: string
   /** Primary moving body, e.g. "Moon". */
   body: string
@@ -59,8 +87,10 @@ export interface AstrologicalTransit {
   moonPhase: string
   /** Illuminated fraction of the Moon, 0–100. */
   illumination: number
-  /** Short guidance text for the user. */
+  /** Short guidance text for the user. English fallback. */
   influence: string
+  /** Structured parts for localised recomposition. */
+  parts: TransitParts
   /** Chakra this transit most strongly resonates with. */
   resonantChakra: ChakraKey
   /** Suggested tone to work with during this window. */

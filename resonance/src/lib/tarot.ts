@@ -1,4 +1,6 @@
 import type { BirthProfile } from '../types/resonance'
+import { type TFn } from './i18n'
+import type { MessageKey } from './locales/en'
 import { localDayKey } from './timezone'
 
 /**
@@ -193,6 +195,41 @@ export const SPREADS: Spread[] = [
 export const spreadOf = (key: Spread['key']): Spread =>
   SPREADS.find((s) => s.key === key) ?? SPREADS[0]
 
+/* ---- localised display for the deck + spreads ---- */
+
+export interface CardText {
+  name: string
+  keywords: string[]
+  upright: string
+  reversed: string
+}
+
+/** A card's text in the active locale. */
+export const cardText = (card: TarotCard, t: TFn): CardText => ({
+  name: t(`tc.${card.id}.n` as MessageKey),
+  keywords: t(`tc.${card.id}.k` as MessageKey)
+    .split(',')
+    .map((k) => k.trim()),
+  upright: t(`tc.${card.id}.u` as MessageKey),
+  reversed: t(`tc.${card.id}.r` as MessageKey),
+})
+
+export const cardName = (card: TarotCard, t: TFn): string =>
+  t(`tc.${card.id}.n` as MessageKey)
+
+export const spreadName = (key: Spread['key'], t: TFn): string =>
+  t(`sp.${key}.name` as MessageKey)
+export const spreadBlurb = (key: Spread['key'], t: TFn): string =>
+  t(`sp.${key}.blurb` as MessageKey)
+export const spreadPosition = (
+  spreadKey: Spread['key'],
+  posKey: string,
+  t: TFn,
+): { label: string; prompt: string } => ({
+  label: t(`sp.pos.${spreadKey}.${posKey}.label` as MessageKey),
+  prompt: t(`sp.pos.${spreadKey}.${posKey}.prompt` as MessageKey),
+})
+
 /* ------------------------------------------------------------------- shuffle */
 
 export interface DrawnCard {
@@ -337,13 +374,6 @@ function leanValue(card: TarotCard): number {
 
 export type OracleVerdict = 'yes' | 'no' | 'wait' | 'both'
 
-const VERDICT_LABEL: Record<OracleVerdict, string> = {
-  yes: 'Yes-leaning',
-  no: 'No-leaning',
-  wait: 'Not yet',
-  both: "It's both",
-}
-
 export interface OracleReading {
   card: TarotCard
   reversed: boolean
@@ -359,15 +389,6 @@ export interface OracleReading {
   action: string
 }
 
-const DOMAIN_PHRASE: Record<OracleDomain, string> = {
-  love: 'your relationships and your heart',
-  work: 'your work and where it is heading',
-  money: 'money and what you can build',
-  home: 'home, family and where you belong',
-  creative: 'the creative work you are carrying',
-  self: 'your own path right now',
-}
-
 const FAST = new Set([
   'major-00', 'major-10', 'major-16', 'major-19',
   'wands-01', 'wands-08', 'cups-01', 'swords-01', 'pentacles-01',
@@ -380,7 +401,11 @@ const SLOW = new Set([
 /** Cards that genuinely put the choice back on you. */
 const FORK = new Set(['major-06', 'major-11', 'swords-02', 'cups-07'])
 
-export function oracleReading(drawn: DrawnCard, question: string): OracleReading {
+export function oracleReading(
+  drawn: DrawnCard,
+  question: string,
+  t: TFn,
+): OracleReading {
   const { card, reversed } = drawn
   const cls = classifyQuestion(question)
   const base = leanValue(card)
@@ -404,29 +429,34 @@ export function oracleReading(drawn: DrawnCard, question: string): OracleReading
           : 'wait'
   }
 
-  const stance = reversed ? 'reversed' : 'upright'
-  const heart = `${card.name}, ${stance} — ${card.keywords[0]}. It lands on ${DOMAIN_PHRASE[cls.domain]}.`
-  const meaning = reversed ? card.reversed : card.upright
+  const text = cardText(card, t)
+  const heart = t('or.heart', {
+    name: text.name,
+    stance: reversed ? t('or.stance.reversed') : t('or.stance.upright'),
+    keyword: text.keywords[0],
+    domain: t(`or.domain.${cls.domain}` as MessageKey),
+  })
+  const meaning = reversed ? text.reversed : text.upright
 
   let action: string
   if (verdict === 'yes') {
-    action = `Lean toward yes — but on the card's terms, not by forcing it. Move once, then look again.`
+    action = t('or.action.yes')
   } else if (verdict === 'no') {
-    action = `Lean toward no, or at least not like this. The card is closing this door rather than opening one.`
+    action = t('or.action.no')
   } else if (verdict === 'both') {
-    action = `Genuinely both. The card won't choose for you — the deciding is yours, and it wants you to make it consciously.`
+    action = t('or.action.both')
   } else if (verdict === 'wait') {
-    action = `Not yet. The ground isn't set. Give it time and ask again when something has actually moved.`
+    action = t('or.action.wait')
   } else if (cls.kind === 'timing') {
     action = FAST.has(card.id)
-      ? `Sooner than it feels — think weeks, not months. Stay ready.`
+      ? t('or.action.timingFast')
       : SLOW.has(card.id)
-        ? `This takes its own time. Think seasons, not weeks — pushing won't speed it.`
-        : `No fixed date. The timing hangs on a move you haven't made yet — make it, and the clock starts.`
+        ? t('or.action.timingSlow')
+        : t('or.action.timingOpen')
   } else {
     action = reversed
-      ? `Turn toward what you've been avoiding here. One honest look changes more than more effort.`
-      : `Put your attention on ${card.keywords.join(', ')}. Take one real step, then re-read the situation.`
+      ? t('or.action.openReversed')
+      : t('or.action.openUpright', { keywords: text.keywords.join(', ') })
   }
 
   return {
@@ -434,7 +464,9 @@ export function oracleReading(drawn: DrawnCard, question: string): OracleReading
     reversed,
     class: cls,
     verdict,
-    verdictLabel: verdict ? VERDICT_LABEL[verdict] : null,
+    verdictLabel: verdict
+      ? t(`or.verdict.${verdict}` as MessageKey)
+      : null,
     heart,
     meaning,
     action,

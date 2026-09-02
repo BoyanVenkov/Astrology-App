@@ -3,6 +3,7 @@ import { LocalNotifications } from '@capacitor/local-notifications'
 import * as Astronomy from 'astronomy-engine'
 import type { NotificationPreferences } from '../types/resonance'
 import { nextMoonSignChanges } from './ephemeris'
+import { signLabel, type TFn } from './i18n'
 import { upcomingVoidOfCourse } from './lunar'
 
 /**
@@ -37,15 +38,15 @@ const parseHM = (hm: string): { hour: number; minute: number } => {
   return { hour: h || 8, minute: m || 0 }
 }
 
-function buildSchedule(prefs: NotificationPreferences): Scheduled[] {
+function buildSchedule(prefs: NotificationPreferences, t: TFn): Scheduled[] {
   const now = new Date()
   const out: Scheduled[] = []
 
   if (prefs.dailyReading) {
     out.push({
       id: ID_DAILY,
-      title: 'Your reading is ready',
-      body: 'Today’s transit, chakra focus and practice are waiting.',
+      title: t('notif.daily.title'),
+      body: t('notif.daily.body'),
       schedule: { on: parseHM(prefs.dailyReadingTime), every: 'day' },
     })
   }
@@ -53,30 +54,24 @@ function buildSchedule(prefs: NotificationPreferences): Scheduled[] {
   if (prefs.eveningWind) {
     out.push({
       id: ID_EVENING,
-      title: 'Wind down',
-      body: 'A few breaths and a mood check-in before sleep.',
+      title: t('notif.evening.title'),
+      body: t('notif.evening.body'),
       schedule: { on: parseHM(prefs.eveningWindTime), every: 'day' },
     })
   }
 
   if (prefs.moonPhases) {
-    const phases: { deg: number; label: string }[] = [
-      { deg: 0, label: 'New Moon' },
-      { deg: 180, label: 'Full Moon' },
-    ]
+    const phases = [0, 180]
     let idx = 0
-    for (const { deg, label } of phases) {
+    for (const deg of phases) {
       let search = now
       for (let i = 0; i < 2; i += 1) {
         const hit = Astronomy.SearchMoonPhase(deg, search, 40)
         if (!hit) break
         out.push({
           id: ID_MOON_PHASE + idx,
-          title: `${label} tonight`,
-          body:
-            deg === 0
-              ? 'A quiet reset — set an intention and keep it to yourself.'
-              : 'Feelings run bright. Notice what comes to the surface.',
+          title: deg === 0 ? t('notif.newMoon.title') : t('notif.fullMoon.title'),
+          body: deg === 0 ? t('notif.newMoon.body') : t('notif.fullMoon.body'),
           schedule: { at: new Date(hit.date.getTime() - 60 * 60 * 1000) },
         })
         idx += 1
@@ -89,8 +84,8 @@ function buildSchedule(prefs: NotificationPreferences): Scheduled[] {
     nextMoonSignChanges(now, 4).forEach((change, i) => {
       out.push({
         id: ID_MOON_SIGN + i,
-        title: `Moon enters ${change.sign}`,
-        body: 'The emotional weather shifts — a good moment to ground your energy.',
+        title: t('notif.moonSign.title', { sign: signLabel(change.sign, t) }),
+        body: t('notif.moonSign.body'),
         schedule: { at: change.at },
       })
     })
@@ -102,8 +97,8 @@ function buildSchedule(prefs: NotificationPreferences): Scheduled[] {
       if (fireAt.getTime() <= now.getTime()) return
       out.push({
         id: ID_VOC + i,
-        title: 'Moon going void of course',
-        body: 'The void begins in 15 minutes. Ground your energy — rest, don’t begin.',
+        title: t('notif.voc.title'),
+        body: t('notif.voc.body'),
         schedule: { at: fireAt },
       })
     })
@@ -123,6 +118,7 @@ const ALL_IDS = [
 /** Re-schedule everything to match `prefs`. Safe to call often. */
 export async function syncNotifications(
   prefs: NotificationPreferences,
+  t: TFn,
 ): Promise<void> {
   if (!isNative()) return
 
@@ -135,7 +131,7 @@ export async function syncNotifications(
   const perm = await LocalNotifications.requestPermissions().catch(() => null)
   if (!perm || perm.display !== 'granted') return
 
-  const items = buildSchedule(prefs)
+  const items = buildSchedule(prefs, t)
   if (items.length === 0) return
 
   await LocalNotifications.schedule({

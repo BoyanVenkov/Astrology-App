@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
-import { useT } from '../lib/i18n'
+import { transitTitle, useT } from '../lib/i18n'
 import { MOOD_LIST, MOOD_META } from '../lib/aura'
 import { localDayKey } from '../lib/timezone'
 import { ResonanceMark } from './Logo'
@@ -61,7 +61,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
       {transit && (
         <p className="mt-3 text-center text-sm leading-relaxed text-haze-300">
           {t('mood.skyLine', {
-            title: transit.title,
+            title: transitTitle(transit, t),
             chakra: chakra
               ? t('mood.skyChakra', {
                   chakra: t(`chakra.${chakra.key}` as MessageKey),

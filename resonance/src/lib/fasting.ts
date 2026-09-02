@@ -1,4 +1,6 @@
 import { bodyPosition, moonState } from './ephemeris'
+import { signLabel, type TFn } from './i18n'
+import type { MessageKey } from './locales/en'
 import { moonVoidOfCourseCached } from './lunar'
 import { localDayKey } from './timezone'
 
@@ -103,94 +105,49 @@ function scoreFor(l: Lunar, moonSign: string, vocActive: boolean): number {
 const verdictOf = (score: number): FastingVerdict =>
   score >= 68 ? 'favourable' : score >= 46 ? 'neutral' : 'not-ideal'
 
-const LABEL: Record<FastingVerdict, string> = {
-  favourable: 'A supported window',
-  neutral: 'A neutral day',
-  'not-ideal': 'Not the moment',
-}
-
-function reasonFor(l: Lunar, moonSign: string, vocActive: boolean): string {
+function reasonFor(
+  l: Lunar,
+  moonSign: string,
+  vocActive: boolean,
+  t: TFn,
+): string {
+  const sign = signLabel(moonSign, t)
   const parts: string[] = []
 
-  if (l.special === 'Ekadashi') {
-    parts.push(
-      `It's Ekadashi — the 11th lunar day, kept for fasting across many traditions`,
-    )
-  } else if (l.special === 'New Moon') {
-    parts.push(`The New Moon is a natural reset point`)
-  } else if (l.special === 'Full Moon') {
-    parts.push(`The Full Moon runs hot — a fast here is about release, not restriction`)
-  } else {
+  if (l.special === 'Ekadashi') parts.push(t('fast.reason.ekadashi'))
+  else if (l.special === 'New Moon') parts.push(t('fast.reason.newMoon'))
+  else if (l.special === 'Full Moon') parts.push(t('fast.reason.fullMoon'))
+  else
     parts.push(
       l.phase === 'waning'
-        ? `The Moon is waning — the half of the cycle that favours lightening and letting go`
-        : `The Moon is waxing — the body is in a building phase, less suited to going without`,
+        ? t('fast.reason.waning')
+        : t('fast.reason.waxing'),
     )
-  }
 
-  if (EARTH.has(moonSign)) {
-    parts.push(`with the Moon in earthy ${moonSign}, discipline comes easier`)
-  } else if (WATER.has(moonSign)) {
-    parts.push(`the Moon in watery ${moonSign} supports a gentle cleanse`)
-  } else if (FIRE.has(moonSign)) {
-    parts.push(`the Moon in fiery ${moonSign} sharpens both willpower and hunger`)
-  } else {
-    parts.push(`the Moon in airy ${moonSign} can make it easy to get distracted from it`)
-  }
+  if (EARTH.has(moonSign)) parts.push(t('fast.reason.earth', { sign }))
+  else if (WATER.has(moonSign)) parts.push(t('fast.reason.water', { sign }))
+  else if (FIRE.has(moonSign)) parts.push(t('fast.reason.fire', { sign }))
+  else parts.push(t('fast.reason.air', { sign }))
 
-  if (vocActive) {
-    parts.push(`and the Moon is void of course — a poor time to begin anything, a fast included`)
-  }
+  if (vocActive) parts.push(t('fast.reason.voc'))
 
-  return parts.join('; ') + '.'
+  return parts.join(t('fast.reason.join')) + '.'
 }
 
-const noteFor = (verdict: FastingVerdict): string =>
+const noteFor = (verdict: FastingVerdict, t: TFn): string =>
   verdict === 'favourable'
-    ? 'Break it gently — warm water, then something light. Stop if your body says stop.'
+    ? t('fast.note.favourable')
     : verdict === 'neutral'
-      ? 'Fine for a shorter fast or a lighter day of eating. Follow how you feel.'
-      : 'If you fast anyway, keep it short and easy. This is guidance, not medical advice.'
-
-interface MethodDef {
-  key: FastingMethod
-  name: string
-  window: string
-  what: string
-}
+      ? t('fast.note.neutral')
+      : t('fast.note.not-ideal')
 
 /** Ordered gentlest → deepest. */
-const METHOD_DEFS: MethodDef[] = [
-  {
-    key: 'intermittent',
-    name: 'Intermittent',
-    window: '16:8 — a daily 8-hour eating window',
-    what: 'The everyday version: push the first meal later or the last one earlier so the body gets 16 hours clear. Water, tea and black coffee through the gap.',
-  },
-  {
-    key: 'sunrise-sunset',
-    name: 'Dawn to dusk',
-    window: 'First light to sunset, water through the day',
-    what: 'Nothing solid while the sun is up; a normal meal after dark and again before dawn. The rhythm most fasting traditions are built on.',
-  },
-  {
-    key: 'omad',
-    name: 'One meal a day',
-    window: '20:4 — a single meal, one short window',
-    what: 'Eat once, usually late afternoon or evening, and make it a full plate. Everything else in the day is water, tea or broth.',
-  },
-  {
-    key: 'one-day',
-    name: 'A full day',
-    window: '24–36 hours, dinner to dinner',
-    what: 'The classic Ekadashi length. Finish dinner, skip every meal the next day, break the following evening with something light and warm.',
-  },
-  {
-    key: 'prolonged',
-    name: 'Prolonged',
-    window: '48 hours and up — multi-day',
-    what: 'Two to five days on water, salt and minerals only. Real shifts in energy and mood; ease in for days beforehand and break it very slowly. Not a first fast, and not one to run without guidance.',
-  },
+const METHOD_KEYS: FastingMethod[] = [
+  'intermittent',
+  'sunrise-sunset',
+  'omad',
+  'one-day',
+  'prolonged',
 ]
 
 function methodFit(
@@ -199,128 +156,62 @@ function methodFit(
   moonSign: string,
   vocActive: boolean,
   score: number,
+  t: TFn,
 ): { fit: MethodFit; why: string } {
   const waning = l.phase === 'waning'
   const earth = EARTH.has(moonSign)
   const water = WATER.has(moonSign)
   const fire = FIRE.has(moonSign)
   const ekadashi = l.special === 'Ekadashi'
+  const sign = signLabel(moonSign, t)
+  const why = (k: MessageKey): string => t(k, { sign })
 
   switch (key) {
     case 'intermittent': {
-      if (vocActive)
-        return {
-          fit: 'ok',
-          why: 'The void-of-course Moon dulls willpower a little, but a 16:8 gap is small enough to hold anyway.',
-        }
+      if (vocActive) return { fit: 'ok', why: why('fast.why.intermittent.voc') }
       if (fire && !waning)
-        return {
-          fit: 'ok',
-          why: `A waxing Moon in fiery ${moonSign} sharpens hunger — workable, just expect to feel it.`,
-        }
-      return {
-        fit: 'good',
-        why: 'Short and daily — the sky rarely argues with this one, and today is no exception.',
-      }
+        return { fit: 'ok', why: why('fast.why.intermittent.fire') }
+      return { fit: 'good', why: why('fast.why.intermittent.good') }
     }
     case 'sunrise-sunset': {
-      if (vocActive)
-        return {
-          fit: 'ok',
-          why: 'Fine to continue if it is already your rhythm; a poor day to start it fresh with the Moon void of course.',
-        }
-      if (earth)
-        return {
-          fit: 'good',
-          why: `The Moon in earthy ${moonSign} makes a daylight fast feel structured and doable.`,
-        }
+      if (vocActive) return { fit: 'ok', why: why('fast.why.sunrise-sunset.voc') }
+      if (earth) return { fit: 'good', why: why('fast.why.sunrise-sunset.earth') }
       if (score >= 58)
-        return { fit: 'good', why: 'The lunar day backs a steady, contained fast like this.' }
-      if (score >= 44)
-        return {
-          fit: 'ok',
-          why: 'Neither helped nor hindered — lean on routine rather than the sky today.',
-        }
-      return {
-        fit: 'not-today',
-        why: 'A waxing, building Moon works against going a whole day on water.',
-      }
+        return { fit: 'good', why: why('fast.why.sunrise-sunset.good') }
+      if (score >= 44) return { fit: 'ok', why: why('fast.why.sunrise-sunset.ok') }
+      return { fit: 'not-today', why: why('fast.why.sunrise-sunset.no') }
     }
     case 'omad': {
-      if (vocActive)
-        return {
-          fit: 'not-today',
-          why: 'The Moon is void of course — a scattered day to hold to a single meal.',
-        }
-      if (waning && !fire)
-        return {
-          fit: 'good',
-          why: 'The waning Moon favours eating less, and one full meal sits neatly inside that.',
-        }
-      if (earth && !fire)
-        return {
-          fit: 'good',
-          why: `The Moon in steady ${moonSign} makes a single meal easy to keep to.`,
-        }
+      if (vocActive) return { fit: 'not-today', why: why('fast.why.omad.voc') }
+      if (waning && !fire) return { fit: 'good', why: why('fast.why.omad.waning') }
+      if (earth && !fire) return { fit: 'good', why: why('fast.why.omad.earth') }
       if (fire && !waning)
-        return {
-          fit: 'not-today',
-          why: `A waxing Moon in fiery ${moonSign} spikes appetite — one meal will feel like a fight.`,
-        }
-      return {
-        fit: 'ok',
-        why: 'A neutral day — possible, but you will be running on discipline, not momentum.',
-      }
+        return { fit: 'not-today', why: why('fast.why.omad.fire') }
+      return { fit: 'ok', why: why('fast.why.omad.ok') }
     }
     case 'one-day': {
-      if (vocActive)
-        return {
-          fit: 'not-today',
-          why: 'Void of course — the tradition is clear that you do not begin a fast of this length now.',
-        }
+      if (vocActive) return { fit: 'not-today', why: why('fast.why.one-day.voc') }
       if (ekadashi && waning)
-        return { fit: 'good', why: 'Waning Ekadashi — the exact window this fast was built for.' }
-      if (ekadashi)
-        return {
-          fit: 'good',
-          why: 'It is Ekadashi, the day kept for a 24-hour fast across many traditions.',
-        }
+        return { fit: 'good', why: why('fast.why.one-day.ekadashiWaning') }
+      if (ekadashi) return { fit: 'good', why: why('fast.why.one-day.ekadashi') }
       if (waning && score >= 60)
-        return {
-          fit: 'good',
-          why: 'The waning half and a supportive Moon give a full day solid backing.',
-        }
+        return { fit: 'good', why: why('fast.why.one-day.waningGood') }
       if (waning || l.special === 'New Moon')
-        return {
-          fit: 'ok',
-          why: 'Some support from the cycle, though not a standout day — keep it to 24 hours rather than 36.',
-        }
-      return {
-        fit: 'not-today',
-        why: 'A waxing Moon makes a full day harder than it needs to be — wait for the waning half.',
-      }
+        return { fit: 'ok', why: why('fast.why.one-day.someSupport') }
+      return { fit: 'not-today', why: why('fast.why.one-day.no') }
     }
     case 'prolonged': {
       if (ekadashi && waning && !vocActive && score >= 70 && (earth || water))
-        return {
-          fit: 'good',
-          why: 'Everything lines up — waning Ekadashi, a grounded Moon, no void. A rare green light for a long fast.',
-        }
+        return { fit: 'good', why: why('fast.why.prolonged.good') }
       if (vocActive)
-        return {
-          fit: 'not-today',
-          why: 'Void of course — never the moment to begin something this demanding.',
-        }
+        return { fit: 'not-today', why: why('fast.why.prolonged.voc') }
       if (waning && score >= 62)
-        return {
-          fit: 'ok',
-          why: 'The waning half supports it, but only start a multi-day fast if you have done shorter ones and prepared for days.',
-        }
+        return { fit: 'ok', why: why('fast.why.prolonged.ok') }
       return {
         fit: 'not-today',
         why: waning
-          ? 'The cycle is willing but the day is not strong enough to launch a multi-day fast.'
-          : 'A waxing Moon and a multi-day fast pull in opposite directions.',
+          ? why('fast.why.prolonged.noWaning')
+          : why('fast.why.prolonged.no'),
       }
     }
   }
@@ -334,11 +225,19 @@ function methodsFor(
   moonSign: string,
   vocActive: boolean,
   score: number,
+  t: TFn,
 ): { methods: FastingMethodRead[]; pick: FastingMethodRead } {
   const rated = new Map<FastingMethod, FastingMethodRead>()
-  for (const def of METHOD_DEFS) {
-    const { fit, why } = methodFit(def.key, l, moonSign, vocActive, score)
-    rated.set(def.key, { ...def, fit, why })
+  for (const key of METHOD_KEYS) {
+    const { fit, why } = methodFit(key, l, moonSign, vocActive, score, t)
+    rated.set(key, {
+      key,
+      name: t(`fast.method.${key}.name` as MessageKey),
+      window: t(`fast.method.${key}.window` as MessageKey),
+      what: t(`fast.method.${key}.what` as MessageKey),
+      fit,
+      why,
+    })
   }
 
   // deepest method that still rates 'good' (prolonged never auto-recommended),
@@ -354,13 +253,13 @@ function methodsFor(
   return { methods, pick: rated.get(pickKey)! }
 }
 
-export function computeFasting(now: Date = new Date()): FastingReading {
+export function computeFasting(now: Date, t: TFn): FastingReading {
   const l = lunarDay(now)
   const moonSign = bodyPosition('Moon', now).sign
   const voc = moonVoidOfCourseCached(now)
   const score = scoreFor(l, moonSign, voc.active)
   const verdict = verdictOf(score)
-  const { methods, pick } = methodsFor(l, moonSign, voc.active, score)
+  const { methods, pick } = methodsFor(l, moonSign, voc.active, score, t)
 
   // best days over the next fortnight, checked at local noon
   const upcoming: FastingReading['upcoming'] = []
@@ -374,7 +273,9 @@ export function computeFasting(now: Date = new Date()): FastingReading {
     if (dl.special === 'Ekadashi' || ds >= 74) {
       upcoming.push({
         day: localDayKey(d),
-        label: dl.special ?? `Waning · lunar day ${dl.tithi}`,
+        label: dl.special
+          ? t(`fast.special.${dl.special}` as MessageKey)
+          : t('fast.upcoming.waning', { n: dl.tithi }),
         special: dl.special,
       })
     }
@@ -383,9 +284,9 @@ export function computeFasting(now: Date = new Date()): FastingReading {
   return {
     verdict,
     score,
-    label: LABEL[verdict],
-    reason: reasonFor(l, moonSign, voc.active),
-    note: noteFor(verdict),
+    label: t(`fast.label.${verdict}` as MessageKey),
+    reason: reasonFor(l, moonSign, voc.active, t),
+    note: noteFor(verdict, t),
     tithi: { day: l.tithi, phase: l.phase, special: l.special },
     moonSign,
     methods,
@@ -393,3 +294,7 @@ export function computeFasting(now: Date = new Date()): FastingReading {
     upcoming: upcoming.slice(0, 3),
   }
 }
+
+/** Localised label for a special lunar day (`tithi.special`). */
+export const fastingSpecialLabel = (special: string | null, t: TFn): string | null =>
+  special ? t(`fast.special.${special}` as MessageKey) : null

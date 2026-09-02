@@ -1,6 +1,14 @@
 import type { ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { chakraLabel, useT } from '../lib/i18n'
+import {
+  chakraLabel,
+  phaseLabel,
+  planetLabel,
+  transitTitle,
+  useT,
+  type TFn,
+} from '../lib/i18n'
+import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
 import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
@@ -49,17 +57,24 @@ function Tile({
   )
 }
 
-function chakraFieldSummary(field: ChakraReading[]): string {
+function chakraFieldSummary(field: ChakraReading[], t: TFn): string {
+  const join = t('scr.field.summary.join')
   const strained = field.filter(
     (c) => c.tone === 'blocked' || c.tone === 'strained',
   )
   if (strained.length > 0)
-    return `${strained.map((c) => c.name).join(' & ')} under pressure`
+    return t('scr.field.summary.pressure', {
+      names: strained.map((c) => c.name).join(join),
+    })
   const open = field.filter((c) => c.tone === 'open' || c.tone === 'lit')
   if (open.length > 0)
-    return `${open.map((c) => c.name).join(' & ')} wide open`
+    return t('scr.field.summary.open', {
+      names: open.map((c) => c.name).join(join),
+    })
   const focus = field.find((c) => c.focus)
-  return focus ? `${focus.name} carries the day` : 'A settled field'
+  return focus
+    ? t('scr.field.summary.carries', { name: focus.name })
+    : t('scr.field.summary.settled')
 }
 
 export function SkyView({
@@ -91,14 +106,15 @@ export function SkyView({
       <header className="px-1">
         <p className="eyebrow-hue">{t('sky.eyebrow')}</p>
         <h1 className="mt-1.5 font-serif text-2xl leading-tight text-gilded">
-          {transit.body} <span aria-hidden>{planetSymbol(transit.body)}</span>
+          {planetLabel(transit.body, t)}{' '}
+          <span aria-hidden>{planetSymbol(transit.body)}</span>
           {focusPlanet?.retrograde && (
             <span className="ml-1 align-super text-sm text-haze-300">℞</span>
           )}
           <span className="text-haze-400"> · </span>
           {chakraLabel(chakra.key, t)}
         </h1>
-        <p className="mt-1 text-sm text-haze-300">{transit.title}</p>
+        <p className="mt-1 text-sm text-haze-300">{transitTitle(transit, t)}</p>
       </header>
 
       <QuickHoroscope
@@ -132,7 +148,7 @@ export function SkyView({
         <span className="min-w-0 flex-1">
           <span className="eyebrow">{t('sky.chakraField')}</span>
           <span className="mt-1 block font-serif text-lg leading-tight text-white">
-            {chakraFieldSummary(chakraField)}
+            {chakraFieldSummary(chakraField, t)}
           </span>
           <span className="mt-0.5 block text-xs text-haze-300">
             {t('sky.chakraFieldSub')}
@@ -163,7 +179,7 @@ export function SkyView({
         <Tile
           icon={<MoonIcon className="h-5 w-5" />}
           title={t('sky.tileMoon')}
-          sub={t('sky.moonSub', { phase: transit.moonPhase })}
+          sub={t('sky.moonSub', { phase: phaseLabel(transit.moonPhase, t) })}
           onClick={onOpenMoon}
         />
         <Tile
@@ -187,7 +203,10 @@ export function SkyView({
           title={t('sky.tileStones')}
           sub={
             dailyCrystals.length > 0
-              ? dailyCrystals.slice(0, 2).map((c) => c.name).join(' · ')
+              ? dailyCrystals
+                  .slice(0, 2)
+                  .map((c) => crystalName(c.name, t))
+                  .join(' · ')
               : t('sky.stonesEmpty')
           }
           onClick={onOpenStones}

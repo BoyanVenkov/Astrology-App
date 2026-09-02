@@ -1,5 +1,6 @@
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { usePrescription } from '../lib/prescription'
+import { useT } from '../lib/i18n'
 import { BreathIcon, FrequenciesIcon, PlayIcon } from './icons'
 import type { RitualPreset } from '../types/resonance'
 
@@ -26,6 +27,7 @@ export function TodaysPractice({
   showDirective = true,
   className = '',
 }: TodaysPracticeProps) {
+  const t = useT()
   const rx = usePrescription()
   const breathMin = midOf(BREATH_PATTERNS[rx.breathPattern].durations, 6)
 
@@ -38,8 +40,8 @@ export function TodaysPractice({
   }[] = [
     {
       key: 'meditation',
-      label: 'Meditate',
-      sub: `${rx.minutes} min`,
+      label: t('tp.meditate'),
+      sub: t('tp.min', { n: rx.minutes }),
       accent: !rx.urgent,
       preset: {
         mode: 'meditation',
@@ -50,7 +52,7 @@ export function TodaysPractice({
     },
     {
       key: 'breath',
-      label: 'Breathe',
+      label: t('tp.breathe'),
       sub: rx.breathRatio,
       accent: rx.urgent,
       preset: {
@@ -62,7 +64,7 @@ export function TodaysPractice({
     },
     {
       key: 'frequency',
-      label: 'Frequency',
+      label: t('tp.frequency'),
       sub: `${rx.frequency} Hz`,
       accent: false,
       preset: {
@@ -132,7 +134,7 @@ export function TodaysPractice({
       style={{ boxShadow: '0 0 32px -12px var(--rz-glow)' }}
     >
       <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-        {rx.urgent ? 'Restore first' : 'Today’s practice'}
+        {rx.urgent ? t('tp.restoreFirst') : t('tp.today')}
       </p>
       {showDirective && (
         <p className="mt-1.5 text-sm leading-relaxed text-haze-200">

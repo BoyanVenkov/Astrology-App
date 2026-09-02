@@ -93,6 +93,12 @@ export const chrome = {
   'mood.preview.bright': "we'll lean into the sky's charge and give you more",
   'mood.preview.clear': "we'll follow the sky — a focused, unhurried practice",
   'mood.preview.calm': "we'll follow the sky — steady, aligned practice",
+  'mood.phrase.bright': 'Bright & energised',
+  'mood.phrase.calm': 'Calm & settled',
+  'mood.phrase.clear': 'Clear & focused',
+  'mood.phrase.heavy': 'Heavy or low',
+  'mood.phrase.anxious': 'Anxious or wired',
+  'mood.phrase.tired': 'Tired & depleted',
 
   /* ---- aura ---- */
   'aura.yours': 'Your aura',

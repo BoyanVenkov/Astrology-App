@@ -8,17 +8,18 @@ export const speechAvailable = (): boolean =>
   'speechSynthesis' in window &&
   typeof SpeechSynthesisUtterance !== 'undefined'
 
-let cachedVoice: SpeechSynthesisVoice | null = null
+const voiceCache = new Map<string, SpeechSynthesisVoice | null>()
 
-function pickVoice(): SpeechSynthesisVoice | null {
+function pickVoice(lang = 'en'): SpeechSynthesisVoice | null {
   if (!speechAvailable()) return null
   const voices = window.speechSynthesis.getVoices()
   if (voices.length === 0) return null
-  const en = voices.filter((v) => v.lang.toLowerCase().startsWith('en'))
-  const pool = en.length > 0 ? en : voices
+  const prefix = lang.toLowerCase().split('-')[0]
+  const matched = voices.filter((v) => v.lang.toLowerCase().startsWith(prefix))
+  const pool = matched.length > 0 ? matched : voices
   return (
     pool.find((v) =>
-      /samantha|serena|moira|karen|fiona|tessa|calm|soft/i.test(v.name),
+      /samantha|serena|moira|karen|fiona|tessa|calm|soft|natural/i.test(v.name),
     ) ??
     pool.find((v) => v.default) ??
     pool[0]
@@ -27,18 +28,21 @@ function pickVoice(): SpeechSynthesisVoice | null {
 
 if (speechAvailable()) {
   window.speechSynthesis.addEventListener?.('voiceschanged', () => {
-    cachedVoice = pickVoice()
+    voiceCache.clear()
   })
 }
 
 export function speak(
   text: string,
-  opts: { rate?: number; onEnd?: () => void } = {},
+  opts: { rate?: number; onEnd?: () => void; lang?: string } = {},
 ): void {
   if (!speechAvailable() || !text) return
+  const lang = opts.lang ?? 'en-US'
   const u = new SpeechSynthesisUtterance(text)
-  cachedVoice = cachedVoice ?? pickVoice()
-  if (cachedVoice) u.voice = cachedVoice
+  if (!voiceCache.has(lang)) voiceCache.set(lang, pickVoice(lang))
+  const voice = voiceCache.get(lang) ?? null
+  if (voice) u.voice = voice
+  u.lang = lang
   u.rate = opts.rate ?? 0.82
   u.pitch = 0.96
   u.volume = 1

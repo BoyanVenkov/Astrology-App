@@ -2,6 +2,8 @@ import { chrome } from './chrome'
 import { astro } from './astro'
 import { practice } from './practice'
 import { mantra } from './mantra'
+import { meditation } from './meditation'
+import { crystals } from './crystals'
 import { reading } from './reading'
 import { tarot } from './tarot'
 import { screens } from './screens'
@@ -17,6 +19,8 @@ export const en = {
   ...astro,
   ...practice,
   ...mantra,
+  ...meditation,
+  ...crystals,
   ...reading,
   ...tarot,
   ...screens,

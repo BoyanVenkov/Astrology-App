@@ -1,10 +1,15 @@
 import { useMemo } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { Aura } from './Aura'
-import { BREATH_PATTERNS } from '../lib/breathwork'
-import { MEDITATION_STYLE_MAP } from '../lib/meditation'
 import { computeAura, MOOD_META } from '../lib/aura'
-import { auraLabel, chakraLabel, moodLabel, useT } from '../lib/i18n'
+import {
+  auraLabel,
+  breathName,
+  chakraLabel,
+  medName,
+  moodLabel,
+  useT,
+} from '../lib/i18n'
 import { useEntitlements } from '../lib/premium'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
@@ -95,29 +100,33 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
       <section className="glass-panel grid grid-cols-3 divide-x divide-white/8 p-4 text-center">
         <div>
           <p className="font-serif text-2xl text-white">{streak}</p>
-          <p className="eyebrow mt-1">day streak</p>
+          <p className="eyebrow mt-1">{t('scr.journal.dayStreak')}</p>
         </div>
         <div>
           <p className="font-serif text-2xl text-white">{totalSessions}</p>
-          <p className="eyebrow mt-1">practices</p>
+          <p className="eyebrow mt-1">{t('scr.journal.practices')}</p>
         </div>
         <div>
           <p className="font-serif text-2xl text-white">{totalMinutes}</p>
-          <p className="eyebrow mt-1">minutes</p>
+          <p className="eyebrow mt-1">{t('scr.journal.minutes')}</p>
         </div>
       </section>
 
       {/* practice grid */}
       <section className="glass-panel p-4">
         <div className="flex items-center justify-between">
-          <p className="eyebrow">Last {gridDays === 28 ? '4 weeks' : `${gridDays} days`}</p>
+          <p className="eyebrow">
+            {gridDays === 28
+              ? t('scr.journal.last4w')
+              : t('scr.journal.lastNDays', { n: gridDays })}
+          </p>
           {!isPro && (
             <button
               type="button"
-              onClick={() => onUpgrade('Unlimited journal history')}
+              onClick={() => onUpgrade(t('scr.journal.reasonHistory'))}
               className="text-[10px] uppercase tracking-[0.14em] text-gold-300"
             >
-              full history →
+              {t('scr.journal.fullHistory')}
             </button>
           )}
         </div>
@@ -150,16 +159,16 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
           })}
         </div>
         <p className="mt-2 text-[11px] text-haze-400">
-          Fill = minutes practised · ring = mood logged
+          {t('scr.journal.gridNote')}
         </p>
       </section>
 
       {/* recent sessions */}
       <section className="glass-panel p-4">
-        <p className="eyebrow">Recent practice</p>
+        <p className="eyebrow">{t('scr.journal.recent')}</p>
         {recent.length === 0 ? (
           <p className="mt-3 text-sm text-haze-400">
-            No sessions yet — start one from the dashboard.
+            {t('scr.journal.noSessions')}
           </p>
         ) : (
           <ul className="mt-3 flex flex-col gap-2 text-sm">
@@ -171,15 +180,14 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
                 <span className="text-haze-100">
                   {s.day.slice(5)} ·{' '}
                   {s.kind === 'meditation'
-                    ? (MEDITATION_STYLE_MAP[s.style ?? 'chakra']?.name ??
-                      'Meditation')
+                    ? medName(s.style ?? 'chakra', t)
                     : s.kind === 'frequency'
                       ? `${s.frequency} Hz`
-                      : (BREATH_PATTERNS[s.pattern]?.name ?? s.pattern)}
+                      : (breathName(s.pattern, t) ?? s.pattern)}
                 </span>
                 <span className="tabular-nums text-xs text-haze-400">
-                  {chakraLabel(s.chakra, t)} · {s.minutes} min
-                  {s.completed ? '' : ' · ended early'}
+                  {chakraLabel(s.chakra, t)} · {t('scr.journal.min', { n: s.minutes })}
+                  {s.completed ? '' : t('scr.journal.endedEarly')}
                 </span>
               </li>
             ))}

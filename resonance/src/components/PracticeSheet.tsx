@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useAppStore } from '../store/useAppStore'
+import { useT } from '../lib/i18n'
 import { TodaysPractice } from './TodaysPractice'
 import type { Prescription } from '../lib/prescription'
 import type { RitualPreset } from '../types/resonance'
@@ -41,6 +42,7 @@ export function PracticeSheet({
   onRitual,
   onLibrary,
 }: PracticeSheetProps) {
+  const t = useT()
   const doneToday = useAppStore(
     (s) => s.sessionLog.filter((x) => x.completed).length > 0,
   )
@@ -70,7 +72,7 @@ export function PracticeSheet({
         <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20" />
 
         <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-          {prescription.urgent ? 'Restore first' : "Today's practice"}
+          {prescription.urgent ? t('tp.restoreFirst') : t('tp.today')}
         </p>
         <h2 className="mt-1 font-serif text-2xl leading-snug text-gilded">
           {prescription.headline}
@@ -85,13 +87,13 @@ export function PracticeSheet({
 
         <div className="mt-4 flex flex-col gap-2">
           <Row
-            title="Full library"
-            sub="12 breath patterns · 12 meditations · 8 tones"
+            title={t('tp.fullLibrary')}
+            sub={t('tp.librarySub')}
             onClick={onLibrary}
           />
           <Row
-            title="2-minute reset"
-            sub={doneToday ? 'A quick top-up' : 'Ground your energy fast'}
+            title={t('tp.reset2')}
+            sub={doneToday ? t('tp.resetTopUp') : t('tp.resetGround')}
             onClick={() =>
               onRitual({ mode: 'breath', minutes: 2, skipIntro: true })
             }

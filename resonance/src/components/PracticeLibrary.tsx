@@ -4,6 +4,16 @@ import { useAppStore } from '../store/useAppStore'
 import { BREATH_PATTERN_LIST } from '../lib/breathwork'
 import { MEDITATION_STYLES } from '../lib/meditation'
 import {
+  breathName,
+  breathTag,
+  medName,
+  medTag,
+  solfeggioIntention,
+  useT,
+  type TFn,
+} from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
+import {
   breathUnlocked,
   meditationUnlocked,
   useEntitlements,
@@ -30,20 +40,6 @@ const BREATH_ORDER: Record<BreathCategory, number> = {
   energy: 2,
   advanced: 3,
 }
-const BREATH_CAT_LABEL: Record<BreathCategory, string> = {
-  calm: 'Calm',
-  balance: 'Balance',
-  energy: 'Energy',
-  advanced: 'Advanced',
-}
-const MED_CAT_LABEL: Record<MeditationCategory, string> = {
-  grounding: 'Grounding',
-  calm: 'Calm',
-  heart: 'Heart',
-  focus: 'Focus',
-  sleep: 'Sleep',
-  energy: 'Energy',
-}
 const MED_ORDER: MeditationCategory[] = [
   'grounding',
   'calm',
@@ -53,19 +49,21 @@ const MED_ORDER: MeditationCategory[] = [
   'sleep',
 ]
 
-const TAB_LABEL: Record<PracticeKind, string> = {
-  breath: 'Breathwork',
-  meditation: 'Meditation',
-  frequency: 'Frequency',
-}
+const breathCatLabel = (c: BreathCategory, t: TFn): string =>
+  t(`breath.cat.${c}` as MessageKey)
+const medCatLabel = (c: MeditationCategory, t: TFn): string =>
+  t(`med.cat.${c}` as MessageKey)
 
 const midOf = (arr: number[]): number =>
   arr.length ? (arr[Math.floor(arr.length / 2)] ?? arr[0]) : 0
 
-const lengthLabel = (durations: number[]): string => {
-  if (durations.length === 0) return '3 rounds · ~12 min'
-  if (durations.length === 1) return `${durations[0]} min`
-  return `${durations[0]}–${durations[durations.length - 1]} min`
+const lengthLabel = (durations: number[], t: TFn): string => {
+  if (durations.length === 0) return t('lib.len.rounds')
+  if (durations.length === 1) return t('lib.len.one', { n: durations[0] })
+  return t('lib.len.range', {
+    a: durations[0],
+    b: durations[durations.length - 1],
+  })
 }
 
 const breaths = [...BREATH_PATTERN_LIST].sort(
@@ -106,6 +104,7 @@ export function PracticeLibrary({
   onLaunch,
   onUpgrade,
 }: PracticeLibraryProps) {
+  const t = useT()
   const [tab, setTab] = useState<PracticeKind>('breath')
   const [cat, setCat] = useState<string>('all')
   const { isPro, freeFrequencyCount } = useEntitlements()
@@ -126,10 +125,10 @@ export function PracticeLibrary({
 
   const catLabel = (c: string): string =>
     c === 'all'
-      ? 'All'
+      ? t('lib.cat.all')
       : tab === 'breath'
-        ? BREATH_CAT_LABEL[c as BreathCategory]
-        : MED_CAT_LABEL[c as MeditationCategory]
+        ? breathCatLabel(c as BreathCategory, t)
+        : medCatLabel(c as MeditationCategory, t)
 
   const switchTab = (next: PracticeKind) => {
     setTab(next)
@@ -141,24 +140,28 @@ export function PracticeLibrary({
 
   return (
     <Screen
-      eyebrow="Practice Library"
-      title="Choose how you want to sit"
-      subtitle={`${breaths.length} breath patterns · ${meditations.length} meditations · ${SOLFEGGIO_PRESETS.length} tones`}
+      eyebrow={t('lib.eyebrow')}
+      title={t('lib.title')}
+      subtitle={t('lib.sub', {
+        breaths: breaths.length,
+        meds: meditations.length,
+        tones: SOLFEGGIO_PRESETS.length,
+      })}
       onBack={onBack}
     >
       <div className="grid grid-cols-3 gap-2">
-        {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((t) => (
+        {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((tk) => (
           <button
-            key={t}
+            key={tk}
             type="button"
-            onClick={() => switchTab(t)}
+            onClick={() => switchTab(tk)}
             className={`rounded-2xl border px-2 py-3 text-xs font-semibold transition ${
-              t === tab
+              tk === tab
                 ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
                 : 'border-white/12 bg-white/5 text-haze-300'
             }`}
           >
-            {TAB_LABEL[t]}
+            {t(`lib.tab.${tk}` as MessageKey)}
           </button>
         ))}
       </div>
@@ -191,7 +194,7 @@ export function PracticeLibrary({
                         breathPattern: b.key,
                         minutes: midOf(b.durations),
                       })
-                    : onUpgrade('Every breath pattern')
+                    : onUpgrade(t('lib.reasonBreath'))
                 }
                 className={`glass-panel p-4 text-left active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
@@ -205,7 +208,9 @@ export function PracticeLibrary({
                       boxShadow: `0 0 10px ${b.accent}`,
                     }}
                   />
-                  <h2 className="font-serif text-lg text-white">{b.name}</h2>
+                  <h2 className="font-serif text-lg text-white">
+                    {breathName(b.key, t)}
+                  </h2>
                   {unlocked ? (
                     <span className="data ml-auto shrink-0 text-xs text-haze-400">
                       {b.ratio}
@@ -214,9 +219,14 @@ export function PracticeLibrary({
                     <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
                   )}
                 </div>
-                <p className="mt-1 text-sm text-haze-300">{b.tagline}</p>
+                <p className="mt-1 text-sm text-haze-300">
+                  {breathTag(b.key, t)}
+                </p>
                 <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
-                  {BREATH_CAT_LABEL[b.category]} · {lengthLabel(b.durations)}
+                  {t('lib.catMeta', {
+                    cat: breathCatLabel(b.category, t),
+                    len: lengthLabel(b.durations, t),
+                  })}
                 </p>
               </button>
             )
@@ -236,7 +246,7 @@ export function PracticeLibrary({
                         meditationStyle: m.key,
                         minutes: midOf(m.durations),
                       })
-                    : onUpgrade('Every guided meditation')
+                    : onUpgrade(t('lib.reasonMed'))
                 }
                 className={`glass-panel p-4 text-left active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
@@ -250,7 +260,9 @@ export function PracticeLibrary({
                       boxShadow: '0 0 10px var(--rz-glow)',
                     }}
                   />
-                  <h2 className="font-serif text-lg text-white">{m.name}</h2>
+                  <h2 className="font-serif text-lg text-white">
+                    {medName(m.key, t)}
+                  </h2>
                   {!unlocked ? (
                     <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
                   ) : m.dynamic ? (
@@ -261,13 +273,16 @@ export function PracticeLibrary({
                         boxShadow: `inset 0 0 0 1px ${chakraColor('third-eye')}66`,
                       }}
                     >
-                      Your chart
+                      {t('med.yourChart')}
                     </span>
                   ) : null}
                 </div>
-                <p className="mt-1 text-sm text-haze-300">{m.tagline}</p>
+                <p className="mt-1 text-sm text-haze-300">{medTag(m.key, t)}</p>
                 <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
-                  {MED_CAT_LABEL[m.category]} · {lengthLabel(m.durations)}
+                  {t('lib.catMeta', {
+                    cat: medCatLabel(m.category, t),
+                    len: lengthLabel(m.durations, t),
+                  })}
                 </p>
               </button>
             )
@@ -288,7 +303,7 @@ export function PracticeLibrary({
                         frequency: p.frequency,
                         minutes: 10,
                       })
-                    : onUpgrade('The full frequency library')
+                    : onUpgrade(t('lib.reasonFreq'))
                 }
                 className={`glass-panel p-4 text-left active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
@@ -310,7 +325,7 @@ export function PracticeLibrary({
                       className="ml-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
                       style={{ color: p.color, boxShadow: `inset 0 0 0 1px ${p.color}66` }}
                     >
-                      Today
+                      {t('lib.today')}
                     </span>
                   ) : (
                     !unlocked && (
@@ -318,9 +333,11 @@ export function PracticeLibrary({
                     )
                   )}
                 </div>
-                <p className="mt-1 text-sm text-haze-300">{p.intention}</p>
+                <p className="mt-1 text-sm text-haze-300">
+                  {solfeggioIntention(p.frequency, t)}
+                </p>
                 <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
-                  Frequency · 5–45 min
+                  {t('freq.lengthNote')}
                 </p>
               </button>
             )

@@ -147,7 +147,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
 
   const patchNotif = (patch: Partial<typeof notifications>) => {
     updateNotificationPrefs(patch)
-    void syncNotifications({ ...notifications, ...patch })
+    void syncNotifications({ ...notifications, ...patch }, t)
   }
 
   const toggleNotifications = async (on: boolean) => {

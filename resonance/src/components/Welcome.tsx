@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
-import { useT } from '../lib/i18n'
+import { transitTitle, useT } from '../lib/i18n'
 import { CHAKRA_ORDER, chakraColor } from '../lib/resonanceData'
 import { signInWithGoogle } from '../lib/auth'
 import { PRIVACY_URL, TERMS_URL, openExternal } from '../lib/links'
@@ -245,7 +245,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
         {transit && (
           <p className="data mt-7 text-center text-[11px] tracking-wide text-haze-500">
-            {t('welcome.tonight', { title: transit.title })}
+            {t('welcome.tonight', { title: transitTitle(transit, t) })}
           </p>
         )}
       </div>

@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   computeFasting,
+  fastingSpecialLabel,
   type FastingVerdict,
   type MethodFit,
 } from '../lib/fasting'
+import { signLabel, useLocaleTag, useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { Screen } from './Screen'
 
 const VERDICT_COLOR: Record<FastingVerdict, string> = {
@@ -12,19 +15,10 @@ const VERDICT_COLOR: Record<FastingVerdict, string> = {
   'not-ideal': '#fb923c',
 }
 
-const FIT_META: Record<MethodFit, { label: string; color: string }> = {
-  good: { label: 'Good today', color: '#6ee7b7' },
-  ok: { label: 'Workable', color: '#9aa6c9' },
-  'not-today': { label: 'Not today', color: '#fb923c' },
-}
-
-const fmtDay = (key: string): string => {
-  const [y, m, d] = key.split('-').map(Number)
-  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  })
+const FIT_COLOR: Record<MethodFit, string> = {
+  good: '#6ee7b7',
+  ok: '#9aa6c9',
+  'not-today': '#fb923c',
 }
 
 interface FastingGuideProps {
@@ -33,29 +27,49 @@ interface FastingGuideProps {
 
 /** Free — the full fasting read: today's verdict, which method the sky backs, the days ahead. */
 export function FastingGuide({ onBack }: FastingGuideProps) {
-  const [f] = useState(() => computeFasting())
+  const t = useT()
+  const localeTag = useLocaleTag()
+  const f = useMemo(() => computeFasting(new Date(), t), [t])
   const [openKey, setOpenKey] = useState<string | null>(f.pick.key)
   const tint = VERDICT_COLOR[f.verdict]
 
+  const fitLabel = (fit: MethodFit): string =>
+    t(`fast.fit.${fit}` as MessageKey)
+
+  const fmtDay = (key: string): string => {
+    const [y, m, d] = key.split('-').map(Number)
+    return new Date(y, m - 1, d).toLocaleDateString(localeTag, {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+
   return (
     <Screen
-      eyebrow="The Moon"
-      title="Fasting"
+      eyebrow={t('scr.horo.moonHead')}
+      title={t('scr.fast.eyebrow')}
       subtitle={
         f.tithi.special
-          ? `${f.tithi.special} · Moon in ${f.moonSign}`
-          : `${f.tithi.phase} moon · lunar day ${f.tithi.day}`
+          ? t('scr.fast.guideSubSpecial', {
+              special: fastingSpecialLabel(f.tithi.special, t) ?? '',
+              sign: signLabel(f.moonSign, t),
+            })
+          : t('scr.fast.guideSubPhase', {
+              phase: t(`scr.fast.phase.${f.tithi.phase}` as MessageKey),
+              day: f.tithi.day,
+            })
       }
       onBack={onBack}
     >
       <section className="glass-panel p-4">
         <div className="flex items-center justify-between">
-          <p className="eyebrow">Today</p>
+          <p className="eyebrow">{t('scr.fast.today')}</p>
           <span
             className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]"
             style={{ color: tint, boxShadow: `inset 0 0 0 1px ${tint}55` }}
           >
-            {f.verdict === 'not-ideal' ? 'Not ideal' : f.verdict}
+            {t(`fast.verdict.${f.verdict}` as MessageKey)}
           </span>
         </div>
         <p className="mt-2 font-serif text-lg leading-tight text-white">
@@ -63,19 +77,19 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
         </p>
         <p className="mt-2 text-sm leading-relaxed text-haze-200">{f.reason}</p>
         <p className="data mt-3 text-[11px] text-haze-400">
-          Sky backs → <span className="text-haze-200">{f.pick.name}</span>
+          {t('scr.fast.skyBacks', { method: f.pick.name })}
         </p>
       </section>
 
       <section className="glass-panel p-4">
-        <p className="eyebrow">Which kind</p>
+        <p className="eyebrow">{t('scr.fast.whichKind')}</p>
         <p className="mt-2 text-sm leading-relaxed text-haze-300">
-          Five ways to hold a fast, gentlest first — each rated for the Moon
-          today. Tap one to open it.
+          {t('scr.fast.whichKindBlurb')}
         </p>
         <ul className="mt-3 flex flex-col gap-2">
           {f.methods.map((m) => {
-            const meta = FIT_META[m.fit]
+            const color = FIT_COLOR[m.fit]
+            const label = fitLabel(m.fit)
             const open = openKey === m.key
             return (
               <li key={m.key}>
@@ -91,11 +105,11 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
                     <span
                       className="shrink-0 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.1em]"
                       style={{
-                        color: meta.color,
-                        boxShadow: `inset 0 0 0 1px ${meta.color}55`,
+                        color,
+                        boxShadow: `inset 0 0 0 1px ${color}55`,
                       }}
                     >
-                      {meta.label}
+                      {label}
                     </span>
                   </div>
                   <p className="data mt-1 text-[11px] text-haze-400">
@@ -107,10 +121,7 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
                         {m.what}
                       </p>
                       <p className="mt-2 text-sm leading-relaxed text-haze-300">
-                        <span style={{ color: meta.color }}>
-                          {meta.label}.
-                        </span>{' '}
-                        {m.why}
+                        <span style={{ color }}>{label}.</span> {m.why}
                       </p>
                     </div>
                   )}
@@ -123,12 +134,13 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
 
       {f.upcoming.length > 0 && (
         <section className="glass-panel p-4">
-          <p className="eyebrow">Better days ahead</p>
+          <p className="eyebrow">{t('scr.fast.betterDays')}</p>
           <ul className="mt-2 flex flex-col gap-1.5 text-sm">
             {f.upcoming.map((u) => (
               <li key={u.day} className="flex justify-between">
                 <span className="text-haze-200">
-                  {u.special ?? 'Waning window'}
+                  {fastingSpecialLabel(u.special, t) ??
+                    t('scr.fast.waningWindow')}
                 </span>
                 <span className="data text-xs text-haze-400">
                   {fmtDay(u.day)}
@@ -140,24 +152,14 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
       )}
 
       <section className="glass-panel p-4">
-        <p className="eyebrow">Holding it well</p>
+        <p className="eyebrow">{t('scr.fast.holdingWell')}</p>
         <ul className="mt-2 flex flex-col gap-2 text-sm leading-relaxed text-haze-200">
-          <li>
-            Drink through it — water, herbal tea, black coffee. A pinch of salt
-            helps on the longer ones.
-          </li>
-          <li>
-            Break gently: warm water first, then something small and cooked.
-            Skip the big meal straight away.
-          </li>
-          <li>Move slowly, sleep more, and stop the moment your body says stop.</li>
+          <li>{t('scr.fast.hold1')}</li>
+          <li>{t('scr.fast.hold2')}</li>
+          <li>{t('scr.fast.hold3')}</li>
         </ul>
         <p className="mt-3 text-[11px] leading-relaxed text-haze-500">
-          Traditional lunar guidance, not medical advice. Dry fasting — going
-          without water — carries real risk and is never something the sky
-          &ldquo;recommends&rdquo;; this guide assumes you drink. If you are
-          pregnant, on medication, diabetic, underweight, or have a history with
-          food, skip fasting and just eat lighter.
+          {t('scr.fast.guideDisclaimer')}
         </p>
       </section>
     </Screen>

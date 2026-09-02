@@ -9,16 +9,16 @@ import type {
 import { useAppStore } from '../store/useAppStore'
 import { computeAura, type AuraState } from './aura'
 import { BREATH_PATTERNS } from './breathwork'
+import { breathName, transitTitle, useT, type TFn } from './i18n'
+import { crystalName } from './crystals'
 import { buildDailyMantra } from './mantra'
 import type { MessageKey } from './locales/en'
 import {
   MOOD_NEED,
   moodBreath,
-  moodClause,
   moodMeditation,
   moodMinutesScale,
 } from './moodPractice'
-import { chakraName } from './resonanceData'
 import { localDayKey } from './timezone'
 
 export interface PrescribedStone {
@@ -52,16 +52,6 @@ export interface Prescription {
   urgent: boolean
 }
 
-const PLACEMENT: Record<ChakraKey, string> = {
-  root: 'in your pocket or by your feet as you sit',
-  sacral: 'in a low pocket, near the hips',
-  'solar-plexus': 'in a pocket at your waist',
-  heart: 'over your heart, or on a cord around your neck',
-  throat: 'as a pendant at the throat',
-  'third-eye': 'on your desk, in your eyeline as you work',
-  crown: 'on your pillow, or above your head as you rest',
-}
-
 interface PrescriptionInput {
   chakra: ChakraKey
   frequency: SolfeggioFrequency
@@ -83,12 +73,14 @@ const clampMinutes = (n: number): number => Math.max(3, Math.min(25, Math.round(
 export function buildPrescription(
   input: PrescriptionInput,
   aura: AuraState,
+  t: TFn,
 ): Prescription {
-  const label = chakraName(input.chakra)
+  const label = t(`chakra.${input.chakra}` as MessageKey)
   const { mood } = input
 
   const breathKey = moodBreath(input.suggestedPattern, mood)
   const pattern = BREATH_PATTERNS[breathKey]
+  const breathLabel = breathName(breathKey, t)
   const meditationStyle = moodMeditation(mood)
 
   const urgent =
@@ -102,29 +94,49 @@ export function buildPrescription(
   const stones: PrescribedStone[] = input.crystals.slice(0, 2).map((c) => ({
     name: c.name,
     color: c.color,
-    placement: PLACEMENT[input.chakra],
+    placement: t(`rx.place.${input.chakra}` as MessageKey),
   }))
 
   const headline = urgent
-    ? `Restore first · ${label}`
-    : `${label} focus · ${input.transitTitle}`
+    ? t('rx.headline.restore', { chakra: label })
+    : t('rx.headline.focus', { chakra: label, transit: input.transitTitle })
 
   const stoneText =
     stones.length > 0
-      ? ` Keep ${stones.map((s) => s.name).join(' or ')} ${PLACEMENT[input.chakra].replace(/,.*/, '')}.`
+      ? t('rx.stoneText', {
+          stones: stones
+            .map((s) => crystalName(s.name, t))
+            .join(t('rx.join.or')),
+          place: t(`rx.placeShort.${input.chakra}` as MessageKey),
+        })
       : ''
 
-  const arriving = moodClause(mood)
+  const arriving = mood ? t(`rx.arriving.${mood}` as MessageKey) : ''
   const need = mood ? MOOD_NEED[mood] : null
   const soften = need === 'settle' || need === 'ground' || need === 'restore'
 
+  const common = {
+    minutes,
+    hz: input.frequency,
+    pattern: breathLabel,
+    ratio: pattern.ratio,
+    chakra: label,
+    transit: input.transitTitle,
+    stones: stoneText,
+    arriving,
+  }
+
   let directive: string
   if (urgent) {
-    directive = `${arriving ? `You’re ${arriving}, and your ` : 'Your '}system is depleted. Start with a ${minutes}-minute ${input.frequency} Hz restorative sit and slow ${pattern.name} breathing before the day asks anything of you.${stoneText}`
+    directive = mood
+      ? t('rx.directive.urgent.mood', common)
+      : t('rx.directive.urgent.plain', common)
   } else if (soften) {
-    directive = `You’re ${arriving}. With ${input.transitTitle} in the sky, the move is ${pattern.name} breathing (${pattern.ratio}) and ${input.frequency} Hz to settle into the ${label} — ${minutes} minutes.${stoneText}`
+    directive = t('rx.directive.soften', common)
   } else {
-    directive = `${arriving ? `You’re ${arriving} — a` : 'A'} ${minutes}-minute ${input.frequency} Hz meditation for the ${label}, ${pattern.name} breathing (${pattern.ratio}), and time with your stones.${stoneText}`
+    directive = mood
+      ? t('rx.directive.default.mood', common)
+      : t('rx.directive.default.plain', common)
   }
 
   return {
@@ -132,7 +144,7 @@ export function buildPrescription(
     chakraLabel: label,
     frequency: input.frequency,
     breathPattern: breathKey,
-    breathLabel: pattern.name,
+    breathLabel,
     breathRatio: pattern.ratio,
     meditationStyle,
     minutes,
@@ -156,6 +168,7 @@ export function buildPrescription(
 
 /** Today's prescription, derived from the live reading + today's mood. */
 export function usePrescription(): Prescription {
+  const t = useT()
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
   const sky = useAppStore((s) => s.sky)
@@ -178,7 +191,7 @@ export function usePrescription(): Prescription {
       frequency: chakra?.frequency ?? transit?.recommendedFrequency ?? frequency,
       suggestedPattern,
       crystals,
-      transitTitle: transit?.title ?? 'today',
+      transitTitle: transit ? transitTitle(transit, t) : t('rx.transitFallback'),
       planet,
       aspect: transit?.aspect ?? 'in',
       retrograde,
@@ -187,5 +200,6 @@ export function usePrescription(): Prescription {
       mood,
     },
     aura,
+    t,
   )
 }

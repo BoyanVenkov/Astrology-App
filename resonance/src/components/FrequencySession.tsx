@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { audioEngine, solfeggioInfo } from '../audio/audioEngine'
+import { solfeggioIntention, useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import type { SolfeggioFrequency } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
 
@@ -17,21 +19,13 @@ const mmss = (s: number): string => {
   return `${m}:${sec.toString().padStart(2, '0')}`
 }
 
-const CUES = [
-  'Let the tone do the work. There is nothing to focus on.',
-  'Notice where in the body the sound seems to land.',
-  'If the mind wanders, the tone is still here when you come back.',
-  'Let the sound be wider than any thought.',
-  'Soften the jaw, the shoulders, the space behind the eyes.',
-  'Let the space between you and the sound dissolve.',
-]
-
 export function FrequencySession({
   frequency,
   minutes,
   onComplete,
   className = '',
 }: FrequencySessionProps) {
+  const t = useT()
   const setFrequency = useAppStore((s) => s.setFrequency)
   const setAudioMode = useAppStore((s) => s.setAudioMode)
   const setAudioPlaying = useAppStore((s) => s.toggleAudio)
@@ -100,7 +94,8 @@ export function FrequencySession({
   }
 
   const pct = Math.min(100, (elapsed / totalSeconds) * 100)
-  const cue = CUES[Math.min(CUES.length - 1, Math.floor(elapsed / 45)) % CUES.length]
+  const cueIdx = Math.min(5, Math.floor(elapsed / 45)) % 6
+  const cue = t(`freq.cue.${cueIdx}` as MessageKey)
 
   return (
     <section
@@ -108,7 +103,7 @@ export function FrequencySession({
     >
       <div className="flex w-full items-center justify-between">
         <div>
-          <p className="eyebrow">Frequency</p>
+          <p className="eyebrow">{t('freq.eyebrow')}</p>
           <h2
             className="data mt-1 text-xl font-normal"
             style={{ color: tint }}
@@ -121,7 +116,9 @@ export function FrequencySession({
         </span>
       </div>
 
-      <p className="-mt-2 self-start text-sm text-haze-300">{info.intention}</p>
+      <p className="-mt-2 self-start text-sm text-haze-300">
+        {solfeggioIntention(frequency, t)}
+      </p>
 
       <div className="w-full">
         <div className="h-1 overflow-hidden rounded-full bg-white/10">
@@ -184,7 +181,7 @@ export function FrequencySession({
         ) : (
           <PlayIcon className="h-4 w-4" />
         )}
-        {running ? 'Pause' : 'Resume'}
+        {running ? t('freq.pause') : t('freq.resume')}
       </button>
     </section>
   )

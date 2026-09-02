@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { HOUSE_ARENA, ORDINAL } from '../lib/astrology'
+import {
+  houseArena,
+  ordinal,
+  planetLabel,
+  useT,
+  type TFn,
+} from '../lib/i18n'
 import { useChakraField, type ChakraContact, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
 import { ChakraColumn } from './ChakraColumn'
@@ -31,10 +37,15 @@ const TONE_COLOR: Record<ChakraReading['tone'], string> = {
   open: '#6ee7b7',
 }
 
-function contactLine(c: ChakraContact): string {
+function contactLine(c: ChakraContact, t: TFn): string {
   const glyph = ASPECT_GLYPH[c.aspect] ?? '·'
-  const target = c.natal ? `natal ${c.other}` : c.other
-  return `${c.transiting} ${glyph} ${target}`
+  const body = planetLabel(c.other, t)
+  const target = c.natal ? t('field.natalTarget', { body }) : body
+  return t('field.contactLine', {
+    planet: planetLabel(c.transiting, t),
+    glyph,
+    target,
+  })
 }
 
 function ChakraRow({
@@ -43,17 +54,19 @@ function ChakraRow({
   locked,
   onToggle,
   onRitual,
+  t,
 }: {
   c: ChakraReading
   open: boolean
   locked: boolean
   onToggle: () => void
   onRitual: (preset: RitualPreset) => void
+  t: TFn
 }) {
   const driverText = c.driver
-    ? contactLine(c.driver)
+    ? contactLine(c.driver, t)
     : c.tone === 'quiet'
-      ? 'No aspect in orb'
+      ? t('field.noAspect')
       : '—'
 
   return (
@@ -79,7 +92,7 @@ function ChakraRow({
             </span>
             {c.focus && (
               <span className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-                Today
+                {t('field.today')}
               </span>
             )}
           </span>
@@ -130,7 +143,7 @@ function ChakraRow({
                   key={`${ct.transiting}-${ct.other}-${ct.aspect}-${i}`}
                   className="flex items-center justify-between text-xs"
                 >
-                  <span className="text-haze-100">{contactLine(ct)}</span>
+                  <span className="text-haze-100">{contactLine(ct, t)}</span>
                   <span className="data shrink-0 text-haze-400">
                     {ct.orbDelta.toFixed(1)}°{' '}
                     <span aria-hidden>{ct.applying ? '↑' : '↓'}</span>
@@ -140,13 +153,16 @@ function ChakraRow({
             </ul>
           ) : (
             <p className="mt-3 text-xs text-haze-400">
-              Nothing is aspecting this centre today — it&rsquo;s running clear.
+              {t('field.nothingAspecting')}
             </p>
           )}
 
-          {c.house && HOUSE_ARENA[c.house] && (
+          {c.house && c.house >= 1 && (
             <p className="mt-3 text-xs text-haze-300">
-              Landing in your {ORDINAL[c.house]} house — {HOUSE_ARENA[c.house]}.
+              {t('field.landingHouse', {
+                ord: ordinal(c.house, t),
+                arena: houseArena(c.house, t),
+              })}
             </p>
           )}
 
@@ -168,7 +184,7 @@ function ChakraRow({
             }
             className="mt-3 w-full rounded-[0.9rem] border border-white/10 bg-white/[0.03] py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-haze-200 active:bg-white/[0.08]"
           >
-            Tune the {c.name} · {c.frequency} Hz
+            {t('field.tune', { chakra: c.name, hz: c.frequency })}
           </button>
         </div>
       )}
@@ -177,6 +193,7 @@ function ChakraRow({
 }
 
 export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
+  const t = useT()
   const field = useChakraField()
   const hasNatal = useAppStore((s) => s.hasNatal)
   const editProfile = useAppStore((s) => s.editProfile)
@@ -189,28 +206,42 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
   )
   const flowing = field.filter((c) => c.tone === 'open' || c.tone === 'lit')
   const list = (cs: ChakraReading[]): string =>
-    cs.map((c) => c.name).join(' and ')
+    cs.map((c) => c.name).join(t('field.summary.join'))
+  const verb = (n: number): string =>
+    n > 1 ? t('field.summary.are') : t('field.summary.is')
 
   let summary: string
   if (!hasNatal) {
-    summary =
-      'Read from the transiting Moon. Add your birth chart for a field tuned to your own planets.'
+    summary = t('field.summary.noNatal')
   } else if (strained.length > 0) {
     const others = strained.filter((c) => !c.focus)
     summary = strained.some((c) => c.focus)
-      ? `${focus.name} carries the day and takes the most strain${others.length ? `, with ${list(others)} close behind` : ''}.`
-      : `${focus.name} carries the day; ${list(strained)} ${strained.length > 1 ? 'are' : 'is'} under the most strain.`
+      ? t('field.summary.strainFocus', {
+          focus: focus.name,
+          others: others.length
+            ? t('field.summary.strainFocusOthers', { names: list(others) })
+            : '',
+        })
+      : t('field.summary.strainNoFocus', {
+          focus: focus.name,
+          names: list(strained),
+          verb: verb(strained.length),
+        })
   } else if (flowing.length > 0) {
-    summary = `${focus.name} carries the day, and ${list(flowing)} ${flowing.length > 1 ? 'are' : 'is'} wide open.`
+    summary = t('field.summary.flowing', {
+      focus: focus.name,
+      names: list(flowing),
+      verb: verb(flowing.length),
+    })
   } else {
-    summary = `${focus.name} carries the day. The rest of the field is fairly even.`
+    summary = t('field.summary.even', { focus: focus.name })
   }
 
   return (
     <Screen
-      eyebrow="Your energy"
-      title="The Chakra Field"
-      subtitle="Where today's sky lands in the body"
+      eyebrow={t('field.eyebrow')}
+      title={t('field.title')}
+      subtitle={t('field.sub')}
       onBack={onBack}
       action={
         hasNatal ? undefined : (
@@ -219,7 +250,7 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
             onClick={editProfile}
             className="text-[10px] uppercase tracking-[0.14em] text-gold-300"
           >
-            Add chart
+            {t('field.addChart')}
           </button>
         )
       }
@@ -247,10 +278,11 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
               open={open === c.key}
               onToggle={() =>
                 locked
-                  ? onUpgrade('The full Chakra Field')
+                  ? onUpgrade(t('field.reasonFull'))
                   : setOpen((cur) => (cur === c.key ? null : c.key))
               }
               onRitual={onRitual}
+              t={t}
             />
           )
         })}
@@ -259,17 +291,16 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
       {!isPro && (
         <button
           type="button"
-          onClick={() => onUpgrade('The full Chakra Field')}
+          onClick={() => onUpgrade(t('field.reasonFull'))}
           className="glass-panel glass-panel-active flex items-center justify-between gap-3 p-4 text-left active:scale-[0.99]"
         >
           <span>
             <span className="flex items-center gap-1.5 font-serif text-lg text-white">
               <LockIcon className="h-4 w-4 text-gold-300" />
-              Open every centre
+              {t('field.openEvery')}
             </span>
             <span className="mt-0.5 block text-xs text-haze-300">
-              Why each is charged, all its transits, and a tone to tune it —
-              Resonance Pro
+              {t('field.openEverySub')}
             </span>
           </span>
           <span style={{ color: 'var(--rz-hue)' }}>›</span>
@@ -277,9 +308,7 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
       )}
 
       <p className="px-1 pb-2 text-[11px] leading-relaxed text-haze-500">
-        Each planet resonates with one centre; its aspects to your chart charge
-        or strain it. Soft aspects open a centre, hard aspects put it under
-        pressure. Recomputed through the day as the planets move.
+        {t('field.footer')}
       </p>
     </Screen>
   )

@@ -2,6 +2,8 @@ import type { Aspect, AspectHarmony } from './astrology'
 import { PLANET_CHAKRA } from './astrology'
 import type { BodyName } from './ephemeris'
 import { useAppStore } from '../store/useAppStore'
+import { chakraDetail, useT, type TFn } from './i18n'
+import type { MessageKey } from './locales/en'
 import { CHAKRA_ORDER, chakraInfo, chakraMantra } from './resonanceData'
 import type { ChakraKey, SolfeggioFrequency } from '../types/resonance'
 
@@ -20,14 +22,6 @@ export type ChakraTone =
   | 'lit'
   | 'open'
 
-const STATE_LABEL: Record<ChakraTone, string> = {
-  blocked: 'Under pressure',
-  strained: 'Strained',
-  quiet: 'Quiet',
-  steady: 'Steady',
-  lit: 'Lit up',
-  open: 'Open',
-}
 
 export interface ChakraContact {
   /** The moving body whose resonance lands on this centre. */
@@ -99,19 +93,19 @@ const MASS: Record<BodyName, number> = {
 
 const clamp = (n: number): number => Math.max(6, Math.min(98, Math.round(n)))
 
-function cueFor(tone: ChakraTone, freq: SolfeggioFrequency): string {
+function cueFor(tone: ChakraTone, freq: SolfeggioFrequency, t: TFn): string {
   switch (tone) {
     case 'blocked':
     case 'strained':
-      return `Ground here — a long, slow exhale and ${freq} Hz.`
+      return t('field.cue.blocked', { hz: freq })
     case 'quiet':
-      return `Nothing pressing. A light touch keeps it clear.`
+      return t('field.cue.quiet')
     case 'steady':
-      return `Balanced — hold it with even breath and ${freq} Hz.`
+      return t('field.cue.steady', { hz: freq })
     case 'lit':
-      return `Charged. Meet it head-on: ${freq} Hz and full breath.`
+      return t('field.cue.lit', { hz: freq })
     case 'open':
-      return `Flowing — amplify with ${freq} Hz and open breath.`
+      return t('field.cue.open', { hz: freq })
   }
 }
 
@@ -123,7 +117,10 @@ export interface ChakraFieldInput {
   transitHouses: Partial<Record<BodyName, number>>
 }
 
-export function computeChakraField(input: ChakraFieldInput): ChakraReading[] {
+export function computeChakraField(
+  input: ChakraFieldInput,
+  t: TFn,
+): ChakraReading[] {
   const { aspects, hasNatal, focusKey, focusBalance, transitHouses } = input
 
   const buckets: Record<ChakraKey, ChakraContact[]> = {
@@ -154,6 +151,7 @@ export function computeChakraField(input: ChakraFieldInput): ChakraReading[] {
 
   return CHAKRA_ORDER.map((key) => {
     const info = chakraInfo(key)
+    const detail = chakraDetail(key, t)
     const contacts = [...buckets[key]].sort((x, y) => y.exactness - x.exactness)
     const driver = contacts[0] ?? null
 
@@ -190,23 +188,23 @@ export function computeChakraField(input: ChakraFieldInput): ChakraReading[] {
 
     return {
       key,
-      name: info.name,
+      name: detail.name,
       color: info.color,
       note: info.note,
-      sanskrit: info.sanskrit,
-      element: info.element,
-      location: info.location,
+      sanskrit: detail.sanskrit,
+      element: detail.element,
+      location: detail.location,
       petals: info.petals,
-      theme: info.theme,
-      mantra: chakraMantra(key),
+      theme: detail.theme,
+      mantra: t(chakraMantra(key)),
       frequency: info.frequency,
       charge,
       tone,
-      state: STATE_LABEL[tone],
+      state: t(`field.state.${tone}` as MessageKey),
       driver,
       contacts,
       house,
-      cue: cueFor(tone, info.frequency),
+      cue: cueFor(tone, info.frequency, t),
       focus: key === focusKey,
     }
   })
@@ -214,15 +212,19 @@ export function computeChakraField(input: ChakraFieldInput): ChakraReading[] {
 
 /** Today's chakra field, live from the store's reading. */
 export function useChakraField(): ChakraReading[] {
+  const t = useT()
   const aspects = useAppStore((s) => s.aspects)
   const hasNatal = useAppStore((s) => s.hasNatal)
   const chakra = useAppStore((s) => s.chakra)
   const transitHouses = useAppStore((s) => s.transitHouses)
-  return computeChakraField({
-    aspects,
-    hasNatal,
-    focusKey: chakra?.key ?? 'heart',
-    focusBalance: chakra?.balance ?? 50,
-    transitHouses,
-  })
+  return computeChakraField(
+    {
+      aspects,
+      hasNatal,
+      focusKey: chakra?.key ?? 'heart',
+      focusBalance: chakra?.balance ?? 50,
+      transitHouses,
+    },
+    t,
+  )
 }

@@ -9,10 +9,21 @@ import { MoodCheckIn } from './MoodCheckIn'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { MEDITATION_STYLE_MAP } from '../lib/meditation'
 import { buildHoroscope } from '../lib/horoscope'
-import { useT } from '../lib/i18n'
+import { crystalName } from '../lib/crystals'
+import {
+  breathGuide,
+  breathName,
+  chakraLabel,
+  medName,
+  medTag,
+  planetLabel,
+  solfeggioIntention,
+  useT,
+} from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { useEntitlements } from '../lib/premium'
 import { ResonanceMark } from './Logo'
-import { chakraColor, chakraName } from '../lib/resonanceData'
+import { chakraColor } from '../lib/resonanceData'
 import { speechAvailable } from '../lib/speech'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
@@ -33,11 +44,7 @@ interface RitualProps {
 }
 
 const FREQ_DURATIONS = [5, 10, 20, 30, 45]
-const MED_SOUNDS: { key: MeditationSound; label: string }[] = [
-  { key: 'tone', label: 'Tone' },
-  { key: 'music', label: 'Music' },
-  { key: 'silent', label: 'Silent' },
-]
+const MED_SOUND_KEYS: MeditationSound[] = ['tone', 'music', 'silent']
 
 const shell = 'mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5'
 const shellStyle = {
@@ -125,13 +132,13 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
     return (
       <div className={shell} style={shellStyle}>
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-          <p className="text-sm text-haze-300">Attuning to the sky…</p>
+          <p className="text-sm text-haze-300">{t('scr.ritual.attuning')}</p>
           <button
             type="button"
             onClick={onExit}
             className="text-xs uppercase tracking-[0.14em] text-gold-300"
           >
-            Back
+            {t('scr.ritual.back')}
           </button>
         </div>
       </div>
@@ -139,28 +146,31 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   }
 
   const accent = chakraColor(chakra.key)
-  const focus = chakraName(chakra.key)
-  const medName = MEDITATION_STYLE_MAP[medStyle]?.name ?? `${focus} meditation`
+  const focus = chakraLabel(chakra.key, t)
+  const medDisplayName = medName(medStyle, t)
   const freqInfo = solfeggioInfo(chosenFreq)
   const soundBath = mode === 'meditation' && medStyle === 'sound-bath'
   const minutes =
     mode === 'breath' ? breathMin : mode === 'meditation' ? medMin : freqMin
-  const horoscope = buildHoroscope({
-    transit,
-    chakra,
-    crystals,
-    aspects,
-    sky,
-    hasNatal,
-    suggestedPattern,
-  })
-  const stones = crystals.slice(0, 2).map((c) => c.name)
+  const horoscope = buildHoroscope(
+    {
+      transit,
+      chakra,
+      crystals,
+      aspects,
+      sky,
+      hasNatal,
+      suggestedPattern,
+    },
+    t,
+  )
+  const stones = crystals.slice(0, 2).map((c) => crystalName(c.name, t))
 
   const doneLabel =
     mode === 'breath'
-      ? breathPattern.name
+      ? breathName(breathKey, t)
       : mode === 'meditation'
-        ? medName
+        ? medDisplayName
         : `${chosenFreq} Hz`
 
   const record = (mins: number, completed: boolean) => {
@@ -216,27 +226,25 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
 
     const title = specificPractice
       ? mode === 'breath'
-        ? breathPattern.name
+        ? breathName(breathKey, t)
         : mode === 'meditation'
-          ? medName
+          ? medDisplayName
           : `${chosenFreq} Hz`
-      : `${focus} alignment`
+      : t('scr.ritual.focusAlignment', { chakra: focus })
     const blurb = specificPractice
       ? mode === 'breath'
-        ? breathPattern.guide
+        ? breathGuide(breathKey, t)
         : mode === 'meditation'
-          ? (MEDITATION_STYLE_MAP[medStyle]?.tagline ?? '')
-          : freqInfo.intention
+          ? medTag(medStyle, t)
+          : solfeggioIntention(chosenFreq, t)
       : horoscope.greeting
 
     return (
       <div className={`${shell} justify-center`} style={shellStyle}>
         <p className="eyebrow">
-          {preset?.personalised
-            ? 'Today’s Practice'
-            : specificPractice
-              ? 'From the library'
-              : 'Today’s Practice'}
+          {!preset?.personalised && specificPractice
+            ? t('scr.ritual.fromLibrary')
+            : t('scr.ritual.todaysPractice')}
         </p>
         <h1 className="mt-2 font-serif text-3xl leading-tight text-gilded">
           {title}
@@ -258,11 +266,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                       : 'border-white/12 bg-white/5 text-haze-300'
                   }`}
                 >
-                  {m === 'breath'
-                    ? 'Breathwork'
-                    : m === 'meditation'
-                      ? 'Meditation'
-                      : 'Frequency'}
+                  {t(`lib.tab.${m}` as MessageKey)}
                 </button>
               ),
             )}
@@ -280,9 +284,9 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
             />
             <p className="font-serif text-lg text-white">
               {mode === 'breath'
-                ? breathPattern.name
+                ? breathName(breathKey, t)
                 : mode === 'meditation'
-                  ? medName
+                  ? medDisplayName
                   : `${chosenFreq} Hz`}
             </p>
             {mode === 'breath' && (
@@ -293,17 +297,29 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           </div>
           <p className="mt-2 text-sm text-haze-300">
             {mode === 'breath'
-              ? breathPattern.guide
+              ? breathGuide(breathKey, t)
               : mode === 'meditation'
                 ? medStyle === 'chakra'
-                  ? `A guided sit shaped by ${transit.body} and your chart.`
-                  : MEDITATION_STYLE_MAP[medStyle]?.tagline
-                : `${freqInfo.intention}. Sit, soften, and let the tone carry the session.`}
+                  ? t('scr.ritual.chakraBlurb', {
+                      planet: planetLabel(transit.body, t),
+                    })
+                  : medTag(medStyle, t)
+                : t('scr.ritual.freqBlurb', {
+                    intention: solfeggioIntention(chosenFreq, t),
+                  })}
           </p>
           {mode !== 'frequency' && (
             <p className="mt-3 text-xs uppercase tracking-[0.12em] text-haze-400">
-              {recommendedFreq} Hz · {focus}
-              {stones.length > 0 && ` · ${stones.join(' / ')}`}
+              {t('scr.ritual.metaLine', {
+                hz: recommendedFreq,
+                chakra: focus,
+                stones:
+                  stones.length > 0
+                    ? t('scr.ritual.stonesSuffix', {
+                        stones: stones.join(' / '),
+                      })
+                    : '',
+              })}
             </p>
           )}
         </div>
@@ -311,7 +327,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         {/* frequency chooser — pick which tone to sit with */}
         {mode === 'frequency' && !preset?.frequency && (
           <>
-            <p className="mt-5 eyebrow">Tone</p>
+            <p className="mt-5 eyebrow">{t('scr.ritual.tone')}</p>
             <div className="no-scrollbar mt-2 flex gap-2 overflow-x-auto pb-1">
               {SOLFEGGIO_PRESETS.map((p, i) => {
                 const unlocked =
@@ -326,7 +342,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                     onClick={() =>
                       unlocked
                         ? setChosenFreq(p.frequency)
-                        : onUpgrade?.('The full frequency library')
+                        : onUpgrade?.(t('lib.reasonFreq'))
                     }
                     className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold tabular-nums transition ${
                       active
@@ -345,12 +361,13 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
 
         {isJourney ? (
           <p className="mt-5 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-haze-300">
-            {breathPattern.rounds?.rounds ?? 3} rounds, self-paced — about 12
-            minutes. The screen guides every phase.
+            {t('scr.ritual.journeyNote', {
+              n: breathPattern.rounds?.rounds ?? 3,
+            })}
           </p>
         ) : (
           <>
-            <p className="mt-5 eyebrow">Length</p>
+            <p className="mt-5 eyebrow">{t('scr.ritual.length')}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {durations.map((m) => {
                 const selected = m === minutes
@@ -365,7 +382,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                         : 'border-white/12 bg-white/5 text-haze-300'
                     }`}
                   >
-                    {m} min
+                    {t('tp.min', { n: m })}
                   </button>
                 )
               })}
@@ -376,29 +393,29 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         {/* meditation sound bed */}
         {mode === 'meditation' && !soundBath && (
           <>
-            <p className="mt-5 eyebrow">Sound</p>
+            <p className="mt-5 eyebrow">{t('scr.ritual.sound')}</p>
             <div className="mt-2 grid grid-cols-3 gap-2">
-              {MED_SOUNDS.map((s) => (
+              {MED_SOUND_KEYS.map((k) => (
                 <button
-                  key={s.key}
+                  key={k}
                   type="button"
-                  onClick={() => setMedSound(s.key)}
+                  onClick={() => setMedSound(k)}
                   className={`rounded-2xl border px-2 py-2.5 text-xs font-semibold transition ${
-                    s.key === medSound
+                    k === medSound
                       ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
                       : 'border-white/12 bg-white/5 text-haze-300'
                   }`}
                 >
-                  {s.label}
+                  {t(`scr.ritual.sound.${k}` as MessageKey)}
                 </button>
               ))}
             </div>
             <p className="mt-1.5 text-[11px] text-haze-500">
               {medSound === 'tone'
-                ? `The ${recommendedFreq} Hz frequency tone plays underneath.`
+                ? t('scr.ritual.soundTone', { hz: recommendedFreq })
                 : medSound === 'music'
-                  ? 'A soft, slow-moving ambient chord.'
-                  : 'No sound — spoken or on-screen guidance only.'}
+                  ? t('scr.ritual.soundMusic')
+                  : t('scr.ritual.soundSilent')}
             </p>
           </>
         )}
@@ -410,10 +427,10 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
             className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-haze-200"
           >
             <span>
-              Spoken guidance
+              {t('scr.ritual.spokenGuidance')}
               {!speechAvailable() && (
                 <span className="block text-[11px] text-haze-500">
-                  not available here — words show on screen
+                  {t('scr.ritual.notAvailable')}
                 </span>
               )}
             </span>
@@ -426,14 +443,14 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           onClick={begin}
           className="mt-6 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
         >
-          Begin practice
+          {t('scr.ritual.beginPractice')}
         </button>
         <button
           type="button"
           onClick={onExit}
           className="mt-3 text-center text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
         >
-          Not now
+          {t('scr.ritual.notNow')}
         </button>
       </div>
     )
@@ -448,7 +465,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           onClick={endEarly}
           className="self-start py-2 text-xs uppercase tracking-[0.14em] text-haze-300 active:text-haze-100"
         >
-          ‹ End session
+          {t('scr.ritual.endSession')}
         </button>
         <div className="flex flex-1 items-center">
           {mode === 'breath' ? (
@@ -499,9 +516,15 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       >
         <ResonanceMark className="h-12 w-12" style={{ color: accent }} animated />
       </div>
-      <h1 className="mt-5 font-serif text-3xl text-gilded">Practice complete</h1>
+      <h1 className="mt-5 font-serif text-3xl text-gilded">
+        {t('scr.ritual.complete')}
+      </h1>
       <p className="mt-2 text-sm text-haze-300">
-        {doneMinutes} min · {focus} · {doneLabel}
+        {t('scr.ritual.doneMeta', {
+          minutes: doneMinutes,
+          chakra: focus,
+          label: doneLabel,
+        })}
       </p>
 
       {horoscope.affirmation && (
@@ -511,13 +534,15 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       )}
 
       <p className="mt-4 text-sm text-gold-200">
-        {streak > 0 ? `${streak}-day streak` : 'First practice logged'}
+        {streak > 0
+          ? t('scr.ritual.streak', { n: streak })
+          : t('scr.ritual.firstLogged')}
       </p>
 
       <div className="mt-8 w-full">
         <MoodCheckIn
           compact
-          title="How do you feel now?"
+          title={t('scr.ritual.howNow')}
           onDone={() => undefined}
         />
       </div>
@@ -527,7 +552,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         onClick={onExit}
         className="mt-6 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 transition active:scale-[0.98]"
       >
-        Done
+        {t('scr.ritual.done')}
       </button>
     </div>
   )
