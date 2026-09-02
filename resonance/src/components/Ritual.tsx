@@ -9,6 +9,7 @@ import { MoodCheckIn } from './MoodCheckIn'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { MEDITATION_STYLE_MAP } from '../lib/meditation'
 import { buildHoroscope } from '../lib/horoscope'
+import { useT } from '../lib/i18n'
 import { useEntitlements } from '../lib/premium'
 import { ResonanceMark } from './Logo'
 import { chakraColor, chakraName } from '../lib/resonanceData'
@@ -64,6 +65,7 @@ function Switch({ on }: { on: boolean }) {
 }
 
 export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
+  const t = useT()
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const frequency = useAppStore((s) => s.frequency)
@@ -504,7 +506,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
 
       {horoscope.affirmation && (
         <p className="mt-6 font-serif text-xl leading-relaxed text-white">
-          “{horoscope.affirmation}”
+          “{t(horoscope.affirmation)}”
         </p>
       )}
 

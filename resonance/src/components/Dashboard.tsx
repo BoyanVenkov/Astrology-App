@@ -116,14 +116,14 @@ export function Dashboard({
       </header>
 
       {/* the quiet centre of the day */}
-      {rx.mantra && (
+      {transit && (
         <div className="px-2 py-1 text-center">
           <div className="mx-auto mb-3.5 flex items-center justify-center gap-2.5">
             <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/20" />
             <SparkIcon className="h-2.5 w-2.5" style={{ color: 'var(--rz-hue)' }} />
             <span className="h-px w-9 bg-gradient-to-l from-transparent to-white/20" />
           </div>
-          <p className="display text-[1.8rem] text-gilded">“{rx.mantra}”</p>
+          <p className="display text-[1.8rem] text-gilded">“{t(rx.mantra)}”</p>
           <p className="mt-3 eyebrow" style={{ color: 'var(--rz-hue)' }}>
             {t('dash.mantra')}
           </p>

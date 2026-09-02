@@ -14,9 +14,10 @@ export { detectLocale }
  * `{name}` placeholders are substituted by `translate()`.
  */
 
-const CATALOGS: Record<Locale, Record<MessageKey, string>> = { en, bg }
+const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = { en, bg }
 
 export type { Locale }
+export type { MessageKey }
 
 export interface LocaleInfo {
   code: Locale
@@ -83,3 +84,29 @@ export const auraLabel = (score: number, tr: TFn): string => {
   if (score >= 0.25) return tr('aura.dim')
   return tr('aura.depleted')
 }
+
+export const signLabel = (sign: string, tr: TFn): string =>
+  tr(`sign.${sign}` as MessageKey)
+export const planetLabel = (body: string, tr: TFn): string =>
+  tr(`planet.${body}` as MessageKey)
+export const phaseLabel = (phase: string, tr: TFn): string =>
+  tr(`phase.${phase}` as MessageKey)
+export const aspectLabel = (name: string, tr: TFn): string =>
+  tr(`aspect.${name}` as MessageKey)
+export const houseArena = (n: number, tr: TFn): string =>
+  tr(`house.${n}` as MessageKey)
+export const ordinal = (n: number, tr: TFn): string =>
+  tr(`ord.${n}` as MessageKey)
+
+export const breathName = (key: string, tr: TFn): string =>
+  tr(`breath.${key}.name` as MessageKey)
+export const breathTag = (key: string, tr: TFn): string =>
+  tr(`breath.${key}.tag` as MessageKey)
+export const breathGuide = (key: string, tr: TFn): string =>
+  tr(`breath.${key}.guide` as MessageKey)
+export const breathStep = (label: string, tr: TFn): string =>
+  tr(`breath.step.${label}` as MessageKey)
+export const medName = (key: string, tr: TFn): string =>
+  tr(`med.${key}.name` as MessageKey)
+export const medTag = (key: string, tr: TFn): string =>
+  tr(`med.${key}.tag` as MessageKey)

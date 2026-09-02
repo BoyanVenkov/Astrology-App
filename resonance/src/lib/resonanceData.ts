@@ -1,4 +1,5 @@
 import type { ChakraKey, SolfeggioFrequency } from '../types/resonance'
+import type { MessageKey } from './locales/en'
 
 /* ------------------------------------------------------------------ chakras */
 
@@ -125,18 +126,9 @@ export const chakraInfo = (key: ChakraKey): ChakraInfo => ({
 
 /* ------------------------------------------------------------------ mantras */
 
-/** The day's short mantra — one per chakra centre, used app-wide. */
-const CHAKRA_MANTRA: Record<ChakraKey, string> = {
-  root: 'I am safe, supported and here.',
-  sacral: 'I let life move through me.',
-  'solar-plexus': 'I trust my own fire.',
-  heart: 'I give and receive love freely.',
-  throat: 'I speak my truth with ease.',
-  'third-eye': 'I trust what I see within.',
-  crown: 'I am part of something vast.',
-}
-
-export const chakraMantra = (key: ChakraKey): string => CHAKRA_MANTRA[key]
+/** The short per-chakra mantra, as a catalogue key. Resolve with `t()`. */
+export const chakraMantra = (key: ChakraKey): MessageKey =>
+  `mantra.short.${key}` as MessageKey
 
 /* ------------------------------------------------------------ zodiac glyphs */
 

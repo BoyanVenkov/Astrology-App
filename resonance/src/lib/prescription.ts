@@ -10,6 +10,7 @@ import { useAppStore } from '../store/useAppStore'
 import { computeAura, type AuraState } from './aura'
 import { BREATH_PATTERNS } from './breathwork'
 import { buildDailyMantra } from './mantra'
+import type { MessageKey } from './locales/en'
 import {
   MOOD_NEED,
   moodBreath,
@@ -42,9 +43,9 @@ export interface Prescription {
   headline: string
   /** One sentence that reads like the vision's "The Prescription". */
   directive: string
-  /** The day's mantra — chosen for the focus chakra *and* the shape of the day
-   *  (the transit, its harmony, the mood, whether to restore). */
-  mantra: string
+  /** The day's mantra as a catalogue key — chosen for the focus chakra *and*
+   *  the shape of the day. Resolve with `t()`. */
+  mantra: MessageKey
   /** Today's logged mood, if any — the prescription is tuned to it. */
   mood: Mood | null
   /** Body signals (or an anxious arrival on a fragile day) say to restore first. */

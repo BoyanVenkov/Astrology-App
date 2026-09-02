@@ -1,5 +1,6 @@
 import type { ChakraKey } from '../types/resonance'
 import type { MoodNeed } from './moodPractice'
+import type { MessageKey } from './locales/en'
 
 /**
  * The day's mantra — chosen for the focus centre *and* the shape of the day:
@@ -210,9 +211,11 @@ function modeFor(input: MantraInput): MantraMode {
   return 'flow'
 }
 
-export function buildDailyMantra(input: MantraInput): string {
+/** Returns a catalogue key like `mantra.root.ground.1` — resolve it with `t()`. */
+export function buildDailyMantra(input: MantraInput): MessageKey {
   const mode = modeFor(input)
   const pool = BANK[input.chakra][mode]
   const key = `${input.seed}|${input.planet}|${input.aspect}|${input.retrograde}|${input.moodNeed ?? 'none'}|${mode}`
-  return pool[fnv1a(key) % pool.length]
+  const idx = fnv1a(key) % pool.length
+  return `mantra.${input.chakra}.${mode}.${idx}` as MessageKey
 }

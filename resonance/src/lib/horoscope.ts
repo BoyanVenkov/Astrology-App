@@ -7,6 +7,7 @@ import type {
 import type { Aspect } from './astrology'
 import type { BodyName, BodyPosition } from './ephemeris'
 import { BREATH_PATTERNS } from './breathwork'
+import type { MessageKey } from './locales/en'
 import { chakraMantra, chakraName } from './resonanceData'
 
 /** The slice of a `DailyReading` the horoscope narrative needs — all in the store. */
@@ -36,7 +37,8 @@ export interface DailyHoroscope {
   sections: HoroscopeSection[]
   moon: string
   practice: string
-  affirmation: string
+  /** Catalogue key for the closing affirmation, or '' when there's no sky. */
+  affirmation: MessageKey | ''
 }
 
 const WHAT: Record<BodyName, string> = {
