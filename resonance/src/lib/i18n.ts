@@ -16,6 +16,10 @@ import { fr } from './locales/fr'
 import { de } from './locales/de'
 import { pt } from './locales/pt'
 import { sv } from './locales/sv'
+import { zh } from './locales/zh'
+import { ja } from './locales/ja'
+import { hi } from './locales/hi'
+import { sw } from './locales/sw'
 
 export { detectLocale }
 
@@ -35,6 +39,10 @@ const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = {
   de,
   pt,
   sv,
+  zh,
+  ja,
+  hi,
+  sw,
 }
 
 export type { Locale }
@@ -59,6 +67,10 @@ export const LOCALES: LocaleInfo[] = [
   { code: 'de', native: 'Deutsch', english: 'German', sample: 'Der Himmel, für dich gelesen' },
   { code: 'pt', native: 'Português', english: 'Portuguese', sample: 'O céu, lido para você' },
   { code: 'sv', native: 'Svenska', english: 'Swedish', sample: 'Himlen, läst för dig' },
+  { code: 'zh', native: '中文', english: 'Chinese', sample: '为你解读的星空' },
+  { code: 'ja', native: '日本語', english: 'Japanese', sample: 'あなたのために読む空' },
+  { code: 'hi', native: 'हिन्दी', english: 'Hindi', sample: 'आपके लिए पढ़ा गया आकाश' },
+  { code: 'sw', native: 'Kiswahili', english: 'Swahili', sample: 'Anga, iliyosomwa kwa ajili yako' },
 ]
 
 export type TranslateParams = Record<string, string | number>
@@ -97,6 +109,10 @@ const LOCALE_TAGS: Record<Locale, string> = {
   de: 'de-DE',
   pt: 'pt-BR',
   sv: 'sv-SE',
+  zh: 'zh-CN',
+  ja: 'ja-JP',
+  hi: 'hi-IN',
+  sw: 'sw-KE',
 }
 export const localeTag = (locale: Locale): string => LOCALE_TAGS[locale]
 

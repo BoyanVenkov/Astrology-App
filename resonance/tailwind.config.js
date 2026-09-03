@@ -53,9 +53,34 @@ export default {
       },
       fontFamily: {
         /* Mystical / editorial — headings, mantra. Old-style serif with soft
-           terminals + optical sizing; SOFT/WONK set in index.css. */
-        serif: ['"Fraunces Variable"', '"Noto Serif"', '"Cormorant Garamond"', 'Georgia', 'serif'],
-        display: ['"Fraunces Variable"', '"Noto Serif"', 'Georgia', 'serif'],
+           terminals + optical sizing; SOFT/WONK set in index.css.
+           Noto Serif (Cyrillic) + Noto Serif Devanagari (Hindi) fill Fraunces's
+           script gaps; the CJK names hand zh/ja headings to the device's fonts. */
+        serif: [
+          '"Fraunces Variable"',
+          '"Noto Serif"',
+          '"Noto Serif Devanagari"',
+          '"Songti SC"',
+          '"Noto Serif CJK SC"',
+          '"Noto Serif CJK JP"',
+          '"Yu Mincho"',
+          '"Hiragino Mincho ProN"',
+          '"Cormorant Garamond"',
+          'Georgia',
+          'serif',
+        ],
+        display: [
+          '"Fraunces Variable"',
+          '"Noto Serif"',
+          '"Noto Serif Devanagari"',
+          '"Songti SC"',
+          '"Noto Serif CJK SC"',
+          '"Noto Serif CJK JP"',
+          '"Yu Mincho"',
+          '"Hiragino Mincho ProN"',
+          'Georgia',
+          'serif',
+        ],
         /* Clean, high-legibility — UI + body copy. */
         sans: [
           '"Inter Variable"',
@@ -64,6 +89,10 @@ export default {
           '-apple-system',
           '"Segoe UI"',
           'Roboto',
+          '"PingFang SC"',
+          '"Hiragino Sans"',
+          '"Noto Sans CJK SC"',
+          '"Microsoft YaHei"',
           'sans-serif',
         ],
         /* Instrument data — degrees, orbs, Hz, times, dates. */
