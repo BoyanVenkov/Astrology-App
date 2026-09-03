@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': 'Tystnad',
   'medp.attuning': 'Stämmer av mot himlen…',
   'medp.noVoice': 'Rösten är inte tillgänglig här — följ orden på skärmen.',
+  'medp.bowlOf': 'Skål {n} / {total}',
   'med.yourChart': 'Din karta',
 
   /* ---- frekvensspelare ---- */

@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': '静寂',
   'medp.attuning': '空と調律しています…',
   'medp.noVoice': 'ここでは音声を使えません — 画面の言葉に従ってください。',
+  'medp.bowlOf': 'リン {n} / {total}',
   'med.yourChart': 'あなたのホロスコープ',
 
   /* ---- 周波数プレーヤー ---- */

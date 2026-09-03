@@ -2,18 +2,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { audioEngine } from '../audio/audioEngine'
 import { buildMeditation } from '../lib/meditation'
-import { useLocaleTag, useT } from '../lib/i18n'
-import { speak, speechAvailable, stopSpeaking } from '../lib/speech'
+import { useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import type { MeditationSound, MeditationStyleKey } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
 
 interface MeditationProps {
   minutes: number
-  withVoice: boolean
   style?: MeditationStyleKey
   /** Sound bed: the frequency tone, soft ambient music, or nothing. */
   sound?: MeditationSound
   onComplete: (minutesPractised: number) => void
+  /** Fired when the user leaves the briefing and the timed session starts. */
+  onStarted?: () => void
   className?: string
 }
 
@@ -25,14 +26,13 @@ const mmss = (s: number): string => {
 
 export function Meditation({
   minutes,
-  withVoice,
   style = 'chakra',
   sound = 'tone',
   onComplete,
+  onStarted,
   className = '',
 }: MeditationProps) {
   const t = useT()
-  const localeTag = useLocaleTag()
   // The sound bath is built around the tone — it always plays.
   const bed: MeditationSound = style === 'sound-bath' ? 'tone' : sound
   const transit = useAppStore((s) => s.transit)
@@ -54,35 +54,30 @@ export function Meditation({
   }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes, t])
 
   const totalSeconds = minutes * 60
+  const [stage, setStage] = useState<'briefing' | 'running'>('briefing')
   const [running, setRunning] = useState(true)
   const [elapsed, setElapsed] = useState(0)
-  const [stepIndex, setStepIndex] = useState(0)
+  const [phaseIndex, setPhaseIndex] = useState(0)
 
   const elapsedRef = useRef(0)
   const legStartRef = useRef(0)
-  const nextStepRef = useRef(0)
+  const nextPhaseRef = useRef(1)
   const doneRef = useRef(false)
-  const startedRef = useRef(false)
   const onCompleteRef = useRef(onComplete)
   useEffect(() => {
     onCompleteRef.current = onComplete
   })
 
-  // start the audio bed once
+  // start / stop the audio bed with the running stage
   useEffect(() => {
-    if (bed === 'silent') {
-      // no engine audio — spoken / on-screen guidance only
-      return () => stopSpeaking()
-    }
+    if (stage !== 'running' || bed === 'silent') return
     audioEngine.unlock().catch(() => undefined)
     setAudioMode(bed === 'music' ? 'drone' : 'tone')
     setAudioPlaying(true)
-    startedRef.current = true
     return () => {
-      stopSpeaking()
-      if (startedRef.current) useAppStore.getState().toggleAudio(false)
+      useAppStore.getState().toggleAudio(false)
     }
-  }, [bed, setAudioMode, setAudioPlaying])
+  }, [stage, bed, setAudioMode, setAudioPlaying])
 
   const tick = useCallback(() => {
     if (!meditation) return
@@ -93,29 +88,27 @@ export function Meditation({
     const whole = Math.floor(total)
     setElapsed((prev) => (prev === whole ? prev : whole))
 
-    // fire any steps we've passed
+    // open any phases we've passed — each with a single bowl
     while (
-      nextStepRef.current < meditation.steps.length &&
-      total >= meditation.steps[nextStepRef.current].at
+      nextPhaseRef.current < meditation.phases.length &&
+      total >= meditation.phases[nextPhaseRef.current].at
     ) {
-      const idx = nextStepRef.current
-      nextStepRef.current += 1
-      setStepIndex(idx)
-      if (withVoice && speechAvailable()) {
-        speak(meditation.steps[idx].text, { rate: 0.8, lang: localeTag })
-      }
+      const idx = nextPhaseRef.current
+      nextPhaseRef.current += 1
+      setPhaseIndex(idx)
+      audioEngine.chime(1)
     }
 
     if (!doneRef.current && total >= totalSeconds) {
       doneRef.current = true
       setRunning(false)
-      stopSpeaking()
+      audioEngine.chime(3)
       onCompleteRef.current?.(minutes)
     }
-  }, [meditation, withVoice, totalSeconds, minutes, localeTag])
+  }, [meditation, totalSeconds, minutes])
 
   useEffect(() => {
-    if (!running) return
+    if (stage !== 'running' || !running) return
     legStartRef.current = performance.now()
     const id = window.setInterval(tick, 250)
     return () => {
@@ -125,11 +118,13 @@ export function Meditation({
         legStartRef.current = 0
       }
     }
-  }, [running, tick])
+  }, [stage, running, tick])
 
-  const toggle = () => {
-    if (running) stopSpeaking()
-    setRunning((r) => !r)
+  const begin = () => {
+    audioEngine.unlock().catch(() => undefined)
+    audioEngine.chime(1) // the opening bowl
+    onStarted?.()
+    setStage('running')
   }
 
   if (!meditation) {
@@ -141,26 +136,71 @@ export function Meditation({
   }
 
   const hue = meditation.hue
-  const currentText = meditation.steps[stepIndex]?.text ?? ''
-  const pct = Math.min(100, (elapsed / totalSeconds) * 100)
 
-  return (
-    <section
-      className={`glass-panel flex flex-col items-center gap-6 p-6 ${className}`}
-    >
-      <div className="flex w-full items-center justify-between">
+  /* ---------------------------------------------------------- briefing */
+  if (stage === 'briefing') {
+    return (
+      <section className={`glass-panel flex flex-col gap-5 p-6 ${className}`}>
         <div>
           <p className="eyebrow">{t('medp.eyebrow')}</p>
           <h2 className="mt-1 font-serif text-2xl text-gilded">
             {meditation.title}
           </h2>
         </div>
-        <span className="rounded-full border border-gold-500/30 px-3 py-1 text-xs tracking-[0.12em] text-haze-200">
-          {bed === 'tone'
-            ? `${meditation.frequency} Hz`
-            : bed === 'music'
-              ? t('medp.ambient')
-              : t('medp.quiet')}
+
+        <p className="text-sm leading-relaxed text-haze-200">
+          {meditation.briefingLead}
+        </p>
+
+        <ol className="flex flex-col gap-3">
+          {meditation.phases.map((p, i) => (
+            <li key={i} className="flex gap-3">
+              <span
+                className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-semibold tabular-nums"
+                style={{ borderColor: `${hue}66`, color: hue }}
+              >
+                {i + 1}
+              </span>
+              <p className="text-sm leading-relaxed text-haze-100">{p.text}</p>
+            </li>
+          ))}
+        </ol>
+
+        <p className="text-sm leading-relaxed text-haze-300">
+          {meditation.briefingClose}
+        </p>
+
+        <button
+          type="button"
+          onClick={begin}
+          className="mt-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
+        >
+          {t('scr.ritual.beginPractice')}
+        </button>
+      </section>
+    )
+  }
+
+  /* ----------------------------------------------------------- running */
+  const currentText = meditation.phases[phaseIndex]?.text ?? ''
+  const pct = Math.min(100, (elapsed / totalSeconds) * 100)
+
+  return (
+    <section
+      className={`glass-panel flex flex-col items-center gap-6 p-6 ${className}`}
+    >
+      <div className="flex w-full items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="eyebrow">{t('medp.eyebrow')}</p>
+          <h2 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+            {meditation.title}
+          </h2>
+        </div>
+        <span className="mt-1 shrink-0 whitespace-nowrap rounded-full border border-gold-500/30 px-3 py-1 text-xs tabular-nums tracking-[0.12em] text-haze-200">
+          {t('medp.bowlOf', {
+            n: phaseIndex + 1,
+            total: meditation.phases.length,
+          })}
         </span>
       </div>
 
@@ -198,14 +238,14 @@ export function Meditation({
         />
       </div>
 
-      <p className="min-h-[4.5rem] max-w-[34ch] text-center text-lg leading-relaxed text-white">
+      <p className="min-h-[7rem] max-w-[36ch] text-center text-lg leading-relaxed text-white">
         {currentText}
       </p>
 
       <div className="flex items-center gap-4">
         <button
           type="button"
-          onClick={toggle}
+          onClick={() => setRunning((r) => !r)}
           aria-pressed={running}
           className="flex items-center gap-2 rounded-full border border-gold-500/40 bg-gold-500/10 px-6 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 transition active:scale-95"
         >
@@ -218,9 +258,13 @@ export function Meditation({
         </button>
       </div>
 
-      {withVoice && !speechAvailable() && (
-        <p className="text-xs text-haze-400">{t('medp.noVoice')}</p>
-      )}
+      <p className="text-center text-[11px] text-haze-500">
+        {bed === 'tone'
+          ? t('scr.ritual.soundTone', { hz: meditation.frequency })
+          : bed === 'music'
+            ? t('medp.ambient')
+            : t(`scr.ritual.sound.silent` as MessageKey)}
+      </p>
     </section>
   )
 }

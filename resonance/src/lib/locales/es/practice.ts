@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': 'Silencio',
   'medp.attuning': 'Sintonizando con el cielo…',
   'medp.noVoice': 'La voz no está disponible aquí — sigue las palabras en pantalla.',
+  'medp.bowlOf': 'Cuenco {n} / {total}',
   'med.yourChart': 'Tu carta',
 
   /* ---- reproductor de frecuencias ---- */

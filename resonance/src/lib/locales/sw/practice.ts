@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': 'Kimya',
   'medp.attuning': 'Inapatanisha na anga…',
   'medp.noVoice': 'Sauti haipatikani hapa — fuata maneno kwenye skrini.',
+  'medp.bowlOf': 'Bakuli {n} / {total}',
   'med.yourChart': 'Chati yako',
 
   /* ---- kicheza masafa ---- */

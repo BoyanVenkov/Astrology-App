@@ -24,7 +24,6 @@ import type { MessageKey } from '../lib/locales/en'
 import { useEntitlements } from '../lib/premium'
 import { ResonanceMark } from './Logo'
 import { chakraColor } from '../lib/resonanceData'
-import { speechAvailable } from '../lib/speech'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon } from './icons'
@@ -54,22 +53,6 @@ const shellStyle = {
 
 const midOf = (arr: number[], fallback: number): number =>
   arr.length ? (arr[Math.floor(arr.length / 2)] ?? arr[0]) : fallback
-
-function Switch({ on }: { on: boolean }) {
-  return (
-    <span
-      className={`h-5 w-9 shrink-0 rounded-full p-0.5 transition ${
-        on ? 'bg-gold-500/60' : 'bg-white/15'
-      }`}
-    >
-      <span
-        className={`block h-4 w-4 rounded-full bg-white transition-transform ${
-          on ? 'translate-x-4' : ''
-        }`}
-      />
-    </span>
-  )
-}
 
 export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   const t = useT()
@@ -119,7 +102,6 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
     preset?.frequency ?? recommendedFreq,
   )
   const [medSound, setMedSound] = useState<MeditationSound>('tone')
-  const [withVoice, setWithVoice] = useState(true)
   const [doneMinutes, setDoneMinutes] = useState(0)
   const startedAtRef = useRef(0)
   useEffect(() => {
@@ -420,24 +402,6 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           </>
         )}
 
-        {mode === 'meditation' && (
-          <button
-            type="button"
-            onClick={() => setWithVoice((v) => !v)}
-            className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-haze-200"
-          >
-            <span>
-              {t('scr.ritual.spokenGuidance')}
-              {!speechAvailable() && (
-                <span className="block text-[11px] text-haze-500">
-                  {t('scr.ritual.notAvailable')}
-                </span>
-              )}
-            </span>
-            <Switch on={withVoice} />
-          </button>
-        )}
-
         <button
           type="button"
           onClick={begin}
@@ -484,10 +448,12 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           ) : mode === 'meditation' ? (
             <Meditation
               minutes={minutes}
-              withVoice={withVoice}
               style={medStyle}
               sound={medSound}
               onComplete={handleComplete}
+              onStarted={() => {
+                startedAtRef.current = Date.now()
+              }}
               className="w-full"
             />
           ) : (

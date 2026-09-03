@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': 'Тихо',
   'medp.attuning': 'Настройване по небето…',
   'medp.noVoice': 'Гласът не е достъпен тук — следвай думите на екрана.',
+  'medp.bowlOf': 'Купа {n} / {total}',
   'med.yourChart': 'Твоята карта',
 
   /* ---- плеър за честоти ---- */

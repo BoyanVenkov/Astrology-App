@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': 'मौन',
   'medp.attuning': 'आकाश के साथ सुर मिला रहे हैं…',
   'medp.noVoice': 'यहाँ आवाज़ उपलब्ध नहीं — स्क्रीन पर शब्दों का अनुसरण करें।',
+  'medp.bowlOf': 'कटोरा {n} / {total}',
   'med.yourChart': 'आपकी कुंडली',
 
   /* ---- आवृत्ति प्लेयर ---- */

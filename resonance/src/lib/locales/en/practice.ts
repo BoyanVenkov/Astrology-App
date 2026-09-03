@@ -205,6 +205,7 @@ export const practice = {
   'medp.quiet': 'Quiet',
   'medp.attuning': 'Attuning to the sky…',
   'medp.noVoice': "Voice isn't available here — follow the words on screen.",
+  'medp.bowlOf': 'Bowl {n} / {total}',
   'med.yourChart': 'Your chart',
 
   /* ---- frequency player ---- */

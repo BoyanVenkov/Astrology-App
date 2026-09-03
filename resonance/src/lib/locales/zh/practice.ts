@@ -196,6 +196,7 @@ export const practice: Record<PracticeKey, string> = {
   'medp.quiet': '静默',
   'medp.attuning': '正在与星空校准…',
   'medp.noVoice': '这里没有语音 — 请跟随屏幕上的文字。',
+  'medp.bowlOf': '钵 {n} / {total}',
   'med.yourChart': '你的星盘',
 
   /* ---- 频率播放器 ---- */

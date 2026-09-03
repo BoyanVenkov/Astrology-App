@@ -10,7 +10,7 @@ import type { BodyName } from './ephemeris'
 import { medName, type TFn } from './i18n'
 import type { MessageKey } from './locales/en'
 
-/** The slice of a `DailyReading` the meditation script needs (all in the store). */
+/** The slice of a `DailyReading` the meditation needs (all in the store). */
 export interface MeditationInput {
   chakra: ChakraState
   transit: AstrologicalTransit
@@ -20,26 +20,38 @@ export interface MeditationInput {
 }
 
 /**
- * A guided meditation. The "Chakra Alignment" style is generated live from the
- * person's chart × today's transits; the rest are fixed scripts. Spoken (Web
- * Speech) or read on screen — no recordings, fully offline, per locale.
+ * A guided meditation, delivered as a briefing the user reads once and then a
+ * sequence of self-paced phases. There is no spoken audio — each phase opens
+ * with a singing-bowl strike (the cue to move on), the instruction for the
+ * current phase stays on screen, and three bowls close the practice. The
+ * "Chakra Alignment" style is composed live from the person's chart × today's
+ * transits; the rest are fixed. Fully offline, per locale.
  */
 
-export type MeditationCue =
+export type MeditationPhaseKey =
   | 'settle'
   | 'breath'
-  | 'body'
+  | 'centre'
   | 'transit'
-  | 'frequency'
   | 'affirm'
-  | 'reflect'
   | 'close'
+  | 'count'
+  | 'scan'
+  | 'metta'
+  | 'bath'
+  | 'gratitude'
+  | 'safe'
+  | 'mountain'
+  | 'open'
+  | 'morning'
+  | 'evening'
+  | 'nidra'
 
-export interface MeditationStep {
-  /** Seconds from the start when this line appears / is spoken. */
+export interface MeditationPhase {
+  /** Seconds from the start of the session when this phase opens (its bowl). */
   at: number
+  /** The instruction shown on screen for the whole of this phase. */
   text: string
-  cue: MeditationCue
 }
 
 export interface Meditation {
@@ -48,7 +60,11 @@ export interface Meditation {
   hue: string
   frequency: number
   focus: ChakraKey
-  steps: MeditationStep[]
+  /** One line, read before starting. */
+  briefingLead: string
+  /** One line, read before starting — what the closing bowls mean. */
+  briefingClose: string
+  phases: MeditationPhase[]
 }
 
 /* ------------------------------------------------------------- the catalog */
@@ -147,163 +163,106 @@ export const MEDITATION_STYLE_MAP: Record<MeditationStyleKey, MeditationStyle> =
     MeditationStyle
   >
 
-/* ------------------------------------------------- script timelines (data) */
+/* --------------------------------------------------- phase plans (data) */
 
-interface ScriptLine {
-  /** Fraction of the total length where this line lands. */
-  f: number
-  cue: MeditationCue
+interface PlanPhase {
+  key: MeditationPhaseKey
+  /** Message key for the instruction. */
+  line: MessageKey
+  /** Relative share of the session length. */
+  weight: number
 }
 
-const CHAKRA_SCRIPT: ScriptLine[] = [
-  { f: 0.0, cue: 'settle' },
-  { f: 0.03, cue: 'breath' },
-  { f: 0.07, cue: 'breath' },
-  { f: 0.12, cue: 'body' },
-  { f: 0.17, cue: 'body' },
-  { f: 0.24, cue: 'transit' },
-  { f: 0.3, cue: 'transit' },
-  { f: 0.37, cue: 'body' },
-  { f: 0.45, cue: 'frequency' },
-  { f: 0.55, cue: 'transit' },
-  { f: 0.63, cue: 'body' },
-  { f: 0.72, cue: 'affirm' },
-  { f: 0.8, cue: 'affirm' },
-  { f: 0.87, cue: 'close' },
-  { f: 0.93, cue: 'close' },
-  { f: 0.98, cue: 'close' },
-]
+const settle = (): PlanPhase => ({
+  key: 'settle',
+  line: 'med.step.settle',
+  weight: 1,
+})
+const close = (): PlanPhase => ({
+  key: 'close',
+  line: 'med.step.close',
+  weight: 1,
+})
 
-const STATIC_SCRIPTS: Record<Exclude<MeditationStyleKey, 'chakra'>, ScriptLine[]> = {
+const PHASE_PLANS: Record<MeditationStyleKey, PlanPhase[]> = {
+  chakra: [
+    settle(),
+    { key: 'breath', line: 'med.step.breath', weight: 1.4 },
+    { key: 'centre', line: 'med.step.centre', weight: 2.4 },
+    { key: 'transit', line: 'med.step.transit', weight: 2 },
+    { key: 'affirm', line: 'med.step.affirm', weight: 1.4 },
+    close(),
+  ],
   'breath-awareness': [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.04, cue: 'breath' },
-    { f: 0.12, cue: 'breath' },
-    { f: 0.22, cue: 'breath' },
-    { f: 0.36, cue: 'breath' },
-    { f: 0.52, cue: 'breath' },
-    { f: 0.68, cue: 'body' },
-    { f: 0.82, cue: 'reflect' },
-    { f: 0.92, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'breath', line: 'med.step.breath', weight: 3 },
+    { key: 'count', line: 'med.step.ba.count', weight: 2.2 },
+    close(),
   ],
   'body-scan': [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.05, cue: 'breath' },
-    { f: 0.12, cue: 'body' },
-    { f: 0.22, cue: 'body' },
-    { f: 0.34, cue: 'body' },
-    { f: 0.46, cue: 'body' },
-    { f: 0.56, cue: 'body' },
-    { f: 0.66, cue: 'body' },
-    { f: 0.76, cue: 'body' },
-    { f: 0.85, cue: 'body' },
-    { f: 0.93, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'scan', line: 'med.step.scan.0', weight: 3.2 },
+    { key: 'scan', line: 'med.step.scan.1', weight: 2 },
+    close(),
   ],
   metta: [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.05, cue: 'breath' },
-    { f: 0.12, cue: 'reflect' },
-    { f: 0.26, cue: 'reflect' },
-    { f: 0.4, cue: 'reflect' },
-    { f: 0.56, cue: 'reflect' },
-    { f: 0.7, cue: 'reflect' },
-    { f: 0.84, cue: 'reflect' },
-    { f: 0.93, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'metta', line: 'med.step.metta.0', weight: 2.2 },
+    { key: 'metta', line: 'med.step.metta.1', weight: 2 },
+    { key: 'metta', line: 'med.step.metta.2', weight: 2 },
+    close(),
   ],
   'sound-bath': [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.05, cue: 'frequency' },
-    { f: 0.14, cue: 'frequency' },
-    { f: 0.28, cue: 'body' },
-    { f: 0.44, cue: 'frequency' },
-    { f: 0.6, cue: 'body' },
-    { f: 0.76, cue: 'frequency' },
-    { f: 0.9, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'bath', line: 'med.step.bath.0', weight: 3 },
+    { key: 'bath', line: 'med.step.bath.1', weight: 2.4 },
+    close(),
   ],
   gratitude: [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.08, cue: 'reflect' },
-    { f: 0.24, cue: 'body' },
-    { f: 0.42, cue: 'reflect' },
-    { f: 0.58, cue: 'body' },
-    { f: 0.74, cue: 'reflect' },
-    { f: 0.88, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'gratitude', line: 'med.step.grat.0', weight: 2 },
+    { key: 'gratitude', line: 'med.step.grat.1', weight: 2 },
+    { key: 'gratitude', line: 'med.step.grat.2', weight: 2 },
+    close(),
   ],
   'safe-place': [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.08, cue: 'reflect' },
-    { f: 0.22, cue: 'reflect' },
-    { f: 0.38, cue: 'body' },
-    { f: 0.54, cue: 'body' },
-    { f: 0.68, cue: 'reflect' },
-    { f: 0.82, cue: 'reflect' },
-    { f: 0.92, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'safe', line: 'med.step.safe.0', weight: 3 },
+    { key: 'safe', line: 'med.step.safe.1', weight: 2.4 },
+    close(),
   ],
   mountain: [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.08, cue: 'reflect' },
-    { f: 0.2, cue: 'body' },
-    { f: 0.36, cue: 'body' },
-    { f: 0.5, cue: 'reflect' },
-    { f: 0.66, cue: 'reflect' },
-    { f: 0.8, cue: 'body' },
-    { f: 0.92, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'mountain', line: 'med.step.mtn.0', weight: 3 },
+    { key: 'mountain', line: 'med.step.mtn.1', weight: 2.6 },
+    close(),
   ],
   'open-awareness': [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.06, cue: 'breath' },
-    { f: 0.2, cue: 'reflect' },
-    { f: 0.34, cue: 'reflect' },
-    { f: 0.5, cue: 'reflect' },
-    { f: 0.66, cue: 'reflect' },
-    { f: 0.8, cue: 'reflect' },
-    { f: 0.92, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'breath', line: 'med.step.breath', weight: 1.6 },
+    { key: 'open', line: 'med.step.open.0', weight: 2.6 },
+    { key: 'open', line: 'med.step.open.1', weight: 2.4 },
+    close(),
   ],
   morning: [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.08, cue: 'breath' },
-    { f: 0.22, cue: 'body' },
-    { f: 0.38, cue: 'reflect' },
-    { f: 0.54, cue: 'reflect' },
-    { f: 0.7, cue: 'reflect' },
-    { f: 0.84, cue: 'body' },
-    { f: 0.94, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'morning', line: 'med.step.morn.0', weight: 2.4 },
+    { key: 'morning', line: 'med.step.morn.1', weight: 2.4 },
+    close(),
   ],
   evening: [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.08, cue: 'breath' },
-    { f: 0.2, cue: 'reflect' },
-    { f: 0.38, cue: 'reflect' },
-    { f: 0.54, cue: 'reflect' },
-    { f: 0.68, cue: 'reflect' },
-    { f: 0.82, cue: 'body' },
-    { f: 0.92, cue: 'close' },
-    { f: 0.98, cue: 'close' },
+    settle(),
+    { key: 'evening', line: 'med.step.eve.0', weight: 2.6 },
+    { key: 'evening', line: 'med.step.eve.1', weight: 2.6 },
+    close(),
   ],
   'yoga-nidra': [
-    { f: 0.0, cue: 'settle' },
-    { f: 0.05, cue: 'breath' },
-    { f: 0.12, cue: 'reflect' },
-    { f: 0.2, cue: 'body' },
-    { f: 0.28, cue: 'body' },
-    { f: 0.4, cue: 'body' },
-    { f: 0.5, cue: 'body' },
-    { f: 0.6, cue: 'body' },
-    { f: 0.68, cue: 'body' },
-    { f: 0.76, cue: 'body' },
-    { f: 0.84, cue: 'breath' },
-    { f: 0.9, cue: 'reflect' },
-    { f: 0.95, cue: 'close' },
-    { f: 0.99, cue: 'close' },
+    settle(),
+    { key: 'nidra', line: 'med.step.nidra.0', weight: 2 },
+    { key: 'nidra', line: 'med.step.nidra.1', weight: 2.4 },
+    { key: 'nidra', line: 'med.step.nidra.2', weight: 2.4 },
+    { key: 'nidra', line: 'med.step.nidra.3', weight: 2 },
+    close(),
   ],
 }
 
@@ -337,50 +296,42 @@ export function buildMeditation(
           sign: t(`sign.${reading.transit.sign}` as MessageKey),
         })
 
-  const house = reading.transitHouses[planet]
-  const houseLine =
-    house && house >= 1 && house <= 12
-      ? t('med.houseLine.known', {
-          theme: t(`med.house.${house}` as MessageKey),
-        })
-      : t('med.houseLine.unknown')
-
   const chakraLower = t('med.chakraLower', {
     chakra: t(`chakra.${focus}` as MessageKey).toLowerCase(),
   })
 
   const params: Record<string, string | number> = {
     seat: t(`med.seat.${focus}` as MessageKey),
+    chakra: t(`chakra.${focus}` as MessageKey),
     chakraLower,
     hz: reading.transit.recommendedFrequency,
     affirmation: t(`med.mantraLong.${focus}` as MessageKey),
     transitLine: t(`med.ease.${harmony}` as MessageKey, { dominant: dominantText }),
     planetInvite:
-      t(`med.invite.${planet}` as MessageKey) ||
-      t('med.invite.default'),
-    houseLine,
+      t(`med.invite.${planet}` as MessageKey) || t('med.invite.default'),
   }
 
-  const script = style === 'chakra' ? CHAKRA_SCRIPT : STATIC_SCRIPTS[style]
-  const prefix =
-    style === 'chakra' ? 'med.chakraScript' : `med.script.${style}`
+  const plan = PHASE_PLANS[style]
+  const totalWeight = plan.reduce((sum, p) => sum + p.weight, 0)
   const total = minutes * 60
-  const steps: MeditationStep[] = script.map((s, i) => ({
-    at: Math.round(s.f * total),
-    text: t(`${prefix}.${i}` as MessageKey, params),
-    cue: s.cue,
-  }))
+
+  let acc = 0
+  const phases: MeditationPhase[] = plan.map((p) => {
+    const at = Math.round((acc / totalWeight) * total)
+    acc += p.weight
+    return { at, text: t(p.line, params) }
+  })
 
   return {
     title:
       medName(style, t) ||
-      t('med.title.fallback', {
-        chakra: t(`chakra.${focus}` as MessageKey),
-      }),
+      t('med.title.fallback', { chakra: t(`chakra.${focus}` as MessageKey) }),
     minutes,
     hue: reading.chakra.color,
     frequency: reading.transit.recommendedFrequency,
     focus,
-    steps,
+    briefingLead: t('med.brief.lead'),
+    briefingClose: t('med.brief.close'),
+    phases,
   }
 }

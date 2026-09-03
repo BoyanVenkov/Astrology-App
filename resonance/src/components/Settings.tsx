@@ -183,7 +183,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
           >
             <span className="flex items-center gap-3">
               <GlobeIcon
-                className="h-[1.35rem] w-[1.35rem] shrink-0 text-haze-300"
+                className="h-[1.35rem] w-[1.35rem] shrink-0 text-gold-300"
               />
               <span>
                 <span className="block text-sm text-haze-100">

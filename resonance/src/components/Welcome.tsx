@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
-import { transitTitle, useT } from '../lib/i18n'
+import { LOCALES, transitTitle, useT } from '../lib/i18n'
 import { CHAKRA_ORDER, chakraColor } from '../lib/resonanceData'
 import { signInWithGoogle } from '../lib/auth'
 import { PRIVACY_URL, TERMS_URL, openExternal } from '../lib/links'
@@ -192,6 +192,9 @@ export function Welcome({ onSkip }: WelcomeProps) {
   useDayHue()
   const t = useT()
   const transit = useAppStore((s) => s.transit)
+  const locale = useAppStore((s) => s.locale)
+  const localeNative =
+    LOCALES.find((l) => l.code === locale)?.native ?? 'English'
 
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
@@ -222,9 +225,10 @@ export function Welcome({ onSkip }: WelcomeProps) {
         type="button"
         onClick={() => setLangOpen(true)}
         aria-label={t('welcome.language')}
-        className="absolute right-5 top-[max(1.25rem,env(safe-area-inset-top))] z-10 grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-white/[0.06] text-haze-200 active:bg-white/[0.12]"
+        className="absolute right-5 top-[max(1.25rem,env(safe-area-inset-top))] z-10 flex items-center gap-2 rounded-full border border-gold-500/30 bg-white/[0.06] py-1.5 pl-3 pr-3.5 text-[13px] font-medium text-haze-100 shadow-[0_2px_14px_-6px_rgba(0,0,0,0.5)] backdrop-blur-sm active:bg-white/[0.12]"
       >
-        <GlobeIcon className="h-[1.15rem] w-[1.15rem]" />
+        <GlobeIcon className="h-[1.05rem] w-[1.05rem] text-gold-300" />
+        <span>{localeNative}</span>
       </button>
 
       <div className="flex flex-1 flex-col justify-center py-8">

@@ -280,6 +280,68 @@ export class AudioEngine {
     this.duckVoice(this.breathGain, 1)
   }
 
+  /**
+   * Strike a singing bowl — a one-shot cue used to move a meditation from one
+   * phase to the next. Independent of the playing bed (tone / drone / silent):
+   * it routes straight to the destination, scaled by the master volume, so it
+   * sounds whether or not `play()` was ever called. `count` strikes are spaced
+   * `gap` seconds apart (three, softly, closes a practice).
+   */
+  chime(count = 1, opts: { gap?: number; gain?: number } = {}): void {
+    const ctx = this.ensureContext()
+    if (!ctx) return
+    if (ctx.state === 'suspended') void ctx.resume()
+    const gap = opts.gap ?? 3.4
+    const level = clamp((opts.gain ?? 0.9) * this.masterVolume, 0, 1)
+    for (let i = 0; i < count; i += 1) {
+      this.strikeBowl(ctx, ctx.currentTime + i * gap, level)
+    }
+  }
+
+  /** One struck-bowl note: inharmonic partials over a long exponential tail. */
+  private strikeBowl(ctx: AudioContext, at: number, level: number): void {
+    const out = ctx.createGain()
+    out.gain.value = level
+    out.connect(ctx.destination)
+
+    // fundamental + the ring of inharmonic partials a metal bowl actually sings
+    const partials: [ratio: number, gain: number, decay: number][] = [
+      [1, 1, 8],
+      [2.75, 0.55, 6],
+      [5.38, 0.32, 4],
+      [8.9, 0.16, 2.6],
+      [13.3, 0.08, 1.8],
+    ]
+    const base = 174.61 // F3 — low, warm, unobtrusive
+    let tail = 0
+    for (const [ratio, gain, decay] of partials) {
+      const osc = ctx.createOscillator()
+      osc.type = 'sine'
+      const hz = base * ratio
+      osc.frequency.setValueAtTime(hz, at)
+      // a touch of downward drift as the strike energy bleeds off
+      osc.frequency.exponentialRampToValueAtTime(hz * 0.995, at + decay)
+      const g = ctx.createGain()
+      g.gain.setValueAtTime(MIN_GAIN, at)
+      g.gain.exponentialRampToValueAtTime(gain, at + 0.012)
+      g.gain.exponentialRampToValueAtTime(MIN_GAIN, at + decay)
+      osc.connect(g).connect(out)
+      osc.start(at)
+      osc.stop(at + decay + 0.1)
+      tail = Math.max(tail, decay + 0.2)
+    }
+    window.setTimeout(
+      () => {
+        try {
+          out.disconnect()
+        } catch {
+          /* already detached */
+        }
+      },
+      (at - ctx.currentTime + tail) * 1000 + 200,
+    )
+  }
+
   setFrequency(frequency: SolfeggioFrequency): void {
     this.frequency = frequency
     if (!this.ctx || !this.toneOsc) return
