@@ -23,17 +23,17 @@ export function LanguageSheet({ onClose }: { onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        className="glass-panel mx-auto w-full max-w-md rounded-b-none p-6"
+        className="glass-panel mx-auto flex max-h-[85dvh] w-full max-w-md flex-col rounded-b-none p-6"
         onClick={(e) => e.stopPropagation()}
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20" />
-        <p className="eyebrow-hue text-center">{t('lang.title')}</p>
-        <p className="mx-auto mt-1.5 max-w-xs text-center text-sm leading-relaxed text-haze-300">
+        <div className="mx-auto mb-4 h-1 w-10 shrink-0 rounded-full bg-white/20" />
+        <p className="eyebrow-hue shrink-0 text-center">{t('lang.title')}</p>
+        <p className="mx-auto mt-1.5 max-w-xs shrink-0 text-center text-sm leading-relaxed text-haze-300">
           {t('lang.blurb')}
         </p>
 
-        <ul className="mt-5 flex flex-col gap-2.5">
+        <ul className="-me-2 mt-5 flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto overscroll-contain pe-2">
           {LOCALES.map((l) => {
             const active = l.code === locale
             return (
@@ -84,7 +84,7 @@ export function LanguageSheet({ onClose }: { onClose: () => void }) {
         <button
           type="button"
           onClick={onClose}
-          className="mt-4 w-full text-center text-[11px] uppercase tracking-[0.14em] text-haze-500"
+          className="mt-4 w-full shrink-0 text-center text-[11px] uppercase tracking-[0.14em] text-haze-500"
         >
           {t('common.close')}
         </button>
