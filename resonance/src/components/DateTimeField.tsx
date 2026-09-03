@@ -170,7 +170,7 @@ function PickerSheet({
 /* ------------------------------------------------------------------- helpers */
 
 const trigger =
-  'w-full min-w-0 rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-left text-white outline-none transition active:border-white/30 active:bg-white/[0.06]'
+  'w-full min-w-0 rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-start text-white outline-none transition active:border-white/30 active:bg-white/[0.06]'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',

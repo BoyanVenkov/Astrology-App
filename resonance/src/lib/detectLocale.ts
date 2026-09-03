@@ -2,7 +2,7 @@ import type { Locale } from '../types/resonance'
 
 /** Supported UI languages — keep in sync with `lib/i18n` catalogues. */
 export const SUPPORTED_LOCALES: Locale[] = [
-  'en', 'bg', 'es', 'it', 'fr', 'de', 'pt', 'sv', 'zh', 'ja', 'hi', 'sw',
+  'en', 'bg', 'es', 'it', 'fr', 'de', 'pt', 'sv', 'zh', 'ja', 'hi', 'sw', 'tr', 'ar',
 ]
 
 /** Best-guess locale from the device language list, English otherwise. */

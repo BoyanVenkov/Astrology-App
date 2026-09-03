@@ -225,7 +225,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
         type="button"
         onClick={() => setLangOpen(true)}
         aria-label={t('welcome.language')}
-        className="absolute right-5 top-[max(1.25rem,env(safe-area-inset-top))] z-10 flex items-center gap-2 rounded-full border border-gold-500/30 bg-white/[0.06] py-1.5 pl-3 pr-3.5 text-[13px] font-medium text-haze-100 shadow-[0_2px_14px_-6px_rgba(0,0,0,0.5)] backdrop-blur-sm active:bg-white/[0.12]"
+        className="absolute end-5 top-[max(1.25rem,env(safe-area-inset-top))] z-10 flex items-center gap-2 rounded-full border border-gold-500/30 bg-white/[0.06] py-1.5 ps-3 pe-3.5 text-[13px] font-medium text-haze-100 shadow-[0_2px_14px_-6px_rgba(0,0,0,0.5)] backdrop-blur-sm active:bg-white/[0.12]"
       >
         <GlobeIcon className="h-[1.05rem] w-[1.05rem] text-gold-300" />
         <span>{localeNative}</span>

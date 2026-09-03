@@ -84,7 +84,7 @@ function Interpretation({
       {position && (
         <p className="eyebrow">
           {position.label}
-          <span className="ml-2 normal-case tracking-normal text-haze-500">
+          <span className="ms-2 normal-case tracking-normal text-haze-500">
             {position.prompt}
           </span>
         </p>
@@ -92,7 +92,7 @@ function Interpretation({
       <p className="mt-1.5 font-serif text-xl text-white">
         {text.name}
         {drawn.reversed && (
-          <span className="ml-2 text-sm uppercase tracking-[0.14em] text-amber-300">
+          <span className="ms-2 text-sm uppercase tracking-[0.14em] text-amber-300">
             {t('tr.reversed')}
           </span>
         )}
@@ -257,7 +257,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
         <button
           type="button"
           onClick={() => setView('choose')}
-          className="glass-panel glass-panel-active flex items-center justify-between p-4 text-left active:scale-[0.99]"
+          className="glass-panel glass-panel-active flex items-center justify-between p-4 text-start active:scale-[0.99]"
         >
           <span>
             <span className="font-serif text-lg text-white">
@@ -275,7 +275,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
           onClick={() =>
             isPro ? setView('oracle') : onUpgrade?.(t('tr.reasonOracle'))
           }
-          className="glass-panel flex items-center justify-between p-4 text-left active:scale-[0.99]"
+          className="glass-panel flex items-center justify-between p-4 text-start active:scale-[0.99]"
         >
           <span>
             <span className="flex items-center gap-1.5 font-serif text-lg text-white">
@@ -400,7 +400,7 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
                     ? startReading(s)
                     : onUpgrade?.(t('tr.reasonSpreads'))
                 }
-                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                className={`glass-panel p-4 text-start active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
                 }`}
               >
@@ -409,13 +409,13 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
                     {spreadName(s.key, t)}
                   </h2>
                   {unlocked ? (
-                    <span className="ml-auto text-xs tabular-nums text-haze-400">
+                    <span className="ms-auto text-xs tabular-nums text-haze-400">
                       {s.positions.length === 1
                         ? t('tr.cardCount.one')
                         : t('tr.cardCount.many', { n: s.positions.length })}
                     </span>
                   ) : (
-                    <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                    <LockIcon className="ms-auto h-4 w-4 shrink-0 text-haze-400" />
                   )}
                 </div>
                 <p className="mt-1 text-sm text-haze-300">

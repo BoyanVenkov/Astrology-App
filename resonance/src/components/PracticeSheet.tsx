@@ -25,7 +25,7 @@ function Row({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-left transition active:scale-[0.98]"
+      className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-start transition active:scale-[0.98]"
     >
       <span>
         <span className="font-serif text-base text-white">{title}</span>

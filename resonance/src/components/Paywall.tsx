@@ -139,7 +139,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
           <button
             type="button"
             onClick={() => setPlan('yearly')}
-            className={`rounded-2xl border p-3 text-left transition ${
+            className={`rounded-2xl border p-3 text-start transition ${
               plan === 'yearly'
                 ? 'border-gold-400/60 bg-gold-500/15'
                 : 'border-white/12 bg-white/5'
@@ -158,7 +158,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
           <button
             type="button"
             onClick={() => setPlan('monthly')}
-            className={`rounded-2xl border p-3 text-left transition ${
+            className={`rounded-2xl border p-3 text-start transition ${
               plan === 'monthly'
                 ? 'border-gold-400/60 bg-gold-500/15'
                 : 'border-white/12 bg-white/5'

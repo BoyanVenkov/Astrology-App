@@ -62,14 +62,14 @@ export function QuickHoroscope({
 
       <div className="mt-3 flex flex-col gap-1.5 border-t border-white/[0.07] pt-3">
         <p className="text-[13px] leading-snug text-haze-200">
-          <span className="mr-2 text-[10px] uppercase tracking-[0.16em] text-haze-400">
+          <span className="me-2 text-[10px] uppercase tracking-[0.16em] text-haze-400">
             {t('scr.quick.you')}
           </span>
           {q.body}
         </p>
         {q.moon && (
           <p className="text-[13px] leading-snug text-haze-200">
-            <span className="mr-2 text-[10px] uppercase tracking-[0.16em] text-haze-400">
+            <span className="me-2 text-[10px] uppercase tracking-[0.16em] text-haze-400">
               {t('scr.quick.moon')}
             </span>
             {q.moon}

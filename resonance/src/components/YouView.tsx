@@ -38,7 +38,7 @@ function Row({
     <button
       type="button"
       onClick={onClick}
-      className={`glass-panel flex items-center justify-between p-4 text-left transition active:scale-[0.99] ${
+      className={`glass-panel flex items-center justify-between p-4 text-start transition active:scale-[0.99] ${
         accent ? 'glass-panel-active' : ''
       }`}
     >

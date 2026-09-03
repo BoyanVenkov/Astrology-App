@@ -37,7 +37,7 @@ function Toggle({
     <button
       type="button"
       onClick={() => onChange(!on)}
-      className="flex w-full items-center justify-between gap-3 py-2 text-left"
+      className="flex w-full items-center justify-between gap-3 py-2 text-start"
     >
       <span>
         <span className="text-sm text-haze-100">{label}</span>
@@ -50,7 +50,7 @@ function Toggle({
       >
         <span
           className={`block h-5 w-5 rounded-full bg-white transition-transform ${
-            on ? 'translate-x-4' : ''
+            on ? 'translate-x-4 rtl:-translate-x-4' : ''
           }`}
         />
       </span>
@@ -179,7 +179,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
           <button
             type="button"
             onClick={onLanguage}
-            className="flex w-full items-center justify-between gap-3 py-3 text-left"
+            className="flex w-full items-center justify-between gap-3 py-3 text-start"
           >
             <span className="flex items-center gap-3">
               <GlobeIcon
@@ -229,7 +229,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
                   setAcctBusy('out')
                   void signOut().finally(() => setAcctBusy(null))
                 }}
-                className="w-full py-3 text-left text-sm text-haze-200"
+                className="w-full py-3 text-start text-sm text-haze-200"
               >
                 {t('set.signOut')}
               </button>
@@ -239,7 +239,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
                 type="button"
                 onClick={() => void doDelete()}
                 disabled={acctBusy !== null}
-                className="w-full py-3 text-left text-xs text-red-300 disabled:opacity-50"
+                className="w-full py-3 text-start text-xs text-red-300 disabled:opacity-50"
               >
                 {acctBusy === 'delete'
                   ? t('set.deleting')
@@ -480,7 +480,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
             <button
               type="button"
               onClick={() => setCurrentLocation(null)}
-              className="w-full py-3 text-left text-xs text-haze-400"
+              className="w-full py-3 text-start text-xs text-haze-400"
             >
               {t('set.clearLocation')}
             </button>
@@ -533,7 +533,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
             <button
               type="button"
               onClick={() => setTier('pro')}
-              className="w-full py-3 text-left text-xs text-haze-400"
+              className="w-full py-3 text-start text-xs text-haze-400"
             >
               Dev: unlock Pro without paying →
             </button>
@@ -545,7 +545,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
               type="button"
               onClick={() => void manageSubscription()}
               disabled={manageBusy}
-              className="w-full py-3 text-left text-xs text-haze-400 disabled:opacity-50"
+              className="w-full py-3 text-start text-xs text-haze-400 disabled:opacity-50"
             >
               {manageBusy ? t('set.opening') : t('set.manageSubscription')}
             </button>
@@ -558,7 +558,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
           <button
             type="button"
             onClick={resetAll}
-            className="w-full py-3 text-left text-sm text-red-300"
+            className="w-full py-3 text-start text-sm text-red-300"
           >
             {t('set.eraseAll')}
           </button>

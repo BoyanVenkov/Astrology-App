@@ -42,7 +42,7 @@ export function LanguageSheet({ onClose }: { onClose: () => void }) {
                   type="button"
                   onClick={() => choose(l.code)}
                   lang={l.code}
-                  className="flex w-full items-center gap-3 rounded-2xl border p-4 text-left transition active:scale-[0.99]"
+                  className="flex w-full items-center gap-3 rounded-2xl border p-4 text-start transition active:scale-[0.99]"
                   style={{
                     borderColor: active
                       ? 'color-mix(in srgb, var(--rz-hue) 45%, transparent)'

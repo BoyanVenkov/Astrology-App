@@ -43,7 +43,7 @@ function Tile({
     <button
       type="button"
       onClick={onClick}
-      className="glass-panel flex flex-col gap-2 p-4 text-left transition active:scale-[0.98]"
+      className="glass-panel flex flex-col gap-2 p-4 text-start transition active:scale-[0.98]"
     >
       <span className="flex items-center justify-between">
         <span style={{ color: 'var(--rz-hue)' }}>{icon}</span>
@@ -109,7 +109,7 @@ export function SkyView({
           {planetLabel(transit.body, t)}{' '}
           <span aria-hidden>{planetSymbol(transit.body)}</span>
           {focusPlanet?.retrograde && (
-            <span className="ml-1 align-super text-sm text-haze-300">℞</span>
+            <span className="ms-1 align-super text-sm text-haze-300">℞</span>
           )}
           <span className="text-haze-400"> · </span>
           {chakraLabel(chakra.key, t)}
@@ -128,7 +128,7 @@ export function SkyView({
       <button
         type="button"
         onClick={onOpenChakras}
-        className="glass-panel flex items-center gap-4 p-4 text-left transition active:scale-[0.99]"
+        className="glass-panel flex items-center gap-4 p-4 text-start transition active:scale-[0.99]"
       >
         <span className="flex h-12 items-center gap-[3px]">
           {[...chakraField].reverse().map((c) => (

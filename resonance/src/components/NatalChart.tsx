@@ -137,7 +137,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
         <button
           type="button"
           onClick={editProfile}
-          className="-mt-2 px-1 text-left text-xs text-gold-300"
+          className="-mt-2 px-1 text-start text-xs text-gold-300"
         >
           {t('scr.natal.addPlace')}
         </button>
@@ -328,7 +328,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
                 {BODY_SYMBOL[p.body]}
               </span>
               <span className="text-haze-100">{planetLabel(p.body, t)}</span>
-              <span className="data ml-auto text-xs text-haze-400">
+              <span className="data ms-auto text-xs text-haze-400">
                 {Math.floor(p.signDegree)}° {signLabel(p.sign, t).slice(0, 3)}
                 {p.retrograde ? ' ℞' : ''}
                 {cusps

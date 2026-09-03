@@ -109,7 +109,7 @@ export function Layout({
             type="button"
             onClick={onSettings}
             aria-label={t('nav.settings')}
-            className="absolute right-2 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-white/15"
+            className="absolute end-2 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-white/15"
           >
             <GearIcon className="h-[1.3rem] w-[1.3rem]" strokeWidth={1.8} />
           </button>

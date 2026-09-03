@@ -92,7 +92,7 @@ export function Dashboard({
           onClick={() =>
             onRitual({ mode: 'breath', minutes: 2, skipIntro: true })
           }
-          className="glass-panel flex items-center justify-between gap-3 border-amber-400/25 p-3 text-left active:scale-[0.99]"
+          className="glass-panel flex items-center justify-between gap-3 border-amber-400/25 p-3 text-start active:scale-[0.99]"
         >
           <span className="text-sm text-amber-200">
             {voc.active
@@ -222,7 +222,7 @@ export function Dashboard({
       <button
         type="button"
         onClick={() => onTab('tarot')}
-        className="glass-panel flex items-center gap-3 p-4 text-left active:scale-[0.99]"
+        className="glass-panel flex items-center gap-3 p-4 text-start active:scale-[0.99]"
       >
         <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
         <div className="min-w-0 flex-1">

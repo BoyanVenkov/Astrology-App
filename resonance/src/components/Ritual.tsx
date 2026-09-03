@@ -272,7 +272,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                   : `${chosenFreq} Hz`}
             </p>
             {mode === 'breath' && (
-              <span className="ml-auto text-xs text-haze-400">
+              <span className="ms-auto text-xs text-haze-400">
                 {breathPattern.ratio}
               </span>
             )}

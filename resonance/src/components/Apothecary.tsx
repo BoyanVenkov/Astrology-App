@@ -89,7 +89,7 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
                   {crystalName(crystal.name, t)}
                 </h3>
                 {isToday && (
-                  <span className="ml-auto text-[10px] uppercase tracking-[0.14em] text-gold-300">
+                  <span className="ms-auto text-[10px] uppercase tracking-[0.14em] text-gold-300">
                     {t('scr.apoth.today')}
                   </span>
                 )}

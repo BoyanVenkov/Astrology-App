@@ -20,6 +20,8 @@ import { zh } from './locales/zh'
 import { ja } from './locales/ja'
 import { hi } from './locales/hi'
 import { sw } from './locales/sw'
+import { tr } from './locales/tr'
+import { ar } from './locales/ar'
 
 export { detectLocale }
 
@@ -43,6 +45,8 @@ const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = {
   ja,
   hi,
   sw,
+  tr,
+  ar,
 }
 
 export type { Locale }
@@ -71,6 +75,8 @@ export const LOCALES: LocaleInfo[] = [
   { code: 'ja', native: '日本語', english: 'Japanese', sample: 'あなたのために読む空' },
   { code: 'hi', native: 'हिन्दी', english: 'Hindi', sample: 'आपके लिए पढ़ा गया आकाश' },
   { code: 'sw', native: 'Kiswahili', english: 'Swahili', sample: 'Anga, iliyosomwa kwa ajili yako' },
+  { code: 'tr', native: 'Türkçe', english: 'Turkish', sample: 'Gökyüzü, senin için okundu' },
+  { code: 'ar', native: 'العربية', english: 'Arabic', sample: 'السماء، تُقرأ من أجلك' },
 ]
 
 export type TranslateParams = Record<string, string | number>
@@ -113,18 +119,31 @@ const LOCALE_TAGS: Record<Locale, string> = {
   ja: 'ja-JP',
   hi: 'hi-IN',
   sw: 'sw-KE',
+  tr: 'tr-TR',
+  ar: 'ar',
 }
 export const localeTag = (locale: Locale): string => LOCALE_TAGS[locale]
+
+/** Right-to-left scripts. */
+const RTL_LOCALES = new Set<string>(['ar'])
+export const isRtl = (locale: Locale): boolean => RTL_LOCALES.has(locale)
+
+/** Hook — is the active locale written right-to-left? */
+export function useIsRtl(): boolean {
+  return isRtl(useAppStore((s) => s.locale))
+}
 
 /** Hook — the BCP-47 tag for the active locale. */
 export function useLocaleTag(): string {
   return localeTag(useAppStore((s) => s.locale))
 }
 
-/** Keep `<html lang>` in step so fonts / hyphenation resolve per script. */
+/** Keep `<html lang>` and `<html dir>` in step so fonts, hyphenation and
+ *  layout direction resolve per script. */
 export function applyHtmlLang(locale: Locale): void {
   try {
     document.documentElement.lang = locale
+    document.documentElement.dir = isRtl(locale) ? 'rtl' : 'ltr'
   } catch {
     /* ignore */
   }

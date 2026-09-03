@@ -154,7 +154,7 @@ export function Onboarding() {
                   <button
                     type="button"
                     onClick={() => pickCity(c)}
-                    className="block w-full px-4 py-2.5 text-left text-sm text-haze-100 active:bg-white/10"
+                    className="block w-full px-4 py-2.5 text-start text-sm text-haze-100 active:bg-white/10"
                   >
                     {c.name}
                     <span className="text-haze-400">, {c.country}</span>

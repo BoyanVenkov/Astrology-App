@@ -79,7 +79,7 @@ function ChakraRow({
         type="button"
         onClick={onToggle}
         aria-expanded={locked ? undefined : open}
-        className="flex w-full items-center gap-3 p-4 text-left active:scale-[0.995]"
+        className="flex w-full items-center gap-3 p-4 text-start active:scale-[0.995]"
       >
         <span
           className="h-3.5 w-3.5 shrink-0 rounded-full"
@@ -100,7 +100,7 @@ function ChakraRow({
             {driverText}
           </span>
         </span>
-        <span className="flex shrink-0 items-center gap-2 text-right">
+        <span className="flex shrink-0 items-center gap-2 text-end">
           <span>
             <span
               className="block text-[11px] font-semibold uppercase tracking-[0.12em]"
@@ -292,7 +292,7 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
         <button
           type="button"
           onClick={() => onUpgrade(t('field.reasonFull'))}
-          className="glass-panel glass-panel-active flex items-center justify-between gap-3 p-4 text-left active:scale-[0.99]"
+          className="glass-panel glass-panel-active flex items-center justify-between gap-3 p-4 text-start active:scale-[0.99]"
         >
           <span>
             <span className="flex items-center gap-1.5 font-serif text-lg text-white">

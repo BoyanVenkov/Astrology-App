@@ -94,7 +94,7 @@ function ConnectionRow({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="flex w-full items-center gap-3 p-3.5 text-left active:scale-[0.995]"
+        className="flex w-full items-center gap-3 p-3.5 text-start active:scale-[0.995]"
       >
         <span
           className="h-2 w-2 shrink-0 rounded-full"
@@ -114,7 +114,7 @@ function ConnectionRow({
             {conn.summary}
           </span>
         </span>
-        <span className="shrink-0 text-right">
+        <span className="shrink-0 text-end">
           <span
             className="block text-[10px] font-semibold uppercase tracking-[0.12em]"
             style={{ color: tint }}
@@ -257,7 +257,7 @@ function Reading({ person }: { person: SavedPerson }) {
                   }}
                 />
               </span>
-              <span className="data w-7 shrink-0 text-right text-xs text-haze-400">
+              <span className="data w-7 shrink-0 text-end text-xs text-haze-400">
                 {f.score}
               </span>
             </div>
@@ -401,7 +401,7 @@ export function Compatibility({ onBack }: CompatibilityProps) {
             <button
               type="button"
               onClick={() => setSelected(p.id)}
-              className="glass-panel flex w-full items-center justify-between p-4 text-left active:scale-[0.99]"
+              className="glass-panel flex w-full items-center justify-between p-4 text-start active:scale-[0.99]"
             >
               <span className="min-w-0">
                 <span className="block font-serif text-lg leading-tight text-white">

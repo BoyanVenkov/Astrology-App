@@ -196,7 +196,7 @@ export function PracticeLibrary({
                       })
                     : onUpgrade(t('lib.reasonBreath'))
                 }
-                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                className={`glass-panel p-4 text-start active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
                 }`}
               >
@@ -212,11 +212,11 @@ export function PracticeLibrary({
                     {breathName(b.key, t)}
                   </h2>
                   {unlocked ? (
-                    <span className="data ml-auto shrink-0 text-xs text-haze-400">
+                    <span className="data ms-auto shrink-0 text-xs text-haze-400">
                       {b.ratio}
                     </span>
                   ) : (
-                    <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                    <LockIcon className="ms-auto h-4 w-4 shrink-0 text-haze-400" />
                   )}
                 </div>
                 <p className="mt-1 text-sm text-haze-300">
@@ -248,7 +248,7 @@ export function PracticeLibrary({
                       })
                     : onUpgrade(t('lib.reasonMed'))
                 }
-                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                className={`glass-panel p-4 text-start active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
                 }`}
               >
@@ -264,10 +264,10 @@ export function PracticeLibrary({
                     {medName(m.key, t)}
                   </h2>
                   {!unlocked ? (
-                    <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                    <LockIcon className="ms-auto h-4 w-4 shrink-0 text-haze-400" />
                   ) : m.dynamic ? (
                     <span
-                      className="ml-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
+                      className="ms-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
                       style={{
                         color: chakraColor('third-eye'),
                         boxShadow: `inset 0 0 0 1px ${chakraColor('third-eye')}66`,
@@ -305,7 +305,7 @@ export function PracticeLibrary({
                       })
                     : onUpgrade(t('lib.reasonFreq'))
                 }
-                className={`glass-panel p-4 text-left active:scale-[0.99] ${
+                className={`glass-panel p-4 text-start active:scale-[0.99] ${
                   unlocked ? '' : 'opacity-60'
                 }`}
               >
@@ -322,14 +322,14 @@ export function PracticeLibrary({
                   </h2>
                   {isToday ? (
                     <span
-                      className="ml-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
+                      className="ms-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
                       style={{ color: p.color, boxShadow: `inset 0 0 0 1px ${p.color}66` }}
                     >
                       {t('lib.today')}
                     </span>
                   ) : (
                     !unlocked && (
-                      <LockIcon className="ml-auto h-4 w-4 shrink-0 text-haze-400" />
+                      <LockIcon className="ms-auto h-4 w-4 shrink-0 text-haze-400" />
                     )
                   )}
                 </div>

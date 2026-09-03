@@ -96,7 +96,7 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
                 <button
                   type="button"
                   onClick={() => setOpenKey(open ? null : m.key)}
-                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-left transition active:scale-[0.99]"
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-start transition active:scale-[0.99]"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <span className="font-serif text-base leading-tight text-white">

@@ -80,7 +80,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
               key={m}
               type="button"
               onClick={() => setMood(m)}
-              className="flex items-center gap-3 rounded-2xl border px-3.5 py-3.5 text-left transition active:scale-[0.98]"
+              className="flex items-center gap-3 rounded-2xl border px-3.5 py-3.5 text-start transition active:scale-[0.98]"
               style={{
                 borderColor: on
                   ? meta.color
