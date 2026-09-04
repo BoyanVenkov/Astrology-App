@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
-  appId: 'com.venkovdigital.resonance',
+  appId: 'com.resonance.app',
   appName: 'Resonance',
   webDir: 'dist',
   server: {

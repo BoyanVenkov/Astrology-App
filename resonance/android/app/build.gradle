@@ -9,7 +9,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.venkovdigital.resonance"
+    namespace = "com.resonance.app"
     compileSdk = rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -18,7 +18,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.venkovdigital.resonance"
+        applicationId "com.resonance.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
