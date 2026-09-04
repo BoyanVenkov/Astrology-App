@@ -22,6 +22,7 @@ import { hi } from './locales/hi'
 import { sw } from './locales/sw'
 import { tr } from './locales/tr'
 import { ar } from './locales/ar'
+import { pl } from './locales/pl'
 
 export { detectLocale }
 
@@ -47,6 +48,7 @@ const CATALOGS: Record<Locale, Partial<Record<MessageKey, string>>> = {
   sw,
   tr,
   ar,
+  pl,
 }
 
 export type { Locale }
@@ -77,6 +79,7 @@ export const LOCALES: LocaleInfo[] = [
   { code: 'sw', native: 'Kiswahili', english: 'Swahili', sample: 'Anga, iliyosomwa kwa ajili yako' },
   { code: 'tr', native: 'Türkçe', english: 'Turkish', sample: 'Gökyüzü, senin için okundu' },
   { code: 'ar', native: 'العربية', english: 'Arabic', sample: 'السماء، تُقرأ من أجلك' },
+  { code: 'pl', native: 'Polski', english: 'Polish', sample: 'Niebo, odczytane dla ciebie' },
 ]
 
 export type TranslateParams = Record<string, string | number>
@@ -121,6 +124,7 @@ const LOCALE_TAGS: Record<Locale, string> = {
   sw: 'sw-KE',
   tr: 'tr-TR',
   ar: 'ar',
+  pl: 'pl-PL',
 }
 export const localeTag = (locale: Locale): string => LOCALE_TAGS[locale]
 
