@@ -1,15 +1,30 @@
+# The app lives in resonance/ (Vite + Capacitor); it has its own .gitignore.
+# docs/ is the GitHub Pages legal page. This root file just catches stray junk.
+
+# IDE / OS
+.idea/
+.vscode/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+Thumbs.db
+
+# Node / build output (defensive — normally under resonance/)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Android / Gradle (defensive — the real project is resonance/android/)
+.gradle/
+.kotlin/
+/build/
+captures/
 local.properties
+
+# Secrets — never commit signing material or env files
+*.jks
+*.keystore
+keystore.properties
+.env
+.env.local
+.env.*.local

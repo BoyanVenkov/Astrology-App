@@ -1,8 +1,13 @@
 # Releasing Resonance (Android)
 
 The web build happens on this machine; the `.aab` (Android App Bundle) must be
-built on a machine with **JDK 17** + the **Android SDK**. Easiest is Android
-Studio, which bundles both.
+built on a machine with **JDK 21** + the **Android SDK**. Capacitor 8's Android
+platform compiles at Java 21 (`android/app/capacitor.build.gradle`), so an older
+JDK fails with "invalid source release: 21". Easiest is a current **Android
+Studio** (Ladybug 2024.2 or newer), which bundles a matching JDK 21.
+
+**Open Android Studio on `resonance/android/`** (or run `npx cap open android`
+from `resonance/`) — never on the repo root.
 
 ---
 
@@ -12,7 +17,7 @@ Studio, which bundles both.
 
 - **Android Studio** — https://developer.android.com/studio (bundles JDK + SDK).
   On first run let it install the SDK + build-tools.
-- Or, without Android Studio: JDK 17 (`winget install Microsoft.OpenJDK.17`) +
+- Or, without Android Studio: JDK 21 (`winget install Microsoft.OpenJDK.21`) +
   Android command-line tools, with `ANDROID_HOME` set and
   `android/local.properties` containing `sdk.dir=C:\\path\\to\\Android\\Sdk`.
 
