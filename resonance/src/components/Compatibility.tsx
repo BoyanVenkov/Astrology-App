@@ -213,6 +213,27 @@ function Reading({ person }: { person: SavedPerson }) {
       </section>
 
       <section className="glass-panel p-4">
+        <p className="eyebrow">{t('syn.deep.patternLead')}</p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-200">
+          {reading.pattern}
+        </p>
+      </section>
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow">{t('syn.deep.chemHead')}</p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-200">
+          {reading.chemistry}
+        </p>
+      </section>
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow">{t('syn.deep.commHead')}</p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-200">
+          {reading.communication}
+        </p>
+      </section>
+
+      <section className="glass-panel p-4">
         <p className="eyebrow" style={{ color: '#6ee7b7' }}>
           {t('scr.compat.flows')}
         </p>
@@ -292,10 +313,22 @@ function Reading({ person }: { person: SavedPerson }) {
         }}
       >
         <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
-          {t('scr.compat.makeWork')}
+          {t('syn.deep.growthLead')}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-haze-100">
+          {reading.growth}
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-haze-200">
           {reading.advice}
+        </p>
+        <p className="mt-4 text-[13px] font-semibold uppercase tracking-[0.14em] text-haze-300">
+          {t('syn.deep.nameItLead')}
+        </p>
+        <p className="mt-1.5 text-sm leading-relaxed text-haze-200">
+          {reading.nameIt}
+        </p>
+        <p className="mt-4 text-sm leading-relaxed text-haze-300">
+          {reading.longView}
         </p>
       </section>
 

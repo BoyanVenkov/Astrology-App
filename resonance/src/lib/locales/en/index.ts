@@ -5,6 +5,7 @@ import { mantra } from './mantra'
 import { meditation } from './meditation'
 import { crystals } from './crystals'
 import { reading } from './reading'
+import { deepReading } from './deepReading'
 import { tarot } from './tarot'
 import { screens } from './screens'
 
@@ -22,6 +23,7 @@ export const en = {
   ...meditation,
   ...crystals,
   ...reading,
+  ...deepReading,
   ...tarot,
   ...screens,
 } as const

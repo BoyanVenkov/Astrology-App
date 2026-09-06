@@ -23,6 +23,7 @@ export function QuickHoroscope({
   const sky = useAppStore((s) => s.sky)
   const hasNatal = useAppStore((s) => s.hasNatal)
   const suggestedPattern = useAppStore((s) => s.suggestedPattern)
+  const transitHouses = useAppStore((s) => s.transitHouses)
 
   if (!transit || !chakra) return null
 
@@ -35,6 +36,7 @@ export function QuickHoroscope({
       sky,
       hasNatal,
       suggestedPattern,
+      transitHouses,
     },
     t,
   )

@@ -31,6 +31,7 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
   const profile = useAppStore((s) => s.profile)
   const currentLocation = useAppStore((s) => s.currentLocation)
   const transitHouses = useAppStore((s) => s.transitHouses)
+  const natal = useAppStore((s) => s.natal)
   const nowAngles = useAppStore((s) => s.nowAngles)
   const editProfile = useAppStore((s) => s.editProfile)
 
@@ -67,6 +68,8 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
       sky,
       hasNatal,
       suggestedPattern,
+      transitHouses,
+      natal,
     },
     t,
   )
@@ -81,9 +84,16 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
     >
 
       <section className="glass-panel p-5">
-        <p className="text-sm leading-relaxed text-haze-200">
-          {horoscope.overview}
-        </p>
+        {horoscope.intro.map((para, i) => (
+          <p
+            key={i}
+            className={`text-sm leading-relaxed ${
+              i === 0 ? 'text-haze-300' : 'text-haze-200'
+            } ${i > 0 ? 'mt-3' : ''}`}
+          >
+            {para}
+          </p>
+        ))}
         {!hasNatal && (
           <button
             type="button"
@@ -103,9 +113,14 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
           >
             {section.heading}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-haze-200">
-            {section.body}
-          </p>
+          {section.body.split('\n\n').map((para, i) => (
+            <p
+              key={i}
+              className="mt-2 text-sm leading-relaxed text-haze-200"
+            >
+              {para}
+            </p>
+          ))}
         </section>
       ))}
 
@@ -117,6 +132,43 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
           </p>
         </section>
       )}
+
+      {horoscope.threads.length > 0 && (
+        <section className="glass-panel p-4">
+          <p className="eyebrow">{t('scr.horo.threadsHead')}</p>
+          {horoscope.threads.map((para, i) => (
+            <p
+              key={i}
+              className={`text-sm leading-relaxed text-haze-200 ${
+                i > 0 ? 'mt-2' : 'mt-2'
+              }`}
+            >
+              {para}
+            </p>
+          ))}
+        </section>
+      )}
+
+      {horoscope.timing.length > 0 && (
+        <section className="glass-panel p-4">
+          <p className="eyebrow">{t('scr.horo.timingHead')}</p>
+          {horoscope.timing.map((para, i) => (
+            <p
+              key={i}
+              className="mt-2 text-sm leading-relaxed text-haze-200"
+            >
+              {para}
+            </p>
+          ))}
+        </section>
+      )}
+
+      <section className="glass-panel p-4">
+        <p className="eyebrow">{t('scr.horo.weekHead')}</p>
+        <p className="mt-2 text-sm leading-relaxed text-haze-100">
+          {horoscope.close}
+        </p>
+      </section>
 
       <section className="glass-panel p-4">
         <p className="eyebrow">{t('scr.horo.skyHead')}</p>

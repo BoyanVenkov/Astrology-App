@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useT } from '../lib/i18n'
 
 /**
@@ -142,9 +143,12 @@ function PickerSheet({
   children: React.ReactNode
 }) {
   const t = useT()
-  return (
+  // Portalled to <body> so it escapes the app shell's stacking context — the
+  // z-10 `<main>` would otherwise trap it under the z-30 bottom nav, hiding the
+  // Done button behind the tab bar.
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -165,7 +169,8 @@ function PickerSheet({
           {t('common.done')}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 

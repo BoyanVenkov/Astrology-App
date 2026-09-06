@@ -49,6 +49,18 @@ export interface SynastryReading {
   advice: string
   connections: SynastryConnection[]
   facets: { key: CompatLens; label: string; score: number }[]
+  /** A paragraph on what this bond fundamentally runs on. */
+  pattern: string
+  /** A paragraph on the chemistry between the two charts. */
+  chemistry: string
+  /** A paragraph on how the two communicate. */
+  communication: string
+  /** A paragraph on the work this connection asks of both people. */
+  growth: string
+  /** The one friction worth naming early. */
+  nameIt: string
+  /** One line on how the connection tends to age. */
+  longView: string
 }
 
 const MASS: Record<BodyName, number> = {
@@ -193,7 +205,7 @@ const CATEGORY = {
   karmic: new Set<BodyName>(['Saturn', 'Pluto']),
 }
 
-function textureFor(conns: SynastryConnection[], t: TFn): string {
+function categoryTally(conns: SynastryConnection[]): Record<string, number> {
   const tally: Record<string, number> = { emotional: 0, mental: 0, physical: 0, karmic: 0 }
   for (const c of conns) {
     const w = Math.abs(c.weight)
@@ -201,12 +213,72 @@ function textureFor(conns: SynastryConnection[], t: TFn): string {
       if (set.has(c.a) || set.has(c.b)) tally[cat] += w
     }
   }
+  return tally
+}
+
+function textureFor(conns: SynastryConnection[], t: TFn): string {
+  const tally = categoryTally(conns)
   const top = Object.entries(tally).sort((x, y) => y[1] - x[1])[0]
   if (!top || top[1] === 0) return t('syn.texture.light')
   const [cat, val] = top
   const total = Object.values(tally).reduce((s, n) => s + n, 0)
   if (val / total < 0.4) return t('syn.texture.rounded')
   return t(`syn.texture.${cat}` as MessageKey)
+}
+
+/** The deeper-pattern paragraph — keyed off whichever planet category dominates. */
+function patternFor(conns: SynastryConnection[], t: TFn): string {
+  const tally = categoryTally(conns)
+  const top = Object.entries(tally).sort((x, y) => y[1] - x[1])[0]
+  const cat = top && top[1] > 0 ? top[0] : 'emotional'
+  return t(`syn.deep.pattern.${cat}` as MessageKey)
+}
+
+const scoreBand = (score: number): 'good' | 'mid' | 'hard' =>
+  score >= 62 ? 'good' : score >= 46 ? 'mid' : 'hard'
+
+function growthFor(score: number, t: TFn): string {
+  return t(`syn.deep.growth.${scoreBand(score)}` as MessageKey)
+}
+
+/** Weigh only the contacts that govern attraction (Venus / Mars / Sun / Moon). */
+function chemistryFor(conns: SynastryConnection[], t: TFn): string {
+  const desire = new Set<BodyName>(['Venus', 'Mars', 'Sun', 'Moon'])
+  let warm = 0
+  let sharp = 0
+  for (const c of conns) {
+    if (!desire.has(c.a) && !desire.has(c.b)) continue
+    if (c.weight > 0) warm += c.weight
+    else sharp += -c.weight
+  }
+  if (warm + sharp < 0.15) return t('syn.deep.chem.cool')
+  return sharp > warm * 0.6 ? t('syn.deep.chem.mixed') : t('syn.deep.chem.strong')
+}
+
+/** Read the Mercury cross-aspects for the communication paragraph. */
+function communicationFor(conns: SynastryConnection[], t: TFn): string {
+  const merc = conns.filter((c) => c.a === 'Mercury' || c.b === 'Mercury')
+  if (merc.length === 0) return t('syn.deep.comm.quiet')
+  const net = merc.reduce((s, c) => s + c.weight, 0)
+  return net >= 0 ? t('syn.deep.comm.easy') : t('syn.deep.comm.work')
+}
+
+function nameItFor(hard: SynastryConnection[], t: TFn): string {
+  const top = hard[0]
+  if (!top) return t('syn.deep.nameIt.none')
+  return t('syn.deep.nameIt', {
+    a: planetLabel(top.a, t),
+    b: planetLabel(top.b, t),
+    sentence: firstSentence(top.detail).toLowerCase(),
+  })
+}
+
+function longViewFor(score: number, t: TFn): string {
+  return (
+    t('syn.deep.longViewLead') +
+    ': ' +
+    t(`syn.deep.longView.${scoreBand(score)}` as MessageKey)
+  )
 }
 
 const ELEMENT = ['fire', 'earth', 'air', 'water']
@@ -327,5 +399,11 @@ export function computeSynastry(
     advice: adviceFor(score, lens, t),
     connections,
     facets,
+    pattern: patternFor(connections, t),
+    chemistry: chemistryFor(connections, t),
+    communication: communicationFor(connections, t),
+    growth: growthFor(score, t),
+    nameIt: nameItFor(hard, t),
+    longView: longViewFor(score, t),
   }
 }
