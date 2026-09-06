@@ -58,6 +58,21 @@ export const listTimeZones = (): string[] => {
   return FALLBACK_ZONES
 }
 
+/**
+ * Whether the runtime accepts this string as an IANA time zone. More forgiving
+ * than `listTimeZones().includes(tz)` — the suggestion list can lag the engine's
+ * real zone database (e.g. `America/Nuuk` vs the older `America/Godthab`).
+ */
+export const isValidTimeZone = (tz: string): boolean => {
+  if (!tz) return false
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: tz })
+    return true
+  } catch {
+    return false
+  }
+}
+
 /** Milliseconds to add to a UTC instant to get wall-clock time in `timeZone`. */
 function zoneOffsetMs(instant: Date, timeZone: string): number {
   const dtf = new Intl.DateTimeFormat('en-US', {

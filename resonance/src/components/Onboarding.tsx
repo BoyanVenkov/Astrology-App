@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { useDayHue } from '../lib/dayhue'
-import { deviceTimeZone, listTimeZones, zonedWallTimeToUtc } from '../lib/timezone'
+import {
+  deviceTimeZone,
+  isValidTimeZone,
+  listTimeZones,
+  zonedWallTimeToUtc,
+} from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
 import { useT } from '../lib/i18n'
 import { DateField, TimeField } from './DateTimeField'
@@ -55,7 +60,7 @@ export function Onboarding() {
       ? { lat: Number(lat), lon: Number(lon) }
       : null
 
-  const zoneValid = zones.includes(timeZone)
+  const zoneValid = isValidTimeZone(timeZone)
   const dateValid = /^\d{4}-\d{2}-\d{2}$/.test(date) && date <= todayKey()
   const geoValid =
     geo === null ||

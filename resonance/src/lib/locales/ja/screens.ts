@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': '月が{sign}に入ります',
   'notif.moonSign.body':
     '感情の空模様が移り変わります — エネルギーを地に着けるのに良い時です。',
+  'notif.confirm.title': '通知がオンになりました',
+  'notif.confirm.body':
+    'リーディングや夜のクールダウン、空のできごとをここでお知らせします。',
   'notif.voc.title': '月がまもなくボイドになります',
   'notif.voc.body':
     'ボイドは 15 分後に始まります。エネルギーを地に着けて — 休んで、始めないで。',

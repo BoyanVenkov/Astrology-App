@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'Öğlen kullanılıyor — Ay ve yükselen burç yaklaşık olacak.',
   'person.save': 'Kaydet ve karşılaştır',
+  'person.need': 'Karşılaştırmak için ad, doğum tarihi ve yerini ekle.',
 
   /* ---- ruh hali kapısı / kayıt ---- */
   'mood.eyebrow': 'Başlamadan önce',

@@ -68,6 +68,7 @@ export const chrome = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'Using noon — the Moon and rising sign will be approximate.',
   'person.save': 'Save & compare',
+  'person.need': 'Add their name, birth date and place to compare.',
 
   /* ---- mood gate / check-in ---- */
   'mood.eyebrow': 'Before you begin',

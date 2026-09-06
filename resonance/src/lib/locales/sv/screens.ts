@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'Månen går in i {sign}',
   'notif.moonSign.body':
     'Det känslomässiga vädret skiftar — ett bra ögonblick att jorda din energi.',
+  'notif.confirm.title': 'Aviseringar är på',
+  'notif.confirm.body':
+    'Här får du din läsning, kvällens lugn och himlens händelser.',
   'notif.voc.title': 'Månen blir snart utan riktning',
   'notif.voc.body':
     'Riktningslösheten börjar om 15 minuter. Jorda din energi — vila, börja inte.',

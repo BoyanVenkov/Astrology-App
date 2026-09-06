@@ -173,6 +173,8 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': '月亮进入{sign}',
   'notif.moonSign.body':
     '情绪的气候在转变 — 一个为你的能量接地的好时机。',
+  'notif.confirm.title': '通知已开启',
+  'notif.confirm.body': '你的每日解读、睡前放松和天象提醒都会显示在这里。',
   'notif.voc.title': '月亮即将进入空亡',
   'notif.voc.body':
     '空亡将在 15 分钟后开始。为你的能量接地 — 休息，别开始。',

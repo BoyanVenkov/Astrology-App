@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'Używamy południa — Księżyc i znak wschodzący będą przybliżone.',
   'person.save': 'Zapisz i porównaj',
+  'person.need': 'Podaj imię, datę i miejsce urodzenia, aby porównać.',
 
   /* ---- brama nastroju / meldunek ---- */
   'mood.eyebrow': 'Zanim zaczniesz',

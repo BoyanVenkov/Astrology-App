@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'Ay {sign} burcuna giriyor',
   'notif.moonSign.body':
     'Duygusal hava değişiyor — enerjini topraklamak için iyi bir an.',
+  'notif.confirm.title': 'Bildirimler açık',
+  'notif.confirm.body':
+    'Okumanı, akşam sakinleşmelerini ve gökyüzü olaylarını burada alacaksın.',
   'notif.voc.title': 'Ay boşluğa giriyor',
   'notif.voc.body':
     'Boşluk 15 dakika içinde başlıyor. Enerjini topraklan — dinlen, başlama.',

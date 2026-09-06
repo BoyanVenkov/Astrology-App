@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'القمر يدخل {sign}',
   'notif.moonSign.body':
     'الطقس العاطفي يتحوّل — لحظة جيّدة لتأريض طاقتك.',
+  'notif.confirm.title': 'الإشعارات مفعّلة',
+  'notif.confirm.body':
+    'ستصلك هنا قراءتك، ولحظات الهدوء المسائية، وأحداث السماء.',
   'notif.voc.title': 'القمر يصير خالي المسار',
   'notif.voc.body':
     'يبدأ خلوّ المسار خلال ١٥ دقيقة. أرّض طاقتك — استرِح، لا تبدأ.',

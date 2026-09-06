@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'Луната влиза в {sign}',
   'notif.moonSign.body':
     'Емоционалното време се променя — добър момент да заземиш енергията си.',
+  'notif.confirm.title': 'Известията са включени',
+  'notif.confirm.body':
+    'Тук ще получаваш прочита си, вечерните напомняния и събитията в небето.',
   'notif.voc.title': 'Луната става без курс',
   'notif.voc.body':
     'Безкурсието започва след 15 минути. Заземи енергията си — почивай, не започвай.',

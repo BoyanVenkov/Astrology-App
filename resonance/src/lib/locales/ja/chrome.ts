@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': '正午で計算します。月とアセンダントはおおよその値になります。',
   'person.save': '保存して比較',
+  'person.need': '名前・生年月日・出生地を入力すると比較できます。',
 
   /* ---- 気分の記録 ---- */
   'mood.eyebrow': '始める前に',

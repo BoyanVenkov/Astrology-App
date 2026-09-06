@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'Jag använder middagstid: Månen och ascendenten blir ungefärliga.',
   'person.save': 'Spara och jämför',
+  'person.need': 'Lägg till namn, födelsedatum och födelseort för att jämföra.',
 
   /* ---- humörlogg ---- */
   'mood.eyebrow': 'Innan du börjar',

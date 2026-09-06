@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'Księżyc wchodzi w {sign}',
   'notif.moonSign.body':
     'Pogoda emocjonalna się przesuwa — dobra chwila, by uziemić energię.',
+  'notif.confirm.title': 'Powiadomienia są włączone',
+  'notif.confirm.body':
+    'Tu otrzymasz swój odczyt, wieczorne wyciszenia i wydarzenia na niebie.',
   'notif.voc.title': 'Księżyc staje się bez biegu',
   'notif.voc.body':
     'Bezbieg zaczyna się za 15 minut. Uziem energię — odpocznij, nie zaczynaj.',

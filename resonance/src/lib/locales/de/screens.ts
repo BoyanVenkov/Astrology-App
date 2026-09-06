@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'Mond tritt in {sign} ein',
   'notif.moonSign.body':
     'Das emotionale Wetter verschiebt sich — ein guter Moment, deine Energie zu erden.',
+  'notif.confirm.title': 'Benachrichtigungen sind an',
+  'notif.confirm.body':
+    'Hier bekommst du deine Lesung, die Abendruhe und Himmelsereignisse.',
   'notif.voc.title': 'Mond läuft gleich leer',
   'notif.voc.body':
     'Der Leerlauf beginnt in 15 Minuten. Erde deine Energie — ruhe, beginn nicht.',

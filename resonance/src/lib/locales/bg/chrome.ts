@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Алекс',
   'person.noonNote': 'Използва се обед — Луната и възходящият знак ще са приблизителни.',
   'person.save': 'Запази и сравни',
+  'person.need': 'Добави име, дата и място на раждане, за да сравниш.',
 
   /* ---- mood gate / check-in ---- */
   'mood.eyebrow': 'Преди да започнеш',

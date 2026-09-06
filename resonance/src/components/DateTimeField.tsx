@@ -150,7 +150,9 @@ function PickerSheet({
       <div
         className="mx-auto w-full max-w-md rounded-t-3xl border-t border-white/10 bg-[#0a0e1f] p-5"
         onClick={(e) => e.stopPropagation()}
-        style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }}
+        style={{
+          paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)',
+        }}
       >
         <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" />
         <p className="eyebrow-hue text-center">{title}</p>

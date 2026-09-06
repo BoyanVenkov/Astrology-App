@@ -1,6 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { zonedWallTimeToUtc } from '../lib/timezone'
+import {
+  deviceTimeZone,
+  isValidTimeZone,
+  listTimeZones,
+  zonedWallTimeToUtc,
+} from '../lib/timezone'
 import { searchCities, type City } from '../data/cities'
 import { useT } from '../lib/i18n'
 import { DateField, TimeField } from './DateTimeField'
@@ -21,36 +26,66 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
   const t = useT()
   const addPerson = useAppStore((s) => s.addPerson)
 
+  const zones = useMemo(() => listTimeZones(), [])
+
   const [name, setName] = useState('')
   const [date, setDate] = useState('')
   const [timeKnown, setTimeKnown] = useState(true)
   const [time, setTime] = useState('12:00')
   const [query, setQuery] = useState('')
   const [city, setCity] = useState<City | null>(null)
+  const [manual, setManual] = useState(false)
+  const [lat, setLat] = useState('')
+  const [lon, setLon] = useState('')
+  const [timeZone, setTimeZone] = useState(deviceTimeZone())
 
   const results = useMemo(
     () => (city ? [] : searchCities(query)),
     [query, city],
   )
 
+  const pickCity = (c: City) => {
+    setCity(c)
+    setQuery(`${c.name}, ${c.country}`)
+    setTimeZone(c.tz)
+    setManual(false)
+  }
+
+  const geo = city
+    ? { lat: city.lat, lon: city.lon }
+    : manual && lat.trim() !== '' && lon.trim() !== ''
+      ? { lat: Number(lat), lon: Number(lon) }
+      : null
+
   const dateValid = /^\d{4}-\d{2}-\d{2}$/.test(date) && date <= todayKey()
-  const canSave = name.trim().length > 0 && dateValid && city != null
+  const zoneValid = isValidTimeZone(timeZone)
+  const geoValid =
+    geo === null ||
+    (Number.isFinite(geo.lat) &&
+      Math.abs(geo.lat) <= 90 &&
+      Number.isFinite(geo.lon) &&
+      Math.abs(geo.lon) <= 180)
+  const canSave =
+    name.trim().length > 0 && dateValid && zoneValid && geoValid
 
   const save = () => {
-    if (!canSave || !city) return
+    if (!canSave) return
     const [y, mo, d] = date.split('-').map(Number)
     const [h, mi] = (timeKnown ? time : '12:00').split(':').map(Number)
-    const utc = zonedWallTimeToUtc(y, mo, d, h, mi, city.tz)
+    const utc = zonedWallTimeToUtc(y, mo, d, h, mi, timeZone)
+    const placeLabel = city
+      ? `${city.name}, ${city.country}`
+      : query.trim() || undefined
     const person: SavedPerson = {
       id: `p-${Date.now().toString(36)}`,
       name: name.trim(),
       date,
       time: timeKnown ? time : '12:00',
       timeKnown,
-      timeZone: city.tz,
-      placeLabel: `${city.name}, ${city.country}`,
-      lat: city.lat,
-      lon: city.lon,
+      timeZone,
+      placeLabel,
+      lat: geo?.lat,
+      lon: geo?.lon,
       utc: utc.toISOString(),
     }
     addPerson(person)
@@ -115,10 +150,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
               <li key={`${c.name}-${c.country}`}>
                 <button
                   type="button"
-                  onClick={() => {
-                    setCity(c)
-                    setQuery(`${c.name}, ${c.country}`)
-                  }}
+                  onClick={() => pickCity(c)}
                   className="block w-full px-4 py-2.5 text-start text-sm text-haze-100 active:bg-white/10"
                 >
                   {c.name}
@@ -128,13 +160,66 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
             ))}
           </ul>
         )}
-        {city && (
+        {city ? (
           <p className="data text-xs text-haze-400">
             {city.lat.toFixed(2)}°{city.lat >= 0 ? 'N' : 'S'} ·{' '}
             {Math.abs(city.lon).toFixed(2)}°{city.lon >= 0 ? 'E' : 'W'} · {city.tz}
           </p>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setManual((v) => !v)}
+            className="self-start text-[11px] uppercase tracking-[0.12em] text-gold-300"
+          >
+            {manual ? t('onb.hideManual') : t('onb.notListed')}
+          </button>
         )}
       </div>
+
+      {!city && manual && (
+        <div className="grid grid-cols-2 gap-3">
+          <label className="flex flex-col gap-1.5">
+            <span className="eyebrow">{t('onb.latitude')}</span>
+            <input
+              type="number"
+              inputMode="decimal"
+              value={lat}
+              onChange={(e) => setLat(e.target.value)}
+              placeholder="43.21"
+              className={field}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="eyebrow">{t('onb.longitude')}</span>
+            <input
+              type="number"
+              inputMode="decimal"
+              value={lon}
+              onChange={(e) => setLon(e.target.value)}
+              placeholder="27.91"
+              className={field}
+            />
+          </label>
+        </div>
+      )}
+
+      {!city && (
+        <label className="flex flex-col gap-1.5">
+          <span className="eyebrow">{t('onb.birthZone')}</span>
+          <input
+            list="person-tz-list"
+            value={timeZone}
+            onChange={(e) => setTimeZone(e.target.value)}
+            placeholder="Europe/Athens"
+            className={`${field} ${zoneValid ? '' : '!border-red-400/50'}`}
+          />
+          <datalist id="person-tz-list">
+            {zones.map((z) => (
+              <option key={z} value={z} />
+            ))}
+          </datalist>
+        </label>
+      )}
 
       <button
         type="button"
@@ -146,6 +231,11 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
       >
         {t('person.save')}
       </button>
+      {!canSave && (
+        <p className="-mt-2 text-center text-[11px] text-haze-500">
+          {t('person.need')}
+        </p>
+      )}
       {onCancel && (
         <button
           type="button"

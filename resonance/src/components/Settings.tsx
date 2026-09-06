@@ -2,10 +2,7 @@ import { useRef, useState, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { deleteAccount, signOut, useAuth } from '../lib/auth'
 import { backupNow } from '../lib/sync'
-import {
-  ensureNotificationPermission,
-  syncNotifications,
-} from '../lib/notifications'
+import { enableNotifications, syncNotifications } from '../lib/notifications'
 import { locationIsFresh, requestCurrentLocation } from '../lib/location'
 import { openExternal } from '../lib/links'
 import { useT } from '../lib/i18n'
@@ -14,6 +11,7 @@ import { useEntitlements } from '../lib/premium'
 import { subscriptionManagementUrl } from '../lib/revenuecat'
 import { GlobeIcon } from './icons'
 import { Screen } from './Screen'
+import { TimeField } from './DateTimeField'
 
 interface SettingsProps {
   onBack: () => void
@@ -176,7 +174,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
 
   const toggleNotifications = async (on: boolean) => {
     if (on) {
-      const granted = await ensureNotificationPermission()
+      const granted = await enableNotifications(t)
       if (!granted) {
         setNotice(t('set.notificationsBlocked'))
         return
@@ -372,17 +370,19 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
         {notifications.enabled && (
           <>
             <Row>
-              <div className="flex items-center justify-between py-3 text-sm">
+              <div className="flex items-center justify-between gap-3 py-3 text-sm">
                 <span className="text-haze-100">{t('set.morningReading')}</span>
-                <input
-                  type="time"
-                  value={notifications.dailyReadingTime}
-                  onChange={(e) =>
-                    patchNotif({ dailyReadingTime: e.target.value })
-                  }
-                  disabled={!notifications.dailyReading}
-                  className={fieldCls}
-                />
+                <div
+                  className={`w-24 shrink-0 ${
+                    notifications.dailyReading ? '' : 'pointer-events-none opacity-40'
+                  }`}
+                >
+                  <TimeField
+                    value={notifications.dailyReadingTime}
+                    onChange={(v) => patchNotif({ dailyReadingTime: v })}
+                    label={t('set.morningReading')}
+                  />
+                </div>
               </div>
             </Row>
             <Row>
@@ -393,17 +393,19 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
               />
             </Row>
             <Row>
-              <div className="flex items-center justify-between py-3 text-sm">
+              <div className="flex items-center justify-between gap-3 py-3 text-sm">
                 <span className="text-haze-100">{t('set.eveningWind')}</span>
-                <input
-                  type="time"
-                  value={notifications.eveningWindTime}
-                  onChange={(e) =>
-                    patchNotif({ eveningWindTime: e.target.value })
-                  }
-                  disabled={!notifications.eveningWind}
-                  className={fieldCls}
-                />
+                <div
+                  className={`w-24 shrink-0 ${
+                    notifications.eveningWind ? '' : 'pointer-events-none opacity-40'
+                  }`}
+                >
+                  <TimeField
+                    value={notifications.eveningWindTime}
+                    onChange={(v) => patchNotif({ eveningWindTime: v })}
+                    label={t('set.eveningWind')}
+                  />
+                </div>
               </div>
             </Row>
             <Row>

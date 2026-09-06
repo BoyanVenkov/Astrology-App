@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'Mwezi unaingia {sign}',
   'notif.moonSign.body':
     'Hali ya kihisia inahamia — wakati mzuri wa kutulia nguvu yako chini.',
+  'notif.confirm.title': 'Arifa zimewashwa',
+  'notif.confirm.body':
+    'Utapata usomaji wako, utulivu wa jioni na matukio ya anga hapa.',
   'notif.voc.title': 'Mwezi unakaribia kukosa mwelekeo',
   'notif.voc.body':
     'Ukosefu wa mwelekeo unaanza baada ya dakika 15. Tulia nguvu yako chini — pumzika, usianze.',

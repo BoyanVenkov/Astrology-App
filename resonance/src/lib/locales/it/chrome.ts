@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'Uso mezzogiorno: la Luna e l’ascendente saranno approssimativi.',
   'person.save': 'Salva e confronta',
+  'person.need': 'Aggiungi nome, data e luogo di nascita per confrontare.',
 
   /* ---- registro dell’umore ---- */
   'mood.eyebrow': 'Prima di iniziare',

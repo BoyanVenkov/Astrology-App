@@ -9,6 +9,11 @@ import { upcomingVoidOfCourse } from './lunar'
 /**
  * Local notifications, all computed on-device from the ephemeris — no server.
  * A no-op on the web; the real thing runs in the Capacitor build.
+ *
+ * Everything is scheduled as an **inexact** alarm (`isExactNotification: false`)
+ * so Android 12+ never yanks the user to the system "Alarms & reminders" screen,
+ * and `allowWhileIdle` so Doze doesn't defer them indefinitely. A morning nudge
+ * landing a few minutes late is fine; reliability matters more than the second.
  */
 
 const isNative = (): boolean => {
@@ -19,14 +24,30 @@ const isNative = (): boolean => {
   }
 }
 
+const CHANNEL_ID = 'resonance-default'
+
+/** Android 8+: notifications need a channel, and its importance is fixed at
+ *  creation — so make sure a HIGH one exists before scheduling anything. */
+async function ensureChannel(): Promise<void> {
+  if (Capacitor.getPlatform() !== 'android') return
+  await LocalNotifications.createChannel({
+    id: CHANNEL_ID,
+    name: 'Resonance',
+    description: 'Readings, wind-downs and sky events',
+    importance: 4, // IMPORTANCE_HIGH — makes a sound, can pop as a heads-up
+    visibility: 1,
+  }).catch(() => undefined)
+}
+
 interface Scheduled {
   id: number
   title: string
   body: string
-  schedule: { at: Date } | { on: { hour: number; minute: number }; every: 'day' }
+  schedule: { at: Date } | { on: { hour: number; minute: number } }
 }
 
 // Fixed id ranges so we can cancel cleanly and never collide.
+const ID_CONFIRM = 99
 const ID_DAILY = 100
 const ID_EVENING = 101
 const ID_MOON_PHASE = 200 // 200..205
@@ -47,7 +68,7 @@ function buildSchedule(prefs: NotificationPreferences, t: TFn): Scheduled[] {
       id: ID_DAILY,
       title: t('notif.daily.title'),
       body: t('notif.daily.body'),
-      schedule: { on: parseHM(prefs.dailyReadingTime), every: 'day' },
+      schedule: { on: parseHM(prefs.dailyReadingTime) },
     })
   }
 
@@ -56,7 +77,7 @@ function buildSchedule(prefs: NotificationPreferences, t: TFn): Scheduled[] {
       id: ID_EVENING,
       title: t('notif.evening.title'),
       body: t('notif.evening.body'),
-      schedule: { on: parseHM(prefs.eveningWindTime), every: 'day' },
+      schedule: { on: parseHM(prefs.eveningWindTime) },
     })
   }
 
@@ -93,7 +114,9 @@ function buildSchedule(prefs: NotificationPreferences, t: TFn): Scheduled[] {
 
   if (prefs.voidOfCourse) {
     upcomingVoidOfCourse(now, 3).forEach((voc, i) => {
-      const fireAt = new Date(voc.since.getTime() - 15 * 60_000)
+      // 30 min ahead — enough lead that a Doze-delayed inexact alarm still
+      // lands before the void actually starts.
+      const fireAt = new Date(voc.since.getTime() - 30 * 60_000)
       if (fireAt.getTime() <= now.getTime()) return
       out.push({
         id: ID_VOC + i,
@@ -107,6 +130,9 @@ function buildSchedule(prefs: NotificationPreferences, t: TFn): Scheduled[] {
   return out
 }
 
+// ID_CONFIRM is deliberately absent: it's a fire-once "it works" toast shown
+// straight after the permission grant, and `syncNotifications` runs immediately
+// after that — cancelling it here would dismiss it before it's seen.
 const ALL_IDS = [
   ID_DAILY,
   ID_EVENING,
@@ -131,6 +157,8 @@ export async function syncNotifications(
   const perm = await LocalNotifications.requestPermissions().catch(() => null)
   if (!perm || perm.display !== 'granted') return
 
+  await ensureChannel()
+
   const items = buildSchedule(prefs, t)
   if (items.length === 0) return
 
@@ -139,14 +167,39 @@ export async function syncNotifications(
       id: n.id,
       title: n.title,
       body: n.body,
-      schedule: n.schedule,
+      channelId: CHANNEL_ID,
+      schedule: {
+        ...n.schedule,
+        allowWhileIdle: true,
+      },
+      // never bounce the user to the system "Alarms & reminders" screen
+      isExactNotification: false,
     })),
   }).catch(() => undefined)
 }
 
-/** True once the OS has granted (or we're on web where it doesn't matter). */
-export async function ensureNotificationPermission(): Promise<boolean> {
+/**
+ * Turn notifications on: ask for permission, and if granted fire one straight
+ * away so the user actually sees it work (the scheduled ones may be hours off).
+ * Returns whether permission is granted.
+ */
+export async function enableNotifications(t: TFn): Promise<boolean> {
   if (!isNative()) return true
   const res = await LocalNotifications.requestPermissions().catch(() => null)
-  return res?.display === 'granted'
+  if (res?.display !== 'granted') return false
+
+  await ensureChannel()
+  // No `schedule` → the plugin delivers it right now, so the user sees proof
+  // it works without waiting on an alarm.
+  await LocalNotifications.schedule({
+    notifications: [
+      {
+        id: ID_CONFIRM,
+        title: t('notif.confirm.title'),
+        body: t('notif.confirm.body'),
+        channelId: CHANNEL_ID,
+      },
+    ],
+  }).catch(() => undefined)
+  return true
 }

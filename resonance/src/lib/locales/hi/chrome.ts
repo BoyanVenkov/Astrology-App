@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'दोपहर का उपयोग कर रहे हैं: चंद्रमा और लग्न अनुमानित होंगे।',
   'person.save': 'सहेजें और तुलना करें',
+  'person.need': 'तुलना के लिए नाम, जन्म तिथि और जन्म स्थान जोड़ें।',
 
   /* ---- मनोदशा लॉग ---- */
   'mood.eyebrow': 'शुरू करने से पहले',

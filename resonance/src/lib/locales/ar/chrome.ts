@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'أليكس',
   'person.noonNote': 'نستخدم الظهر — سيكون القمر وبرج الطالع تقريبيَّين.',
   'person.save': 'احفظ وقارن',
+  'person.need': 'أضِف الاسم وتاريخ الميلاد ومكانه للمقارنة.',
 
   /* ---- بوابة المزاج / التسجيل ---- */
   'mood.eyebrow': 'قبل أن تبدأ',

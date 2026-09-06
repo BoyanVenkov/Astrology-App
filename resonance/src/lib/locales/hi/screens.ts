@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'चंद्रमा {sign} में प्रवेश करता है',
   'notif.moonSign.body':
     'भावनात्मक मौसम बदलता है — अपनी ऊर्जा को ज़मीन से जोड़ने का एक अच्छा क्षण।',
+  'notif.confirm.title': 'सूचनाएँ चालू हैं',
+  'notif.confirm.body':
+    'आपका पाठ, रात की शांति और आकाश की घटनाएँ यहाँ मिलेंगी।',
   'notif.voc.title': 'चंद्रमा दिशाहीन होने वाला है',
   'notif.voc.body':
     'दिशाहीनता 15 मिनट में शुरू होती है। अपनी ऊर्जा को ज़मीन से जोड़ें — विश्राम करें, शुरू न करें।',

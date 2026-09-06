@@ -173,6 +173,9 @@ export const screens: Record<ScreenKey, string> = {
   'notif.moonSign.title': 'A Lua entra em {sign}',
   'notif.moonSign.body':
     'O clima emocional muda — um bom momento para aterrar sua energia.',
+  'notif.confirm.title': 'Notificações ativadas',
+  'notif.confirm.body':
+    'Você vai receber aqui sua leitura, os relaxamentos noturnos e os eventos do céu.',
   'notif.voc.title': 'A Lua vai ficar fora de curso',
   'notif.voc.body':
     'O fora de curso começa em 15 minutos. Aterre sua energia — descanse, não comece.',

@@ -172,6 +172,9 @@ export const screens = {
   'notif.moonSign.title': 'Moon enters {sign}',
   'notif.moonSign.body':
     'The emotional weather shifts — a good moment to ground your energy.',
+  'notif.confirm.title': 'Notifications are on',
+  'notif.confirm.body':
+    "You'll get your reading, wind-downs and sky events here.",
   'notif.voc.title': 'Moon going void of course',
   'notif.voc.body':
     "The void begins in 15 minutes. Ground your energy — rest, don't begin.",

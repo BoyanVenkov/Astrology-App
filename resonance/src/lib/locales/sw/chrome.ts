@@ -70,6 +70,7 @@ export const chrome: Record<ChromeKey, string> = {
   'person.namePlaceholder': 'Alex',
   'person.noonNote': 'Tunatumia adhuhuri: Mwezi na lagi vitakuwa vya kadirio.',
   'person.save': 'Hifadhi na linganisha',
+  'person.need': 'Ongeza jina, tarehe na mahali pa kuzaliwa ili kulinganisha.',
 
   /* ---- rekodi ya hisia ---- */
   'mood.eyebrow': 'Kabla ya kuanza',
