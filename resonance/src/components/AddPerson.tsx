@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
+import { popOverlay, pushOverlay } from '../lib/overlayLock'
 import {
   deviceTimeZone,
   isValidTimeZone,
@@ -25,6 +26,13 @@ const todayKey = (): string => new Date().toISOString().slice(0, 10)
 export function AddPerson({ onDone, onCancel }: AddPersonProps) {
   const t = useT()
   const addPerson = useAppStore((s) => s.addPerson)
+
+  // A focused data-entry screen — hide the tab bar so the Save button is never
+  // tucked behind it on shorter phones or with the keyboard up.
+  useEffect(() => {
+    pushOverlay()
+    return () => popOverlay()
+  }, [])
 
   const zones = useMemo(() => listTimeZones(), [])
 

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { TabKey } from '../types/resonance'
 import { useDayHue } from '../lib/dayhue'
 import { useT, type TFn } from '../lib/i18n'
+import { useOverlayOpen } from '../lib/overlayLock'
 import type { MessageKey } from '../lib/locales/en'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
@@ -90,6 +91,7 @@ export function Layout({
 }: LayoutProps) {
   useDayHue()
   const t = useT()
+  const navHidden = useOverlayOpen()
 
   return (
     <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col">
@@ -120,11 +122,16 @@ export function Layout({
 
       <main
         className="relative z-10 min-w-0 flex-1 px-4"
-        style={{ paddingBottom: 'calc(6.5rem + env(safe-area-inset-bottom))' }}
+        style={{
+          paddingBottom: navHidden
+            ? 'calc(1.5rem + env(safe-area-inset-bottom))'
+            : 'calc(6.5rem + env(safe-area-inset-bottom))',
+        }}
       >
         {children}
       </main>
 
+      {!navHidden && (
       <nav
         className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.1] backdrop-blur-2xl"
         style={{
@@ -179,6 +186,7 @@ export function Layout({
           ))}
         </div>
       </nav>
+      )}
     </div>
   )
 }

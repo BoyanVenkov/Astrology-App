@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useT } from '../lib/i18n'
+import { popOverlay, pushOverlay } from '../lib/overlayLock'
 
 /**
  * Birth date / time inputs styled to the app instead of the OS's default
@@ -143,6 +144,11 @@ function PickerSheet({
   children: React.ReactNode
 }) {
   const t = useT()
+  // Hide the app's bottom tab bar for as long as the sheet is up.
+  useEffect(() => {
+    pushOverlay()
+    return () => popOverlay()
+  }, [])
   // Portalled to <body> so it escapes the app shell's stacking context — the
   // z-10 `<main>` would otherwise trap it under the z-30 bottom nav, hiding the
   // Done button behind the tab bar.
