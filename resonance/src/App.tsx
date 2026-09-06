@@ -23,6 +23,7 @@ import { Ritual } from './components/Ritual'
 import { Settings } from './components/Settings'
 import { SkyView } from './components/SkyView'
 import { TarotReader } from './components/TarotReader'
+import { RuneReader } from './components/RuneReader'
 import { Transits } from './components/Transits'
 import { Welcome, Splash } from './components/Welcome'
 import { YouView } from './components/YouView'
@@ -58,6 +59,7 @@ type Sub =
   | 'library'
   | 'journal'
   | 'mood'
+  | 'runes'
   | 'settings'
 
 function App() {
@@ -211,6 +213,9 @@ function App() {
         )}
         {sub === 'journal' && <Journal onBack={back} onUpgrade={openPaywall} />}
         {sub === 'mood' && <MoodCheckIn onDone={back} />}
+        {sub === 'runes' && (
+          <RuneReader onBack={back} onUpgrade={openPaywall} />
+        )}
         {sub === 'settings' && (
           <Settings
             onBack={back}
@@ -227,6 +232,7 @@ function App() {
             onTab={goTab}
             onStones={() => setSub('stones')}
             onChakras={() => setSub('chakras')}
+            onRunes={() => setSub('runes')}
           />
         )}
         {sub === null && tab === 'sky' && (
@@ -245,6 +251,7 @@ function App() {
           <TarotReader
             key={tabNonce}
             onUpgrade={() => openPaywall(t('pay.reasonSpreads'))}
+            onOpenRunes={() => setSub('runes')}
           />
         )}
         {sub === null && tab === 'you' && (

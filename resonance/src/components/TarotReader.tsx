@@ -17,17 +17,27 @@ import {
   type Spread,
   type TarotReading,
 } from '../lib/tarot'
+import {
+  drawRunes,
+  layoutOf,
+  runeDailySeed,
+  runeMeta,
+  runeText,
+} from '../lib/runes'
 import { useT, type TFn } from '../lib/i18n'
 import { spreadUnlocked, useEntitlements } from '../lib/premium'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon } from './icons'
 import { BackButton } from './Screen'
+import { RuneGlyph } from './RuneGlyph'
 import { TarotCardBack, TarotCardFace } from './TarotCard'
 
 interface TarotReaderProps {
   /** Only set when Tarot is pushed as a sub-screen; as a tab there's nowhere back. */
   onBack?: () => void
   onUpgrade?: (reason?: string) => void
+  /** Opens the Runes reader. */
+  onOpenRunes?: () => void
 }
 
 type View = 'daily' | 'choose' | 'table' | 'oracle'
@@ -163,12 +173,17 @@ function OracleResult({ q, card, t }: { q: string; card: DrawnCard; t: TFn }) {
 
 /* ---------------------------------------------------------------- reader */
 
-export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
+export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps) {
   const t = useT()
   const profile = useAppStore((s) => s.profile)
   const drawnDay = useAppStore((s) => s.tarotDrawnDay)
+  const runeDrawnDay = useAppStore((s) => s.runeDrawnDay)
   const markTarotDrawn = useAppStore((s) => s.markTarotDrawn)
   const { isPro } = useEntitlements()
+  const dailyRune = useMemo(
+    () => drawRunes(layoutOf('one'), runeDailySeed(profile)).runes[0],
+    [profile],
+  )
 
   const today = localDayKey()
   const daily = useMemo(
@@ -252,6 +267,43 @@ export function TarotReader({ onBack, onUpgrade }: TarotReaderProps) {
           <Interpretation drawn={d} t={t} />
         ) : (
           <p className="text-center text-sm text-haze-400">{t('tr.tapTurn')}</p>
+        )}
+
+        {onOpenRunes && (
+          <button
+            type="button"
+            onClick={onOpenRunes}
+            className="glass-panel flex items-center gap-3 p-4 text-start active:scale-[0.99]"
+          >
+            <span
+              className="grid h-11 w-9 shrink-0 place-items-center rounded-[26%]"
+              style={{
+                background:
+                  'radial-gradient(120% 100% at 30% 20%, #333949, #23283492 55%, #1a1d27)',
+                border: '1px solid rgba(255,255,255,0.10)',
+              }}
+            >
+              <RuneGlyph
+                runeKey={dailyRune.key}
+                merkstave={dailyRune.merkstave}
+                className="h-[64%] w-[64%]"
+                style={{ color: '#e3c063' }}
+              />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="font-serif text-lg text-white">
+                {t('dash.dailyRune')}
+              </span>
+              <span className="block text-xs text-haze-300">
+                {runeDrawnDay === today
+                  ? runeMeta(dailyRune.key).name +
+                    ' · ' +
+                    runeText(dailyRune.key, dailyRune.merkstave, t).keywords[0]
+                  : t('dash.runeNew')}
+              </span>
+            </span>
+            <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          </button>
         )}
 
         <button

@@ -130,6 +130,7 @@ const createSession = (): ResonanceSession & SkyState => {
     notifications: DEFAULT_NOTIFICATIONS,
     tier: 'free',
     tarotDrawnDay: null,
+    runeDrawnDay: null,
     moodGateDay: null,
     people: [],
     authSkipped: false,
@@ -181,6 +182,8 @@ interface ResonanceActions {
   refreshDailyTransit: () => void
   /** Mark that today's daily tarot card has been turned. */
   markTarotDrawn: () => void
+  /** Mark that today's daily rune has been cast. */
+  markRuneDrawn: () => void
   /** Mark today's mood gate handled (answered or skipped) so it stops asking. */
   dismissMoodGate: () => void
   /** Save someone for chart-compatibility readings. */
@@ -303,6 +306,8 @@ export const useAppStore = create<AppStore>()(
 
       markTarotDrawn: () => set({ tarotDrawnDay: localDayKey() }),
 
+      markRuneDrawn: () => set({ runeDrawnDay: localDayKey() }),
+
       dismissMoodGate: () => set({ moodGateDay: localDayKey() }),
 
       addPerson: (person) =>
@@ -326,6 +331,7 @@ export const useAppStore = create<AppStore>()(
           currentLocation: state.currentLocation,
           onboardingComplete: state.onboardingComplete,
           tarotDrawnDay: state.tarotDrawnDay,
+          runeDrawnDay: state.runeDrawnDay,
           moodGateDay: state.moodGateDay,
           people: state.people,
           authSkipped: state.authSkipped,
@@ -361,6 +367,7 @@ export const useAppStore = create<AppStore>()(
         notifications: state.notifications,
         tier: state.tier,
         tarotDrawnDay: state.tarotDrawnDay,
+        runeDrawnDay: state.runeDrawnDay,
         moodGateDay: state.moodGateDay,
         people: state.people,
         authSkipped: state.authSkipped,
@@ -415,6 +422,7 @@ export interface SyncSnapshot {
   notifications: NotificationPreferences
   tier: PremiumTier
   tarotDrawnDay: string | null
+  runeDrawnDay: string | null
   moodGateDay: string | null
   people: SavedPerson[]
   locale: Locale
@@ -436,6 +444,7 @@ export function snapshotForSync(): SyncSnapshot {
     notifications: s.notifications,
     tier: s.tier,
     tarotDrawnDay: s.tarotDrawnDay,
+    runeDrawnDay: s.runeDrawnDay,
     moodGateDay: s.moodGateDay,
     people: s.people,
     locale: s.locale,
@@ -491,6 +500,7 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
       ),
       lastCompletedAt: laterDay(s.lastCompletedAt, remote.lastCompletedAt ?? null),
       tarotDrawnDay: laterDay(s.tarotDrawnDay, remote.tarotDrawnDay ?? null),
+      runeDrawnDay: laterDay(s.runeDrawnDay, remote.runeDrawnDay ?? null),
       moodGateDay: laterDay(s.moodGateDay, remote.moodGateDay ?? null),
       onboardingComplete: s.onboardingComplete || !!remote.onboardingComplete,
       tier: s.tier === 'pro' || remote.tier === 'pro' ? 'pro' : s.tier,

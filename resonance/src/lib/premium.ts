@@ -87,6 +87,10 @@ export const meditationUnlocked = (
 export const spreadUnlocked = (spreadKey: string, isPro: boolean): boolean =>
   isPro || spreadKey === 'one'
 
+/** Free runecraft is the daily single rune; the Norns and the Cross are Pro. */
+export const runeLayoutUnlocked = (layoutKey: string, isPro: boolean): boolean =>
+  isPro || layoutKey === 'one'
+
 /* -------------------------------------------------------------- purchase */
 
 // The actual purchase flow (Play Billing via RevenueCat) lives in

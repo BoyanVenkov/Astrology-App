@@ -243,7 +243,7 @@ export interface TarotReading {
   seed: string
 }
 
-const fnv1a = (str: string): number => {
+export const fnv1a = (str: string): number => {
   let h = 0x811c9dc5
   for (let i = 0; i < str.length; i += 1) {
     h ^= str.charCodeAt(i)
@@ -252,7 +252,7 @@ const fnv1a = (str: string): number => {
   return h >>> 0
 }
 
-const mulberry32 = (seed: number) => {
+export const mulberry32 = (seed: number) => {
   let a = seed >>> 0
   return (): number => {
     a = (a + 0x6d2b79f5) | 0

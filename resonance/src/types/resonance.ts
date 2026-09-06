@@ -430,6 +430,8 @@ export interface ResonanceSession {
   tier: PremiumTier
   /** Local day `YYYY-MM-DD` the daily tarot card was last turned — `null` if never. */
   tarotDrawnDay: string | null
+  /** Local day `YYYY-MM-DD` the daily rune was last cast — `null` if never. */
+  runeDrawnDay: string | null
   /** Local day the daily mood gate was answered or dismissed — `null` if never. */
   moodGateDay: string | null
   /** People saved for chart-compatibility readings. */

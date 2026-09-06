@@ -13,6 +13,8 @@ import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
 import { useChakraField } from '../lib/chakraField'
+import { drawRunes, layoutOf, runeDailySeed } from '../lib/runes'
+import { RuneGlyph } from './RuneGlyph'
 import { CardsIcon, SparkIcon } from './icons'
 
 interface DashboardProps {
@@ -21,6 +23,7 @@ interface DashboardProps {
   onTab: (tab: TabKey) => void
   onStones: () => void
   onChakras: () => void
+  onRunes: () => void
 }
 
 const greetingKey = (h: number): MessageKey =>
@@ -38,6 +41,7 @@ export function Dashboard({
   onTab,
   onStones,
   onChakras,
+  onRunes,
 }: DashboardProps) {
   const t = useT()
   const localeTag = useLocaleTag()
@@ -49,6 +53,12 @@ export function Dashboard({
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
   const tarotDrawnDay = useAppStore((s) => s.tarotDrawnDay)
+  const runeDrawnDay = useAppStore((s) => s.runeDrawnDay)
+  const profile = useAppStore((s) => s.profile)
+  const dailyRune = useMemo(
+    () => drawRunes(layoutOf('one'), runeDailySeed(profile)).runes[0],
+    [profile],
+  )
 
   const [bucket, setBucket] = useState(() => Math.floor(Date.now() / 300_000))
   useEffect(() => {
@@ -83,6 +93,7 @@ export function Dashboard({
   const heroStone = rx.stones[0]
   const vocSoon = voc.active || (voc.hoursUntil != null && voc.hoursUntil < 4)
   const tarotDrawn = tarotDrawnDay === localDayKey()
+  const runeDrawn = runeDrawnDay === localDayKey()
 
   return (
     <div className="flex flex-col gap-5">
@@ -218,21 +229,41 @@ export function Dashboard({
         </button>
       </section>
 
-      {/* tarot */}
-      <button
-        type="button"
-        onClick={() => onTab('tarot')}
-        className="glass-panel flex items-center gap-3 p-4 text-start active:scale-[0.99]"
-      >
-        <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
-        <div className="min-w-0 flex-1">
-          <p className="font-serif text-lg text-white">{t('dash.dailyTarot')}</p>
+      {/* tarot + rune */}
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={() => onTab('tarot')}
+          className="glass-panel flex flex-col gap-2 p-4 text-start active:scale-[0.99]"
+        >
+          <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
+          <p className="font-serif text-base leading-tight text-white">
+            {t('dash.dailyTarot')}
+          </p>
           <p className="text-xs text-haze-300">
             {tarotDrawn ? t('dash.tarotSeen') : t('dash.tarotNew')}
           </p>
-        </div>
-        <span style={{ color: 'var(--rz-hue)' }}>›</span>
-      </button>
+        </button>
+
+        <button
+          type="button"
+          onClick={onRunes}
+          className="glass-panel flex flex-col gap-2 p-4 text-start active:scale-[0.99]"
+        >
+          <RuneGlyph
+            runeKey={dailyRune.key}
+            merkstave={runeDrawn && dailyRune.merkstave}
+            className="h-5 w-4"
+            style={{ color: runeDrawn ? '#e3c063' : 'var(--rz-hue)' }}
+          />
+          <p className="font-serif text-base leading-tight text-white">
+            {t('dash.dailyRune')}
+          </p>
+          <p className="text-xs text-haze-300">
+            {runeDrawn ? t('dash.runeSeen') : t('dash.runeNew')}
+          </p>
+        </button>
+      </div>
 
       {!hasNatal && (
         <button
