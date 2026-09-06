@@ -22,12 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- OAuth redirect: com.resonance.app://auth-callback -->
+            <!-- OAuth redirect: com.venkovdigital.resonance://auth-callback -->
             <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="com.resonance.app" />
+                <data android:scheme="com.venkovdigital.resonance" />
             </intent-filter>
 
         </activity>

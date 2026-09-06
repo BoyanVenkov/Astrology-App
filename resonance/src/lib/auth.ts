@@ -83,7 +83,7 @@ let webExchangeHandled = false
 
 /**
  * Finish the OAuth redirect and run the PKCE exchange:
- * - native: a `com.resonance.app://auth-callback` deep link (Capacitor App plugin)
+ * - native: a `com.venkovdigital.resonance://auth-callback` deep link (Capacitor App plugin)
  * - web: the provider redirects back to the app origin with `?code=…`
  * (the client has `detectSessionInUrl: false`, so we do this ourselves).
  */

@@ -9,7 +9,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.resonance.app"
+    namespace = "com.venkovdigital.resonance"
     compileSdk = rootProject.ext.compileSdkVersion
 
     compileOptions {
@@ -18,11 +18,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.resonance.app"
+        applicationId "com.venkovdigital.resonance"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "3"
+        versionCode 4
+        versionName "4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'

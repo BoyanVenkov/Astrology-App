@@ -1,4 +1,4 @@
-package com.resonance.app;
+package com.venkovdigital.resonance;
 
 import com.getcapacitor.BridgeActivity;
 

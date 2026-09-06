@@ -14,7 +14,7 @@ const ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95amNldXlwYWJrcm5rcGVuYXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNDgwNjAsImV4cCI6MjEwMzYyNDA2MH0.vZzTX-BeaNI6_T5SMzPEhc0Mwuc_1lcOc4zT28OJBPI'
 
 /** Deep-link the OAuth redirect comes back to (also set in Supabase + Google). */
-export const OAUTH_REDIRECT = 'com.resonance.app://auth-callback'
+export const OAUTH_REDIRECT = 'com.venkovdigital.resonance://auth-callback'
 
 let client: SupabaseClient | null = null
 
