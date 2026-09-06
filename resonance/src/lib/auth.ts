@@ -111,13 +111,21 @@ export function useAuthDeepLink(): void {
       return
     }
 
-    const handle = CapApp.addListener('appUrlOpen', async ({ url }) => {
+    const consume = async (url: string): Promise<void> => {
       if (!url.startsWith(OAUTH_REDIRECT)) return
       const code = new URL(url).searchParams.get('code')
       if (code) {
         await supabase().auth.exchangeCodeForSession(code)
       }
       await Browser.close().catch(() => undefined)
+    }
+
+    // Warm path: the redirect arrives while the app is still alive.
+    const handle = CapApp.addListener('appUrlOpen', ({ url }) => void consume(url))
+    // Cold path: Android killed the app behind the browser tab, so the deep
+    // link is only available as the launch URL when we come back up.
+    void CapApp.getLaunchUrl().then((res) => {
+      if (res?.url) void consume(res.url)
     })
     return () => {
       void handle.then((h) => h.remove())

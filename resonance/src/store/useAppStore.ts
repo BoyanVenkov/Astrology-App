@@ -133,6 +133,7 @@ const createSession = (): ResonanceSession & SkyState => {
     moodGateDay: null,
     people: [],
     authSkipped: false,
+    qaProUnlock: false,
     locale: detectLocale(),
   }
 }
@@ -172,6 +173,8 @@ interface ResonanceActions {
   skipOnboarding: () => void
   /** Enter the app without signing in (the Welcome gate stops blocking). */
   skipAuth: () => void
+  /** QA / internal-testing: unlock (or re-lock) every Pro feature locally. */
+  setQaProUnlock: (on: boolean) => void
   /** Change the UI language. */
   setLocale: (locale: Locale) => void
   /** Recompute the daily transit / chakra / crystals (call when the day rolls over). */
@@ -283,6 +286,8 @@ export const useAppStore = create<AppStore>()(
 
       skipAuth: () => set({ authSkipped: true }),
 
+      setQaProUnlock: (on) => set({ qaProUnlock: on }),
+
       setLocale: (locale) => set({ locale }),
 
       refreshDailyTransit: () =>
@@ -324,6 +329,7 @@ export const useAppStore = create<AppStore>()(
           moodGateDay: state.moodGateDay,
           people: state.people,
           authSkipped: state.authSkipped,
+          qaProUnlock: state.qaProUnlock,
           locale: state.locale,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
@@ -358,6 +364,7 @@ export const useAppStore = create<AppStore>()(
         moodGateDay: state.moodGateDay,
         people: state.people,
         authSkipped: state.authSkipped,
+        qaProUnlock: state.qaProUnlock,
         locale: state.locale,
       }),
       merge: (persisted, current) => {

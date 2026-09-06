@@ -51,8 +51,12 @@ export interface Entitlements {
  */
 export const REVIEW_UNLOCK = import.meta.env.VITE_REVIEW_UNLOCK === '1'
 
-export function entitlementsFor(tier: PremiumTier): Entitlements {
-  const isPro = tier === 'pro' || REVIEW_UNLOCK
+export function entitlementsFor(
+  tier: PremiumTier,
+  /** QA / internal-testing override — see `ResonanceSession.qaProUnlock`. */
+  qaProUnlock = false,
+): Entitlements {
+  const isPro = tier === 'pro' || REVIEW_UNLOCK || qaProUnlock
   return {
     tier,
     isPro,
@@ -63,7 +67,8 @@ export function entitlementsFor(tier: PremiumTier): Entitlements {
 
 export function useEntitlements(): Entitlements {
   const tier = useAppStore((s) => s.tier)
-  return entitlementsFor(tier)
+  const qaProUnlock = useAppStore((s) => s.qaProUnlock)
+  return entitlementsFor(tier, qaProUnlock)
 }
 
 /* ---------------------------------------------------------------- gates */

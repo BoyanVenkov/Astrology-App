@@ -436,6 +436,14 @@ export interface ResonanceSession {
   people: SavedPerson[]
   /** True once the user chose "explore without an account" on the Welcome gate. */
   authSkipped: boolean
+  /**
+   * QA / internal-testing override: when true, every Pro feature is unlocked
+   * regardless of `tier` and regardless of what RevenueCat reports. Toggled by a
+   * hidden gesture in Settings (tap the footer plan line 7×). Device-local — it
+   * is deliberately kept out of the cloud sync snapshot so it can never leak to
+   * a real account.
+   */
+  qaProUnlock: boolean
   /** UI language. */
   locale: Locale
 }
