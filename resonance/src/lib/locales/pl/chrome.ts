@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Rozkłady 3 kart i Krzyż Celtycki',
   'pay.perYear': '{price}/rok',
   'pay.perMonth': '{price}/mies.',
-  'pay.freeTrial': '{days}-dniowy darmowy okres próbny',
   'pay.save': 'oszczędź {pct}%',
   'pay.billedMonthly': 'rozliczane miesięcznie',
-  'pay.ctaTrial': 'Rozpocznij {days}-dniowy darmowy okres próbny',
-  'pay.ctaMonthly': 'Rozpocznij Pro · {price}/mies.',
+  'pay.ctaMonthly': 'Rozpocznij Pro · {price}',
   'pay.ctaSignIn': 'Zaloguj się, by kontynuować',
   'pay.oneMoment': 'Chwila…',
   'pay.restore': 'Przywróć zakupy',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'Subskrypcja jest powiązana z twoim kontem, więc zostaje z tobą po ponownej instalacji lub zmianie telefonu. ',
   'pay.termsTrial':
-    '{days} dni za darmo, potem {yearly}/rok ({perMonth}/mies.). Odnawia się automatycznie — anuluj w każdej chwili w Google Play.',
+    '{yearly}/rok ({perMonth}/mies.). Odnawia się automatycznie — anuluj w każdej chwili w Google Play.',
   'pay.termsMonthly':
     '{monthly} rozliczane miesięcznie. Odnawia się automatycznie — anuluj w każdej chwili w Google Play.',
   'pay.notAvailable': 'Niedostępne w tej chwili — spróbuj za moment.',

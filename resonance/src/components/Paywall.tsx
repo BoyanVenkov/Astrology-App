@@ -59,7 +59,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
       ? Math.round(
           (1 - yearlyPkg.product.price / (monthlyPkg.product.price * 12)) * 100,
         )
-      : null
+      : PRO_PRICING.savePct
 
   const buy = async () => {
     if (needsAuth) {
@@ -92,19 +92,18 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
     else setErr(t('pay.nothingToRestore'))
   }
 
+  const priceWithPeriod =
+    plan === 'yearly'
+      ? t('pay.perYear', { price: yearlyPrice })
+      : t('pay.perMonth', { price: monthlyPrice })
+
   const cta = needsAuth
     ? t('pay.ctaSignIn')
-    : plan === 'yearly'
-      ? t('pay.ctaTrial', { days: PRO_PRICING.trialDays })
-      : t('pay.ctaMonthly', { price: monthlyPrice })
+    : t('pay.ctaMonthly', { price: priceWithPeriod })
 
   const terms =
     plan === 'yearly'
-      ? t('pay.termsTrial', {
-          days: PRO_PRICING.trialDays,
-          yearly: yearlyPrice,
-          perMonth: yearlyPerMonth,
-        })
+      ? t('pay.termsTrial', { yearly: yearlyPrice, perMonth: yearlyPerMonth })
       : t('pay.termsMonthly', { monthly: monthlyPrice })
 
   return (
@@ -149,10 +148,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
               {t('pay.perYear', { price: yearlyPrice })}
             </p>
             <p className="text-[11px] text-gold-300">
-              {t('pay.freeTrial', { days: PRO_PRICING.trialDays })}
-              {savePct != null && savePct > 0
-                ? ` · ${t('pay.save', { pct: savePct })}`
-                : ''}
+              {t('pay.save', { pct: savePct > 0 ? savePct : PRO_PRICING.savePct })}
             </p>
           </button>
           <button

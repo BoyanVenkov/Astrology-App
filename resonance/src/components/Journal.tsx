@@ -160,10 +160,12 @@ function StreakReward({
 
 function StreakCelebration({
   milestone,
+  streak,
   t,
   onDismiss,
 }: {
   milestone: Milestone
+  streak: number
   t: TFn
   onDismiss: () => void
 }) {
@@ -190,7 +192,7 @@ function StreakCelebration({
         {milestoneName(milestone, t)}
       </h2>
       <p className="text-sm leading-relaxed text-haze-200">
-        {t('reward.streakReached', { days: milestone.days })}{' '}
+        {t('reward.streakReached', { days: Math.max(streak, milestone.days) })}{' '}
         {milestoneNote(milestone, t)}
       </p>
       <button
@@ -259,6 +261,7 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
       {celebration && (
         <StreakCelebration
           milestone={celebration}
+          streak={streak}
           t={t}
           onDismiss={() => acknowledgeStreakReward(celebration.days)}
         />

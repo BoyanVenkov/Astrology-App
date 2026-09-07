@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': '3-कार्ड प्रसार और सेल्टिक क्रॉस',
   'pay.perYear': '{price}/वर्ष',
   'pay.perMonth': '{price}/माह',
-  'pay.freeTrial': '{days} दिन का नि:शुल्क परीक्षण',
   'pay.save': '{pct}% बचाएँ',
   'pay.billedMonthly': 'मासिक बिल',
-  'pay.ctaTrial': '{days} दिन का नि:शुल्क परीक्षण शुरू करें',
-  'pay.ctaMonthly': 'Pro शुरू करें · {price}/माह',
+  'pay.ctaMonthly': 'Pro शुरू करें · {price}',
   'pay.ctaSignIn': 'जारी रखने के लिए लॉग इन करें',
   'pay.oneMoment': 'एक क्षण…',
   'pay.restore': 'खरीदारी पुनर्स्थापित करें',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'सदस्यता आपके खाते से जुड़ी है, इसलिए फिर से इंस्टॉल करने या फ़ोन बदलने पर यह आपके साथ चलती है। ',
   'pay.termsTrial':
-    '{days} दिन नि:शुल्क, फिर {yearly}/वर्ष ({perMonth}/माह)। स्वतः नवीनीकरण — Google Play पर कभी भी रद्द करें।',
+    '{yearly}/वर्ष ({perMonth}/माह)। स्वतः नवीनीकरण — Google Play पर कभी भी रद्द करें।',
   'pay.termsMonthly':
     '{monthly}, मासिक बिल। स्वतः नवीनीकरण — Google Play पर कभी भी रद्द करें।',
   'pay.notAvailable': 'अभी उपलब्ध नहीं — थोड़ी देर में फिर कोशिश करें।',

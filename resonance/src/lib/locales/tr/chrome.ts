@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': '3 kartlık ve Kelt Haçı açılımları',
   'pay.perYear': '{price}/yıl',
   'pay.perMonth': '{price}/ay',
-  'pay.freeTrial': '{days} günlük ücretsiz deneme',
   'pay.save': '%{pct} tasarruf',
   'pay.billedMonthly': 'aylık faturalanır',
-  'pay.ctaTrial': '{days} günlük ücretsiz denemeyi başlat',
-  'pay.ctaMonthly': "Pro'yu başlat · {price}/ay",
+  'pay.ctaMonthly': "Pro'yu başlat · {price}",
   'pay.ctaSignIn': 'Devam etmek için giriş yap',
   'pay.oneMoment': 'Bir dakika…',
   'pay.restore': 'Satın alımları geri yükle',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'Abonelik hesabına bağlıdır, bu yüzden yeniden yükleseniz ya da telefon değiştirseniz de sizinle kalır. ',
   'pay.termsTrial':
-    '{days} gün ücretsiz, sonra {yearly}/yıl ({perMonth}/ay). Otomatik yenilenir — Google Play’den istediğin zaman iptal et.',
+    '{yearly}/yıl ({perMonth}/ay). Otomatik yenilenir — Google Play’den istediğin zaman iptal et.',
   'pay.termsMonthly':
     '{monthly} aylık faturalanır. Otomatik yenilenir — Google Play’den istediğin zaman iptal et.',
   'pay.notAvailable': 'Şu an kullanılamıyor — birazdan tekrar dene.',

@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'توزيعات ٣ بطاقات والصليب الكلتي',
   'pay.perYear': '{price}/سنة',
   'pay.perMonth': '{price}/شهر',
-  'pay.freeTrial': 'تجربة مجانية {days} يوماً',
   'pay.save': 'وفّر {pct}٪',
   'pay.billedMonthly': 'يُفوتَر شهرياً',
-  'pay.ctaTrial': 'ابدأ التجربة المجانية {days} يوماً',
-  'pay.ctaMonthly': 'ابدأ Pro · {price}/شهر',
+  'pay.ctaMonthly': 'ابدأ Pro · {price}',
   'pay.ctaSignIn': 'سجّل الدخول للمتابعة',
   'pay.oneMoment': 'لحظة…',
   'pay.restore': 'استعادة المشتريات',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'الاشتراك مرتبط بحسابك، فيبقى معك إذا أعدت التثبيت أو غيّرت الهاتف. ',
   'pay.termsTrial':
-    '{days} أيام مجاناً، ثم {yearly}/سنة ({perMonth}/شهر). يتجدّد تلقائياً — ألغِ في أي وقت من Google Play.',
+    '{yearly}/سنة ({perMonth}/شهر). يتجدّد تلقائياً — ألغِ في أي وقت من Google Play.',
   'pay.termsMonthly':
     '{monthly} يُفوتَر شهرياً. يتجدّد تلقائياً — ألغِ في أي وقت من Google Play.',
   'pay.notAvailable': 'غير متاح الآن — حاول بعد لحظة.',

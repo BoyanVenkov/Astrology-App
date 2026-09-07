@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Mitandao ya kadi 3 na Msalaba wa Kikelti',
   'pay.perYear': '{price}/mwaka',
   'pay.perMonth': '{price}/mwezi',
-  'pay.freeTrial': 'jaribio la bure la siku {days}',
   'pay.save': 'okoa {pct}%',
   'pay.billedMonthly': 'inatozwa kila mwezi',
-  'pay.ctaTrial': 'Anza jaribio la bure la siku {days}',
-  'pay.ctaMonthly': 'Anza Pro · {price}/mwezi',
+  'pay.ctaMonthly': 'Anza Pro · {price}',
   'pay.ctaSignIn': 'Ingia ili kuendelea',
   'pay.oneMoment': 'Subiri kidogo…',
   'pay.restore': 'Rejesha manunuzi',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'Usajili umefungwa kwa akaunti yako, hivyo unakufuata ukiweka upya au kubadilisha simu. ',
   'pay.termsTrial':
-    'Siku {days} bure, kisha {yearly}/mwaka ({perMonth}/mwezi). Hujirejesha kiotomatiki — ghairi wakati wowote katika Google Play.',
+    '{yearly}/mwaka ({perMonth}/mwezi). Hujirejesha kiotomatiki — ghairi wakati wowote katika Google Play.',
   'pay.termsMonthly':
     '{monthly}, inatozwa kila mwezi. Hujirejesha kiotomatiki — ghairi wakati wowote katika Google Play.',
   'pay.notAvailable': 'Haipatikani sasa — jaribu tena baada ya muda mfupi.',

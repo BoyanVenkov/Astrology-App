@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': '3 枚スプレッドとケルト十字',
   'pay.perYear': '{price}/年',
   'pay.perMonth': '{price}/月',
-  'pay.freeTrial': '{days} 日間の無料トライアル',
   'pay.save': '{pct}% お得',
   'pay.billedMonthly': '毎月請求',
-  'pay.ctaTrial': '{days} 日間の無料トライアルを始める',
-  'pay.ctaMonthly': 'Pro を始める · {price}/月',
+  'pay.ctaMonthly': 'Pro を始める · {price}',
   'pay.ctaSignIn': '続けるにはログイン',
   'pay.oneMoment': '少々お待ちください…',
   'pay.restore': '購入を復元',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'サブスクリプションはアカウントに紐づくので、再インストールや機種変更をしても引き継がれます。 ',
   'pay.termsTrial':
-    '{days} 日間無料、その後 {yearly}/年（{perMonth}/月）。自動更新 — Google Play でいつでも解約できます。',
+    '{yearly}/年（{perMonth}/月）。自動更新 — Google Play でいつでも解約できます。',
   'pay.termsMonthly':
     '{monthly}、毎月請求。自動更新 — Google Play でいつでも解約できます。',
   'pay.notAvailable': '今は利用できません — 少し後にもう一度お試しください。',

@@ -10,7 +10,9 @@ import { Capacitor } from '@capacitor/core'
 const LEGAL_ORIGIN = 'https://boyanvenkov.github.io/Astrology-App'
 export const PRIVACY_URL = `${LEGAL_ORIGIN}/#privacy`
 export const TERMS_URL = `${LEGAL_ORIGIN}/#terms`
-export const SUPPORT_EMAIL = 'ludbobo@gmail.com'
+/** Public account-deletion instructions — also set as the "Delete account URL" in Play Console. */
+export const DELETE_ACCOUNT_URL = `${LEGAL_ORIGIN}/#delete`
+export const SUPPORT_EMAIL = 'boyan@venkovdigital.com'
 
 /** Open a URL in the system browser (native) or a new tab (web). */
 export async function openExternal(url: string): Promise<void> {

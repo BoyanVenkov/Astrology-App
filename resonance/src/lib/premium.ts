@@ -10,8 +10,8 @@ export const PRO_PRICING = {
   yearly: '$29.99',
   /** Effective monthly cost of the annual plan — used on the paywall. */
   yearlyPerMonth: '$2.50',
-  /** Free-trial length on the annual plan, in days. */
-  trialDays: 7,
+  /** Placeholder discount shown until RevenueCat reports the real store prices. */
+  savePct: 64,
 }
 
 export const PRO_FEATURES = [
@@ -45,18 +45,15 @@ export interface Entitlements {
 
 /**
  * Review build only. `npm run build:review` (Vite `--mode review`, which loads
- * `.env.review` with VITE_REVIEW_UNLOCK=1) unlocks every Pro feature so you can
- * walk the whole app on a device without a real purchase. A normal `vite build`
- * has no such env var, so this folds to `false` and is dead-code-eliminated.
+ * `.env.review` with VITE_REVIEW_UNLOCK=1) unlocks every Pro feature so the
+ * whole app can be walked on a device without a real purchase. A normal
+ * `vite build` has no such env var, so this folds to `false` and is
+ * dead-code-eliminated — it can never reach a production build.
  */
 export const REVIEW_UNLOCK = import.meta.env.VITE_REVIEW_UNLOCK === '1'
 
-export function entitlementsFor(
-  tier: PremiumTier,
-  /** QA / internal-testing override — see `ResonanceSession.qaProUnlock`. */
-  qaProUnlock = false,
-): Entitlements {
-  const isPro = tier === 'pro' || REVIEW_UNLOCK || qaProUnlock
+export function entitlementsFor(tier: PremiumTier): Entitlements {
+  const isPro = tier === 'pro' || REVIEW_UNLOCK
   return {
     tier,
     isPro,
@@ -67,8 +64,7 @@ export function entitlementsFor(
 
 export function useEntitlements(): Entitlements {
   const tier = useAppStore((s) => s.tier)
-  const qaProUnlock = useAppStore((s) => s.qaProUnlock)
-  return entitlementsFor(tier, qaProUnlock)
+  return entitlementsFor(tier)
 }
 
 /* ---------------------------------------------------------------- gates */

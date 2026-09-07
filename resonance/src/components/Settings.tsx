@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { deleteAccount, signOut, useAuth } from '../lib/auth'
 import { backupNow } from '../lib/sync'
@@ -113,33 +113,9 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
   const editProfile = useAppStore((s) => s.editProfile)
   const tier = useAppStore((s) => s.tier)
   const setTier = useAppStore((s) => s.setTier)
-  const qaProUnlock = useAppStore((s) => s.qaProUnlock)
-  const setQaProUnlock = useAppStore((s) => s.setQaProUnlock)
   const currentLocation = useAppStore((s) => s.currentLocation)
   const setCurrentLocation = useAppStore((s) => s.setCurrentLocation)
   const { isPro } = useEntitlements()
-
-  // Hidden QA gesture: tap the footer plan line 7× (within 2s between taps) to
-  // reveal the "unlock Pro for testing" toggle. Undiscoverable in normal use;
-  // the override is device-local and never syncs to an account.
-  const tapCount = useRef(0)
-  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const bumpQaTap = () => {
-    if (qaProUnlock) return
-    if (tapTimer.current) clearTimeout(tapTimer.current)
-    tapCount.current += 1
-    if (tapCount.current >= 7) {
-      tapCount.current = 0
-      setQaProUnlock(true)
-      window.alert(
-        'QA testing mode on — every Pro feature is unlocked on this device. Turn it off from Settings → Pro.',
-      )
-      return
-    }
-    tapTimer.current = setTimeout(() => {
-      tapCount.current = 0
-    }, 2000)
-  }
 
   const [notice, setNotice] = useState<string | null>(null)
   const [locMsg, setLocMsg] = useState<string | null>(null)
@@ -565,18 +541,6 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
             </button>
           </Row>
         )}
-        {/* QA testing override — only visible once the hidden footer gesture
-            has been used. Lets a tester flip Pro on/off freely. */}
-        {qaProUnlock && (
-          <Row>
-            <Toggle
-              on={qaProUnlock}
-              onChange={(v) => setQaProUnlock(v)}
-              label="QA: unlock all Pro features"
-              hint="Testing only · this device · not tied to your account"
-            />
-          </Row>
-        )}
         {isPro && (
           <Row>
             <button
@@ -603,10 +567,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
         </Row>
       </Section>
 
-      <p
-        onClick={bumpQaTap}
-        className="select-none px-1 pb-2 text-center text-[11px] text-haze-500"
-      >
+      <p className="px-1 pb-2 text-center text-[11px] text-haze-500">
         {t('set.tierLine', { tier })}
       </p>
     </Screen>

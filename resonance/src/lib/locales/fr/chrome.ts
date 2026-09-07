@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Les tirages à 3 cartes et la Croix Celtique',
   'pay.perYear': '{price}/an',
   'pay.perMonth': '{price}/mois',
-  'pay.freeTrial': 'essai gratuit de {days} jours',
   'pay.save': 'économise {pct} %',
   'pay.billedMonthly': 'facturé mensuellement',
-  'pay.ctaTrial': 'Commencer l’essai gratuit de {days} jours',
-  'pay.ctaMonthly': 'Commencer Pro · {price}/mois',
+  'pay.ctaMonthly': 'Commencer Pro · {price}',
   'pay.ctaSignIn': 'Se connecter pour continuer',
   'pay.oneMoment': 'Un instant…',
   'pay.restore': 'Restaurer les achats',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'L’abonnement est lié à ton compte, donc il te suit si tu réinstalles ou changes de téléphone. ',
   'pay.termsTrial':
-    '{days} jours gratuits, puis {yearly}/an ({perMonth}/mois). Renouvellement automatique — annule quand tu veux sur Google Play.',
+    '{yearly}/an ({perMonth}/mois). Renouvellement automatique — annule quand tu veux sur Google Play.',
   'pay.termsMonthly':
     '{monthly} facturé mensuellement. Renouvellement automatique — annule quand tu veux sur Google Play.',
   'pay.notAvailable': 'Indisponible pour l’instant — réessaie dans un moment.',

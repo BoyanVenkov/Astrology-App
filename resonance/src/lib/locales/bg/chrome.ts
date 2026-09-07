@@ -273,11 +273,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Разгъвките с 3 карти и Келтски кръст',
   'pay.perYear': '{price}/год.',
   'pay.perMonth': '{price}/мес.',
-  'pay.freeTrial': '{days} дни безплатно',
   'pay.save': 'спестяваш {pct}%',
   'pay.billedMonthly': 'месечно плащане',
-  'pay.ctaTrial': 'Започни {days} дни безплатно',
-  'pay.ctaMonthly': 'Вземи Pro · {price}/мес.',
+  'pay.ctaMonthly': 'Вземи Pro · {price}',
   'pay.ctaSignIn': 'Влез, за да продължиш',
   'pay.oneMoment': 'Момент…',
   'pay.restore': 'Възстанови покупки',
@@ -286,7 +284,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'Абонаментът е свързан с профила ти, така че остава при теб, ако преинсталираш или смениш телефона. ',
   'pay.termsTrial':
-    '{days} дни безплатно, после {yearly}/година ({perMonth}/мес.). Подновява се автоматично — можеш да откажеш по всяко време в Google Play.',
+    '{yearly}/година ({perMonth}/мес.). Подновява се автоматично — можеш да откажеш по всяко време в Google Play.',
   'pay.termsMonthly':
     '{monthly} на месец. Подновява се автоматично — можеш да откажеш по всяко време в Google Play.',
   'pay.notAvailable': 'Недостъпно в момента — опитай пак след малко.',

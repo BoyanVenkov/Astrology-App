@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Las tiradas de 3 cartas y la Cruz Celta',
   'pay.perYear': '{price}/año',
   'pay.perMonth': '{price}/mes',
-  'pay.freeTrial': 'prueba gratis de {days} días',
   'pay.save': 'ahorra {pct}%',
   'pay.billedMonthly': 'facturado mensualmente',
-  'pay.ctaTrial': 'Empezar prueba gratis de {days} días',
-  'pay.ctaMonthly': 'Empezar Pro · {price}/mes',
+  'pay.ctaMonthly': 'Empezar Pro · {price}',
   'pay.ctaSignIn': 'Inicia sesión para continuar',
   'pay.oneMoment': 'Un momento…',
   'pay.restore': 'Restaurar compras',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'La suscripción está vinculada a tu cuenta, así que te acompaña si reinstalas o cambias de teléfono. ',
   'pay.termsTrial':
-    '{days} días gratis, luego {yearly}/año ({perMonth}/mes). Se renueva automáticamente — cancela cuando quieras en Google Play.',
+    '{yearly}/año ({perMonth}/mes). Se renueva automáticamente — cancela cuando quieras en Google Play.',
   'pay.termsMonthly':
     '{monthly} facturado mensualmente. Se renueva automáticamente — cancela cuando quieras en Google Play.',
   'pay.notAvailable': 'No disponible ahora mismo — inténtalo de nuevo en un momento.',

@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Spådomarna med 3 kort och det Keltiska korset',
   'pay.perYear': '{price}/år',
   'pay.perMonth': '{price}/mån',
-  'pay.freeTrial': '{days} dagars gratis prova-på',
   'pay.save': 'spara {pct}%',
   'pay.billedMonthly': 'faktureras månadsvis',
-  'pay.ctaTrial': 'Starta {days} dagars gratis prova-på',
-  'pay.ctaMonthly': 'Starta Pro · {price}/mån',
+  'pay.ctaMonthly': 'Starta Pro · {price}',
   'pay.ctaSignIn': 'Logga in för att fortsätta',
   'pay.oneMoment': 'Ett ögonblick…',
   'pay.restore': 'Återställ köp',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'Prenumerationen är kopplad till ditt konto, så den följer med om du installerar om eller byter telefon. ',
   'pay.termsTrial':
-    '{days} dagar gratis, sedan {yearly}/år ({perMonth}/mån). Förnyas automatiskt — avsluta när du vill i Google Play.',
+    '{yearly}/år ({perMonth}/mån). Förnyas automatiskt — avsluta när du vill i Google Play.',
   'pay.termsMonthly':
     '{monthly} faktureras månadsvis. Förnyas automatiskt — avsluta när du vill i Google Play.',
   'pay.notAvailable': 'Inte tillgängligt just nu — försök igen strax.',

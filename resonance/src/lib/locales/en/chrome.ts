@@ -272,11 +272,9 @@ export const chrome = {
   'pay.reasonSpreads': 'The 3-card & Celtic Cross spreads',
   'pay.perYear': '{price}/yr',
   'pay.perMonth': '{price}/mo',
-  'pay.freeTrial': '{days}-day free trial',
   'pay.save': 'save {pct}%',
   'pay.billedMonthly': 'billed monthly',
-  'pay.ctaTrial': 'Start {days}-day free trial',
-  'pay.ctaMonthly': 'Start Pro · {price}/mo',
+  'pay.ctaMonthly': 'Start Pro · {price}',
   'pay.ctaSignIn': 'Sign in to continue',
   'pay.oneMoment': 'One moment…',
   'pay.restore': 'Restore purchases',
@@ -285,7 +283,7 @@ export const chrome = {
   'pay.accountNote':
     'A subscription is linked to your account, so it stays with you if you reinstall or switch phones. ',
   'pay.termsTrial':
-    '{days} days free, then {yearly}/year ({perMonth}/mo). Auto-renews — cancel anytime in Google Play.',
+    '{yearly}/year ({perMonth}/mo). Auto-renews — cancel anytime in Google Play.',
   'pay.termsMonthly':
     '{monthly} billed monthly. Auto-renews — cancel anytime in Google Play.',
   'pay.notAvailable': 'Not available right now — try again in a moment.',

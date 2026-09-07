@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': 'Die 3-Karten-Blätter und das Keltische Kreuz',
   'pay.perYear': '{price}/Jahr',
   'pay.perMonth': '{price}/Monat',
-  'pay.freeTrial': '{days} Tage kostenlos testen',
   'pay.save': 'spare {pct} %',
   'pay.billedMonthly': 'monatlich abgerechnet',
-  'pay.ctaTrial': 'Starte die {days}-tägige kostenlose Testphase',
-  'pay.ctaMonthly': 'Pro starten · {price}/Monat',
+  'pay.ctaMonthly': 'Pro starten · {price}',
   'pay.ctaSignIn': 'Anmelden, um fortzufahren',
   'pay.oneMoment': 'Einen Moment…',
   'pay.restore': 'Käufe wiederherstellen',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     'Das Abo ist an dein Konto gebunden, es folgt dir also bei einer Neuinstallation oder einem Handywechsel. ',
   'pay.termsTrial':
-    '{days} Tage kostenlos, dann {yearly}/Jahr ({perMonth}/Monat). Verlängert sich automatisch — jederzeit bei Google Play kündbar.',
+    '{yearly}/Jahr ({perMonth}/Monat). Verlängert sich automatisch — jederzeit bei Google Play kündbar.',
   'pay.termsMonthly':
     '{monthly} monatlich abgerechnet. Verlängert sich automatisch — jederzeit bei Google Play kündbar.',
   'pay.notAvailable': 'Gerade nicht verfügbar — versuch es gleich noch mal.',

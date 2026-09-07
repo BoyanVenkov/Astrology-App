@@ -274,11 +274,9 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.reasonSpreads': '三张牌牌阵和凯尔特十字牌阵',
   'pay.perYear': '{price}/年',
   'pay.perMonth': '{price}/月',
-  'pay.freeTrial': '{days} 天免费试用',
   'pay.save': '省 {pct}%',
   'pay.billedMonthly': '按月计费',
-  'pay.ctaTrial': '开始 {days} 天免费试用',
-  'pay.ctaMonthly': '开始 Pro · {price}/月',
+  'pay.ctaMonthly': '开始 Pro · {price}',
   'pay.ctaSignIn': '登录以继续',
   'pay.oneMoment': '请稍候…',
   'pay.restore': '恢复购买',
@@ -287,7 +285,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.accountNote':
     '订阅绑定在你的账户上，所以重装或换手机后它都会跟着你。 ',
   'pay.termsTrial':
-    '{days} 天免费，之后 {yearly}/年（{perMonth}/月）。自动续订 — 可随时在 Google Play 取消。',
+    '{yearly}/年（{perMonth}/月）。自动续订 — 可随时在 Google Play 取消。',
   'pay.termsMonthly':
     '{monthly}，按月计费。自动续订 — 可随时在 Google Play 取消。',
   'pay.notAvailable': '现在不可用 — 请稍后再试。',

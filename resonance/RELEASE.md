@@ -113,9 +113,15 @@ release → upload the `.aab`.
 - [ ] Permissions declaration form: justify `SCHEDULE_EXACT_ALARM`
       ("time-specific astrological reminders the user schedules")
 - [ ] RevenueCat: `VITE_REVENUECAT_ANDROID_KEY` set, Play products active,
-      entitlement `pro` + a current offering with monthly/annual packages
+      entitlement `pro` + a current offering with monthly/annual packages.
+      No free-trial offer on the base plans (removed from app copy 2026-09-07)
+      unless you deliberately re-add one.
 - [ ] `delete-account` Supabase Edge Function deployed (Play requires in-app
       account deletion)
+- [ ] Play Console → App content → Data deletion: set the **Delete account URL**
+      to `https://boyanvenkov.github.io/Astrology-App/#delete` (the deletion
+      section in `docs/index.html`; also `DELETE_ACCOUNT_URL` in `src/lib/links.ts`).
+      Account-creation method: **OAuth** only (Google sign-in).
 - [ ] Store listing: 512×512 icon (`store-assets/icon-512.png`), screenshots,
       short + full description
 - [ ] Built from `npm run mobile:sync`, **not** `review:sync`

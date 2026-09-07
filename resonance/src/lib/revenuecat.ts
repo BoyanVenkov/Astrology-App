@@ -17,7 +17,8 @@ import { useAppStore } from '../store/useAppStore'
  *
  * Setup (see resonance-project memory / RELEASE notes):
  *  1. Play Console → Monetize → Products → Subscriptions:
- *     create `resonance_pro_monthly` and `resonance_pro_yearly` (7-day trial).
+ *     create `resonance_pro_monthly` and `resonance_pro_yearly`. (No free-trial
+ *     offer configured — add one on the base plan later if you want it back.)
  *  2. RevenueCat project → connect the Play Console app (service-account JSON)
  *     → Entitlement `pro` → attach both products → Offering with `monthly`/
  *     `annual` packages, marked current.
@@ -54,8 +55,15 @@ export async function configureRevenueCat(): Promise<void> {
 export async function linkRevenueCatUser(userId: string | null): Promise<void> {
   if (!configured) return
   try {
-    if (userId) await Purchases.logIn({ appUserID: userId })
-    else await Purchases.logOut()
+    if (userId) {
+      await Purchases.logIn({ appUserID: userId })
+    } else {
+      // Only log out an actually-identified user. Calling logOut() while
+      // already anonymous throws `LogOutWithAnonymousUserError` — harmless but
+      // it floods the log on every launch for guests / signed-out users.
+      const { isAnonymous } = await Purchases.isAnonymous()
+      if (!isAnonymous) await Purchases.logOut()
+    }
   } catch {
     /* not fatal — purchases still work under RevenueCat's own anonymous id */
   }
