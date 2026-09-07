@@ -9,9 +9,19 @@ import {
   medName,
   moodLabel,
   useT,
+  type TFn,
 } from '../lib/i18n'
 import { useEntitlements } from '../lib/premium'
-import { practiceStreak } from '../lib/streak'
+import { longestStreak, practiceStreak } from '../lib/streak'
+import {
+  earnedMilestones,
+  MILESTONES,
+  milestoneName,
+  milestoneNote,
+  pendingCelebration,
+  streakStanding,
+  type Milestone,
+} from '../lib/milestones'
 import { localDayKey } from '../lib/timezone'
 import { BackButton } from './Screen'
 import type { Mood } from '../types/resonance'
@@ -35,17 +45,180 @@ const dayKeyOffset = (offset: number): string => {
   return localDayKey(d)
 }
 
+type EmblemState = 'earned' | 'next' | 'locked'
+
+function Emblem({ m, state }: { m: Milestone; state: EmblemState }) {
+  const gold = state === 'earned'
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <div
+        className={`grid h-8 w-8 place-items-center rounded-full text-[13px] ${
+          state === 'next' ? 'animate-pulse-glow' : ''
+        }`}
+        style={{
+          background: gold
+            ? 'radial-gradient(120% 120% at 30% 20%, #f2dc9c, #d4af37 55%, #8f6d25)'
+            : 'rgba(255,255,255,0.04)',
+          border: gold
+            ? '1px solid rgba(242,220,156,0.55)'
+            : state === 'next'
+              ? '1px solid color-mix(in srgb, var(--rz-hue) 55%, transparent)'
+              : '1px solid rgba(255,255,255,0.08)',
+          color: gold
+            ? '#1a1204'
+            : state === 'next'
+              ? 'var(--rz-hue)'
+              : 'rgba(233,237,250,0.28)',
+          boxShadow: gold ? '0 0 14px -3px rgba(212,175,55,0.55)' : undefined,
+        }}
+      >
+        {m.glyph}
+      </div>
+      <span
+        className="text-[9px] tabular-nums"
+        style={{ color: gold ? '#e3c063' : 'rgba(233,237,250,0.32)' }}
+      >
+        {m.days}
+      </span>
+    </div>
+  )
+}
+
+function StreakReward({
+  streak,
+  longest,
+  t,
+}: {
+  streak: number
+  longest: number
+  t: TFn
+}) {
+  const standing = streakStanding(streak)
+  const earned = earnedMilestones(longest).length
+
+  return (
+    <section className="glass-panel p-4">
+      <div className="flex items-center justify-between">
+        <p className="eyebrow">{t('reward.shelfTitle')}</p>
+        <span className="text-[10px] uppercase tracking-[0.14em] text-haze-500">
+          {t('reward.earnedCount', { earned, total: MILESTONES.length })}
+        </span>
+      </div>
+
+      <div className="mt-3 grid grid-cols-9 gap-1">
+        {MILESTONES.map((m) => (
+          <Emblem
+            key={m.key}
+            m={m}
+            state={
+              longest >= m.days
+                ? 'earned'
+                : standing.next?.days === m.days
+                  ? 'next'
+                  : 'locked'
+            }
+          />
+        ))}
+      </div>
+
+      <div className="mt-3">
+        {standing.next ? (
+          <>
+            <div className="h-1.5 overflow-hidden rounded-full bg-white/8">
+              <div
+                className="h-full rounded-full transition-[width] duration-500"
+                style={{
+                  width: `${
+                    streak === 0
+                      ? 0
+                      : Math.max(5, Math.round(standing.progress * 100))
+                  }%`,
+                  background: 'linear-gradient(90deg, #8f6d25, #f2dc9c)',
+                }}
+              />
+            </div>
+            <p className="mt-2 text-[11px] text-haze-400">
+              {streak === 0
+                ? t('reward.startStreak')
+                : standing.toNext === 1
+                  ? t('reward.nextMarkOne', {
+                      name: milestoneName(standing.next, t),
+                    })
+                  : t('reward.nextMark', {
+                      days: standing.toNext,
+                      name: milestoneName(standing.next, t),
+                    })}
+            </p>
+          </>
+        ) : (
+          <p className="text-[11px] text-haze-400">{t('reward.allEarned')}</p>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function StreakCelebration({
+  milestone,
+  t,
+  onDismiss,
+}: {
+  milestone: Milestone
+  t: TFn
+  onDismiss: () => void
+}) {
+  return (
+    <section
+      className="glass-panel glass-panel-active animate-rise-in flex flex-col items-center gap-2 p-5 text-center"
+      style={{ borderColor: 'rgba(242,220,156,0.4)' }}
+    >
+      <div
+        className="grid h-14 w-14 place-items-center rounded-full text-2xl"
+        style={{
+          background:
+            'radial-gradient(120% 120% at 30% 20%, #f2dc9c, #d4af37 55%, #8f6d25)',
+          color: '#1a1204',
+          boxShadow: '0 0 28px -4px rgba(212,175,55,0.6)',
+        }}
+      >
+        {milestone.glyph}
+      </div>
+      <p className="eyebrow" style={{ color: '#e3c063' }}>
+        {t('reward.congrats')}
+      </p>
+      <h2 className="font-serif text-2xl text-gilded">
+        {milestoneName(milestone, t)}
+      </h2>
+      <p className="text-sm leading-relaxed text-haze-200">
+        {t('reward.streakReached', { days: milestone.days })}{' '}
+        {milestoneNote(milestone, t)}
+      </p>
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="btn-primary mt-1 rounded-[0.9rem] px-6 py-2.5 text-xs uppercase tracking-[0.14em]"
+      >
+        {t('reward.dismiss')}
+      </button>
+    </section>
+  )
+}
+
 export function Journal({ onBack, onUpgrade }: JournalProps) {
   const t = useT()
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
+  const streakRewardTier = useAppStore((s) => s.streakRewardTier)
+  const acknowledgeStreakReward = useAppStore((s) => s.acknowledgeStreakReward)
   const { isPro, freeHistoryDays } = useEntitlements()
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focusChakra, sessionLog, moodLog)
   const streak = practiceStreak(sessionLog)
+  const longest = Math.max(longestStreak(sessionLog), streak)
+  const celebration = pendingCelebration(streak, streakRewardTier)
   const gridDays = isPro ? 28 : Math.min(28, freeHistoryDays)
 
   const totalMinutes = sessionLog
@@ -83,6 +256,14 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
     <div className="flex flex-col gap-5">
       <BackButton onClick={onBack} />
 
+      {celebration && (
+        <StreakCelebration
+          milestone={celebration}
+          t={t}
+          onDismiss={() => acknowledgeStreakReward(celebration.days)}
+        />
+      )}
+
       <header className="flex flex-col items-center text-center">
         <Aura state={aura} size={200} className="h-48 w-48" />
         <p className="eyebrow mt-1">{t('aura.yours')}</p>
@@ -111,6 +292,8 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
           <p className="eyebrow mt-1">{t('scr.journal.minutes')}</p>
         </div>
       </section>
+
+      <StreakReward streak={streak} longest={longest} t={t} />
 
       {/* practice grid */}
       <section className="glass-panel p-4">

@@ -24,6 +24,26 @@ export function practicedToday(log: PracticeSession[]): boolean {
   return completedDays(log).has(localDayKey())
 }
 
+/** A `YYYY-MM-DD` key as a day count, for calendar-safe adjacency checks. */
+const dayOrdinal = (key: string): number => {
+  const [y, m, d] = key.split('-').map(Number)
+  return Math.round(Date.UTC(y, m - 1, d) / 86_400_000)
+}
+
+/** The longest run of consecutive completed-practice days ever recorded. */
+export function longestStreak(log: PracticeSession[]): number {
+  const days = [...completedDays(log)].sort()
+  if (days.length === 0) return 0
+
+  let best = 1
+  let run = 1
+  for (let i = 1; i < days.length; i += 1) {
+    run = dayOrdinal(days[i]) - dayOrdinal(days[i - 1]) === 1 ? run + 1 : 1
+    if (run > best) best = run
+  }
+  return best
+}
+
 /** Distinct practiced days within the last `n` days, for a mini calendar. */
 export function recentPracticeDays(log: PracticeSession[], n = 7): boolean[] {
   const days = completedDays(log)

@@ -434,6 +434,11 @@ export interface ResonanceSession {
   runeDrawnDay: string | null
   /** Local day the daily mood gate was answered or dismissed — `null` if never. */
   moodGateDay: string | null
+  /**
+   * Highest practice-streak milestone (in days) the user has acknowledged, so
+   * the Journal's celebration banner shows once per milestone. `0` = none yet.
+   */
+  streakRewardTier: number
   /** People saved for chart-compatibility readings. */
   people: SavedPerson[]
   /** True once the user chose "explore without an account" on the Welcome gate. */

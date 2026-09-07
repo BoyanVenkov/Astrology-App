@@ -8,6 +8,7 @@ import { reading } from './reading'
 import { deepReading } from './deepReading'
 import { tarot } from './tarot'
 import { runes } from './runes'
+import { rewards } from './rewards'
 import { screens } from './screens'
 
 /**
@@ -27,6 +28,7 @@ export const en = {
   ...deepReading,
   ...tarot,
   ...runes,
+  ...rewards,
   ...screens,
 } as const
 

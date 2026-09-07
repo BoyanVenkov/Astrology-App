@@ -132,6 +132,7 @@ const createSession = (): ResonanceSession & SkyState => {
     tarotDrawnDay: null,
     runeDrawnDay: null,
     moodGateDay: null,
+    streakRewardTier: 0,
     people: [],
     authSkipped: false,
     qaProUnlock: false,
@@ -184,6 +185,8 @@ interface ResonanceActions {
   markTarotDrawn: () => void
   /** Mark that today's daily rune has been cast. */
   markRuneDrawn: () => void
+  /** Record that the user has seen the celebration for a streak milestone. */
+  acknowledgeStreakReward: (tierDays: number) => void
   /** Mark today's mood gate handled (answered or skipped) so it stops asking. */
   dismissMoodGate: () => void
   /** Save someone for chart-compatibility readings. */
@@ -308,6 +311,11 @@ export const useAppStore = create<AppStore>()(
 
       markRuneDrawn: () => set({ runeDrawnDay: localDayKey() }),
 
+      acknowledgeStreakReward: (tierDays) =>
+        set((s) => ({
+          streakRewardTier: Math.max(s.streakRewardTier, tierDays),
+        })),
+
       dismissMoodGate: () => set({ moodGateDay: localDayKey() }),
 
       addPerson: (person) =>
@@ -333,6 +341,7 @@ export const useAppStore = create<AppStore>()(
           tarotDrawnDay: state.tarotDrawnDay,
           runeDrawnDay: state.runeDrawnDay,
           moodGateDay: state.moodGateDay,
+          streakRewardTier: state.streakRewardTier,
           people: state.people,
           authSkipped: state.authSkipped,
           qaProUnlock: state.qaProUnlock,
@@ -369,6 +378,7 @@ export const useAppStore = create<AppStore>()(
         tarotDrawnDay: state.tarotDrawnDay,
         runeDrawnDay: state.runeDrawnDay,
         moodGateDay: state.moodGateDay,
+        streakRewardTier: state.streakRewardTier,
         people: state.people,
         authSkipped: state.authSkipped,
         qaProUnlock: state.qaProUnlock,
@@ -424,6 +434,7 @@ export interface SyncSnapshot {
   tarotDrawnDay: string | null
   runeDrawnDay: string | null
   moodGateDay: string | null
+  streakRewardTier: number
   people: SavedPerson[]
   locale: Locale
 }
@@ -446,6 +457,7 @@ export function snapshotForSync(): SyncSnapshot {
     tarotDrawnDay: s.tarotDrawnDay,
     runeDrawnDay: s.runeDrawnDay,
     moodGateDay: s.moodGateDay,
+    streakRewardTier: s.streakRewardTier,
     people: s.people,
     locale: s.locale,
   }
@@ -502,6 +514,10 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
       tarotDrawnDay: laterDay(s.tarotDrawnDay, remote.tarotDrawnDay ?? null),
       runeDrawnDay: laterDay(s.runeDrawnDay, remote.runeDrawnDay ?? null),
       moodGateDay: laterDay(s.moodGateDay, remote.moodGateDay ?? null),
+      streakRewardTier: Math.max(
+        s.streakRewardTier,
+        remote.streakRewardTier ?? 0,
+      ),
       onboardingComplete: s.onboardingComplete || !!remote.onboardingComplete,
       tier: s.tier === 'pro' || remote.tier === 'pro' ? 'pro' : s.tier,
     }
