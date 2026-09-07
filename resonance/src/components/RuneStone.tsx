@@ -18,12 +18,15 @@ function StoneShell({
     <div
       className="grid aspect-[5/6] w-full place-items-center rounded-[22%]"
       style={{
-        background:
-          'radial-gradient(120% 100% at 30% 20%, #333949, #23283492 55%, #1a1d27)',
-        border: '1px solid rgba(255,255,255,0.10)',
+        background: carved
+          ? 'radial-gradient(120% 100% at 30% 20%, #333949, #23283492 55%, #1a1d27)'
+          : 'radial-gradient(125% 105% at 32% 18%, #4a5164, #363c4d 52%, #262a38)',
+        border: carved
+          ? '1px solid rgba(255,255,255,0.10)'
+          : '1px solid rgba(255,255,255,0.16)',
         boxShadow: carved
           ? 'inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04), 0 14px 34px -12px rgba(0,0,0,0.6)'
-          : 'inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 34px -12px rgba(0,0,0,0.6)',
+          : 'inset 0 2px 1px rgba(255,255,255,0.14), inset 0 -10px 18px rgba(0,0,0,0.35), 0 16px 36px -12px rgba(0,0,0,0.65), 0 0 0 6px color-mix(in srgb, var(--rz-hue) 8%, transparent)',
       }}
     >
       {children}
@@ -54,8 +57,11 @@ export function RuneStoneSlot({
         <div className="tf-side">
           <StoneShell>
             <span
-              className="font-serif text-2xl"
-              style={{ color: 'rgba(212,175,55,0.28)' }}
+              className="animate-pulse-glow font-serif text-4xl"
+              style={{
+                color: 'rgba(227,192,99,0.5)',
+                textShadow: '0 0 12px rgba(227,192,99,0.3)',
+              }}
             >
               ✦
             </span>
