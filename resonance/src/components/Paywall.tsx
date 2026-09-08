@@ -108,11 +108,11 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm min-[500px]:justify-center min-[500px]:p-6"
       onClick={onClose}
     >
       <div
-        className="glass-panel mx-auto w-full max-w-md rounded-b-none p-6"
+        className="glass-panel mx-auto w-full max-w-md rounded-b-none p-6 min-[500px]:rounded-b-[1.25rem]"
         onClick={(e) => e.stopPropagation()}
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >

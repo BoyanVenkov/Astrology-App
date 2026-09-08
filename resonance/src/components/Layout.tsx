@@ -94,11 +94,12 @@ export function Layout({
   const navHidden = useOverlayOpen()
 
   return (
-    <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col">
-      {/* per-tab atmosphere, pinned to the viewport behind everything */}
+    <div className="app-frame relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col">
+      {/* per-tab atmosphere, pinned to the viewport behind everything — a touch
+          wider than the column so the starfield bleeds under the framed edge */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 top-0 z-0 mx-auto h-[100dvh] w-full max-w-md overflow-hidden"
+        className="pointer-events-none fixed inset-x-0 top-0 z-0 mx-auto h-[100dvh] w-full max-w-xl overflow-hidden"
       >
         <TabBackdrop tab={active} />
       </div>
@@ -133,7 +134,7 @@ export function Layout({
 
       {!navHidden && (
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.1] backdrop-blur-2xl"
+        className="app-frame-nav fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.1] backdrop-blur-2xl"
         style={{
           background:
             'linear-gradient(180deg, rgba(8,12,28,0.86) 0%, rgba(3,4,12,0.98) 100%)',

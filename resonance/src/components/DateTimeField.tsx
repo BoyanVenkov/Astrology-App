@@ -154,11 +154,11 @@ function PickerSheet({
   // Done button behind the tab bar.
   return createPortal(
     <div
-      className="fixed inset-0 z-[70] flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[70] flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm min-[500px]:justify-center min-[500px]:p-6"
       onClick={onClose}
     >
       <div
-        className="mx-auto w-full max-w-md rounded-t-3xl border-t border-white/10 bg-[#0a0e1f] p-5"
+        className="mx-auto w-full max-w-md rounded-t-3xl border-t border-white/10 bg-[#0a0e1f] p-5 min-[500px]:rounded-b-3xl"
         onClick={(e) => e.stopPropagation()}
         style={{
           paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)',

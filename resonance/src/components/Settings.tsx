@@ -87,6 +87,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
     null,
   )
   const [acctMsg, setAcctMsg] = useState<string | null>(null)
+  const clearLocalData = useAppStore((s) => s.clearLocalData)
 
   const doBackup = async () => {
     setAcctBusy('backup')
@@ -162,12 +163,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
 
   const resetAll = () => {
     if (!window.confirm(t('set.confirmErase'))) return
-    try {
-      localStorage.removeItem('resonance-session')
-    } catch {
-      /* ignore */
-    }
-    window.location.reload()
+    clearLocalData()
   }
 
   return (

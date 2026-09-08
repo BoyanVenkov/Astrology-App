@@ -56,11 +56,11 @@ export function PracticeSheet({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm min-[500px]:justify-center min-[500px]:p-6"
       onClick={onClose}
     >
       <div
-        className="mx-auto w-full max-w-md rounded-t-[28px] border-t p-5"
+        className="mx-auto w-full max-w-md rounded-t-[28px] border-t p-5 min-[500px]:rounded-b-[28px]"
         onClick={(e) => e.stopPropagation()}
         style={{
           background:

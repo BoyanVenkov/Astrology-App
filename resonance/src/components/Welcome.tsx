@@ -151,7 +151,7 @@ export function Splash() {
   useDayHue()
   return (
     <div
-      className="relative mx-auto flex min-h-[100dvh] w-full max-w-md items-center justify-center overflow-hidden px-6"
+      className="app-frame relative mx-auto flex min-h-[100dvh] w-full max-w-md items-center justify-center overflow-hidden px-6"
       style={{
         background:
           'radial-gradient(ellipse 90% 45% at 50% 0%, var(--rz-hue-soft), transparent 60%)',
@@ -212,7 +212,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
   return (
     <div
-      className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col overflow-hidden px-6"
+      className="app-frame relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col overflow-hidden px-6"
       style={{
         paddingTop: 'max(2rem, env(safe-area-inset-top))',
         paddingBottom: 'max(1.75rem, env(safe-area-inset-bottom))',

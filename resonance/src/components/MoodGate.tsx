@@ -37,7 +37,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
 
   return (
     <div
-      className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-6"
+      className="app-frame mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-6"
       style={{
         paddingTop: 'max(2rem, env(safe-area-inset-top))',
         paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',

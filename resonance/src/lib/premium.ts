@@ -50,7 +50,8 @@ export interface Entitlements {
  * `vite build` has no such env var, so this folds to `false` and is
  * dead-code-eliminated — it can never reach a production build.
  */
-export const REVIEW_UNLOCK = import.meta.env.VITE_REVIEW_UNLOCK === '1'
+export const REVIEW_UNLOCK =
+  import.meta.env.DEV || import.meta.env.VITE_REVIEW_UNLOCK === '1'
 
 export function entitlementsFor(tier: PremiumTier): Entitlements {
   const isPro = tier === 'pro' || REVIEW_UNLOCK

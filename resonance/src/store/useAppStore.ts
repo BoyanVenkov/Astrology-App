@@ -192,6 +192,8 @@ interface ResonanceActions {
   removePerson: (id: string) => void
   /** Mark the current session finished and start a fresh one. */
   endSession: () => void
+  /** Clear all locally persisted user data and start a fresh session. */
+  clearLocalData: () => void
 }
 
 export type AppStore = ResonanceSession & SkyState & ResonanceActions
@@ -344,6 +346,8 @@ export const useAppStore = create<AppStore>()(
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
         })),
+
+      clearLocalData: () => set(() => createSession()),
     }),
     {
       name: 'resonance-session',

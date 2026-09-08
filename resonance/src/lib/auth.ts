@@ -4,6 +4,7 @@ import { App as CapApp } from '@capacitor/app'
 import { Browser } from '@capacitor/browser'
 import { Capacitor } from '@capacitor/core'
 import { OAUTH_REDIRECT, supabase } from './supabase'
+import { useAppStore } from '../store/useAppStore'
 
 /**
  * Optional accounts. Signed-out is the default and works exactly as before —
@@ -148,9 +149,11 @@ export async function deleteAccount(): Promise<AuthError | null> {
     // best-effort local cleanup if the function isn't deployed yet
     const uid = (await supabase().auth.getUser()).data.user?.id
     if (uid) await supabase().from('sync_state').delete().eq('user_id', uid)
+    useAppStore.getState().clearLocalData()
     await signOut()
     return { message: error.message }
   }
+  useAppStore.getState().clearLocalData()
   await signOut()
   return null
 }
