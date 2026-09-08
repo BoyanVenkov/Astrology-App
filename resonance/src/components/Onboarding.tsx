@@ -91,7 +91,7 @@ export function Onboarding() {
 
   return (
     <div
-      className="app-frame mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-5"
+      className="mx-auto flex min-h-[100dvh] w-full max-w-md md:max-w-lg flex-col justify-center px-5"
       style={{
         paddingTop: 'max(1.5rem, env(safe-area-inset-top))',
         paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',

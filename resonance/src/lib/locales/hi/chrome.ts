@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'Google Play में सदस्यता प्रबंधित करें →',
   'set.data': 'डेटा',
   'set.eraseAll': 'इस डिवाइस का सारा डेटा मिटाएँ',
-  'set.tierLine': 'Resonance · {tier} स्तर',
   'set.accountDeleted': 'खाता हटा दिया गया।',
   'set.deletionIssue': 'हटाने में समस्या: {message}',
   'set.locationUpdated':

@@ -112,7 +112,6 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
   const profile = useAppStore((s) => s.profile)
   const angles = useAppStore((s) => s.angles)
   const editProfile = useAppStore((s) => s.editProfile)
-  const tier = useAppStore((s) => s.tier)
   const setTier = useAppStore((s) => s.setTier)
   const currentLocation = useAppStore((s) => s.currentLocation)
   const setCurrentLocation = useAppStore((s) => s.setCurrentLocation)
@@ -167,7 +166,13 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
   }
 
   return (
-    <Screen eyebrow={t('nav.settings')} title={t('set.title')} onBack={onBack}>
+    <Screen
+      eyebrow={t('nav.settings')}
+      title={t('set.title')}
+      onBack={onBack}
+      width="wide"
+    >
+      <div className="md:columns-2 md:gap-x-6 [&>section]:mb-4 md:[&>section]:break-inside-avoid">
       <Section title={t('set.language')}>
         <Row>
           <button
@@ -562,10 +567,7 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
           </button>
         </Row>
       </Section>
-
-      <p className="px-1 pb-2 text-center text-[11px] text-haze-500">
-        {t('set.tierLine', { tier })}
-      </p>
+      </div>
     </Screen>
   )
 }

@@ -251,7 +251,6 @@ export const chrome = {
   'set.manageSubscription': 'Manage subscription in Google Play →',
   'set.data': 'Data',
   'set.eraseAll': 'Erase all data on this device',
-  'set.tierLine': 'Resonance · tier {tier}',
   'set.accountDeleted': 'Account deleted.',
   'set.deletionIssue': 'Deletion issue: {message}',
   'set.locationUpdated':

@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'Google Play でサブスクリプションを管理 →',
   'set.data': 'データ',
   'set.eraseAll': 'この端末のすべてのデータを消す',
-  'set.tierLine': 'Resonance · {tier} レベル',
   'set.accountDeleted': 'アカウントを削除しました。',
   'set.deletionIssue': '削除で問題が発生しました：{message}',
   'set.locationUpdated':

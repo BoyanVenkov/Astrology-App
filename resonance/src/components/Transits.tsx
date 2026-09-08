@@ -116,7 +116,7 @@ export function Transits({ onBack }: TransitsProps) {
             : t('scr.transits.moonAspects')}
         </p>
         {aspects.length > 0 ? (
-          <ul className="mt-3 flex flex-col gap-2 text-sm">
+          <ul className="mt-3 flex flex-col gap-2 text-sm sm:grid sm:grid-cols-2 sm:gap-x-6">
             {aspects.map((a) => (
               <li
                 key={`${a.transiting}-${a.other}-${a.def.name}`}

@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'Hantera prenumeration i Google Play →',
   'set.data': 'Data',
   'set.eraseAll': 'Radera all data på den här enheten',
-  'set.tierLine': 'Resonance · nivå {tier}',
   'set.accountDeleted': 'Kontot raderat.',
   'set.deletionIssue': 'Problem vid radering: {message}',
   'set.locationUpdated':

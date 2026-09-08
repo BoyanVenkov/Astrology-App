@@ -238,7 +238,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
   if (view === 'daily') {
     const d = daily.cards[0]
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         {onBack && <BackButton onClick={onBack} />}
 
         <header className="px-1">
@@ -347,7 +347,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
   /* ------------------------------------------------------------ oracle */
   if (view === 'oracle') {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <BackButton
           onClick={() => {
             setView('daily')
@@ -429,7 +429,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
   /* ------------------------------------------------------------ choose */
   if (view === 'choose') {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <BackButton onClick={() => setView('daily')} />
 
         <header className="px-1">
@@ -495,7 +495,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         : 'grid grid-cols-2 gap-3'
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <BackButton onClick={() => setView('choose')} />
 
       <header className="px-1">

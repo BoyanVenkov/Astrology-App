@@ -36,6 +36,11 @@ interface ScreenProps {
   onBack?: () => void
   /** Optional control on the right of the header (edit link, etc). */
   action?: ReactNode
+  /**
+   * On tablets / desktop, `'default'` keeps a comfortable reading column;
+   * `'wide'` lets the screen use the full content area for its own columns.
+   */
+  width?: 'default' | 'wide'
   children: ReactNode
 }
 
@@ -50,15 +55,20 @@ export function Screen({
   subtitle,
   onBack,
   action,
+  width = 'default',
   children,
 }: ScreenProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      className={`mx-auto flex w-full flex-col gap-4 ${
+        width === 'wide' ? '' : 'md:max-w-2xl'
+      }`}
+    >
       <header className="flex items-start gap-2">
         {onBack && <BackButton onClick={onBack} />}
         <div className="min-w-0 flex-1 pt-0.5">
           {eyebrow && <p className="eyebrow-hue">{eyebrow}</p>}
-          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded md:text-[1.75rem]">
             {title}
           </h1>
           {subtitle && (

@@ -45,7 +45,7 @@ interface RitualProps {
 const FREQ_DURATIONS = [5, 10, 20, 30, 45]
 const MED_SOUND_KEYS: MeditationSound[] = ['tone', 'music', 'silent']
 
-const shell = 'app-frame mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5'
+const shell = 'mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 md:max-w-lg'
 const shellStyle = {
   paddingTop: 'max(1rem, env(safe-area-inset-top))',
   paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',

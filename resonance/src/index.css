@@ -317,36 +317,31 @@
 }
 
 /* ------------------------------------------------------------------ *
- *  Large-screen framing — tablets, landscape, desktop
+ *  Adaptive layout — phone · tablet · foldable · ChromeOS · desktop
  * ------------------------------------------------------------------ *
- *  Resonance is a single portrait column (max-w-md). On anything wider it
- *  keeps that width and gains a defined edge + a star-washed cosmos in the
- *  margins, so it reads as a deliberate focused panel rather than a stranded
- *  phone layout. The 500px gate clears every phone in portrait (the manifest
- *  locks orientation) while catching 7"+ tablets. Android 16 / targetSdk 36
- *  lets large-screen users rotate freely regardless of that lock, so the
- *  landscape case has to look composed too. */
-@media (min-width: 500px) {
-  .app-frame {
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 0 140px -30px rgba(0, 0, 0, 0.92);
-  }
+ *  Compact (< 768px): phones (portrait-locked) + 7" tablets portrait —
+ *  bottom tab bar, single column.
+ *  Expanded (>= 768px): 10" tablets, landscape, foldables, ChromeOS, desktop —
+ *  a left navigation rail and a wide content area that reflows into columns.
+ *  Android 16 / targetSdk 36 ignores the manifest's portrait lock on >=600dp
+ *  screens, so every large surface must hold up in landscape too.            */
 
-  /* the fixed bottom nav carries the same edges as the column above it */
-  .app-frame-nav {
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-  }
+/* Prose stays readable no matter how wide the content area gets. */
+.reading-measure {
+  max-width: 42rem;
+}
 
-  /* A faint tiled star wash so the cosmos either side of the column has depth
-     on tablets / landscape. Phones are portrait-locked and never this wide. */
+@media (min-width: 768px) {
+  /* A faint fixed star wash behind everything, so the ambient space around a
+     wide layout still reads as sky. Phones keep their per-tab SVG backdrop
+     and never see this. */
   #root::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
+    opacity: 0.5;
     background-image:
       radial-gradient(1.4px 1.4px at 24px 32px, rgba(233, 237, 250, 0.9), transparent),
       radial-gradient(1px 1px at 168px 96px, rgba(233, 237, 250, 0.5), transparent),
@@ -358,6 +353,10 @@
       radial-gradient(1px 1px at 318px 396px, rgba(233, 237, 250, 0.36), transparent);
     background-repeat: repeat;
     background-size: 380px 420px;
-    opacity: 0.55;
+  }
+
+  /* The largest type earns a little more presence on a big screen. */
+  h1 {
+    letter-spacing: -0.014em;
   }
 }

@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'Управлявай абонамента в Google Play →',
   'set.data': 'Данни',
   'set.eraseAll': 'Изтрий всички данни на това устройство',
-  'set.tierLine': 'Resonance · ниво {tier}',
   'set.accountDeleted': 'Профилът е изтрит.',
   'set.deletionIssue': 'Проблем при изтриване: {message}',
   'set.locationUpdated': 'Местоположението е обновено — прочитът вече отразява къде си.',

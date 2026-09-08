@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'Dhibiti usajili katika Google Play →',
   'set.data': 'Data',
   'set.eraseAll': 'Futa data yote katika kifaa hiki',
-  'set.tierLine': 'Resonance · kiwango {tier}',
   'set.accountDeleted': 'Akaunti imefutwa.',
   'set.deletionIssue': 'Tatizo la kufuta: {message}',
   'set.locationUpdated':

@@ -125,34 +125,39 @@ export function Dashboard({
         </button>
       )}
 
-      <header className="px-1 pt-1">
+      {/* -------- the quiet centre — full width -------- */}
+      <header className="px-1 pt-1 md:mx-auto md:max-w-2xl md:text-center">
         <p className="eyebrow-hue">
           {t('dash.headerDate', {
             greeting: t(when.greetingKey),
             date: when.date,
           })}
         </p>
-        <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.12] text-gilded">
+        <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.12] text-gilded md:text-[2rem]">
           {transit ? rx.headline : t('dash.attuning')}
         </h1>
       </header>
 
-      {/* the quiet centre of the day */}
       {transit && (
-        <div className="px-2 py-1 text-center">
+        <div className="px-2 py-1 text-center md:mx-auto md:max-w-2xl md:py-3">
           <div className="mx-auto mb-3.5 flex items-center justify-center gap-2.5">
             <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/20" />
             <SparkIcon className="h-2.5 w-2.5" style={{ color: 'var(--rz-hue)' }} />
             <span className="h-px w-9 bg-gradient-to-l from-transparent to-white/20" />
           </div>
-          <p className="display text-[1.8rem] text-gilded">“{t(rx.mantra)}”</p>
+          <p className="display text-[1.8rem] text-gilded md:text-[2.1rem]">
+            “{t(rx.mantra)}”
+          </p>
           <p className="mt-3 eyebrow" style={{ color: 'var(--rz-hue)' }}>
             {t('dash.mantra')}
           </p>
         </div>
       )}
 
-      {/* the day's one action */}
+      {/* -------- the day, in two panes on a wide screen -------- */}
+      <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:items-start md:gap-x-10">
+      {/* left — the one action */}
+      <div className="flex flex-col gap-5">
       <TodaysPractice variant="full" onLaunch={onRitual} />
       <button
         type="button"
@@ -166,7 +171,10 @@ export function Dashboard({
       >
         {doneToday ? t('dash.practiseAgain') : t('dash.moreWays')} →
       </button>
+      </div>
 
+      {/* right — the day around it */}
+      <div className="flex flex-col gap-5">
       {/* the day at a glance */}
       <section className="glass-panel grid grid-cols-3 divide-x divide-white/8 p-3">
         <button
@@ -274,6 +282,8 @@ export function Dashboard({
           {t('dash.addBirth')}
         </button>
       )}
+      </div>
+      </div>
     </div>
   )
 }

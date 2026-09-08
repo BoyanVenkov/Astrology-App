@@ -254,8 +254,10 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
           </button>
         )
       }
+      width="wide"
     >
-      <div className="flex justify-center py-1">
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-[minmax(0,20rem)_1fr] md:items-start md:gap-8">
+      <div className="flex justify-center py-1 md:sticky md:top-4">
         <ChakraColumn
           field={field}
           size={300}
@@ -265,9 +267,9 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
         />
       </div>
 
+      <div className="flex flex-col gap-2.5">
       <p className="px-1 text-sm leading-relaxed text-haze-300">{summary}</p>
 
-      <div className="flex flex-col gap-2.5">
         {field.map((c) => {
           const locked = !isPro && !c.focus
           return (
@@ -286,7 +288,6 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
             />
           )
         })}
-      </div>
 
       {!isPro && (
         <button
@@ -310,6 +311,8 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
       <p className="px-1 pb-2 text-[11px] leading-relaxed text-haze-500">
         {t('field.footer')}
       </p>
+      </div>
+      </div>
     </Screen>
   )
 }

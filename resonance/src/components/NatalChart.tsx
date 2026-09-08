@@ -106,6 +106,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
     <Screen
       eyebrow={t('scr.natal.eyebrow')}
       title={t('scr.natal.title')}
+      width="wide"
       onBack={onBack}
       action={
         <button
@@ -143,11 +144,12 @@ export function NatalChart({ onBack }: NatalChartProps) {
         </button>
       )}
 
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-[minmax(0,22rem)_1fr] md:items-start md:gap-6 lg:grid-cols-[minmax(0,26rem)_1fr]">
       {/* ---- the wheel ---- */}
-      <div className="glass-panel flex justify-center p-3">
+      <div className="glass-panel flex justify-center p-3 md:sticky md:top-4">
         <svg
           viewBox={`0 0 ${SIZE} ${SIZE}`}
-          className="h-auto w-full max-w-[360px]"
+          className="h-auto w-full max-w-[360px] md:max-w-none"
           role="img"
           aria-label={t('scr.natal.wheelAria')}
         >
@@ -318,6 +320,7 @@ export function NatalChart({ onBack }: NatalChartProps) {
         </svg>
       </div>
 
+      <div className="flex flex-col gap-4">
       {/* ---- placements ---- */}
       <section className="glass-panel p-4">
         <p className="eyebrow">{t('scr.natal.placements')}</p>
@@ -363,6 +366,8 @@ export function NatalChart({ onBack }: NatalChartProps) {
           )}
         </ul>
       </section>
+      </div>
+      </div>
     </Screen>
   )
 }

@@ -148,8 +148,9 @@ export function PracticeLibrary({
         tones: SOLFEGGIO_PRESETS.length,
       })}
       onBack={onBack}
+      width="wide"
     >
-      <div className="grid grid-cols-3 gap-2">
+      <div className="mx-auto grid w-full max-w-md grid-cols-3 gap-2">
         {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((tk) => (
           <button
             key={tk}
@@ -179,7 +180,7 @@ export function PracticeLibrary({
         </div>
       )}
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {tab === 'breath' &&
           shownBreaths.map((b) => {
             const unlocked = breathUnlocked(b.key, isPro)

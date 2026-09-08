@@ -19,11 +19,11 @@ export function LanguageSheet({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm min-[500px]:justify-center min-[500px]:p-6"
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-midnight-void/70 backdrop-blur-sm sm:justify-center sm:p-6"
       onClick={onClose}
     >
       <div
-        className="glass-panel mx-auto flex max-h-[85dvh] w-full max-w-md flex-col rounded-b-none p-6 min-[500px]:rounded-b-[1.25rem]"
+        className="glass-panel mx-auto flex max-h-[85dvh] w-full max-w-md flex-col rounded-b-none p-6 sm:rounded-b-[1.25rem]"
         onClick={(e) => e.stopPropagation()}
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >

@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'Aboneliği Google Play’de yönet →',
   'set.data': 'Veri',
   'set.eraseAll': 'Bu cihazdaki tüm verileri sil',
-  'set.tierLine': 'Resonance · {tier} kademesi',
   'set.accountDeleted': 'Hesap silindi.',
   'set.deletionIssue': 'Silme sorunu: {message}',
   'set.locationUpdated':

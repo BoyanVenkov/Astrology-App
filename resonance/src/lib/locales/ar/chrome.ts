@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': 'أدِر الاشتراك في Google Play ←',
   'set.data': 'البيانات',
   'set.eraseAll': 'محو كل البيانات على هذا الجهاز',
-  'set.tierLine': 'Resonance · المستوى {tier}',
   'set.accountDeleted': 'تمّ حذف الحساب.',
   'set.deletionIssue': 'مشكلة في الحذف: {message}',
   'set.locationUpdated':

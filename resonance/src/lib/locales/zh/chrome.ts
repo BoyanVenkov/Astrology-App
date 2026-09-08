@@ -253,7 +253,6 @@ export const chrome: Record<ChromeKey, string> = {
   'set.manageSubscription': '在 Google Play 管理订阅 →',
   'set.data': '数据',
   'set.eraseAll': '清除本设备上的所有数据',
-  'set.tierLine': 'Resonance · {tier} 级',
   'set.accountDeleted': '账户已删除。',
   'set.deletionIssue': '删除时出现问题：{message}',
   'set.locationUpdated':

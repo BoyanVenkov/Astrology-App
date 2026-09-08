@@ -428,13 +428,13 @@ export function Compatibility({ onBack }: CompatibilityProps) {
       title={t('scr.compat.titleList')}
       onBack={onBack}
     >
-      <ul className="flex flex-col gap-2">
+      <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {people.map((p) => (
           <li key={p.id}>
             <button
               type="button"
               onClick={() => setSelected(p.id)}
-              className="glass-panel flex w-full items-center justify-between p-4 text-start active:scale-[0.99]"
+              className="glass-panel flex h-full w-full items-center justify-between p-4 text-start active:scale-[0.99]"
             >
               <span className="min-w-0">
                 <span className="block font-serif text-lg leading-tight text-white">

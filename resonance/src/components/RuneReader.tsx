@@ -109,7 +109,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
         : null
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <BackButton onClick={onBack} />
 
         <header className="px-1">
@@ -216,7 +216,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
   /* ------------------------------------------------------------ choose */
   if (view === 'choose') {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <BackButton onClick={() => setView('daily')} />
 
         <header className="px-1">
@@ -272,7 +272,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
       layout.count === 3 ? 'grid grid-cols-3 gap-2' : 'grid grid-cols-3 gap-2'
 
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <BackButton onClick={() => setView('choose')} />
 
         <header className="px-1">
@@ -325,7 +325,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
   if (view === 'ask') {
     const a = answer?.a
     return (
-      <div className="flex flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         <BackButton
           onClick={() => {
             setView('daily')
@@ -405,7 +405,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
 
   /* ----------------------------------------------------------- library */
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 md:max-w-4xl">
       <BackButton onClick={() => setView('daily')} />
 
       <header className="px-1">
@@ -419,6 +419,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
       {[1, 2, 3].map((aett) => (
         <section key={aett} className="flex flex-col gap-2">
           <p className="eyebrow px-1">{t(`rune.aett.${aett}` as MessageKey)}</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {RUNE_KEYS.filter((k) => RUNES[k].aett === aett).map((k) => {
             const m = RUNES[k]
             const text = runeText(k, false, t)
@@ -459,6 +460,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
               </button>
             )
           })}
+          </div>
         </section>
       ))}
     </div>

@@ -74,7 +74,7 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
   const hasMoodToday = moodLog.some((m) => m.day === localDayKey())
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
       <header className="flex flex-col items-center pt-1 text-center">
         <Aura state={aura} size={200} className="h-44 w-44" />
         <p className="eyebrow-hue mt-1">{t('aura.yours')}</p>

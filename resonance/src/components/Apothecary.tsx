@@ -48,8 +48,9 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
           : t('scr.apoth.subPlain', { n: ALL_CRYSTALS.length })
       }
       onBack={onBack}
+      width="wide"
     >
-      <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1">
+      <div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 md:flex-wrap md:overflow-visible">
         {(['all', ...CHAKRA_ORDER] as const).map((k) => (
           <button
             key={k}
@@ -69,7 +70,7 @@ export function Apothecary({ onBack, onPractice }: ApothecaryProps) {
         ))}
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         {list.map((crystal) => {
           const isToday = todayNames.has(crystal.name)
           return (

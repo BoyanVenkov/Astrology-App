@@ -102,7 +102,7 @@ export function SkyView({
   if (!transit || !chakra) return null
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 lg:max-w-3xl">
       <header className="px-1">
         <p className="eyebrow-hue">{t('sky.eyebrow')}</p>
         <h1 className="mt-1.5 font-serif text-2xl leading-tight text-gilded">
@@ -159,7 +159,7 @@ export function SkyView({
         </span>
       </button>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <Tile
           icon={<CompassIcon className="h-5 w-5" />}
           title={hasNatal ? t('sky.tileChart') : t('sky.addChart')}

@@ -255,7 +255,7 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
   const recent = [...sessionLog].reverse().slice(0, isPro ? 30 : 6)
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-5 md:max-w-4xl">
       <BackButton onClick={onBack} />
 
       {celebration && (
@@ -267,6 +267,9 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
         />
       )}
 
+      <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:items-start md:gap-x-8">
+      {/* -------- left -------- */}
+      <div className="flex flex-col gap-5">
       <header className="flex flex-col items-center text-center">
         <Aura state={aura} size={200} className="h-48 w-48" />
         <p className="eyebrow mt-1">{t('aura.yours')}</p>
@@ -297,7 +300,10 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
       </section>
 
       <StreakReward streak={streak} longest={longest} t={t} />
+      </div>
 
+      {/* -------- right -------- */}
+      <div className="flex flex-col gap-5">
       {/* practice grid */}
       <section className="glass-panel p-4">
         <div className="flex items-center justify-between">
@@ -380,6 +386,8 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
           </ul>
         )}
       </section>
+      </div>
+      </div>
     </div>
   )
 }
