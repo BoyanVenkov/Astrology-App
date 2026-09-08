@@ -60,7 +60,7 @@ export function PracticeSheet({
       onClick={onClose}
     >
       <div
-        className="mx-auto w-full max-w-md rounded-t-[28px] border-t p-5 sm:rounded-b-[28px]"
+        className="mx-auto max-h-[100dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-t-[28px] border-t p-5 sm:max-h-[92dvh] sm:rounded-b-[28px]"
         onClick={(e) => e.stopPropagation()}
         style={{
           background:

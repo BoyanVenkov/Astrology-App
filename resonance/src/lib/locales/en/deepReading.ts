@@ -383,3 +383,5 @@ export const deepReading = {
   'syn.deep.longView.hard':
     'this is intense now, and it is likely to stay intense. That is worth it if depth and significance are what you both actually want from a relationship. It is draining if part of you is waiting for it to calm down into something easy — that is probably not the assignment here.',
 } as const
+
+export type DeepReadingKey = keyof typeof deepReading

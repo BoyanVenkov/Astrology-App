@@ -158,7 +158,7 @@ function PickerSheet({
       onClick={onClose}
     >
       <div
-        className="mx-auto w-full max-w-md rounded-t-3xl border-t border-white/10 bg-[#0a0e1f] p-5 sm:rounded-b-3xl"
+        className="mx-auto max-h-[100dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-t-3xl border-t border-white/10 bg-[#0a0e1f] p-5 sm:max-h-[92dvh] sm:rounded-b-3xl"
         onClick={(e) => e.stopPropagation()}
         style={{
           paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)',

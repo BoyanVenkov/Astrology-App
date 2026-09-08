@@ -40,7 +40,7 @@ export function AuthSheet({ onClose, reason = 'backup' }: AuthSheetProps) {
       onClick={onClose}
     >
       <div
-        className="glass-panel mx-auto w-full max-w-md rounded-b-none p-6 sm:rounded-b-[1.25rem]"
+        className="glass-panel mx-auto max-h-[100dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-b-none p-6 sm:max-h-[92dvh] sm:rounded-b-[1.25rem]"
         onClick={(e) => e.stopPropagation()}
         style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
       >

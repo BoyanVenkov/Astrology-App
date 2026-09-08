@@ -212,14 +212,16 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
   return (
     <div
-      className="relative mx-auto flex min-h-[100dvh] w-full max-w-md md:max-w-lg flex-col overflow-hidden px-6"
+      className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-6 md:max-w-lg"
       style={{
         paddingTop: 'max(2rem, env(safe-area-inset-top))',
         paddingBottom: 'max(1.75rem, env(safe-area-inset-bottom))',
       }}
     >
-      <WelcomeSky />
-      <PlanetField />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <WelcomeSky />
+        <PlanetField />
+      </div>
 
       <button
         type="button"
@@ -231,7 +233,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
         <span>{localeNative}</span>
       </button>
 
-      <div className="flex flex-1 flex-col justify-center py-8">
+      <div className="relative z-10 my-auto flex w-full flex-col py-8">
         <ResonanceMark
           className="mb-7 h-11 w-11 self-center"
           style={{ color: 'var(--rz-hue)', filter: 'drop-shadow(0 0 14px var(--rz-glow))' }}

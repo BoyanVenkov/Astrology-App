@@ -222,7 +222,8 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       : horoscope.greeting
 
     return (
-      <div className={`${shell} justify-center`} style={shellStyle}>
+      <div className={shell} style={shellStyle}>
+        <div className="my-auto flex w-full flex-col py-6">
         <p className="eyebrow">
           {!preset?.personalised && specificPractice
             ? t('scr.ritual.fromLibrary')
@@ -416,6 +417,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         >
           {t('scr.ritual.notNow')}
         </button>
+        </div>
       </div>
     )
   }
@@ -431,7 +433,8 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         >
           {t('scr.ritual.endSession')}
         </button>
-        <div className="flex flex-1 items-center">
+        <div className="flex flex-1 flex-col overflow-y-auto overscroll-contain">
+         <div className="my-auto w-full">
           {mode === 'breath' ? (
             isJourney ? (
               <BreathJourney onComplete={handleComplete} className="w-full" />
@@ -464,6 +467,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
               className="w-full"
             />
           )}
+         </div>
         </div>
       </div>
     )
@@ -472,7 +476,8 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   /* ----------------------------------------------------------------- done */
   const streak = practiceStreak(sessionLog)
   return (
-    <div className={`${shell} justify-center text-center`} style={shellStyle}>
+    <div className={`${shell} text-center`} style={shellStyle}>
+      <div className="my-auto flex w-full flex-col py-6">
       <div
         className="mx-auto grid h-24 w-24 place-items-center rounded-full"
         style={{
@@ -520,6 +525,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       >
         {t('scr.ritual.done')}
       </button>
+      </div>
     </div>
   )
 }

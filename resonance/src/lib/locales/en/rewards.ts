@@ -38,3 +38,5 @@ export const rewards = {
   'mile.wheel': 'The Full Wheel',
   'mile.wheel.note': 'All the way around the sun — every single day.',
 } as const
+
+export type RewardsKey = keyof typeof rewards

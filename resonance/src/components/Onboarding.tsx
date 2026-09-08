@@ -91,12 +91,13 @@ export function Onboarding() {
 
   return (
     <div
-      className="mx-auto flex min-h-[100dvh] w-full max-w-md md:max-w-lg flex-col justify-center px-5"
+      className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 md:max-w-lg"
       style={{
         paddingTop: 'max(1.5rem, env(safe-area-inset-top))',
         paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
       }}
     >
+      <div className="flex w-full flex-col py-6 my-auto">
       <ResonanceMark
         className="mb-5 h-9 w-9"
         style={{ color: 'var(--rz-hue)' }}
@@ -247,6 +248,7 @@ export function Onboarding() {
       >
         {t('onb.skip')}
       </button>
+      </div>
     </div>
   )
 }

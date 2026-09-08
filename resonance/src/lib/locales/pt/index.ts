@@ -6,7 +6,10 @@ import { practice } from './practice'
 import { meditation } from './meditation'
 import { crystals } from './crystals'
 import { reading } from './reading'
+import { deepReading } from './deepReading'
 import { tarot } from './tarot'
+import { runes } from './runes'
+import { rewards } from './rewards'
 import { screens } from './screens'
 
 /**
@@ -22,6 +25,9 @@ export const pt: Partial<Record<MessageKey, string>> = {
   ...meditation,
   ...crystals,
   ...reading,
+  ...deepReading,
   ...tarot,
+  ...runes,
+  ...rewards,
   ...screens,
 }

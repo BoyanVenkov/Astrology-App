@@ -37,7 +37,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
 
   return (
     <div
-      className="mx-auto flex min-h-[100dvh] w-full max-w-md md:max-w-lg flex-col justify-center px-6"
+      className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-6 md:max-w-lg"
       style={{
         paddingTop: 'max(2rem, env(safe-area-inset-top))',
         paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',
@@ -45,6 +45,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
           'radial-gradient(ellipse 90% 45% at 50% 0%, var(--rz-hue-soft), transparent 60%)',
       }}
     >
+      <div className="my-auto flex w-full flex-col py-4">
       <ResonanceMark
         className="mb-6 h-8 w-8 self-center"
         style={{ color: 'var(--rz-hue)' }}
@@ -139,6 +140,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
       >
         {t('mood.skipToday')}
       </button>
+      </div>
     </div>
   )
 }

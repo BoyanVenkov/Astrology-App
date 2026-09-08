@@ -305,3 +305,5 @@ export const runes = {
   'rune.othala.today':
     'Keep one thing from where you come from today, and consciously set down one thing you have been carrying out of habit.',
 } as const
+
+export type RunesKey = keyof typeof runes
