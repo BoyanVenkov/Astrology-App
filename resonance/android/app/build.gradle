@@ -21,8 +21,8 @@ android {
         applicationId "com.venkovdigital.resonance"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "8"
+        versionCode 9
+        versionName "9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -30,11 +30,15 @@ android {
     }
 
     signingConfigs {
-        release {
-            storeFile file('../resonance-release.jks')
-            storePassword 'resonancepassword123'
-            keyAlias 'resonance'
-            keyPassword 'resonancepassword123'
+        // Credentials come from android/keystore.properties (git-ignored). No
+        // secrets in version control. See RELEASE.md.
+        if (keystorePropertiesFile.exists()) {
+            release {
+                storeFile rootProject.file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
 
@@ -42,7 +46,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            // Sign with the release key when keystore.properties is present;
+            // otherwise fall back to the debug key so CI / fresh clones still build.
+            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
         }
     }
 }
