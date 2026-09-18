@@ -12,6 +12,7 @@ export const chrome: Record<ChromeKey, string> = {
   'common.close': '关闭',
   'common.skip': '跳过',
   'common.today': '今天',
+  'common.greetName': '{greeting}，{name}',
 
   /* ---- 导航 ---- */
   'nav.today': '今天',
@@ -186,6 +187,9 @@ export const chrome: Record<ChromeKey, string> = {
   'sky.tileHoroscope': '完整运势',
   'sky.tileHoroscopeSub': '深入解读今天 · Pro',
   'sky.tileHoroscopeSubPro': '深入解读今天',
+  'sky.tileOracle': 'AI 运势',
+  'sky.tileOracleSub': '为你量身定制 · Pro',
+  'sky.tileOracleSubPro': 'AI 为你量身写就',
   'sky.tileStones': '晶石',
   'sky.addChart': '添加你的星盘',
   'sky.addChartSub': '获得专属解读',

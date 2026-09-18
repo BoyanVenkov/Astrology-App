@@ -383,7 +383,7 @@ export type Locale =
 
 /* --------------------------------------------------------------- navigation */
 
-export type TabKey = 'today' | 'sky' | 'oracle' | 'tarot' | 'you'
+export type TabKey = 'today' | 'sky' | 'tarot' | 'you'
 
 /**
  * The persisted, resumable state of a user's alignment session.

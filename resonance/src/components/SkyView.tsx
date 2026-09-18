@@ -12,12 +12,20 @@ import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
 import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
-import { ApothecaryIcon, CompassIcon, LockIcon, MoonIcon, PulseIcon } from './icons'
+import {
+  ApothecaryIcon,
+  CompassIcon,
+  LockIcon,
+  MoonIcon,
+  OracleIcon,
+  PulseIcon,
+} from './icons'
 import { QuickHoroscope } from './QuickHoroscope'
 
 interface SkyViewProps {
   onOpenChart: () => void
   onOpenHoroscope: () => void
+  onOpenOracle: () => void
   onOpenChakras: () => void
   onOpenCompat: () => void
   onOpenTransits: () => void
@@ -80,6 +88,7 @@ function chakraFieldSummary(field: ChakraReading[], t: TFn): string {
 export function SkyView({
   onOpenChart,
   onOpenHoroscope,
+  onOpenOracle,
   onOpenChakras,
   onOpenCompat,
   onOpenTransits,
@@ -197,6 +206,13 @@ export function SkyView({
           onClick={
             isPro ? onOpenHoroscope : () => onUpgrade(t('sky.reasonHoroscope'))
           }
+        />
+        <Tile
+          icon={<OracleIcon className="h-5 w-5" />}
+          title={t('sky.tileOracle')}
+          sub={isPro ? t('sky.tileOracleSubPro') : t('sky.tileOracleSub')}
+          locked={!isPro}
+          onClick={isPro ? onOpenOracle : () => onUpgrade(t('oracle.reason'))}
         />
         <Tile
           icon={<ApothecaryIcon className="h-5 w-5" />}

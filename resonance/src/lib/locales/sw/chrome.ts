@@ -12,6 +12,7 @@ export const chrome: Record<ChromeKey, string> = {
   'common.close': 'Funga',
   'common.skip': 'Ruka',
   'common.today': 'Leo',
+  'common.greetName': '{greeting}, {name}',
 
   /* ---- urambazaji ---- */
   'nav.today': 'Leo',
@@ -186,6 +187,9 @@ export const chrome: Record<ChromeKey, string> = {
   'sky.tileHoroscope': 'Falaki kamili',
   'sky.tileHoroscopeSub': 'Leo, kwa kina · Pro',
   'sky.tileHoroscopeSubPro': 'Leo, kwa kina',
+  'sky.tileOracle': 'Falaki ya AI',
+  'sky.tileOracleSub': 'Usomaji wa kibinafsi · Pro',
+  'sky.tileOracleSubPro': 'Imeandikwa kwa ajili yako, na AI',
   'sky.tileStones': 'Mawe',
   'sky.addChart': 'Ongeza chati yako',
   'sky.addChartSub': 'Kwa usomaji wa binafsi',

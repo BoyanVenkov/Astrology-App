@@ -10,6 +10,8 @@ export const chrome = {
   'common.close': 'Close',
   'common.skip': 'Skip',
   'common.today': 'Today',
+  /** Wraps any greeting sentence with a first name — "Good morning, {name}". */
+  'common.greetName': '{greeting}, {name}',
 
   /* ---- navigation ---- */
   'nav.today': 'Today',
@@ -184,6 +186,9 @@ export const chrome = {
   'sky.tileHoroscope': 'Full horoscope',
   'sky.tileHoroscopeSub': 'Today, in depth · Pro',
   'sky.tileHoroscopeSubPro': 'Today, in depth',
+  'sky.tileOracle': 'AI Horoscope',
+  'sky.tileOracleSub': 'A personalised reading · Pro',
+  'sky.tileOracleSubPro': 'Written for you, by AI',
   'sky.tileStones': 'Stones',
   'sky.addChart': 'Add your chart',
   'sky.addChartSub': 'For a personal reading',
@@ -273,7 +278,7 @@ export const chrome = {
   'pay.feat.practice': 'Every breath pattern, meditation & Solfeggio tone',
   'pay.feat.tarot': 'The 3-card & Celtic Cross spreads, and the Oracle',
   'pay.feat.horoscope': 'Your full daily horoscope, in depth',
-  'pay.feat.oracle': 'Oracle AI — a personalised reading, written for you',
+  'pay.feat.oracle': 'AI Horoscope — a personalised reading, written for you',
   'pay.feat.journal': 'Unlimited journal history & aura trends',
   'pay.reasonSpreads': 'The 3-card & Celtic Cross spreads',
   'pay.perYear': '{price}/yr',

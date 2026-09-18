@@ -110,6 +110,27 @@ function balanceOf(aspects: Aspect[]): Balance {
   return 'mixed'
 }
 
+/**
+ * Picks which aspects get an individual write-up (a section, or a quick
+ * note). A plain score sort skews hard — `ASPECTS` in `astrology.ts` weights
+ * squares/oppositions at 1.0 vs. 0.5–0.7 for sextiles/trines — so a
+ * supportive aspect can go unmentioned for days even when one's in orb.
+ * Guarantee the single best hard aspect AND the single best soft aspect a
+ * spot (when they exist), then fill the rest by score as before, so the
+ * reading always names an important challenge *and* an important support
+ * rather than only ever the sharpest edge.
+ */
+function pickFeatured(aspects: Aspect[], n: number): Aspect[] {
+  if (aspects.length <= n) return aspects
+  const bestOf = (harmony: 'hard' | 'soft'): Aspect | undefined =>
+    aspects.find((a) => a.def.harmony === harmony)
+  const guaranteed = [bestOf('hard'), bestOf('soft')].filter(
+    (a): a is Aspect => a != null,
+  )
+  const rest = aspects.filter((a) => !guaranteed.includes(a))
+  return [...guaranteed, ...rest].slice(0, n).sort((a, b) => b.score - a.score)
+}
+
 const rel = (name: string, t: TFn): string =>
   t(`horo.rel.${name}` as MessageKey)
 
@@ -180,14 +201,12 @@ export function buildQuickHoroscope(
   }
 
   const seen = new Set<BodyName>()
-  const notes = aspects
-    .filter((a) => {
-      if (seen.has(a.other)) return false
-      seen.add(a.other)
-      return true
-    })
-    .slice(0, hasNatal ? 3 : 2)
-    .map((a) => {
+  const deduped = aspects.filter((a) => {
+    if (seen.has(a.other)) return false
+    seen.add(a.other)
+    return true
+  })
+  const notes = pickFeatured(deduped, hasNatal ? 3 : 2).map((a) => {
       const theme = houseTheme(transitHouses[a.transiting], t)
       const cue = t(`horo.quickCue.${a.def.harmony}` as MessageKey, {
         area: t(`horo.area.${a.other}` as MessageKey),
@@ -331,7 +350,7 @@ export function buildHoroscope(
     : t('horo.greeting.lit', { focus })
 
   const balance = balanceOf(aspects)
-  const top = aspects.slice(0, 5)
+  const top = pickFeatured(aspects, 5)
 
   /* ---- the opening: lead + headline + weather + tempo ---- */
   const intro: string[] = [t('dh.ov.lead')]

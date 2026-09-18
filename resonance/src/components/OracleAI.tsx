@@ -5,8 +5,10 @@ import { useEntitlements } from '../lib/premium'
 import { supabase } from '../lib/supabase'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon, OracleIcon } from './icons'
+import { Screen } from './Screen'
 
 interface OracleAIProps {
+  onBack: () => void
   onUpgrade: (reason?: string) => void
 }
 
@@ -61,7 +63,7 @@ function ConsultOrb({ busy }: { busy: boolean }) {
  * and the only place the daily-use cap is actually enforced — everything
  * here is UX, not the real gate.
  */
-export function OracleAI({ onUpgrade }: OracleAIProps) {
+export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
   const t = useT()
   const { isPro } = useEntitlements()
   const transit = useAppStore((s) => s.transit)
@@ -123,21 +125,14 @@ export function OracleAI({ onUpgrade }: OracleAIProps) {
     })
   }
 
-  const header = (
-    <header className="px-1">
-      <p className="eyebrow-hue">{t('oracle.eyebrow')}</p>
-      <h1 className="mt-1.5 font-serif text-2xl leading-tight text-gilded">
-        {t('oracle.title')}
-      </h1>
-      <p className="mt-1 text-sm text-haze-300">{t('oracle.blurb')}</p>
-    </header>
-  )
-
   if (!isPro) {
     return (
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 lg:max-w-3xl">
-        {header}
-
+      <Screen
+        eyebrow={t('oracle.eyebrow')}
+        title={t('oracle.title')}
+        subtitle={t('oracle.blurb')}
+        onBack={onBack}
+      >
         <section className="glass-panel flex flex-col gap-3 p-5">
           <p className="text-sm italic leading-relaxed text-haze-200">
             {t('oracle.teaserSample1')}
@@ -155,7 +150,7 @@ export function OracleAI({ onUpgrade }: OracleAIProps) {
           <LockIcon className="h-4 w-4" />
           {t('oracle.unlock')}
         </button>
-      </div>
+      </Screen>
     )
   }
 
@@ -168,9 +163,12 @@ export function OracleAI({ onUpgrade }: OracleAIProps) {
         : 'exhausted'
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 lg:max-w-3xl">
-      {header}
-
+    <Screen
+      eyebrow={t('oracle.eyebrow')}
+      title={t('oracle.title')}
+      subtitle={t('oracle.blurb')}
+      onBack={onBack}
+    >
       <section className="glass-panel glass-panel-active flex flex-col items-center gap-4 p-6 text-center">
         {phase === 'idle' && (
           <>
@@ -245,6 +243,6 @@ export function OracleAI({ onUpgrade }: OracleAIProps) {
           {t('oracle.addBirth')}
         </button>
       )}
-    </div>
+    </Screen>
   )
 }

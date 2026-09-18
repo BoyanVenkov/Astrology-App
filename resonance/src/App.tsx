@@ -51,6 +51,7 @@ type Sub =
   | null
   | 'chart'
   | 'horoscope'
+  | 'oracle'
   | 'chakras'
   | 'compat'
   | 'transits'
@@ -186,6 +187,9 @@ function App() {
         {sub === 'horoscope' && (
           <Horoscope onBack={back} onRitual={launchRitual} />
         )}
+        {sub === 'oracle' && (
+          <OracleAI onBack={back} onUpgrade={openPaywall} />
+        )}
         {sub === 'chakras' && (
           <ChakraField
             onBack={back}
@@ -240,6 +244,7 @@ function App() {
           <SkyView
             onOpenChart={() => setSub('chart')}
             onOpenHoroscope={() => setSub('horoscope')}
+            onOpenOracle={() => setSub('oracle')}
             onOpenChakras={() => setSub('chakras')}
             onOpenCompat={() => setSub('compat')}
             onOpenTransits={() => setSub('transits')}
@@ -247,9 +252,6 @@ function App() {
             onOpenStones={() => setSub('stones')}
             onUpgrade={openPaywall}
           />
-        )}
-        {sub === null && tab === 'oracle' && (
-          <OracleAI onUpgrade={openPaywall} />
         )}
         {sub === null && tab === 'tarot' && (
           <TarotReader
