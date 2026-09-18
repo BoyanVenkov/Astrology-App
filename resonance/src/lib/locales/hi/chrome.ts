@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- नेविगेशन ---- */
   'nav.today': 'आज',
   'nav.sky': 'आकाश',
+  'nav.oracle': 'ओरेकल',
   'nav.tarot': 'टैरो',
   'nav.you': 'आप',
   'nav.practice': 'आज का अनुष्ठान',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'शर्तें',
   'welcome.privacy': 'गोपनीयता नीति',
   'welcome.language': 'भाषा',
+  'welcome.personalizeTitle': 'चलिए इसे व्यक्तिगत बनाएं',
+  'welcome.namePrompt': 'हम आपको क्या कहकर बुलाएं?',
+  'welcome.namePlaceholder': 'आपका नाम',
+  'welcome.langHint': 'कोई और भाषा पसंद है? ऊपर दिए ग्लोब आइकन पर टैप करें ↑',
+  'welcome.personalizeDone': 'हो गया',
 
   /* ---- ऑनबोर्डिंग ---- */
   'onb.eyebrow': 'Resonance में आपका स्वागत है',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'हर साँस का पैटर्न, ध्यान और सोल्फेजियो स्वर',
   'pay.feat.tarot': '3-कार्ड प्रसार और सेल्टिक क्रॉस, और ऑरेकल',
   'pay.feat.horoscope': 'आपका पूरा दैनिक राशिफल, गहराई से',
+  'pay.feat.oracle': 'ओरेकल एआई — आपके लिए लिखा गया व्यक्तिगत विश्लेषण',
   'pay.feat.journal': 'असीमित डायरी इतिहास और आभा की प्रवृत्ति',
   'pay.reasonSpreads': '3-कार्ड प्रसार और सेल्टिक क्रॉस',
   'pay.perYear': '{price}/वर्ष',

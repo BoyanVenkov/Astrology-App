@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- nawigacja ---- */
   'nav.today': 'Dziś',
   'nav.sky': 'Niebo',
+  'nav.oracle': 'Wyrocznia',
   'nav.tarot': 'Tarot',
   'nav.you': 'Ty',
   'nav.practice': 'dzisiejszy rytuał',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'Regulamin',
   'welcome.privacy': 'Politykę prywatności',
   'welcome.language': 'Język',
+  'welcome.personalizeTitle': 'Spersonalizujmy to',
+  'welcome.namePrompt': 'Jak mamy się do Ciebie zwracać?',
+  'welcome.namePlaceholder': 'Twoje imię',
+  'welcome.langHint': 'Wolisz inny język? Stuknij w globus powyżej ↑',
+  'welcome.personalizeDone': 'Gotowe',
 
   /* ---- wprowadzenie ---- */
   'onb.eyebrow': 'Witaj w Resonance',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'Każdy wzór oddechu, medytacja i ton Solfeggio',
   'pay.feat.tarot': 'Rozkłady 3 kart i Krzyż Celtycki oraz Wyrocznia',
   'pay.feat.horoscope': 'Twój pełny dzienny horoskop, dogłębnie',
+  'pay.feat.oracle': 'Wyrocznia AI — spersonalizowana interpretacja, napisana dla Ciebie',
   'pay.feat.journal': 'Nielimitowana historia dziennika i trendy aury',
   'pay.reasonSpreads': 'Rozkłady 3 kart i Krzyż Celtycki',
   'pay.perYear': '{price}/rok',

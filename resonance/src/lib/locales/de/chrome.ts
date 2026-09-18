@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- Navigation ---- */
   'nav.today': 'Heute',
   'nav.sky': 'Himmel',
+  'nav.oracle': 'Orakel',
   'nav.tarot': 'Tarot',
   'nav.you': 'Du',
   'nav.practice': 'Ritual des Tages',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'Nutzungsbedingungen',
   'welcome.privacy': 'Datenschutzerklärung',
   'welcome.language': 'Sprache',
+  'welcome.personalizeTitle': 'Personalisieren wir das',
+  'welcome.namePrompt': 'Wie sollen wir dich nennen?',
+  'welcome.namePlaceholder': 'Dein Vorname',
+  'welcome.langHint': 'Lieber eine andere Sprache? Tippe oben auf das Globus-Symbol ↑',
+  'welcome.personalizeDone': 'Fertig',
 
   /* ---- Onboarding ---- */
   'onb.eyebrow': 'Willkommen bei Resonance',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'Jedes Atemmuster, jede Meditation und jeder Solfeggio-Ton',
   'pay.feat.tarot': 'Die 3-Karten-Blätter und das Keltische Kreuz, und das Orakel',
   'pay.feat.horoscope': 'Dein volles Tageshoroskop, in der Tiefe',
+  'pay.feat.oracle': 'Orakel-KI — eine persönliche Deutung, für dich geschrieben',
   'pay.feat.journal': 'Unbegrenzter Journal-Verlauf und Aura-Verlauf',
   'pay.reasonSpreads': 'Die 3-Karten-Blätter und das Keltische Kreuz',
   'pay.perYear': '{price}/Jahr',

@@ -24,6 +24,7 @@ const FEATURE_KEYS: MessageKey[] = [
   'pay.feat.practice',
   'pay.feat.tarot',
   'pay.feat.horoscope',
+  'pay.feat.oracle',
   'pay.feat.journal',
 ]
 

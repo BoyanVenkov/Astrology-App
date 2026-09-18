@@ -199,6 +199,17 @@ export function MoonIcon(props: IconProps) {
   )
 }
 
+export function OracleIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M12 3.2 19.5 8v8L12 20.8 4.5 16V8Z" {...fill} />
+      <path d="M12 3.2 19.5 8v8L12 20.8 4.5 16V8Z" />
+      <path d="M12 3.2V12M19.5 8 12 12 4.5 8M12 12v8.8" strokeOpacity="0.6" />
+      <path d="M12 8.6c.4 1.5 1.1 2.2 2.6 2.6-1.5.4-2.2 1.1-2.6 2.6-.4-1.5-1.1-2.2-2.6-2.6 1.5-.4 2.2-1.1 2.6-2.6Z" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
 export function SparkIcon(props: IconProps) {
   return (
     <svg {...base(props)} fill="currentColor" stroke="none">

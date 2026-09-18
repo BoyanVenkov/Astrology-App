@@ -13,6 +13,7 @@ import type {
   Locale,
   MoodEntry,
   NotificationPreferences,
+  OracleReadingCache,
   PracticeSession,
   PremiumTier,
   ResonanceSession,
@@ -136,6 +137,9 @@ const createSession = (): ResonanceSession & SkyState => {
     people: [],
     authSkipped: false,
     locale: detectLocale(),
+    userName: '',
+    langHintSeen: false,
+    oracleReading: null,
   }
 }
 
@@ -176,6 +180,12 @@ interface ResonanceActions {
   skipAuth: () => void
   /** Change the UI language. */
   setLocale: (locale: Locale) => void
+  /** Save the first name given on the Welcome gate. */
+  setUserName: (name: string) => void
+  /** Dismiss the Welcome-gate "personalize" callout (name + language hint). */
+  dismissLangHint: () => void
+  /** Cache the latest Oracle AI reading. */
+  setOracleReading: (reading: OracleReadingCache | null) => void
   /** Recompute the daily transit / chakra / crystals (call when the day rolls over). */
   refreshDailyTransit: () => void
   /** Mark that today's daily tarot card has been turned. */
@@ -293,6 +303,12 @@ export const useAppStore = create<AppStore>()(
 
       setLocale: (locale) => set({ locale }),
 
+      setUserName: (userName) => set({ userName: userName.trim() }),
+
+      dismissLangHint: () => set({ langHintSeen: true }),
+
+      setOracleReading: (oracleReading) => set({ oracleReading }),
+
       refreshDailyTransit: () =>
         set((state) => {
           const slice = readingSlice(state.profile, state.currentLocation)
@@ -342,6 +358,9 @@ export const useAppStore = create<AppStore>()(
           people: state.people,
           authSkipped: state.authSkipped,
           locale: state.locale,
+          userName: state.userName,
+          langHintSeen: state.langHintSeen,
+          oracleReading: state.oracleReading,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -380,6 +399,9 @@ export const useAppStore = create<AppStore>()(
         people: state.people,
         authSkipped: state.authSkipped,
         locale: state.locale,
+        userName: state.userName,
+        langHintSeen: state.langHintSeen,
+        oracleReading: state.oracleReading,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>
@@ -434,6 +456,7 @@ export interface SyncSnapshot {
   streakRewardTier: number
   people: SavedPerson[]
   locale: Locale
+  userName: string
 }
 
 export function snapshotForSync(): SyncSnapshot {
@@ -457,6 +480,7 @@ export function snapshotForSync(): SyncSnapshot {
     streakRewardTier: s.streakRewardTier,
     people: s.people,
     locale: s.locale,
+    userName: s.userName,
   }
 }
 
@@ -524,6 +548,7 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
       patch.notifications = { ...s.notifications, ...remote.notifications }
       if (remote.breathPattern) patch.breathPattern = remote.breathPattern
       if (remote.locale) patch.locale = remote.locale
+      if (remote.userName) patch.userName = remote.userName
       if (remote.currentLocation !== undefined)
         patch.currentLocation = remote.currentLocation
     } else if (!s.profile && remote.profile) {

@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- 导航 ---- */
   'nav.today': '今天',
   'nav.sky': '天空',
+  'nav.oracle': '神谕',
   'nav.tarot': '塔罗',
   'nav.you': '你',
   'nav.practice': '今日仪式',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': '使用条款',
   'welcome.privacy': '隐私政策',
   'welcome.language': '语言',
+  'welcome.personalizeTitle': '让我们个性化一下',
+  'welcome.namePrompt': '我们该怎么称呼你？',
+  'welcome.namePlaceholder': '你的名字',
+  'welcome.langHint': '想用其他语言？点击上方的地球图标 ↑',
+  'welcome.personalizeDone': '完成',
 
   /* ---- 引导设置 ---- */
   'onb.eyebrow': '欢迎来到 Resonance',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': '每一种呼吸法、冥想和 Solfeggio 声音',
   'pay.feat.tarot': '三张牌牌阵和凯尔特十字牌阵，以及神谕',
   'pay.feat.horoscope': '你完整的每日运势，深入解读',
+  'pay.feat.oracle': 'AI 神谕 — 为你量身写就的个性化解读',
   'pay.feat.journal': '无限日记历史与光环走势',
   'pay.reasonSpreads': '三张牌牌阵和凯尔特十字牌阵',
   'pay.perYear': '{price}/年',

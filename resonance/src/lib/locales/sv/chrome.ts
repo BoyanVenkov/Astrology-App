@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- navigering ---- */
   'nav.today': 'Idag',
   'nav.sky': 'Himlen',
+  'nav.oracle': 'Oraklet',
   'nav.tarot': 'Tarot',
   'nav.you': 'Du',
   'nav.practice': 'dagens ritual',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'Villkor',
   'welcome.privacy': 'Integritetspolicy',
   'welcome.language': 'Språk',
+  'welcome.personalizeTitle': 'Låt oss anpassa det här',
+  'welcome.namePrompt': 'Vad ska vi kalla dig?',
+  'welcome.namePlaceholder': 'Ditt förnamn',
+  'welcome.langHint': 'Föredrar du ett annat språk? Tryck på jordgloben ovan ↑',
+  'welcome.personalizeDone': 'Klar',
 
   /* ---- onboarding ---- */
   'onb.eyebrow': 'Välkommen till Resonance',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'Varje andningsmönster, meditation och Solfeggio-ton',
   'pay.feat.tarot': 'Spådomarna med 3 kort och det Keltiska korset, och Oraklet',
   'pay.feat.horoscope': 'Ditt fullständiga dagshoroskop, på djupet',
+  'pay.feat.oracle': 'Orakel-AI — en personlig läsning, skriven för dig',
   'pay.feat.journal': 'Obegränsad dagbokshistorik och aura-trend',
   'pay.reasonSpreads': 'Spådomarna med 3 kort och det Keltiska korset',
   'pay.perYear': '{price}/år',

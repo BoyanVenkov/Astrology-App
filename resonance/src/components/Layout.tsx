@@ -9,6 +9,7 @@ import { TabBackdrop } from './TabBackdrop'
 import {
   DashboardIcon,
   GearIcon,
+  OracleIcon,
   SkyIcon,
   SparkIcon,
   TarotIcon,
@@ -34,6 +35,7 @@ type TabDef = {
 const TABS: TabDef[] = [
   { key: 'today', labelKey: 'nav.today', Icon: DashboardIcon },
   { key: 'sky', labelKey: 'nav.sky', Icon: SkyIcon },
+  { key: 'oracle', labelKey: 'nav.oracle', Icon: OracleIcon },
   { key: 'tarot', labelKey: 'nav.tarot', Icon: TarotIcon },
   { key: 'you', labelKey: 'nav.you', Icon: YouIcon },
 ]

@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- navigation ---- */
   'nav.today': 'Днес',
   'nav.sky': 'Небе',
+  'nav.oracle': 'Оракул',
   'nav.tarot': 'Таро',
   'nav.you': 'Ти',
   'nav.practice': 'днешният ритуал',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'Условия',
   'welcome.privacy': 'Политика за поверителност',
   'welcome.language': 'Език',
+  'welcome.personalizeTitle': 'Да персонализираме това',
+  'welcome.namePrompt': 'Как да те наричаме?',
+  'welcome.namePlaceholder': 'Твоето име',
+  'welcome.langHint': 'Предпочиташ друг език? Докосни глобуса горе ↑',
+  'welcome.personalizeDone': 'Готово',
 
   /* ---- onboarding ---- */
   'onb.eyebrow': 'Добре дошъл в Resonance',
@@ -268,6 +274,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'Всеки дихателен модел, медитация и солфеджио тон',
   'pay.feat.tarot': 'Разгъвките с 3 карти и Келтски кръст, и Оракула',
   'pay.feat.horoscope': 'Пълният ти дневен хороскоп, в дълбочина',
+  'pay.feat.oracle': 'Оракул с изкуствен интелект — персонализирано послание, написано за теб',
   'pay.feat.journal': 'Неограничена история на дневника и тенденции на аурата',
   'pay.reasonSpreads': 'Разгъвките с 3 карти и Келтски кръст',
   'pay.perYear': '{price}/год.',

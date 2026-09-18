@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- gezinme ---- */
   'nav.today': 'Bugün',
   'nav.sky': 'Gökyüzü',
+  'nav.oracle': 'Kâhin',
   'nav.tarot': 'Tarot',
   'nav.you': 'Sen',
   'nav.practice': 'bugünün ritüeli',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'Kullanım Koşulları',
   'welcome.privacy': 'Gizlilik Politikası',
   'welcome.language': 'Dil',
+  'welcome.personalizeTitle': 'Bunu kişiselleştirelim',
+  'welcome.namePrompt': 'Sana nasıl hitap edelim?',
+  'welcome.namePlaceholder': 'Adın',
+  'welcome.langHint': 'Başka bir dili mi tercih edersin? Yukarıdaki küreye dokun ↑',
+  'welcome.personalizeDone': 'Bitti',
 
   /* ---- tanıtım ---- */
   'onb.eyebrow': "Resonance'a hoş geldin",
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'Her nefes deseni, meditasyon ve Solfeggio tonu',
   'pay.feat.tarot': '3 kartlık ve Kelt Haçı açılımları ve Kâhin',
   'pay.feat.horoscope': 'Tam günlük burç yorumun, derinlemesine',
+  'pay.feat.oracle': 'Kâhin AI — senin için yazılmış kişiselleştirilmiş bir okuma',
   'pay.feat.journal': 'Sınırsız günlük geçmişi ve aura eğilimleri',
   'pay.reasonSpreads': '3 kartlık ve Kelt Haçı açılımları',
   'pay.perYear': '{price}/yıl',

@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- urambazaji ---- */
   'nav.today': 'Leo',
   'nav.sky': 'Anga',
+  'nav.oracle': 'Oracle',
   'nav.tarot': 'Tarot',
   'nav.you': 'Wewe',
   'nav.practice': 'ibada ya leo',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'Masharti',
   'welcome.privacy': 'Sera ya Faragha',
   'welcome.language': 'Lugha',
+  'welcome.personalizeTitle': 'Hebu tubinafsishe hii',
+  'welcome.namePrompt': 'Tukuite jina gani?',
+  'welcome.namePlaceholder': 'Jina lako la kwanza',
+  'welcome.langHint': 'Unapendelea lugha nyingine? Gusa dunia hapo juu ↑',
+  'welcome.personalizeDone': 'Imekamilika',
 
   /* ---- kuanzisha ---- */
   'onb.eyebrow': 'Karibu Resonance',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'Kila mchoro wa pumzi, tafakari na sauti ya Solfeggio',
   'pay.feat.tarot': 'Mitandao ya kadi 3 na Msalaba wa Kikelti, na Chombo cha Kutabiri',
   'pay.feat.horoscope': 'Falaki yako kamili ya kila siku, kwa kina',
+  'pay.feat.oracle': 'Oracle AI — usomaji wa kibinafsi, ulioandikwa kwa ajili yako',
   'pay.feat.journal': 'Historia isiyo na kikomo ya jarida na mwelekeo wa aura',
   'pay.reasonSpreads': 'Mitandao ya kadi 3 na Msalaba wa Kikelti',
   'pay.perYear': '{price}/mwaka',

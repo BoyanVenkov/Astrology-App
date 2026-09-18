@@ -383,7 +383,7 @@ export type Locale =
 
 /* --------------------------------------------------------------- navigation */
 
-export type TabKey = 'today' | 'sky' | 'tarot' | 'you'
+export type TabKey = 'today' | 'sky' | 'oracle' | 'tarot' | 'you'
 
 /**
  * The persisted, resumable state of a user's alignment session.
@@ -445,4 +445,21 @@ export interface ResonanceSession {
   authSkipped: boolean
   /** UI language. */
   locale: Locale
+  /** First name, entered on the Welcome gate — powers personalised greetings/readings. Empty until given. */
+  userName: string
+  /** True once the Welcome-gate "personalize" callout (name + language hint) has been dismissed. */
+  langHintSeen: boolean
+  /** The last Oracle AI reading generated, cached so revisiting the tab doesn't lose it. */
+  oracleReading: OracleReadingCache | null
+}
+
+/** A cached Oracle AI (Claude-generated) reading — see `components/OracleAI.tsx`. */
+export interface OracleReadingCache {
+  /** Local day `YYYY-MM-DD` this reading was generated for. */
+  day: string
+  text: string
+  /** Generations left today, as reported by the server after this call. */
+  remaining: number
+  /** ISO timestamp of generation. */
+  at: string
 }

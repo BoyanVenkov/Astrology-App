@@ -16,6 +16,7 @@ import { MoonScreen } from './components/MoonScreen'
 import { FastingGuide } from './components/FastingGuide'
 import { NatalChart } from './components/NatalChart'
 import { Onboarding } from './components/Onboarding'
+import { OracleAI } from './components/OracleAI'
 import { Paywall } from './components/Paywall'
 import { PracticeLibrary } from './components/PracticeLibrary'
 import { PracticeSheet } from './components/PracticeSheet'
@@ -246,6 +247,9 @@ function App() {
             onOpenStones={() => setSub('stones')}
             onUpgrade={openPaywall}
           />
+        )}
+        {sub === null && tab === 'oracle' && (
+          <OracleAI onUpgrade={openPaywall} />
         )}
         {sub === null && tab === 'tarot' && (
           <TarotReader

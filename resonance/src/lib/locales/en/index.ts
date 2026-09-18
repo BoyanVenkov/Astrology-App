@@ -10,6 +10,7 @@ import { tarot } from './tarot'
 import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
+import { oracle } from './oracle'
 
 /**
  * English is the source catalogue. Its keys are the type every other locale
@@ -30,6 +31,7 @@ export const en = {
   ...runes,
   ...rewards,
   ...screens,
+  ...oracle,
 } as const
 
 export type MessageKey = keyof typeof en

@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- ナビゲーション ---- */
   'nav.today': '今日',
   'nav.sky': '空',
+  'nav.oracle': 'オラクル',
   'nav.tarot': 'タロット',
   'nav.you': 'あなた',
   'nav.practice': '今日の儀式',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': '利用規約',
   'welcome.privacy': 'プライバシーポリシー',
   'welcome.language': '言語',
+  'welcome.personalizeTitle': 'パーソナライズしましょう',
+  'welcome.namePrompt': 'なんとお呼びすればいいですか？',
+  'welcome.namePlaceholder': 'お名前',
+  'welcome.langHint': '他の言語がよければ、上の地球アイコンをタップしてください ↑',
+  'welcome.personalizeDone': '完了',
 
   /* ---- オンボーディング ---- */
   'onb.eyebrow': 'Resonance へようこそ',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'すべての呼吸法、瞑想、ソルフェジオ音',
   'pay.feat.tarot': '3 枚スプレッドとケルト十字、そしてオラクル',
   'pay.feat.horoscope': 'あなたの完全な毎日のホロスコープを、深く',
+  'pay.feat.oracle': 'オラクルAI — あなたのために書かれたパーソナライズされた鑑定',
   'pay.feat.journal': '無制限の日記履歴とオーラの推移',
   'pay.reasonSpreads': '3 枚スプレッドとケルト十字',
   'pay.perYear': '{price}/年',

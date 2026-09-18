@@ -193,12 +193,17 @@ export function Welcome({ onSkip }: WelcomeProps) {
   const t = useT()
   const transit = useAppStore((s) => s.transit)
   const locale = useAppStore((s) => s.locale)
+  const userName = useAppStore((s) => s.userName)
+  const langHintSeen = useAppStore((s) => s.langHintSeen)
+  const setUserName = useAppStore((s) => s.setUserName)
+  const dismissLangHint = useAppStore((s) => s.dismissLangHint)
   const localeNative =
     LOCALES.find((l) => l.code === locale)?.native ?? 'English'
 
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [langOpen, setLangOpen] = useState(false)
+  const [nameDraft, setNameDraft] = useState(userName)
 
   const google = async () => {
     setBusy(true)
@@ -232,6 +237,52 @@ export function Welcome({ onSkip }: WelcomeProps) {
         <GlobeIcon className="h-[1.05rem] w-[1.05rem] text-gold-300" />
         <span>{localeNative}</span>
       </button>
+
+      {!langHintSeen && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (nameDraft.trim()) setUserName(nameDraft.trim())
+            dismissLangHint()
+          }}
+          className="absolute end-5 z-20 w-[16rem] rounded-2xl border border-gold-500/30 bg-[#0c1024]/95 p-4 shadow-[0_14px_34px_-12px_rgba(0,0,0,0.65)] backdrop-blur-sm"
+          style={{ top: 'calc(max(1.25rem, env(safe-area-inset-top)) + 3.1rem)' }}
+        >
+          <span
+            aria-hidden
+            className="absolute -top-[7px] end-6 h-3 w-3 rotate-45 border-s border-t border-gold-500/30 bg-[#0c1024]"
+          />
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-gold-300">
+            {t('welcome.personalizeTitle')}
+          </p>
+          <p className="mt-2 text-xs text-haze-300">{t('welcome.namePrompt')}</p>
+          <input
+            type="text"
+            value={nameDraft}
+            onChange={(e) => setNameDraft(e.target.value)}
+            placeholder={t('welcome.namePlaceholder')}
+            maxLength={30}
+            autoComplete="given-name"
+            className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-sm text-white placeholder:text-haze-500 focus:border-gold-400/50 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setLangOpen(true)
+              dismissLangHint()
+            }}
+            className="mt-3 block text-start text-[11px] leading-relaxed text-haze-300 active:text-haze-100"
+          >
+            {t('welcome.langHint')}
+          </button>
+          <button
+            type="submit"
+            className="mt-3 w-full rounded-xl border border-gold-400/50 bg-gold-500/20 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100 transition active:scale-[0.98]"
+          >
+            {t('welcome.personalizeDone')}
+          </button>
+        </form>
+      )}
 
       <div className="relative z-10 my-auto flex w-full flex-col py-8">
         <ResonanceMark

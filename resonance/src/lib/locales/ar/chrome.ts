@@ -16,6 +16,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- التنقّل ---- */
   'nav.today': 'اليوم',
   'nav.sky': 'السماء',
+  'nav.oracle': 'الكاهن',
   'nav.tarot': 'التاروت',
   'nav.you': 'أنت',
   'nav.practice': 'طقس اليوم',
@@ -38,6 +39,11 @@ export const chrome: Record<ChromeKey, string> = {
   'welcome.terms': 'الشروط',
   'welcome.privacy': 'سياسة الخصوصية',
   'welcome.language': 'اللغة',
+  'welcome.personalizeTitle': 'لنخصّص هذا',
+  'welcome.namePrompt': 'بماذا ننادِيك؟',
+  'welcome.namePlaceholder': 'اسمك الأول',
+  'welcome.langHint': 'تفضّل لغة أخرى؟ اضغط على أيقونة الكرة الأرضية أعلاه ↑',
+  'welcome.personalizeDone': 'تمّ',
 
   /* ---- الإعداد الأولي ---- */
   'onb.eyebrow': 'أهلاً بك في Resonance',
@@ -269,6 +275,7 @@ export const chrome: Record<ChromeKey, string> = {
   'pay.feat.practice': 'كل نمط تنفّس وتأمّل ونغمة سولفيجيو',
   'pay.feat.tarot': 'توزيعات ٣ بطاقات والصليب الكلتي، والعرّاف',
   'pay.feat.horoscope': 'أبراجك اليومية الكاملة، بعمق',
+  'pay.feat.oracle': 'الكاهن بالذكاء الاصطناعي — قراءة شخصية، مكتوبة من أجلك',
   'pay.feat.journal': 'سجلّ مذكّرة غير محدود واتجاهات الهالة',
   'pay.reasonSpreads': 'توزيعات ٣ بطاقات والصليب الكلتي',
   'pay.perYear': '{price}/سنة',

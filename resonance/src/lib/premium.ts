@@ -20,6 +20,7 @@ export const PRO_FEATURES = [
   'Every breath pattern, meditation & Solfeggio tone',
   'The 3-card & Celtic Cross spreads, and the Oracle',
   'Your full daily horoscope, in depth',
+  'Oracle AI — a personalised reading, written for you',
   'Unlimited journal history & aura trends',
 ]
 

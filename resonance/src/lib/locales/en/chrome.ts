@@ -14,6 +14,7 @@ export const chrome = {
   /* ---- navigation ---- */
   'nav.today': 'Today',
   'nav.sky': 'Sky',
+  'nav.oracle': 'Oracle',
   'nav.tarot': 'Tarot',
   'nav.you': 'You',
   'nav.practice': "today's ritual",
@@ -36,6 +37,11 @@ export const chrome = {
   'welcome.terms': 'Terms',
   'welcome.privacy': 'Privacy Policy',
   'welcome.language': 'Language',
+  'welcome.personalizeTitle': "Let's personalise this",
+  'welcome.namePrompt': 'What should we call you?',
+  'welcome.namePlaceholder': 'Your first name',
+  'welcome.langHint': 'Prefer another language? Tap the globe above ↑',
+  'welcome.personalizeDone': 'Done',
 
   /* ---- onboarding ---- */
   'onb.eyebrow': 'Welcome to Resonance',
@@ -267,6 +273,7 @@ export const chrome = {
   'pay.feat.practice': 'Every breath pattern, meditation & Solfeggio tone',
   'pay.feat.tarot': 'The 3-card & Celtic Cross spreads, and the Oracle',
   'pay.feat.horoscope': 'Your full daily horoscope, in depth',
+  'pay.feat.oracle': 'Oracle AI — a personalised reading, written for you',
   'pay.feat.journal': 'Unlimited journal history & aura trends',
   'pay.reasonSpreads': 'The 3-card & Celtic Cross spreads',
   'pay.perYear': '{price}/yr',
