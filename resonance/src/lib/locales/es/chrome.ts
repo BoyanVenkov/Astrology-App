@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- ajustes ---- */
   'set.title': 'Sintoniza la app',
+  'set.nameTitle': 'Tu nombre',
+  'set.nameSub': 'Se usa para personalizar saludos y lecturas — déjalo en blanco para omitirlo',
   'set.language': 'Idioma',
   'set.languageSub': 'La app habla en {language}',
   'set.account': 'Cuenta',

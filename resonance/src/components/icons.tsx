@@ -210,6 +210,18 @@ export function OracleIcon(props: IconProps) {
   )
 }
 
+export function TrashIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M5 7h14" />
+      <path d="M9 7V5a1.6 1.6 0 0 1 1.6-1.6h2.8A1.6 1.6 0 0 1 15 5v2" />
+      <path d="M7 7l.8 12a2 2 0 0 0 2 1.9h4.4a2 2 0 0 0 2-1.9L17 7Z" {...fill} />
+      <path d="M7 7l.8 12a2 2 0 0 0 2 1.9h4.4a2 2 0 0 0 2-1.9L17 7" />
+      <path d="M10 11v6M14 11v6" strokeOpacity="0.6" />
+    </svg>
+  )
+}
+
 export function SparkIcon(props: IconProps) {
   return (
     <svg {...base(props)} fill="currentColor" stroke="none">

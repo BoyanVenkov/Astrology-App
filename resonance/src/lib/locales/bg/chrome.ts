@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- settings ---- */
   'set.title': 'Настрой приложението',
+  'set.nameTitle': 'Твоето име',
+  'set.nameSub': 'Използва се за персонализирани поздрави и послания — остави празно, за да го пропуснеш',
   'set.language': 'Език',
   'set.languageSub': 'Приложението говори {language}',
   'set.account': 'Профил',

@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- सेटिंग्स ---- */
   'set.title': 'ऐप को सुर में लाएँ',
+  'set.nameTitle': 'आपका नाम',
+  'set.nameSub': 'अभिवादन और विश्लेषण को व्यक्तिगत बनाने के लिए उपयोग होता है — छोड़ने के लिए खाली रखें',
   'set.language': 'भाषा',
   'set.languageSub': 'ऐप {language} में बोलता है',
   'set.account': 'खाता',

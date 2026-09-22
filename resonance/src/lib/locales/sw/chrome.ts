@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- mipangilio ---- */
   'set.title': 'Patanisha programu',
+  'set.nameTitle': 'Jina lako',
+  'set.nameSub': 'Hutumika kubinafsisha salamu na usomaji — acha wazi ili kuruka',
   'set.language': 'Lugha',
   'set.languageSub': 'Programu inasema {language}',
   'set.account': 'Akaunti',

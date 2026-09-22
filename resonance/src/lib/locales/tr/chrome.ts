@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- ayarlar ---- */
   'set.title': 'Uygulamayı uyumla',
+  'set.nameTitle': 'Adın',
+  'set.nameSub': 'Selamlamaları ve okumaları kişiselleştirmek için kullanılır — atlamak için boş bırak',
   'set.language': 'Dil',
   'set.languageSub': 'Uygulama {language} konuşuyor',
   'set.account': 'Hesap',

@@ -202,6 +202,8 @@ export const chrome = {
 
   /* ---- settings ---- */
   'set.title': 'Attune the app',
+  'set.nameTitle': 'Your name',
+  'set.nameSub': 'Used to personalise greetings and readings — leave blank to skip it',
   'set.language': 'Language',
   'set.languageSub': 'The app speaks {language}',
   'set.account': 'Account',

@@ -88,6 +88,9 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
   )
   const [acctMsg, setAcctMsg] = useState<string | null>(null)
   const clearLocalData = useAppStore((s) => s.clearLocalData)
+  const userName = useAppStore((s) => s.userName)
+  const setUserName = useAppStore((s) => s.setUserName)
+  const [nameDraft, setNameDraft] = useState(userName)
 
   const doBackup = async () => {
     setAcctBusy('backup')
@@ -173,6 +176,24 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
       width="wide"
     >
       <div className="md:columns-2 md:gap-x-6 [&>section]:mb-4 md:[&>section]:break-inside-avoid">
+      <Section title={t('set.nameTitle')}>
+        <Row>
+          <div className="py-3">
+            <p className="text-xs text-haze-400">{t('set.nameSub')}</p>
+            <input
+              type="text"
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              onBlur={() => setUserName(nameDraft.trim())}
+              placeholder={t('welcome.namePlaceholder')}
+              maxLength={30}
+              autoComplete="given-name"
+              className={`${fieldCls} mt-2 w-full`}
+            />
+          </div>
+        </Row>
+      </Section>
+
       <Section title={t('set.language')}>
         <Row>
           <button

@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- 設定 ---- */
   'set.title': 'アプリを調律する',
+  'set.nameTitle': 'お名前',
+  'set.nameSub': '挨拶や鑑定のパーソナライズに使用します — 空欄のままでも構いません',
   'set.language': '言語',
   'set.languageSub': 'アプリは{language}を話します',
   'set.account': 'アカウント',

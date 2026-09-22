@@ -18,6 +18,7 @@ import type { MessageKey } from '../lib/locales/en'
 import { planetSymbol } from '../data/esoteric'
 import { AddPerson } from './AddPerson'
 import { Screen } from './Screen'
+import { TrashIcon } from './icons'
 import type { SavedPerson } from '../types/resonance'
 
 interface CompatibilityProps {
@@ -430,11 +431,11 @@ export function Compatibility({ onBack }: CompatibilityProps) {
     >
       <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {people.map((p) => (
-          <li key={p.id}>
+          <li key={p.id} className="relative">
             <button
               type="button"
               onClick={() => setSelected(p.id)}
-              className="glass-panel flex h-full w-full items-center justify-between p-4 text-start active:scale-[0.99]"
+              className="glass-panel flex h-full w-full items-center justify-between p-4 pe-11 text-start active:scale-[0.99]"
             >
               <span className="min-w-0">
                 <span className="block font-serif text-lg leading-tight text-white">
@@ -445,6 +446,14 @@ export function Compatibility({ onBack }: CompatibilityProps) {
                 </span>
               </span>
               <span style={{ color: 'var(--rz-hue)' }}>›</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => removePerson(p.id)}
+              aria-label={t('scr.compat.remove')}
+              className="absolute end-2 top-2 grid h-8 w-8 place-items-center rounded-full text-haze-500 transition active:bg-white/10 active:text-red-300"
+            >
+              <TrashIcon className="h-4 w-4" />
             </button>
           </li>
         ))}

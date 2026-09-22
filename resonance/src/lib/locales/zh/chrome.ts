@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- 设置 ---- */
   'set.title': '调校这款应用',
+  'set.nameTitle': '你的名字',
+  'set.nameSub': '用于个性化问候和解读 — 留空即可跳过',
   'set.language': '语言',
   'set.languageSub': '应用使用{language}',
   'set.account': '账户',

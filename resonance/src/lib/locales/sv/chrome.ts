@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- inställningar ---- */
   'set.title': 'Stäm av appen',
+  'set.nameTitle': 'Ditt förnamn',
+  'set.nameSub': 'Används för att anpassa hälsningar och läsningar — lämna tomt för att hoppa över det',
   'set.language': 'Språk',
   'set.languageSub': 'Appen talar {language}',
   'set.account': 'Konto',

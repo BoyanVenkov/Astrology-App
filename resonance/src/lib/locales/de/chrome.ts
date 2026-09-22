@@ -203,6 +203,8 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- Einstellungen ---- */
   'set.title': 'Stimme die App ab',
+  'set.nameTitle': 'Dein Vorname',
+  'set.nameSub': 'Wird verwendet, um Begrüßungen und Deutungen zu personalisieren — leer lassen, um es zu überspringen',
   'set.language': 'Sprache',
   'set.languageSub': 'Die App spricht {language}',
   'set.account': 'Konto',
