@@ -293,7 +293,7 @@
     <p class="eyebrow">Privacy Policy</p>
     <h1>How Resonance handles your data</h1>
     <p class="dek">Resonance works fully without an account. This page explains exactly what we collect if you choose to sign in, why, and how to remove it.</p>
-    <p class="meta mono"><span>Effective September 1, 2026</span><span>·</span><span>Resonance, an independent app</span></p>
+    <p class="meta mono"><span>Effective September 22, 2026</span><span>·</span><span>Resonance, an independent app</span></p>
   </div>
 
   <div class="callout">
@@ -302,6 +302,7 @@
       <li>No ads, no analytics, no tracking SDKs of any kind.</li>
       <li>Your chart, journal, and check-ins stay on your device unless you sign in.</li>
       <li>Signing in is optional, reversible, and only ever backs up what's already yours.</li>
+      <li>The optional AI Horoscope feature sends your chart data for that one reading to Anthropic (maker of Claude) — nothing else about you is shared with them.</li>
       <li>Delete your account and every trace of it in the cloud, anytime, from Settings.</li>
     </ul>
   </div>
@@ -327,8 +328,9 @@
     <ul>
       <li><strong>Birth date, time, and place</strong> — used to calculate your natal chart. Stored on your device, and in our database if you sign in.</li>
       <li><strong>Birth details for anyone you save</strong> for a compatibility reading — handled the same way as your own.</li>
-      <li><strong>Mood and body check-ins</strong> (energy, sleep, resting heart rate, and similar) that you log yourself.</li>
+      <li><strong>Mood check-ins</strong> that you log yourself.</li>
       <li><strong>Your practice history</strong> — sessions completed, journal entries, saved preferences.</li>
+      <li><strong>Language, and optionally a grammatical-gender preference</strong> — the gender preference is used only so AI Horoscope readings use the correct grammatical form for "you" in languages where verbs or adjectives change by gender (e.g. Bulgarian, Spanish, German, Arabic). It's never used for anything else, and you can leave it unset.</li>
     </ul>
     <h3>Account information</h3>
     <p>If you sign in with Google, we receive your email address and Google account ID, used only to identify your account and keep your data in sync. We never request or see your Google password.</p>
@@ -336,6 +338,8 @@
     <p>If you grant permission, Resonance reads your device's location to calculate local sunrise/sunset times and refine your daily reading. This is entirely optional — the app works fully without it. Location is stored on your device and, if you're signed in, in your account. It is never shared with anyone else.</p>
     <h3>Purchases</h3>
     <p>If you subscribe to Resonance Pro, Google Play handles your payment directly — we never see or store your card details. Our subscription-management partner, RevenueCat, receives your purchase and subscription status (not your payment details) so the app knows your entitlement is active.</p>
+    <h3>AI Horoscope (optional, Resonance Pro)</h3>
+    <p>If you use the AI Horoscope feature, the astrological facts Resonance has already computed from your chart — today's transits, active aspects, your chakra focus, your birth date/time/place, and your language and gender preference if you've set one — are sent to <strong>Anthropic</strong>, the maker of Claude, solely to generate that one personalised reading, each time you request it. We do not send your name, email address, or account identifier to Anthropic as part of that request. This only happens when you actively tap to request a reading — never automatically or in the background. The generated text is shown to you and cached only on your device; we don't keep a copy of it on our servers. Anthropic processes this data under its own privacy policy, available at <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener noreferrer">anthropic.com/legal/privacy</a>.</p>
     <h3>What we don't collect</h3>
     <p>No analytics SDKs, no advertising identifiers, no third-party trackers. We don't sell, rent, or share your data with advertisers — there simply isn't a pipe for it to travel through.</p>
   </section>
@@ -351,6 +355,7 @@
       <li><strong>On your device</strong>, always — the primary copy of your data, whether or not you sign in.</li>
       <li><strong>In the cloud</strong>, only if you sign in — hosted on Supabase, with row-level security so only your own account can read your own data.</li>
       <li><strong>Payments</strong> run through Google Play Billing; <strong>subscription status</strong> through RevenueCat. Neither shares your data with us beyond what's described above.</li>
+      <li><strong>AI-generated readings</strong> are produced by sending the chart facts described above to Anthropic, per request, solely to generate that reading. Anthropic is not otherwise given access to your account.</li>
     </ul>
   </section>
 
@@ -399,13 +404,14 @@
     <p class="eyebrow">Terms of Service</p>
     <h1>The terms for using Resonance</h1>
     <p class="dek">Plain-language terms covering what Resonance is for, how Resonance Pro billing works, and where responsibility sits between you and us.</p>
-    <p class="meta mono"><span>Effective September 1, 2026</span><span>·</span><span>Resonance, an independent app</span></p>
+    <p class="meta mono"><span>Effective September 22, 2026</span><span>·</span><span>Resonance, an independent app</span></p>
   </div>
 
   <div class="callout">
     <p class="eyebrow">In short</p>
     <ul>
       <li>Resonance is for reflection and wellness — not medical, financial, or professional advice.</li>
+      <li>AI Horoscope readings are written by a third-party AI model and, like all readings in the app, are for reflection, not fact.</li>
       <li>Resonance Pro renews automatically through Google Play until you cancel.</li>
       <li>Cancel or manage your plan anytime in Google Play — refunds go through Google, not us.</li>
     </ul>
@@ -454,6 +460,7 @@
   <section class="doc-section" id="t5">
     <h2><span class="n">05</span> Content &amp; accuracy</h2>
     <p>Astrological calculations are computed from real astronomical data, but interpretations, guidance, and readings are inherently subjective. We make no guarantee about the accuracy, completeness, or usefulness of any reading — you use the app's guidance at your own discretion.</p>
+    <p>The optional AI Horoscope feature generates its reading using a third-party AI model (Claude, by Anthropic) from your computed chart data. AI-generated text can occasionally be inaccurate, repetitive, or generic, and — like every other reading in the app — is not a factual or professional statement about you. AI Horoscope requests may be limited to a maximum number per day.</p>
   </section>
 
   <section class="doc-section" id="t6">

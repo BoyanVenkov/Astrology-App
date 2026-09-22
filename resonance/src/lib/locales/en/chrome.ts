@@ -204,6 +204,12 @@ export const chrome = {
   'set.title': 'Attune the app',
   'set.nameTitle': 'Your name',
   'set.nameSub': 'Used to personalise greetings and readings — leave blank to skip it',
+  'set.genderTitle': 'How should the AI address you?',
+  'set.genderSub':
+    'Only affects grammar in some languages (verb/adjective gender) — used only for AI Horoscope readings.',
+  'set.genderMale': 'He / him',
+  'set.genderFemale': 'She / her',
+  'set.genderUnspecified': "Don't say",
   'set.language': 'Language',
   'set.languageSub': 'The app speaks {language}',
   'set.account': 'Account',

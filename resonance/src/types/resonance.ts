@@ -456,6 +456,13 @@ export interface ResonanceSession {
   langHintSeen: boolean
   /** The last Oracle AI reading generated, cached so revisiting the tab doesn't lose it. */
   oracleReading: OracleReadingCache | null
+  /**
+   * Optional, purely grammatical: many languages (Bulgarian, Spanish, Arabic,
+   * German, ...) inflect verbs/adjectives that address "you" by gender. With
+   * this unset, the AI Horoscope has no way to know which form to use in
+   * those languages and can guess wrong. Never used for anything astrological.
+   */
+  pronounGender: 'unspecified' | 'male' | 'female'
 }
 
 /** A cached Oracle AI (Claude-generated) reading — see `components/OracleAI.tsx`. */

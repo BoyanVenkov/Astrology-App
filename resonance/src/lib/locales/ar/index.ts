@@ -11,6 +11,7 @@ import { tarot } from './tarot'
 import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
+import { oracle } from './oracle'
 
 /**
  * العربية (من اليمين إلى اليسار). كل وحدة هي `Record<…Key, string>` كاملة، فأي
@@ -29,4 +30,5 @@ export const ar: Partial<Record<MessageKey, string>> = {
   ...runes,
   ...rewards,
   ...screens,
+  ...oracle,
 }

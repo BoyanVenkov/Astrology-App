@@ -11,6 +11,7 @@ import { tarot } from './tarot'
 import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
+import { oracle } from './oracle'
 
 /**
  * Türkçe. Her modül eksiksiz bir `Record<…Key, string>` olduğundan, eksik bir
@@ -30,4 +31,5 @@ export const tr: Partial<Record<MessageKey, string>> = {
   ...runes,
   ...rewards,
   ...screens,
+  ...oracle,
 }

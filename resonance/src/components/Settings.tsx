@@ -88,6 +88,8 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
   )
   const [acctMsg, setAcctMsg] = useState<string | null>(null)
   const clearLocalData = useAppStore((s) => s.clearLocalData)
+  const pronounGender = useAppStore((s) => s.pronounGender)
+  const setPronounGender = useAppStore((s) => s.setPronounGender)
 
   const doBackup = async () => {
     setAcctBusy('backup')
@@ -195,6 +197,36 @@ export function Settings({ onBack, onUpgrade, onAuth, onLanguage }: SettingsProp
             </span>
             <span className="shrink-0 text-sm text-haze-400">{languageName}</span>
           </button>
+        </Row>
+      </Section>
+
+      <Section title={t('set.genderTitle')}>
+        <Row>
+          <div className="py-3">
+            <p className="text-xs text-haze-400">{t('set.genderSub')}</p>
+            <div className="mt-2.5 grid grid-cols-3 gap-2">
+              {(['unspecified', 'male', 'female'] as const).map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setPronounGender(g)}
+                  className={`rounded-xl border py-2 text-xs font-semibold uppercase tracking-[0.08em] transition ${
+                    pronounGender === g
+                      ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
+                      : 'border-white/12 bg-white/[0.04] text-haze-300'
+                  }`}
+                >
+                  {t(
+                    g === 'male'
+                      ? 'set.genderMale'
+                      : g === 'female'
+                        ? 'set.genderFemale'
+                        : 'set.genderUnspecified',
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
         </Row>
       </Section>
 

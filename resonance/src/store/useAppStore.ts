@@ -141,6 +141,7 @@ const createSession = (): ResonanceSession & SkyState => {
     locale: detectLocale(),
     langHintSeen: false,
     oracleReading: null,
+    pronounGender: 'unspecified',
   }
 }
 
@@ -183,6 +184,8 @@ interface ResonanceActions {
   setLocale: (locale: Locale) => void
   /** Dismiss the Welcome-gate language-hint callout. */
   dismissLangHint: () => void
+  /** Set the grammatical-gender hint used by the AI Horoscope in gendered languages. */
+  setPronounGender: (g: ResonanceSession['pronounGender']) => void
   /** Cache the latest Oracle AI reading. */
   setOracleReading: (reading: OracleReadingCache | null) => void
   /** Recompute the daily transit / chakra / crystals (call when the day rolls over). */
@@ -312,6 +315,8 @@ export const useAppStore = create<AppStore>()(
 
       dismissLangHint: () => set({ langHintSeen: true }),
 
+      setPronounGender: (pronounGender) => set({ pronounGender }),
+
       setOracleReading: (oracleReading) => set({ oracleReading }),
 
       refreshDailyTransit: () =>
@@ -366,6 +371,7 @@ export const useAppStore = create<AppStore>()(
           locale: state.locale,
           langHintSeen: state.langHintSeen,
           oracleReading: state.oracleReading,
+          pronounGender: state.pronounGender,
           completedSessions: state.completedSessions + 1,
           lastCompletedAt: new Date().toISOString(),
           ...readingSlice(state.profile, state.currentLocation),
@@ -407,6 +413,7 @@ export const useAppStore = create<AppStore>()(
         locale: state.locale,
         langHintSeen: state.langHintSeen,
         oracleReading: state.oracleReading,
+        pronounGender: state.pronounGender,
       }),
       merge: (persisted, current) => {
         const saved = (persisted ?? {}) as Partial<ResonanceSession>
@@ -480,6 +487,7 @@ export interface SyncSnapshot {
   longestStreakEver: number
   people: SavedPerson[]
   locale: Locale
+  pronounGender: ResonanceSession['pronounGender']
 }
 
 export function snapshotForSync(): SyncSnapshot {
@@ -503,6 +511,7 @@ export function snapshotForSync(): SyncSnapshot {
     longestStreakEver: s.longestStreakEver,
     people: s.people,
     locale: s.locale,
+    pronounGender: s.pronounGender,
   }
 }
 
@@ -573,6 +582,7 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
       patch.notifications = { ...s.notifications, ...remote.notifications }
       if (remote.breathPattern) patch.breathPattern = remote.breathPattern
       if (remote.locale) patch.locale = remote.locale
+      if (remote.pronounGender) patch.pronounGender = remote.pronounGender
       if (remote.currentLocation !== undefined)
         patch.currentLocation = remote.currentLocation
     } else if (!s.profile && remote.profile) {

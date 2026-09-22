@@ -11,6 +11,7 @@ import { tarot } from './tarot'
 import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
+import { oracle } from './oracle'
 
 /**
  * Polski. Każdy moduł to kompletny `Record<…Key, string>`, więc brak tłumaczenia
@@ -29,4 +30,5 @@ export const pl: Partial<Record<MessageKey, string>> = {
   ...runes,
   ...rewards,
   ...screens,
+  ...oracle,
 }

@@ -11,6 +11,7 @@ import { tarot } from './tarot'
 import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
+import { oracle } from './oracle'
 
 /**
  * Português (Brasil). Every module is a complete `Record<…Key, string>`, so a
@@ -30,4 +31,5 @@ export const pt: Partial<Record<MessageKey, string>> = {
   ...runes,
   ...rewards,
   ...screens,
+  ...oracle,
 }

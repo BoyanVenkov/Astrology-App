@@ -75,6 +75,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
   const hasNatal = useAppStore((s) => s.hasNatal)
   const profile = useAppStore((s) => s.profile)
   const locale = useAppStore((s) => s.locale)
+  const pronounGender = useAppStore((s) => s.pronounGender)
   const editProfile = useAppStore((s) => s.editProfile)
   const oracleReading = useAppStore((s) => s.oracleReading)
   const setOracleReading = useAppStore((s) => s.setOracleReading)
@@ -94,6 +95,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
       {
         body: {
           locale,
+          pronounGender,
           transit,
           aspects,
           chakra,
