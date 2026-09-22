@@ -205,7 +205,13 @@ export function Welcome({ onSkip }: WelcomeProps) {
   const [langOpen, setLangOpen] = useState(false)
   const [nameDraft, setNameDraft] = useState(userName)
 
+  const flushName = () => {
+    const name = nameDraft.trim()
+    if (name) setUserName(name)
+  }
+
   const google = async () => {
+    flushName()
     setBusy(true)
     setErr(null)
     const e = await signInWithGoogle()
@@ -213,6 +219,11 @@ export function Welcome({ onSkip }: WelcomeProps) {
     if (e) setErr(e.message)
     // native returns via the deep link; web redirects away. On success the
     // auth listener flips App past this gate — no callback needed.
+  }
+
+  const skip = () => {
+    flushName()
+    onSkip()
   }
 
   return (
@@ -239,31 +250,13 @@ export function Welcome({ onSkip }: WelcomeProps) {
       </button>
 
       {!langHintSeen && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            if (nameDraft.trim()) setUserName(nameDraft.trim())
-            dismissLangHint()
-          }}
-          className="absolute end-5 z-20 w-[16rem] rounded-2xl border border-gold-500/30 bg-[#0c1024]/95 p-4 shadow-[0_14px_34px_-12px_rgba(0,0,0,0.65)] backdrop-blur-sm"
+        <div
+          className="absolute end-5 z-20 w-[15rem] rounded-2xl border border-gold-500/30 bg-[#0c1024]/95 p-4 shadow-[0_14px_34px_-12px_rgba(0,0,0,0.65)] backdrop-blur-sm"
           style={{ top: 'calc(max(1.25rem, env(safe-area-inset-top)) + 3.1rem)' }}
         >
           <span
             aria-hidden
             className="absolute -top-[7px] end-6 h-3 w-3 rotate-45 border-s border-t border-gold-500/30 bg-[#0c1024]"
-          />
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-gold-300">
-            {t('welcome.personalizeTitle')}
-          </p>
-          <p className="mt-2 text-xs text-haze-300">{t('welcome.namePrompt')}</p>
-          <input
-            type="text"
-            value={nameDraft}
-            onChange={(e) => setNameDraft(e.target.value)}
-            placeholder={t('welcome.namePlaceholder')}
-            maxLength={30}
-            autoComplete="given-name"
-            className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2 text-sm text-white placeholder:text-haze-500 focus:border-gold-400/50 focus:outline-none"
           />
           <button
             type="button"
@@ -271,17 +264,18 @@ export function Welcome({ onSkip }: WelcomeProps) {
               setLangOpen(true)
               dismissLangHint()
             }}
-            className="mt-3 block text-start text-[11px] leading-relaxed text-haze-300 active:text-haze-100"
+            className="block text-start text-[13px] leading-relaxed text-haze-100 active:text-white"
           >
             {t('welcome.langHint')}
           </button>
           <button
-            type="submit"
-            className="mt-3 w-full rounded-xl border border-gold-400/50 bg-gold-500/20 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-100 transition active:scale-[0.98]"
+            type="button"
+            onClick={dismissLangHint}
+            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
           >
-            {t('welcome.personalizeDone')}
+            {t('common.done')}
           </button>
-        </form>
+        </div>
       )}
 
       <div className="relative z-10 my-auto flex w-full flex-col py-8">
@@ -309,12 +303,27 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
       <div className="shrink-0">
         <div className="flex flex-col gap-2.5">
+          <div className="mb-1">
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-gold-300">
+              {t('welcome.personalizeTitle')}
+            </p>
+            <input
+              type="text"
+              value={nameDraft}
+              onChange={(e) => setNameDraft(e.target.value)}
+              onBlur={flushName}
+              placeholder={t('welcome.namePlaceholder')}
+              maxLength={30}
+              autoComplete="given-name"
+              className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.06] px-3.5 py-3 text-center text-sm text-white placeholder:text-haze-500 focus:border-gold-400/50 focus:outline-none"
+            />
+          </div>
           <p className="mb-1 text-center text-[11px] leading-relaxed text-haze-500">
             {t('welcome.pitch')}
           </p>
           <button
             type="button"
-            onClick={google}
+            onClick={() => void google()}
             disabled={busy}
             className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-glow)] transition active:scale-[0.98] disabled:opacity-60"
           >
@@ -323,7 +332,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
           </button>
           <button
             type="button"
-            onClick={onSkip}
+            onClick={skip}
             className="mt-1 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
           >
             {t('welcome.explore')}

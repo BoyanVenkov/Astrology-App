@@ -2,6 +2,7 @@ import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
 import { clockHM, geoContext } from '../lib/geo'
 import {
+  nameTag,
   ordinal,
   seasonLabel,
   signLabel,
@@ -34,6 +35,7 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
   const natal = useAppStore((s) => s.natal)
   const nowAngles = useAppStore((s) => s.nowAngles)
   const editProfile = useAppStore((s) => s.editProfile)
+  const userName = useAppStore((s) => s.userName)
 
   if (!transit || !chakra) return null
 
@@ -77,7 +79,7 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
 
   return (
     <Screen
-      eyebrow={t('scr.horo.eyebrow')}
+      eyebrow={nameTag(t('scr.horo.eyebrow'), userName, t)}
       title={transitTitle(transit, t)}
       subtitle={horoscope.greeting}
       onBack={onBack}

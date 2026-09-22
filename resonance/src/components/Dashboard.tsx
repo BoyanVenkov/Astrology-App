@@ -4,7 +4,7 @@ import { Aura } from './Aura'
 import { computeAura } from '../lib/aura'
 import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
-import { chakraLabel, useLocaleTag, useT } from '../lib/i18n'
+import { chakraLabel, nameTag, useLocaleTag, useT } from '../lib/i18n'
 import { crystalName } from '../lib/crystals'
 import type { MessageKey } from '../lib/locales/en'
 import { practicedToday } from '../lib/streak'
@@ -130,12 +130,7 @@ export function Dashboard({
       <header className="px-1 pt-1 md:mx-auto md:max-w-2xl md:text-center">
         <p className="eyebrow-hue">
           {t('dash.headerDate', {
-            greeting: userName
-              ? t('common.greetName', {
-                  greeting: t(when.greetingKey),
-                  name: userName,
-                })
-              : t(when.greetingKey),
+            greeting: nameTag(t(when.greetingKey), userName, t),
             date: when.date,
           })}
         </p>

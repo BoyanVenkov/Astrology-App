@@ -155,6 +155,19 @@ export function applyHtmlLang(locale: Locale): void {
 
 /* ---- localized display names for engine identifiers ---- */
 
+/**
+ * Tags a short label/eyebrow line with the user's first name, when known —
+ * "Today's horoscope" -> "Today's horoscope, Boyan". Reuses `common.greetName`
+ * (already translated for the Dashboard greeting) so every screen that
+ * personalises this way shares one wrapper phrase per locale, not a bespoke
+ * one each. Pass `''`/`null`/`undefined` for `name` to get `base` unchanged.
+ */
+export const nameTag = (
+  base: string,
+  name: string | null | undefined,
+  tr: TFn,
+): string => (name ? tr('common.greetName', { greeting: base, name }) : base)
+
 export const chakraLabel = (key: ChakraKey, tr: TFn): string =>
   tr(`chakra.${key}` as MessageKey)
 

@@ -24,7 +24,7 @@ import {
   runeMeta,
   runeText,
 } from '../lib/runes'
-import { useT, type TFn } from '../lib/i18n'
+import { nameTag, useT, type TFn } from '../lib/i18n'
 import { spreadUnlocked, useEntitlements } from '../lib/premium'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon } from './icons'
@@ -176,6 +176,7 @@ function OracleResult({ q, card, t }: { q: string; card: DrawnCard; t: TFn }) {
 export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps) {
   const t = useT()
   const profile = useAppStore((s) => s.profile)
+  const userName = useAppStore((s) => s.userName)
   const drawnDay = useAppStore((s) => s.tarotDrawnDay)
   const runeDrawnDay = useAppStore((s) => s.runeDrawnDay)
   const markTarotDrawn = useAppStore((s) => s.markTarotDrawn)
@@ -242,7 +243,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         {onBack && <BackButton onClick={onBack} />}
 
         <header className="px-1">
-          <p className="eyebrow-hue">{t('tr.eyebrow')}</p>
+          <p className="eyebrow-hue">{nameTag(t('tr.eyebrow'), userName, t)}</p>
           <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
             {t('tr.dailyTitle')}
           </h1>
@@ -356,7 +357,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         />
 
         <header className="px-1">
-          <p className="eyebrow-hue">{t('tr.oracleEyebrow')}</p>
+          <p className="eyebrow-hue">{nameTag(t('tr.oracleEyebrow'), userName, t)}</p>
           <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
             {t('tr.askOracle')}
           </h1>
@@ -433,7 +434,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         <BackButton onClick={() => setView('daily')} />
 
         <header className="px-1">
-          <p className="eyebrow-hue">{t('tr.eyebrow')}</p>
+          <p className="eyebrow-hue">{nameTag(t('tr.eyebrow'), userName, t)}</p>
           <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
             {t('tr.chooseTitle')}
           </h1>
@@ -500,7 +501,11 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
 
       <header className="px-1">
         <p className="eyebrow-hue">
-          {t('tr.spreadEyebrow', { spread: spreadName(spread.key, t) })}
+          {nameTag(
+            t('tr.spreadEyebrow', { spread: spreadName(spread.key, t) }),
+            userName,
+            t,
+          )}
         </p>
         <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
           {shuffling

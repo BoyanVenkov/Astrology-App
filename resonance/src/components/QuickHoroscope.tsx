@@ -1,6 +1,6 @@
 import { useAppStore } from '../store/useAppStore'
 import { buildQuickHoroscope } from '../lib/horoscope'
-import { useT } from '../lib/i18n'
+import { nameTag, useT } from '../lib/i18n'
 
 interface QuickHoroscopeProps {
   /** Opens the full (Pro) horoscope. */
@@ -24,6 +24,7 @@ export function QuickHoroscope({
   const hasNatal = useAppStore((s) => s.hasNatal)
   const suggestedPattern = useAppStore((s) => s.suggestedPattern)
   const transitHouses = useAppStore((s) => s.transitHouses)
+  const userName = useAppStore((s) => s.userName)
 
   if (!transit || !chakra) return null
 
@@ -43,7 +44,7 @@ export function QuickHoroscope({
 
   return (
     <section className={`glass-panel p-4 ${className}`}>
-      <p className="eyebrow">{t('scr.quick.eyebrow')}</p>
+      <p className="eyebrow">{nameTag(t('scr.quick.eyebrow'), userName, t)}</p>
 
       <p className="mt-2.5 text-sm leading-relaxed text-haze-100">{q.weather}</p>
 
