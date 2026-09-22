@@ -19,6 +19,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': 'Bugün 1 okuma hakkın kaldı',
   'oracle.noneLeft': 'Bugünkü okumalarını kullandın — yarın tekrar gel',
   'oracle.errorGeneric': 'Kâhin şu an sessiz — birazdan tekrar dene.',
+  'oracle.errorNotPro':
+    'Pro aboneliğin bizim tarafımızda henüz aktif görünmüyor. Ayarlar → Yükselt → Satın Almaları Geri Yükle’yi dene, ya da zaten ücret alındıysa destek ile iletişime geç.',
   'oracle.generatedAt': 'Saat {time}’te okundu',
   'oracle.addBirth': 'Tamamen kişisel bir okuma için doğum bilgilerini ekle →',
 }

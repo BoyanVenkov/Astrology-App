@@ -19,6 +19,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': '1 läsning kvar idag',
   'oracle.noneLeft': 'Du har använt dagens läsningar — kom tillbaka imorgon',
   'oracle.errorGeneric': 'Oraklet är tyst just nu — försök igen om en stund.',
+  'oracle.errorNotPro':
+    'Din Pro-prenumeration visas inte som aktiv hos oss ännu. Prova Inställningar → Uppgradera → Återställ köp, eller kontakta supporten om du redan har debiterats.',
   'oracle.generatedAt': 'Läst kl. {time}',
   'oracle.addBirth': 'Lägg till dina födelseuppgifter för en helt personlig läsning →',
 }

@@ -17,6 +17,7 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': '今天还剩 1 次解读',
   'oracle.noneLeft': '今天的解读已用完——明天再来吧',
   'oracle.errorGeneric': '神谕暂时沉默——请稍后再试。',
+  'oracle.errorNotPro': '你的 Pro 订阅在我们这边尚未显示为已激活。请尝试"设置 → 升级 → 恢复购买"，如果已经扣款，请联系客服。',
   'oracle.generatedAt': '{time} 生成',
   'oracle.addBirth': '添加你的出生资料，获取完全个性化的解读 →',
 }

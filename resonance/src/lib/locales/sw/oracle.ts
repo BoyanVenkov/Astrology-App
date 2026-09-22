@@ -19,6 +19,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': 'Somo 1 limebaki leo',
   'oracle.noneLeft': 'Umetumia masomo ya leo — rudi kesho',
   'oracle.errorGeneric': 'Oracle iko kimya kwa sasa — jaribu tena baada ya muda mfupi.',
+  'oracle.errorNotPro':
+    'Usajili wako wa Pro haujionyeshi bado kuwa hai upande wetu. Jaribu Mipangilio → Boresha → Rejesha ununuzi, au wasiliana na huduma kwa wateja kama tayari umetozwa.',
   'oracle.generatedAt': 'Imesomwa saa {time}',
   'oracle.addBirth': 'Ongeza taarifa zako za kuzaliwa kwa usomaji wa kibinafsi kabisa →',
 }

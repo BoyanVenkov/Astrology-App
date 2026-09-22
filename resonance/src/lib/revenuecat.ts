@@ -52,9 +52,18 @@ export async function configureRevenueCat(): Promise<void> {
   }
 }
 
-/** Keep RevenueCat's app-user-id in step with the (optional) Supabase account. */
-export async function linkRevenueCatUser(userId: string | null): Promise<void> {
-  if (!configured) return
+/**
+ * Keep RevenueCat's app-user-id in step with the (optional) Supabase account.
+ * Returns whether it actually succeeded — callers that are about to take a
+ * purchase (see `Paywall.tsx`) should await this and check the result rather
+ * than assuming `App.tsx`'s own background call has already finished; a
+ * purchase made while still on the wrong identity gets attributed to it
+ * permanently, with no user-visible sign anything went wrong (the local
+ * purchase itself still succeeds, so the client shows "Pro active" while the
+ * account RevenueCat is actually tracking never received the entitlement).
+ */
+export async function linkRevenueCatUser(userId: string | null): Promise<boolean> {
+  if (!configured) return true
   try {
     if (userId) {
       await Purchases.logIn({ appUserID: userId })
@@ -65,8 +74,13 @@ export async function linkRevenueCatUser(userId: string | null): Promise<void> {
       const { isAnonymous } = await Purchases.isAnonymous()
       if (!isAnonymous) await Purchases.logOut()
     }
-  } catch {
-    /* not fatal — purchases still work under RevenueCat's own anonymous id */
+    return true
+  } catch (e) {
+    // Not fatal for normal app use — purchases still work under RevenueCat's
+    // own anonymous id — but a caller about to purchase needs to know this
+    // failed so it can retry rather than silently proceeding on the wrong id.
+    console.error('linkRevenueCatUser failed', e)
+    return false
   }
 }
 

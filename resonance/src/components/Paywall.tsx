@@ -6,6 +6,7 @@ import { PRO_PRICING } from '../lib/premium'
 import {
   buyPackage,
   fetchProPackages,
+  linkRevenueCatUser,
   restoreEntitlement,
   type ProPackages,
 } from '../lib/revenuecat'
@@ -30,7 +31,7 @@ const FEATURE_KEYS: MessageKey[] = [
 
 export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
   const t = useT()
-  const { status } = useAuth()
+  const { status, user } = useAuth()
   const needsAuth = status !== 'signed-in'
   const [plan, setPlan] = useState<'monthly' | 'yearly'>('yearly')
   const [busy, setBusy] = useState<'buy' | 'restore' | null>(null)
@@ -62,6 +63,18 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
         )
       : PRO_PRICING.savePct
 
+  // Sign-in (elsewhere) kicks off linking the RevenueCat SDK to this account
+  // in the background — it isn't guaranteed to have finished by the time
+  // someone taps straight through to "buy" here. Purchasing on the wrong
+  // identity attributes the entitlement to it permanently with no visible
+  // sign anything went wrong, so re-confirm (idempotent, cheap if already
+  // linked) and retry once before ever calling into a real purchase/restore.
+  const ensureLinked = async (): Promise<boolean> => {
+    if (!user?.id) return true
+    if (await linkRevenueCatUser(user.id)) return true
+    return linkRevenueCatUser(user.id)
+  }
+
   const buy = async () => {
     if (needsAuth) {
       onNeedAuth?.()
@@ -74,6 +87,11 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
     }
     setBusy('buy')
     setErr(null)
+    if (!(await ensureLinked())) {
+      setBusy(null)
+      setErr(t('pay.somethingWrong'))
+      return
+    }
     const res = await buyPackage(pkg)
     setBusy(null)
     if (res.ok) onClose()
@@ -87,6 +105,11 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
     }
     setBusy('restore')
     setErr(null)
+    if (!(await ensureLinked())) {
+      setBusy(null)
+      setErr(t('pay.somethingWrong'))
+      return
+    }
     const ok = await restoreEntitlement()
     setBusy(null)
     if (ok) onClose()

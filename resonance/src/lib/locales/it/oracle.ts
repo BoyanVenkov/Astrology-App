@@ -19,6 +19,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': '1 lettura rimasta oggi',
   'oracle.noneLeft': 'Hai usato le letture di oggi — torna domani',
   'oracle.errorGeneric': 'L’Oracolo tace per ora — riprova tra poco.',
+  'oracle.errorNotPro':
+    'Il tuo abbonamento Pro non risulta ancora attivo da parte nostra. Prova Impostazioni → Passa a Pro → Ripristina acquisti, oppure contatta l’assistenza se hai già pagato.',
   'oracle.generatedAt': 'Letto alle {time}',
   'oracle.addBirth': 'Aggiungi i tuoi dati di nascita per una lettura completamente personale →',
 }

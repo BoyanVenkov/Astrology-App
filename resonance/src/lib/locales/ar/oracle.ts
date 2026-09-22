@@ -19,6 +19,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': 'تبقّت لك قراءة واحدة اليوم',
   'oracle.noneLeft': 'لقد استخدمت قراءات اليوم — عد غدًا',
   'oracle.errorGeneric': 'الكاهن صامت الآن — حاول مرة أخرى بعد قليل.',
+  'oracle.errorNotPro':
+    'اشتراكك في Pro لا يظهر كنشط لدينا بعد. جرّب الإعدادات ← الترقية ← استعادة المشتريات، أو تواصل مع الدعم إذا كنت قد دُفعت بالفعل.',
   'oracle.generatedAt': 'قُرئ في {time}',
   'oracle.addBirth': 'أضف بيانات ميلادك للحصول على قراءة شخصية بالكامل ←',
 }

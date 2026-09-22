@@ -114,7 +114,10 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
       if (status === 429 && cached) {
         setOracleReading({ ...cached, remaining: 0 })
       }
-      setError(t('oracle.errorGeneric'))
+      // 403 means the server-side Pro check specifically failed — worth its
+      // own message, since it's a different (self-fixable) problem from a
+      // network blip and otherwise looks identical to one.
+      setError(status === 403 ? t('oracle.errorNotPro') : t('oracle.errorGeneric'))
       return
     }
     setOracleReading({

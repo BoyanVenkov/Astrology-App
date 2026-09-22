@@ -18,6 +18,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': '本日はあと1回読めます',
   'oracle.noneLeft': '本日分は使い切りました — また明日お越しください',
   'oracle.errorGeneric': 'オラクルは今静かにしています — また少ししてからお試しください。',
+  'oracle.errorNotPro':
+    'お客様のPro登録が当方でまだ有効と表示されていません。設定 → アップグレード → 購入を復元 をお試しいただくか、すでに請求済みの場合はサポートまでご連絡ください。',
   'oracle.generatedAt': '{time}に読み取り',
   'oracle.addBirth': '出生データを追加すると、完全に個人向けの鑑定になります →',
 }

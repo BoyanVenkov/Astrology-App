@@ -19,6 +19,8 @@ export const oracle: Record<OracleKey, string> = {
   'oracle.remainingOne': 'Został Ci 1 odczyt dzisiaj',
   'oracle.noneLeft': 'Wykorzystałeś dzisiejsze odczyty — wróć jutro',
   'oracle.errorGeneric': 'Wyrocznia milczy w tej chwili — spróbuj ponownie za moment.',
+  'oracle.errorNotPro':
+    'Twoja subskrypcja Pro nie jest jeszcze widoczna jako aktywna po naszej stronie. Spróbuj Ustawienia → Ulepsz → Przywróć zakupy, albo skontaktuj się z pomocą techniczną, jeśli już zostałeś obciążony opłatą.',
   'oracle.generatedAt': 'Odczytano o {time}',
   'oracle.addBirth': 'Dodaj swoje dane urodzenia, by uzyskać w pełni osobisty odczyt →',
 }

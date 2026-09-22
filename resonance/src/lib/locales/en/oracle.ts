@@ -17,6 +17,8 @@ export const oracle = {
   'oracle.remainingOne': '1 reading left today',
   'oracle.noneLeft': 'You\'ve used today\'s readings — back tomorrow',
   'oracle.errorGeneric': 'The Oracle is quiet right now — try again in a moment.',
+  'oracle.errorNotPro':
+    "Your Pro subscription isn't showing as active on our end yet. Try Settings → Upgrade → Restore purchases, or contact support if you were just charged.",
   'oracle.generatedAt': 'Read at {time}',
   'oracle.addBirth': 'Add your birth details for a fully personal reading →',
 } as const
