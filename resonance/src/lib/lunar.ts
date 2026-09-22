@@ -1,4 +1,5 @@
 import * as Astronomy from 'astronomy-engine'
+import { sep } from './astrology'
 import {
   eclipticLongitude,
   nextMoonSignChanges,
@@ -48,11 +49,6 @@ export interface MoonVoC {
   hoursUntil: number | null
 }
 
-const sep = (a: number, b: number): number => {
-  const d = Math.abs(a - b) % 360
-  return d > 180 ? 360 - d : d
-}
-
 /**
  * Is the Moon "void of course" — past its last major aspect before changing
  * sign? A traditional cue to avoid new beginnings and instead ground / rest.
@@ -73,12 +69,22 @@ export function moonVoidOfCourse(now: Date = new Date()): MoonVoC {
   const step = 30 * 60_000
 
   // pre-sample body longitudes across the window
-  const samples: { t: number; moon: number; body: Record<string, number> }[] = []
-  for (let t = start; t <= end; t += step) {
+  const sampleAt = (t: number): { t: number; moon: number; body: Record<string, number> } => {
     const d = new Date(t)
     const body: Record<string, number> = {}
     for (const b of VOC_BODIES) body[b] = eclipticLongitude(b, d)
-    samples.push({ t, moon: eclipticLongitude('Moon', d), body })
+    return { t, moon: eclipticLongitude('Moon', d), body }
+  }
+  const samples: { t: number; moon: number; body: Record<string, number> }[] = []
+  for (let t = start; t <= end; t += step) samples.push(sampleAt(t))
+  // The fixed step above can land its last sample short of `end` (e.g. when
+  // `end - start` isn't an exact multiple of `step`), leaving the final
+  // partial interval unsampled — a real aspect exact in just that stretch
+  // (often the one right before the sign ingress, the one that actually
+  // starts the void) would never get bracketed and detected. Always sample
+  // `end` itself so that interval is covered too.
+  if (samples.length === 0 || samples[samples.length - 1].t < end) {
+    samples.push(sampleAt(end))
   }
 
   const refine = (

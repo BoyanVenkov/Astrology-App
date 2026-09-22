@@ -399,7 +399,7 @@ export const reading = {
   'scr.compat.tone.intense': 'Fuses',
   'scr.compat.tone.friction': 'Effort',
   'scr.compat.rowPair': 'Your {a} {glyph} their {b}',
-  'scr.compat.connMeta': '{aspect} · {orb}° from exact · {trend}',
+  'scr.compat.connMeta': '{aspect} · {orb}° from exact',
   'scr.compat.trendTighter': 'growing tighter',
   'scr.compat.trendEasing': 'easing off',
   'scr.compat.forLens': 'for {lens}',

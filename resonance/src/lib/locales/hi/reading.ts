@@ -395,7 +395,7 @@ export const reading: Record<ReadingKey, string> = {
   'scr.compat.tone.intense': 'मिल जाता है',
   'scr.compat.tone.friction': 'मेहनत',
   'scr.compat.rowPair': '{a} (आप) {glyph} {b} (दूसरा)',
-  'scr.compat.connMeta': '{aspect} · सटीक से {orb}° · {trend}',
+  'scr.compat.connMeta': '{aspect} · सटीक से {orb}°',
   'scr.compat.trendTighter': 'क़रीब आ रहा',
   'scr.compat.trendEasing': 'ढीला पड़ रहा',
   'scr.compat.forLens': '{lens} के लिए',

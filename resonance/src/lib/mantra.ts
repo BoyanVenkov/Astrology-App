@@ -1,6 +1,7 @@
 import type { ChakraKey } from '../types/resonance'
 import type { MoodNeed } from './moodPractice'
 import type { MessageKey } from './locales/en'
+import { fnv1a } from './tarot'
 
 /**
  * The day's mantra — chosen for the focus centre *and* the shape of the day:
@@ -171,15 +172,6 @@ const BANK: Record<ChakraKey, Record<MantraMode, string[]>> = {
 
 const HARD = new Set(['square', 'opposition'])
 const SOFT = new Set(['trine', 'sextile'])
-
-const fnv1a = (str: string): number => {
-  let h = 0x811c9dc5
-  for (let i = 0; i < str.length; i += 1) {
-    h ^= str.charCodeAt(i)
-    h = Math.imul(h, 0x01000193)
-  }
-  return h >>> 0
-}
 
 export interface MantraInput {
   chakra: ChakraKey

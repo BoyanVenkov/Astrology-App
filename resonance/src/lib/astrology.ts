@@ -84,7 +84,8 @@ export interface Aspect {
   applying: boolean
 }
 
-const sep = (a: number, b: number): number => {
+/** Angular separation between two ecliptic longitudes, 0-180°. */
+export const sep = (a: number, b: number): number => {
   const d = Math.abs(a - b) % 360
   return d > 180 ? 360 - d : d
 }
@@ -296,7 +297,7 @@ function composeInfluence(
     dominant.aspectName === 'in'
       ? `${dominant.planet}${retro} moving through ${planetPos.sign}`
       : dominant.trigger
-        ? `${dominant.trigger} ${dominant.aspectName} ${dominant.targetLabel}`
+        ? `${dominant.trigger} ${dominant.aspectName} ${dominant.targetLabel}${retro}`
         : `Transiting ${dominant.planet}${retro} ${dominant.aspectName} ${dominant.targetLabel}`
   const houseClause =
     house && HOUSE_ARENA[house]

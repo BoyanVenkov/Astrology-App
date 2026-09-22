@@ -1,8 +1,8 @@
+import { useEffect } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
 import { clockHM, geoContext } from '../lib/geo'
 import {
-  nameTag,
   ordinal,
   seasonLabel,
   signLabel,
@@ -10,6 +10,7 @@ import {
   transitTitle,
   useT,
 } from '../lib/i18n'
+import { useEntitlements } from '../lib/premium'
 import { chakraColor } from '../lib/resonanceData'
 import { Screen } from './Screen'
 import { TodaysPractice } from './TodaysPractice'
@@ -18,10 +19,20 @@ import type { RitualPreset } from '../types/resonance'
 interface HoroscopeProps {
   onBack: () => void
   onRitual: (preset: RitualPreset) => void
+  onUpgrade: (reason?: string) => void
 }
 
-export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
+export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
   const t = useT()
+  const { isPro } = useEntitlements()
+
+  // The Sky tile is the only normal entry point and already gates this, but
+  // that's UI-only — self-gate here too so this Pro screen can't be reached
+  // (e.g. by driving `sub` state directly) and shown for free.
+  useEffect(() => {
+    if (!isPro) onUpgrade(t('sky.reasonHoroscope'))
+  }, [isPro, onUpgrade, t])
+
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const crystals = useAppStore((s) => s.dailyCrystals)
@@ -35,8 +46,8 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
   const natal = useAppStore((s) => s.natal)
   const nowAngles = useAppStore((s) => s.nowAngles)
   const editProfile = useAppStore((s) => s.editProfile)
-  const userName = useAppStore((s) => s.userName)
 
+  if (!isPro) return null
   if (!transit || !chakra) return null
 
   const geo = geoContext(profile, currentLocation)
@@ -79,7 +90,7 @@ export function Horoscope({ onBack, onRitual }: HoroscopeProps) {
 
   return (
     <Screen
-      eyebrow={nameTag(t('scr.horo.eyebrow'), userName, t)}
+      eyebrow={t('scr.horo.eyebrow')}
       title={transitTitle(transit, t)}
       subtitle={horoscope.greeting}
       onBack={onBack}

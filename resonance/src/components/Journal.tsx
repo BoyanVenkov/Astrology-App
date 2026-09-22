@@ -213,13 +213,19 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
   const streakRewardTier = useAppStore((s) => s.streakRewardTier)
+  const longestStreakEver = useAppStore((s) => s.longestStreakEver)
   const acknowledgeStreakReward = useAppStore((s) => s.acknowledgeStreakReward)
   const { isPro, freeHistoryDays } = useEntitlements()
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focusChakra, sessionLog, moodLog)
   const streak = practiceStreak(sessionLog)
-  const longest = Math.max(longestStreak(sessionLog), streak)
+  // `longestStreakEver` is the authoritative "best ever" — it's kept
+  // up to date on every logged session and never shrinks, unlike
+  // `longestStreak(sessionLog)` alone, which can drop once old sessions
+  // age out of the log's retention cap. Still take the max of all three
+  // as a defensive floor.
+  const longest = Math.max(longestStreakEver, longestStreak(sessionLog), streak)
   const celebration = pendingCelebration(streak, streakRewardTier)
   const gridDays = isPro ? 28 : Math.min(28, freeHistoryDays)
 

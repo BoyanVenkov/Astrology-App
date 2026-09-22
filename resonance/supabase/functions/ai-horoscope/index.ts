@@ -112,17 +112,21 @@ Deno.serve(async (req) => {
 
     // Real Pro gate — RevenueCat's server API, keyed by the same id
     // `linkRevenueCatUser` logs the device into (see src/lib/revenuecat.ts).
+    // Fails CLOSED: a missing/misconfigured secret must never silently open
+    // this costed endpoint to every signed-in user — reject instead.
     const revenueCatKey = Deno.env.get('REVENUECAT_SECRET_KEY')
-    if (revenueCatKey) {
-      const rcRes = await fetch(`https://api.revenuecat.com/v1/subscribers/${user.id}`, {
-        headers: { Authorization: `Bearer ${revenueCatKey}` },
-      })
-      if (!rcRes.ok) return json({ error: 'not_pro' }, 403)
-      const rc = await rcRes.json()
-      const pro = rc?.subscriber?.entitlements?.pro
-      const active = pro && (!pro.expires_date || new Date(pro.expires_date) > new Date())
-      if (!active) return json({ error: 'not_pro' }, 403)
+    if (!revenueCatKey) {
+      console.error('ai-horoscope: REVENUECAT_SECRET_KEY is not set — refusing all requests')
+      return json({ error: 'server_error' }, 500)
     }
+    const rcRes = await fetch(`https://api.revenuecat.com/v1/subscribers/${user.id}`, {
+      headers: { Authorization: `Bearer ${revenueCatKey}` },
+    })
+    if (!rcRes.ok) return json({ error: 'not_pro' }, 403)
+    const rc = await rcRes.json()
+    const pro = rc?.subscriber?.entitlements?.pro
+    const active = pro && (!pro.expires_date || new Date(pro.expires_date) > new Date())
+    if (!active) return json({ error: 'not_pro' }, 403)
 
     // Service-role client — bypasses RLS, only reachable from this function.
     const serviceClient = createClient(supabaseUrl, serviceRoleKey)

@@ -193,9 +193,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
   const t = useT()
   const transit = useAppStore((s) => s.transit)
   const locale = useAppStore((s) => s.locale)
-  const userName = useAppStore((s) => s.userName)
   const langHintSeen = useAppStore((s) => s.langHintSeen)
-  const setUserName = useAppStore((s) => s.setUserName)
   const dismissLangHint = useAppStore((s) => s.dismissLangHint)
   const localeNative =
     LOCALES.find((l) => l.code === locale)?.native ?? 'English'
@@ -203,15 +201,8 @@ export function Welcome({ onSkip }: WelcomeProps) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [langOpen, setLangOpen] = useState(false)
-  const [nameDraft, setNameDraft] = useState(userName)
-
-  const flushName = () => {
-    const name = nameDraft.trim()
-    if (name) setUserName(name)
-  }
 
   const google = async () => {
-    flushName()
     setBusy(true)
     setErr(null)
     const e = await signInWithGoogle()
@@ -219,11 +210,6 @@ export function Welcome({ onSkip }: WelcomeProps) {
     if (e) setErr(e.message)
     // native returns via the deep link; web redirects away. On success the
     // auth listener flips App past this gate — no callback needed.
-  }
-
-  const skip = () => {
-    flushName()
-    onSkip()
   }
 
   return (
@@ -303,21 +289,6 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
       <div className="shrink-0">
         <div className="flex flex-col gap-2.5">
-          <div className="mb-1">
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-gold-300">
-              {t('welcome.personalizeTitle')}
-            </p>
-            <input
-              type="text"
-              value={nameDraft}
-              onChange={(e) => setNameDraft(e.target.value)}
-              onBlur={flushName}
-              placeholder={t('welcome.namePlaceholder')}
-              maxLength={30}
-              autoComplete="given-name"
-              className="mt-2 w-full rounded-xl border border-white/15 bg-white/[0.06] px-3.5 py-3 text-center text-sm text-white placeholder:text-haze-500 focus:border-gold-400/50 focus:outline-none"
-            />
-          </div>
           <p className="mb-1 text-center text-[11px] leading-relaxed text-haze-500">
             {t('welcome.pitch')}
           </p>
@@ -332,7 +303,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
           </button>
           <button
             type="button"
-            onClick={skip}
+            onClick={onSkip}
             className="mt-1 text-center text-xs uppercase tracking-[0.14em] text-haze-400 active:text-haze-200"
           >
             {t('welcome.explore')}

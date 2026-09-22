@@ -212,7 +212,11 @@ export function SkyView({
           title={t('sky.tileOracle')}
           sub={isPro ? t('sky.tileOracleSubPro') : t('sky.tileOracleSub')}
           locked={!isPro}
-          onClick={isPro ? onOpenOracle : () => onUpgrade(t('oracle.reason'))}
+          // Unlike the other Pro tiles, this opens the screen either way —
+          // OracleAI has its own free-tier teaser (sample lines + unlock
+          // CTA) that's worth showing before the paywall, not after skipping
+          // straight to it.
+          onClick={onOpenOracle}
         />
         <Tile
           icon={<ApothecaryIcon className="h-5 w-5" />}

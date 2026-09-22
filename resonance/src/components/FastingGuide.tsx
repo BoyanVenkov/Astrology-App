@@ -7,6 +7,7 @@ import {
 } from '../lib/fasting'
 import { signLabel, useLocaleTag, useT } from '../lib/i18n'
 import type { MessageKey } from '../lib/locales/en'
+import { useLocalDayKey } from '../lib/timezone'
 import { Screen } from './Screen'
 
 const VERDICT_COLOR: Record<FastingVerdict, string> = {
@@ -29,7 +30,13 @@ interface FastingGuideProps {
 export function FastingGuide({ onBack }: FastingGuideProps) {
   const t = useT()
   const localeTag = useLocaleTag()
-  const f = useMemo(() => computeFasting(new Date(), t), [t])
+  const dayKey = useLocalDayKey()
+  // `dayKey` isn't read below — it's purely a "the local day rolled over,
+  // recompute" trigger for the memo.
+  const f = useMemo(() => {
+    void dayKey
+    return computeFasting(new Date(), t)
+  }, [t, dayKey])
   const [openKey, setOpenKey] = useState<string | null>(f.pick.key)
   const tint = VERDICT_COLOR[f.verdict]
 

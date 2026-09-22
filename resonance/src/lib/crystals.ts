@@ -1,5 +1,5 @@
 import type { Crystal } from '../types/resonance'
-import { type TFn } from './i18n'
+import { splitKeywords, type TFn } from './i18n'
 import type { MessageKey } from './locales/en'
 
 /**
@@ -22,7 +22,4 @@ export const crystalDesc = (c: Crystal, t: TFn): string =>
   t(`crystal.${slug(c.name)}.d` as MessageKey)
 
 export const crystalKeywords = (c: Crystal, t: TFn): string[] =>
-  t(`crystal.${slug(c.name)}.k` as MessageKey)
-    .split(',')
-    .map((k) => k.trim())
-    .filter(Boolean)
+  splitKeywords(t(`crystal.${slug(c.name)}.k` as MessageKey))

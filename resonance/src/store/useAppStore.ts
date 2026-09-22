@@ -24,6 +24,7 @@ import { computeDailyReading, type Aspect } from '../lib/astrology'
 import { detectLocale } from '../lib/detectLocale'
 import type { BodyName, BodyPosition } from '../lib/ephemeris'
 import type { ChartAngles } from '../lib/houses'
+import { longestStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 
 const DEFAULT_AUDIO: AudioPreferences = {
@@ -134,10 +135,10 @@ const createSession = (): ResonanceSession & SkyState => {
     runeDrawnDay: null,
     moodGateDay: null,
     streakRewardTier: 0,
+    longestStreakEver: 0,
     people: [],
     authSkipped: false,
     locale: detectLocale(),
-    userName: '',
     langHintSeen: false,
     oracleReading: null,
   }
@@ -180,9 +181,7 @@ interface ResonanceActions {
   skipAuth: () => void
   /** Change the UI language. */
   setLocale: (locale: Locale) => void
-  /** Save the first name given on the Welcome gate. */
-  setUserName: (name: string) => void
-  /** Dismiss the Welcome-gate "personalize" callout (name + language hint). */
+  /** Dismiss the Welcome-gate language-hint callout. */
   dismissLangHint: () => void
   /** Cache the latest Oracle AI reading. */
   setOracleReading: (reading: OracleReadingCache | null) => void
@@ -238,12 +237,20 @@ export const useAppStore = create<AppStore>()(
         set((state) => {
           const completedSessions =
             state.completedSessions + (session.completed ? 1 : 0)
+          // Compute against the full log *before* the retention cap below
+          // truncates it, and only ever grow — so a genuinely-earned
+          // milestone can't silently re-lock once its sessions age out.
+          const fullLog = [...state.sessionLog, session]
           return {
-            sessionLog: [...state.sessionLog, session].slice(-SESSION_LOG_CAP),
+            sessionLog: fullLog.slice(-SESSION_LOG_CAP),
             completedSessions,
             lastCompletedAt: session.completed
               ? session.at
               : state.lastCompletedAt,
+            longestStreakEver: Math.max(
+              state.longestStreakEver,
+              longestStreak(fullLog),
+            ),
           }
         }),
 
@@ -303,8 +310,6 @@ export const useAppStore = create<AppStore>()(
 
       setLocale: (locale) => set({ locale }),
 
-      setUserName: (userName) => set({ userName: userName.trim() }),
-
       dismissLangHint: () => set({ langHintSeen: true }),
 
       setOracleReading: (oracleReading) => set({ oracleReading }),
@@ -355,10 +360,10 @@ export const useAppStore = create<AppStore>()(
           runeDrawnDay: state.runeDrawnDay,
           moodGateDay: state.moodGateDay,
           streakRewardTier: state.streakRewardTier,
+          longestStreakEver: state.longestStreakEver,
           people: state.people,
           authSkipped: state.authSkipped,
           locale: state.locale,
-          userName: state.userName,
           langHintSeen: state.langHintSeen,
           oracleReading: state.oracleReading,
           completedSessions: state.completedSessions + 1,
@@ -396,10 +401,10 @@ export const useAppStore = create<AppStore>()(
         runeDrawnDay: state.runeDrawnDay,
         moodGateDay: state.moodGateDay,
         streakRewardTier: state.streakRewardTier,
+        longestStreakEver: state.longestStreakEver,
         people: state.people,
         authSkipped: state.authSkipped,
         locale: state.locale,
-        userName: state.userName,
         langHintSeen: state.langHintSeen,
         oracleReading: state.oracleReading,
       }),
@@ -426,6 +431,13 @@ export const useAppStore = create<AppStore>()(
           audio: { ...current.audio, ...saved.audio },
           notifications: { ...current.notifications, ...saved.notifications },
           people: saved.people ?? current.people,
+          // Backfill for state persisted before this field existed, from
+          // whatever streak is still visible in the (possibly already
+          // truncated) saved log — never lower than what was saved.
+          longestStreakEver: Math.max(
+            saved.longestStreakEver ?? 0,
+            longestStreak(saved.sessionLog ?? []),
+          ),
           isPlaying: false,
         }
       },
@@ -435,8 +447,20 @@ export const useAppStore = create<AppStore>()(
 
 /* ------------------------------------------------------------------ sync */
 
-/** The fields that back up to the cloud (mirror of `partialize`, minus the
- *  session-specific / recomputed bits). */
+/**
+ * The fields that back up to the cloud (mirror of `partialize`, minus the
+ * session-specific / recomputed bits).
+ *
+ * `tier` is deliberately NOT here. RevenueCat (via `useRevenueCat` /
+ * `refreshEntitlement`) is the sole source of truth for entitlement, checked
+ * fresh on every launch and sign-in — it must never round-trip through this
+ * generic, client-writable sync payload. It used to: the merge only ever
+ * upgraded a locally-'free' tier to 'pro' from whatever was in the cloud
+ * row, and a signed-in user can write to their own `sync_state` row directly
+ * (RLS only checks ownership), which made that a permanent, self-reinforcing
+ * Pro bypass. `tier` still persists locally via zustand `persist` below, just
+ * not through cloud sync.
+ */
 export interface SyncSnapshot {
   profile: BirthProfile | null
   onboardingComplete: boolean
@@ -449,14 +473,13 @@ export interface SyncSnapshot {
   biometricLog: BiometricReading[]
   currentLocation: GeoPoint | null
   notifications: NotificationPreferences
-  tier: PremiumTier
   tarotDrawnDay: string | null
   runeDrawnDay: string | null
   moodGateDay: string | null
   streakRewardTier: number
+  longestStreakEver: number
   people: SavedPerson[]
   locale: Locale
-  userName: string
 }
 
 export function snapshotForSync(): SyncSnapshot {
@@ -473,14 +496,13 @@ export function snapshotForSync(): SyncSnapshot {
     biometricLog: s.biometricLog,
     currentLocation: s.currentLocation,
     notifications: s.notifications,
-    tier: s.tier,
     tarotDrawnDay: s.tarotDrawnDay,
     runeDrawnDay: s.runeDrawnDay,
     moodGateDay: s.moodGateDay,
     streakRewardTier: s.streakRewardTier,
+    longestStreakEver: s.longestStreakEver,
     people: s.people,
     locale: s.locale,
-    userName: s.userName,
   }
 }
 
@@ -539,8 +561,11 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
         s.streakRewardTier,
         remote.streakRewardTier ?? 0,
       ),
+      longestStreakEver: Math.max(
+        s.longestStreakEver,
+        remote.longestStreakEver ?? 0,
+      ),
       onboardingComplete: s.onboardingComplete || !!remote.onboardingComplete,
-      tier: s.tier === 'pro' || remote.tier === 'pro' ? 'pro' : s.tier,
     }
     if (takeRemoteScalars) {
       patch.profile = profile ?? remote.profile ?? null
@@ -548,7 +573,6 @@ export function applySync(remote: Partial<SyncSnapshot>, remoteNewer: boolean): 
       patch.notifications = { ...s.notifications, ...remote.notifications }
       if (remote.breathPattern) patch.breathPattern = remote.breathPattern
       if (remote.locale) patch.locale = remote.locale
-      if (remote.userName) patch.userName = remote.userName
       if (remote.currentLocation !== undefined)
         patch.currentLocation = remote.currentLocation
     } else if (!s.profile && remote.profile) {

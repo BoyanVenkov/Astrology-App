@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import type { Aspect, AspectHarmony } from './astrology'
 import { PLANET_CHAKRA } from './astrology'
 import type { BodyName } from './ephemeris'
@@ -163,7 +164,12 @@ export function computeChakraField(
     } else {
       let s = 50
       for (const c of contacts) {
-        const w = c.exactness * MASS[c.transiting]
+        // Without a natal chart, every contact is transiting-Moon-vs-a-slow-
+        // body (see `pickDominant`'s no-natal fallback in astrology.ts), so
+        // `c.transiting` is always 'Moon' — the body that actually varies
+        // per contact is `c.other`. Mass must track whichever one that is,
+        // or every contact collapses to the same constant Moon-mass weight.
+        const w = c.exactness * MASS[hasNatal ? c.transiting : c.other]
         if (c.harmony === 'soft') s += w * 15
         else if (c.harmony === 'hard') s -= w * 15
         else s += NATURE[hasNatal ? c.other : c.transiting] * w * 12
@@ -217,14 +223,17 @@ export function useChakraField(): ChakraReading[] {
   const hasNatal = useAppStore((s) => s.hasNatal)
   const chakra = useAppStore((s) => s.chakra)
   const transitHouses = useAppStore((s) => s.transitHouses)
-  return computeChakraField(
-    {
-      aspects,
-      hasNatal,
-      focusKey: chakra?.key ?? 'heart',
-      focusBalance: chakra?.balance ?? 50,
-      transitHouses,
-    },
-    t,
+  const focusKey = chakra?.key ?? 'heart'
+  const focusBalance = chakra?.balance ?? 50
+  // Buckets every transiting aspect into all 7 centres and composes each
+  // one's cue/theme/state text — without memoizing, expanding a single
+  // chakra row's local `open` state re-ran this for the whole field.
+  return useMemo(
+    () =>
+      computeChakraField(
+        { aspects, hasNatal, focusKey, focusBalance, transitHouses },
+        t,
+      ),
+    [aspects, hasNatal, focusKey, focusBalance, transitHouses, t],
   )
 }

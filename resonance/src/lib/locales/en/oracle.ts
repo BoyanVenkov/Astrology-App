@@ -9,7 +9,7 @@ export const oracle = {
   'oracle.teaserSample2':
     '"Venus easing into your fourth house softens a home matter you\'ve been avoiding."',
   'oracle.unlock': 'Unlock AI Horoscope',
-  'oracle.reason': 'AI Horoscope — a personalised reading, written for you',
+  'oracle.reason': 'AI Horoscope',
   'oracle.consult': 'Get my AI horoscope',
   'oracle.consultAgain': 'Ask again',
   'oracle.loading': 'Reading the sky for you…',

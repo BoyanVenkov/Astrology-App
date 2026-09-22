@@ -185,7 +185,7 @@ function App() {
       >
         {sub === 'chart' && <NatalChart onBack={back} />}
         {sub === 'horoscope' && (
-          <Horoscope onBack={back} onRitual={launchRitual} />
+          <Horoscope onBack={back} onRitual={launchRitual} onUpgrade={openPaywall} />
         )}
         {sub === 'oracle' && (
           <OracleAI onBack={back} onUpgrade={openPaywall} />
@@ -197,7 +197,9 @@ function App() {
             onUpgrade={openPaywall}
           />
         )}
-        {sub === 'compat' && <Compatibility onBack={back} />}
+        {sub === 'compat' && (
+          <Compatibility onBack={back} onUpgrade={openPaywall} />
+        )}
         {sub === 'transits' && <Transits onBack={back} />}
         {sub === 'moon' && (
           <MoonScreen onBack={back} onOpenFasting={() => setSub('fasting')} />

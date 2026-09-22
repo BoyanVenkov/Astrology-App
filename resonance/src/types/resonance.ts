@@ -439,15 +439,20 @@ export interface ResonanceSession {
    * the Journal's celebration banner shows once per milestone. `0` = none yet.
    */
   streakRewardTier: number
+  /**
+   * Longest consecutive-practice streak ever recorded, kept independent of
+   * `sessionLog`'s rolling cap so a genuinely-earned "permanent" milestone
+   * emblem can never silently re-lock once old sessions age out of the log.
+   * Only ever grows — see `logPractice`.
+   */
+  longestStreakEver: number
   /** People saved for chart-compatibility readings. */
   people: SavedPerson[]
   /** True once the user chose "explore without an account" on the Welcome gate. */
   authSkipped: boolean
   /** UI language. */
   locale: Locale
-  /** First name, entered on the Welcome gate — powers personalised greetings/readings. Empty until given. */
-  userName: string
-  /** True once the Welcome-gate "personalize" callout (name + language hint) has been dismissed. */
+  /** True once the Welcome-gate language-hint callout has been dismissed. */
   langHintSeen: boolean
   /** The last Oracle AI reading generated, cached so revisiting the tab doesn't lose it. */
   oracleReading: OracleReadingCache | null

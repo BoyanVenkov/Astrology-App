@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { App as CapApp } from '@capacitor/app'
 import { Capacitor } from '@capacitor/core'
 import {
   LOG_LEVEL,
@@ -151,6 +152,11 @@ export async function subscriptionManagementUrl(): Promise<string | null> {
  * (optional) Supabase account and re-checks the entitlement on every switch —
  * so a subscription bought on one account never leaks onto another, and a
  * lapsed/renewed subscription (changed outside the app) is caught on launch.
+ *
+ * Also re-checks on every app **resume** (not just launch/sign-in) — without
+ * this, a cancelled/refunded/renewed subscription that changes while the app
+ * is merely backgrounded (not force-killed) would stay stale for the rest of
+ * the session, potentially days.
  */
 export function useRevenueCat(userId: string | null): void {
   const lastUserId = useRef<string | null | undefined>(undefined)
@@ -170,4 +176,13 @@ export function useRevenueCat(userId: string | null): void {
       cancelled = true
     }
   }, [userId])
+
+  useEffect(() => {
+    const handle = CapApp.addListener('resume', () => {
+      void refreshEntitlement()
+    })
+    return () => {
+      void handle.then((h) => h.remove())
+    }
+  }, [])
 }

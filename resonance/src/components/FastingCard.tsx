@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { computeFasting, fastingSpecialLabel, type FastingVerdict } from '../lib/fasting'
 import { signLabel, useLocaleTag, useT } from '../lib/i18n'
 import type { MessageKey } from '../lib/locales/en'
+import { useLocalDayKey } from '../lib/timezone'
 
 const VERDICT_COLOR: Record<FastingVerdict, string> = {
   favourable: '#6ee7b7',
@@ -19,8 +20,15 @@ export function FastingCard({ onOpenGuide }: FastingCardProps) {
   const t = useT()
   const localeTag = useLocaleTag()
   const [open, setOpen] = useState(false)
-  // computed once per locale — the verdict is a whole-day read
-  const f = useMemo(() => computeFasting(new Date(), t), [t])
+  // The verdict is a whole-day read, but "once per locale" alone froze it
+  // at mount — recompute when the local day actually rolls over too.
+  const dayKey = useLocalDayKey()
+  // `dayKey` isn't read below — it's purely a "the local day rolled over,
+  // recompute" trigger for the memo.
+  const f = useMemo(() => {
+    void dayKey
+    return computeFasting(new Date(), t)
+  }, [t, dayKey])
   const tint = VERDICT_COLOR[f.verdict]
 
   const fmtDay = (key: string): string => {

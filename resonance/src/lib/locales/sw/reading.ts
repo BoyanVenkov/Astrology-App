@@ -395,7 +395,7 @@ export const reading: Record<ReadingKey, string> = {
   'scr.compat.tone.intense': 'Inaungana',
   'scr.compat.tone.friction': 'Juhudi',
   'scr.compat.rowPair': '{a} (wewe) {glyph} {b} (mwingine)',
-  'scr.compat.connMeta': '{aspect} · {orb}° kutoka sawasawa · {trend}',
+  'scr.compat.connMeta': '{aspect} · {orb}° kutoka sawasawa',
   'scr.compat.trendTighter': 'inakua kali zaidi',
   'scr.compat.trendEasing': 'inalegea',
   'scr.compat.forLens': 'kwa {lens}',

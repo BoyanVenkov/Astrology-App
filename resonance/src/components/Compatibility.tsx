@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
+import { useEntitlements } from '../lib/premium'
 import {
   computeSynastry,
   LENS_KEYS,
@@ -23,6 +24,7 @@ import type { SavedPerson } from '../types/resonance'
 
 interface CompatibilityProps {
   onBack: () => void
+  onUpgrade: (reason?: string) => void
 }
 
 const ASPECT_GLYPH: Record<string, string> = {
@@ -131,12 +133,12 @@ function ConnectionRow({
         <div className="animate-rise-in border-t border-white/[0.06] px-3.5 py-3.5">
           <p className="text-sm leading-relaxed text-haze-200">{conn.detail}</p>
           <p className="data mt-2 text-[11px] text-haze-500">
+            {/* No "tightening/easing" trend here — both charts are fixed at
+                birth, so an aspect's exactness never actually changes; that
+                would only be meaningful for a live transit, not synastry. */}
             {t('scr.compat.connMeta', {
               aspect: aspectLabel(conn.aspect, t),
               orb: conn.orbDelta.toFixed(1),
-              trend: conn.applying
-                ? t('scr.compat.trendTighter')
-                : t('scr.compat.trendEasing'),
             })}
           </p>
         </div>
@@ -151,13 +153,18 @@ function Reading({ person }: { person: SavedPerson }) {
   const [lens, setLens] = useState<CompatLens>('love')
   const [openConn, setOpenConn] = useState<number | null>(null)
 
-  if (!profile) return null
-  const reading = computeSynastry(
-    new Date(profile.utc),
-    new Date(person.utc),
-    lens,
-    t,
+  // computeSynastry composes ~8 full paragraphs plus a per-connection
+  // sentence for every cross-aspect — without memoizing, merely expanding a
+  // connection row (`openConn`) re-ran the whole thing on every tap.
+  const reading = useMemo(
+    () =>
+      profile
+        ? computeSynastry(new Date(profile.utc), new Date(person.utc), lens, t)
+        : null,
+    [profile, person, lens, t],
   )
+
+  if (!profile || !reading) return null
 
   return (
     <div className="flex flex-col gap-4">
@@ -346,8 +353,9 @@ function Reading({ person }: { person: SavedPerson }) {
   )
 }
 
-export function Compatibility({ onBack }: CompatibilityProps) {
+export function Compatibility({ onBack, onUpgrade }: CompatibilityProps) {
   const t = useT()
+  const { isPro } = useEntitlements()
   const profile = useAppStore((s) => s.profile)
   const people = useAppStore((s) => s.people)
   const removePerson = useAppStore((s) => s.removePerson)
@@ -357,6 +365,15 @@ export function Compatibility({ onBack }: CompatibilityProps) {
   const [adding, setAdding] = useState(false)
 
   const person = people.find((p) => p.id === selected) ?? null
+
+  // The Sky tile is the only normal entry point and already gates this, but
+  // that's UI-only — self-gate here too so this Pro screen can't be reached
+  // (e.g. by driving `sub` state directly) and shown for free.
+  useEffect(() => {
+    if (!isPro) onUpgrade(t('sky.reasonCompat'))
+  }, [isPro, onUpgrade, t])
+
+  if (!isPro) return null
 
   if (!profile) {
     return (

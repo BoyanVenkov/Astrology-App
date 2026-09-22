@@ -4,7 +4,7 @@ import { Aura } from './Aura'
 import { computeAura } from '../lib/aura'
 import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
-import { chakraLabel, nameTag, useLocaleTag, useT } from '../lib/i18n'
+import { chakraLabel, useLocaleTag, useT } from '../lib/i18n'
 import { crystalName } from '../lib/crystals'
 import type { MessageKey } from '../lib/locales/en'
 import { practicedToday } from '../lib/streak'
@@ -55,7 +55,6 @@ export function Dashboard({
   const tarotDrawnDay = useAppStore((s) => s.tarotDrawnDay)
   const runeDrawnDay = useAppStore((s) => s.runeDrawnDay)
   const profile = useAppStore((s) => s.profile)
-  const userName = useAppStore((s) => s.userName)
   const dailyRune = useMemo(
     () => drawRunes(layoutOf('one'), runeDailySeed(profile)).runes[0],
     [profile],
@@ -130,7 +129,7 @@ export function Dashboard({
       <header className="px-1 pt-1 md:mx-auto md:max-w-2xl md:text-center">
         <p className="eyebrow-hue">
           {t('dash.headerDate', {
-            greeting: nameTag(t(when.greetingKey), userName, t),
+            greeting: t(when.greetingKey),
             date: when.date,
           })}
         </p>

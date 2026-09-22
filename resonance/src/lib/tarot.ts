@@ -1,5 +1,5 @@
 import type { BirthProfile } from '../types/resonance'
-import { type TFn } from './i18n'
+import { splitKeywords, type TFn } from './i18n'
 import type { MessageKey } from './locales/en'
 import { localDayKey } from './timezone'
 
@@ -207,9 +207,7 @@ export interface CardText {
 /** A card's text in the active locale. */
 export const cardText = (card: TarotCard, t: TFn): CardText => ({
   name: t(`tc.${card.id}.n` as MessageKey),
-  keywords: t(`tc.${card.id}.k` as MessageKey)
-    .split(',')
-    .map((k) => k.trim()),
+  keywords: splitKeywords(t(`tc.${card.id}.k` as MessageKey)),
   upright: t(`tc.${card.id}.u` as MessageKey),
   reversed: t(`tc.${card.id}.r` as MessageKey),
 })
@@ -409,14 +407,14 @@ export function oracleReading(
   const { card, reversed } = drawn
   const cls = classifyQuestion(question)
   const base = leanValue(card)
-  // reversed dampens a yes and softens a no
-  const lean = reversed
-    ? base > 0
-      ? Math.max(base - 2, -1)
-      : base < 0
-        ? base + 1
-        : 0
-    : base
+  // Reversed shifts the lean one step toward neutral either way — dampens a
+  // yes, softens a no. (Previously the positive side dropped by 2 and
+  // clamped at -1, so a mild yes (1) reversed became a firm no (-1) while a
+  // strong yes (2) reversed only fell to "wait" (0) — a weaker card ending
+  // up harsher than a stronger one. Shifting by 1 both ways keeps it
+  // monotonic: stronger cards keep more of their character reversed, same
+  // as the already-correct negative side.)
+  const lean = reversed ? (base > 0 ? base - 1 : base < 0 ? base + 1 : 0) : base
 
   let verdict: OracleVerdict | null = null
   if (cls.kind === 'decision') {

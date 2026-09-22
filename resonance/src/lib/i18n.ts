@@ -156,17 +156,18 @@ export function applyHtmlLang(locale: Locale): void {
 /* ---- localized display names for engine identifiers ---- */
 
 /**
- * Tags a short label/eyebrow line with the user's first name, when known —
- * "Today's horoscope" -> "Today's horoscope, Boyan". Reuses `common.greetName`
- * (already translated for the Dashboard greeting) so every screen that
- * personalises this way shares one wrapper phrase per locale, not a bespoke
- * one each. Pass `''`/`null`/`undefined` for `name` to get `base` unchanged.
+ * Splits a catalogue "keyword list" string into trimmed, non-empty parts.
+ * Catalogue authors don't all use an ASCII comma — zh/ja use the ideographic
+ * comma (、 U+3001) and ar uses the Arabic comma (، U+060C) — so a plain
+ * `.split(',')` silently returns the whole string as one un-split "keyword"
+ * for those locales. Splitting on any of the three keeps every locale correct
+ * without each catalogue having to standardise on one glyph.
  */
-export const nameTag = (
-  base: string,
-  name: string | null | undefined,
-  tr: TFn,
-): string => (name ? tr('common.greetName', { greeting: base, name }) : base)
+export const splitKeywords = (s: string): string[] =>
+  s
+    .split(/[,、،]/)
+    .map((k) => k.trim())
+    .filter(Boolean)
 
 export const chakraLabel = (key: ChakraKey, tr: TFn): string =>
   tr(`chakra.${key}` as MessageKey)

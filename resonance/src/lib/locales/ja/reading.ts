@@ -395,7 +395,7 @@ export const reading: Record<ReadingKey, string> = {
   'scr.compat.tone.intense': '融け合います',
   'scr.compat.tone.friction': '労がかかります',
   'scr.compat.rowPair': '{a}（あなた）{glyph} {b}（相手）',
-  'scr.compat.connMeta': '{aspect} · 正確まであと {orb}° · {trend}',
+  'scr.compat.connMeta': '{aspect} · 正確まであと {orb}°',
   'scr.compat.trendTighter': '近づいています',
   'scr.compat.trendEasing': 'ゆるんでいます',
   'scr.compat.forLens': '{lens}について',

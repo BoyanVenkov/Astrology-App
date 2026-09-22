@@ -56,7 +56,7 @@ const ID_VOC = 400 // 400..402
 
 const parseHM = (hm: string): { hour: number; minute: number } => {
   const [h, m] = hm.split(':').map(Number)
-  return { hour: h || 8, minute: m || 0 }
+  return { hour: Number.isFinite(h) ? h : 8, minute: Number.isFinite(m) ? m : 0 }
 }
 
 function buildSchedule(prefs: NotificationPreferences, t: TFn): Scheduled[] {
