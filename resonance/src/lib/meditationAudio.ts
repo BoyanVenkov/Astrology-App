@@ -53,16 +53,14 @@ const RECORDED_KEYS: MessageKey[] = [
   'med.step.chakra.crown.1',
 ]
 
-const RECORDED_LINES: Partial<Record<Locale, Set<MessageKey>>> = {
-  en: new Set<MessageKey>(RECORDED_KEYS),
-  bg: new Set<MessageKey>(RECORDED_KEYS),
-  it: new Set<MessageKey>(RECORDED_KEYS),
-  zh: new Set<MessageKey>(RECORDED_KEYS),
-  ja: new Set<MessageKey>(RECORDED_KEYS),
-  ar: new Set<MessageKey>(RECORDED_KEYS),
-  hi: new Set<MessageKey>(RECORDED_KEYS),
-  tr: new Set<MessageKey>(RECORDED_KEYS),
-}
+// All 15 locales are now fully recorded.
+const ALL_LOCALES: Locale[] = [
+  'en', 'bg', 'es', 'it', 'fr', 'de', 'pt', 'sv', 'zh', 'ja', 'hi', 'sw', 'tr', 'ar', 'pl',
+]
+
+const RECORDED_LINES: Partial<Record<Locale, Set<MessageKey>>> = Object.fromEntries(
+  ALL_LOCALES.map((locale) => [locale, new Set<MessageKey>(RECORDED_KEYS)]),
+)
 
 export function meditationLineAudioUrl(locale: Locale, line: MessageKey): string | null {
   if (!RECORDED_LINES[locale]?.has(line)) return null
