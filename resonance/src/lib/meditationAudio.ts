@@ -56,6 +56,7 @@ const RECORDED_KEYS: MessageKey[] = [
 const RECORDED_LINES: Partial<Record<Locale, Set<MessageKey>>> = {
   en: new Set<MessageKey>(RECORDED_KEYS),
   bg: new Set<MessageKey>(RECORDED_KEYS),
+  it: new Set<MessageKey>(RECORDED_KEYS),
 }
 
 export function meditationLineAudioUrl(locale: Locale, line: MessageKey): string | null {
