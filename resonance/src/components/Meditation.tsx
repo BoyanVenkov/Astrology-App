@@ -15,7 +15,7 @@ interface MeditationProps {
   minutes: number
   style?: MeditationStyleKey
   onComplete: (minutesPractised: number) => void
-  /** Fired when the user leaves the briefing and the timed session starts. */
+  /** Fired once, right as the timed session starts. */
   onStarted?: () => void
   className?: string
 }
@@ -55,7 +55,6 @@ export function Meditation({
   }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes, t])
 
   const totalSeconds = minutes * 60
-  const [stage, setStage] = useState<'briefing' | 'running'>('briefing')
   const [running, setRunning] = useState(true)
   const [elapsed, setElapsed] = useState(0)
   const [phaseIndex, setPhaseIndex] = useState(0)
@@ -78,7 +77,6 @@ export function Meditation({
 
   // ambient bed: one track per session length, ducked under narration
   useEffect(() => {
-    if (stage !== 'running') return
     const audio = new Audio(ambientTrackUrl(minutes))
     audio.volume = AMBIENT_VOLUME
     ambientAudioRef.current = audio
@@ -86,14 +84,14 @@ export function Meditation({
       audio.pause()
       ambientAudioRef.current = null
     }
-  }, [stage, minutes])
+  }, [minutes])
 
   useEffect(() => {
     const audio = ambientAudioRef.current
     if (!audio) return
-    if (stage === 'running' && running) audio.play().catch(() => undefined)
+    if (running) audio.play().catch(() => undefined)
     else audio.pause()
-  }, [stage, running])
+  }, [running])
 
   const playClip = useCallback(
     (line: MessageKey, onEnded?: () => void) => {
@@ -146,7 +144,7 @@ export function Meditation({
   }, [meditation, totalSeconds, minutes, playClip])
 
   useEffect(() => {
-    if (stage !== 'running' || !running) return
+    if (!running) return
     legStartRef.current = performance.now()
     const id = window.setInterval(tick, 250)
     return () => {
@@ -156,13 +154,16 @@ export function Meditation({
         legStartRef.current = 0
       }
     }
-  }, [stage, running, tick])
+  }, [running, tick])
 
-  const begin = () => {
+  // the practice starts the moment this mounts — no separate briefing screen
+  const startedRef = useRef(false)
+  useEffect(() => {
+    if (startedRef.current || !meditation) return
+    startedRef.current = true
     onStarted?.()
-    setStage('running')
-    if (meditation) playClip(meditation.phases[0].line)
-  }
+    playClip(meditation.phases[0].line)
+  }, [meditation, onStarted, playClip])
 
   if (!meditation) {
     return (
@@ -173,50 +174,6 @@ export function Meditation({
   }
 
   const hue = meditation.hue
-
-  /* ---------------------------------------------------------- briefing */
-  if (stage === 'briefing') {
-    return (
-      <section className={`glass-panel flex flex-col gap-5 p-6 ${className}`}>
-        <div>
-          <p className="eyebrow">{t('medp.eyebrow')}</p>
-          <h2 className="mt-1 font-serif text-2xl text-gilded">
-            {meditation.title}
-          </h2>
-        </div>
-
-        <p className="text-sm leading-relaxed text-haze-200">
-          {meditation.briefingLead}
-        </p>
-
-        <ol className="flex flex-col gap-3">
-          {meditation.phases.map((p, i) => (
-            <li key={i} className="flex gap-3">
-              <span
-                className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-semibold tabular-nums"
-                style={{ borderColor: `${hue}66`, color: hue }}
-              >
-                {i + 1}
-              </span>
-              <p className="text-sm leading-relaxed text-haze-100">{p.text}</p>
-            </li>
-          ))}
-        </ol>
-
-        <p className="text-sm leading-relaxed text-haze-300">
-          {meditation.briefingClose}
-        </p>
-
-        <button
-          type="button"
-          onClick={begin}
-          className="mt-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
-        >
-          {t('scr.ritual.beginPractice')}
-        </button>
-      </section>
-    )
-  }
 
   /* ----------------------------------------------------------- running */
   const currentText = meditation.phases[phaseIndex]?.text ?? ''
