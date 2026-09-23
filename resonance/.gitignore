@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Local audio generation secrets/output (see scripts/audio)
+scripts/audio/.env
+scripts/audio/output/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

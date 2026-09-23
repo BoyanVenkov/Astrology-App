@@ -20,12 +20,12 @@ export interface MeditationInput {
 }
 
 /**
- * A guided meditation, delivered as a briefing the user reads once and then a
- * sequence of self-paced phases. There is no spoken audio — each phase opens
- * with a singing-bowl strike (the cue to move on), the instruction for the
- * current phase stays on screen, and three bowls close the practice. The
- * "Chakra Alignment" style is composed live from the person's chart × today's
- * transits; the rest are fixed. Fully offline, per locale.
+ * A guided meditation, delivered as a briefing and then a sequence of
+ * self-paced phases. Each phase's instruction stays on screen for its whole
+ * duration; where a recorded narration clip exists for the style/locale
+ * (see lib/meditationAudio.ts), it plays at the phase's `at` offset instead
+ * of a bowl chime. The "Chakra Alignment" style is composed live from the
+ * person's chart × today's transits (never recorded); the rest are fixed.
  */
 
 export type MeditationPhaseKey =
@@ -48,10 +48,12 @@ export type MeditationPhaseKey =
   | 'nidra'
 
 export interface MeditationPhase {
-  /** Seconds from the start of the session when this phase opens (its bowl). */
+  /** Seconds from the start of the session when this phase opens. */
   at: number
   /** The instruction shown on screen for the whole of this phase. */
   text: string
+  /** Which recorded narration clip (if any) opens this phase. */
+  key: MeditationPhaseKey
 }
 
 export interface Meditation {
@@ -83,77 +85,77 @@ export const MEDITATION_STYLES: MeditationStyle[] = [
     name: 'Breath Awareness',
     tagline: 'The simplest anchor — follow, drift, return',
     category: 'focus',
-    durations: [5, 10, 20],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'body-scan',
     name: 'Body Scan',
     tagline: 'Release the body one region at a time',
     category: 'calm',
-    durations: [8, 15, 25],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'metta',
     name: 'Loving-Kindness',
     tagline: 'Metta — goodwill for self and others',
     category: 'heart',
-    durations: [10, 15, 20],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'sound-bath',
     name: 'Sound Bath',
     tagline: 'Rest inside the frequency and let it wash through',
     category: 'calm',
-    durations: [5, 10, 15],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'gratitude',
     name: 'Gratitude',
     tagline: 'Three things, felt in the body, not just named',
     category: 'heart',
-    durations: [5, 10],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'safe-place',
     name: 'Safe Place',
     tagline: 'Build a place of total safety and go there',
     category: 'calm',
-    durations: [8, 12, 18],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'mountain',
     name: 'Mountain Meditation',
     tagline: 'Sit like a mountain while the weather passes',
     category: 'grounding',
-    durations: [10, 15, 20],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'open-awareness',
     name: 'Open Awareness',
     tagline: 'Drop the anchor — rest as the space itself',
     category: 'focus',
-    durations: [10, 20],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'morning',
     name: 'Morning Intention',
     tagline: 'Wake the body, set one intention for the day',
     category: 'energy',
-    durations: [5, 10],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'evening',
     name: 'Evening Release',
     tagline: 'Review the day without judgment, then set it down',
     category: 'sleep',
-    durations: [8, 15],
+    durations: [5, 10, 15, 20],
   },
   {
     key: 'yoga-nidra',
     name: 'Yoga Nidra',
     tagline: 'Rotation of awareness at the edge of sleep',
     category: 'sleep',
-    durations: [15, 25, 35],
+    durations: [5, 10, 15, 20],
   },
 ]
 
@@ -319,7 +321,7 @@ export function buildMeditation(
   const phases: MeditationPhase[] = plan.map((p) => {
     const at = Math.round((acc / totalWeight) * total)
     acc += p.weight
-    return { at, text: t(p.line, params) }
+    return { at, text: t(p.line, params), key: p.key }
   })
 
   return {

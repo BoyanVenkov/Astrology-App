@@ -120,9 +120,6 @@ export interface AudioPreferences {
  */
 export type AudioMode = 'tone' | 'breath' | 'drone'
 
-/** The sound bed under a guided meditation. */
-export type MeditationSound = 'tone' | 'music' | 'silent'
-
 /* ---------------------------------------------------------------- breathwork */
 
 export type BreathPhaseKind =

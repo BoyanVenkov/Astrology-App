@@ -27,12 +27,7 @@ import { chakraColor } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon } from './icons'
-import type {
-  MeditationSound,
-  PracticeKind,
-  RitualPreset,
-  SolfeggioFrequency,
-} from '../types/resonance'
+import type { PracticeKind, RitualPreset, SolfeggioFrequency } from '../types/resonance'
 
 export type { RitualPreset }
 
@@ -43,7 +38,6 @@ interface RitualProps {
 }
 
 const FREQ_DURATIONS = [5, 10, 20, 30, 45]
-const MED_SOUND_KEYS: MeditationSound[] = ['tone', 'music', 'silent']
 
 const shell = 'mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 md:max-w-lg'
 const shellStyle = {
@@ -101,7 +95,6 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   const [chosenFreq, setChosenFreq] = useState<SolfeggioFrequency>(
     preset?.frequency ?? recommendedFreq,
   )
-  const [medSound, setMedSound] = useState<MeditationSound>('tone')
   const [doneMinutes, setDoneMinutes] = useState(0)
   const startedAtRef = useRef(0)
   useEffect(() => {
@@ -131,7 +124,6 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   const focus = chakraLabel(chakra.key, t)
   const medDisplayName = medName(medStyle, t)
   const freqInfo = solfeggioInfo(chosenFreq)
-  const soundBath = mode === 'meditation' && medStyle === 'sound-bath'
   const minutes =
     mode === 'breath' ? breathMin : mode === 'meditation' ? medMin : freqMin
   const horoscope = buildHoroscope(
@@ -373,36 +365,6 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           </>
         )}
 
-        {/* meditation sound bed */}
-        {mode === 'meditation' && !soundBath && (
-          <>
-            <p className="mt-5 eyebrow">{t('scr.ritual.sound')}</p>
-            <div className="mt-2 grid grid-cols-3 gap-2">
-              {MED_SOUND_KEYS.map((k) => (
-                <button
-                  key={k}
-                  type="button"
-                  onClick={() => setMedSound(k)}
-                  className={`rounded-2xl border px-2 py-2.5 text-xs font-semibold transition ${
-                    k === medSound
-                      ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
-                      : 'border-white/12 bg-white/5 text-haze-300'
-                  }`}
-                >
-                  {t(`scr.ritual.sound.${k}` as MessageKey)}
-                </button>
-              ))}
-            </div>
-            <p className="mt-1.5 text-[11px] text-haze-500">
-              {medSound === 'tone'
-                ? t('scr.ritual.soundTone', { hz: recommendedFreq })
-                : medSound === 'music'
-                  ? t('scr.ritual.soundMusic')
-                  : t('scr.ritual.soundSilent')}
-            </p>
-          </>
-        )}
-
         <button
           type="button"
           onClick={begin}
@@ -452,7 +414,6 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
             <Meditation
               minutes={minutes}
               style={medStyle}
-              sound={medSound}
               onComplete={handleComplete}
               onStarted={() => {
                 startedAtRef.current = Date.now()

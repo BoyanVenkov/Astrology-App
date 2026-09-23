@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { audioEngine } from '../audio/audioEngine'
 import { buildMeditation } from '../lib/meditation'
+import {
+  hasMeditationAudio,
+  meditationAudioUrl,
+  type MeditationAudioKey,
+} from '../lib/meditationAudio'
 import { useT } from '../lib/i18n'
-import type { MessageKey } from '../lib/locales/en'
-import type { MeditationSound, MeditationStyleKey } from '../types/resonance'
+import type { MeditationStyleKey } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
 
 interface MeditationProps {
   minutes: number
   style?: MeditationStyleKey
-  /** Sound bed: the frequency tone, soft ambient music, or nothing. */
-  sound?: MeditationSound
   onComplete: (minutesPractised: number) => void
   /** Fired when the user leaves the briefing and the timed session starts. */
   onStarted?: () => void
@@ -27,21 +28,17 @@ const mmss = (s: number): string => {
 export function Meditation({
   minutes,
   style = 'chakra',
-  sound = 'tone',
   onComplete,
   onStarted,
   className = '',
 }: MeditationProps) {
   const t = useT()
-  // The sound bath is built around the tone — it always plays.
-  const bed: MeditationSound = style === 'sound-bath' ? 'tone' : sound
+  const locale = useAppStore((s) => s.locale)
   const transit = useAppStore((s) => s.transit)
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
   const transitHouses = useAppStore((s) => s.transitHouses)
   const hasNatal = useAppStore((s) => s.hasNatal)
-  const setAudioPlaying = useAppStore((s) => s.toggleAudio)
-  const setAudioMode = useAppStore((s) => s.setAudioMode)
 
   const meditation = useMemo(() => {
     if (!transit || !chakra) return null
@@ -54,7 +51,7 @@ export function Meditation({
   }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes, t])
 
   const totalSeconds = minutes * 60
-  const [stage, setStage] = useState<'briefing' | 'running'>('briefing')
+  const [stage, setStage] = useState<'briefing' | 'narrating' | 'running'>('briefing')
   const [running, setRunning] = useState(true)
   const [elapsed, setElapsed] = useState(0)
   const [phaseIndex, setPhaseIndex] = useState(0)
@@ -64,20 +61,32 @@ export function Meditation({
   const nextPhaseRef = useRef(1)
   const doneRef = useRef(false)
   const onCompleteRef = useRef(onComplete)
+  const activeAudioRef = useRef<HTMLAudioElement | null>(null)
   useEffect(() => {
     onCompleteRef.current = onComplete
   })
 
-  // start / stop the audio bed with the running stage
+  // stop any in-flight narration clip when the practice unmounts
   useEffect(() => {
-    if (stage !== 'running' || bed === 'silent') return
-    audioEngine.unlock().catch(() => undefined)
-    setAudioMode(bed === 'music' ? 'drone' : 'tone')
-    setAudioPlaying(true)
-    return () => {
-      useAppStore.getState().toggleAudio(false)
-    }
-  }, [stage, bed, setAudioMode, setAudioPlaying])
+    return () => activeAudioRef.current?.pause()
+  }, [])
+
+  const playClip = useCallback(
+    (key: MeditationAudioKey, onEnded?: () => void) => {
+      const url = meditationAudioUrl(style, locale, key)
+      if (!url) {
+        onEnded?.()
+        return
+      }
+      activeAudioRef.current?.pause()
+      const audio = new Audio(url)
+      activeAudioRef.current = audio
+      audio.onended = () => onEnded?.()
+      audio.onerror = () => onEnded?.()
+      audio.play().catch(() => onEnded?.())
+    },
+    [style, locale],
+  )
 
   const tick = useCallback(() => {
     if (!meditation) return
@@ -88,7 +97,7 @@ export function Meditation({
     const whole = Math.floor(total)
     setElapsed((prev) => (prev === whole ? prev : whole))
 
-    // open any phases we've passed — each with a single bowl
+    // open any phases we've passed
     while (
       nextPhaseRef.current < meditation.phases.length &&
       total >= meditation.phases[nextPhaseRef.current].at
@@ -96,16 +105,15 @@ export function Meditation({
       const idx = nextPhaseRef.current
       nextPhaseRef.current += 1
       setPhaseIndex(idx)
-      audioEngine.chime(1)
+      playClip(meditation.phases[idx].key)
     }
 
     if (!doneRef.current && total >= totalSeconds) {
       doneRef.current = true
       setRunning(false)
-      audioEngine.chime(3)
       onCompleteRef.current?.(minutes)
     }
-  }, [meditation, totalSeconds, minutes])
+  }, [meditation, totalSeconds, minutes, playClip])
 
   useEffect(() => {
     if (stage !== 'running' || !running) return
@@ -121,10 +129,14 @@ export function Meditation({
   }, [stage, running, tick])
 
   const begin = () => {
-    audioEngine.unlock().catch(() => undefined)
-    audioEngine.chime(1) // the opening bowl
     onStarted?.()
-    setStage('running')
+    setStage('narrating')
+    playClip('briefingLead', () => {
+      playClip('briefingClose', () => {
+        setStage('running')
+        if (meditation) playClip(meditation.phases[0].key)
+      })
+    })
   }
 
   if (!meditation) {
@@ -138,7 +150,7 @@ export function Meditation({
   const hue = meditation.hue
 
   /* ---------------------------------------------------------- briefing */
-  if (stage === 'briefing') {
+  if (stage === 'briefing' || stage === 'narrating') {
     return (
       <section className={`glass-panel flex flex-col gap-5 p-6 ${className}`}>
         <div>
@@ -173,7 +185,8 @@ export function Meditation({
         <button
           type="button"
           onClick={begin}
-          className="mt-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
+          disabled={stage === 'narrating'}
+          className="mt-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-60"
         >
           {t('scr.ritual.beginPractice')}
         </button>
@@ -258,13 +271,9 @@ export function Meditation({
         </button>
       </div>
 
-      <p className="text-center text-[11px] text-haze-500">
-        {bed === 'tone'
-          ? t('scr.ritual.soundTone', { hz: meditation.frequency })
-          : bed === 'music'
-            ? t('medp.ambient')
-            : t(`scr.ritual.sound.silent` as MessageKey)}
-      </p>
+      {!hasMeditationAudio(style, locale) && (
+        <p className="text-center text-[11px] text-haze-500">{t('medp.noVoice')}</p>
+      )}
     </section>
   )
 }
