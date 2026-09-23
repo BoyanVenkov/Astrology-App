@@ -61,7 +61,7 @@ export function Meditation({
 
   const elapsedRef = useRef(0)
   const legStartRef = useRef(0)
-  const nextPhaseRef = useRef(1)
+  const nextPhaseRef = useRef(0)
   const doneRef = useRef(false)
   const onCompleteRef = useRef(onComplete)
   const activeAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -156,14 +156,15 @@ export function Meditation({
     }
   }, [running, tick])
 
-  // the practice starts the moment this mounts — no separate briefing screen
+  // fire once, the moment the practice starts — phase 0's narration is
+  // handled by the tick loop above (nextPhaseRef starts at 0), the same
+  // reliable path every later phase uses, rather than a separate mount hook
   const startedRef = useRef(false)
   useEffect(() => {
-    if (startedRef.current || !meditation) return
+    if (startedRef.current) return
     startedRef.current = true
     onStarted?.()
-    playClip(meditation.phases[0].line)
-  }, [meditation, onStarted, playClip])
+  }, [onStarted])
 
   if (!meditation) {
     return (
