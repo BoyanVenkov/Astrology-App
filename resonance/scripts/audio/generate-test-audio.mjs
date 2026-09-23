@@ -18,17 +18,8 @@ const VOICE_ID = 'dancing-comet-7283__boyan_venkov'
 const MODEL_ID = 'inworld-tts-2'
 const OUT_DIR = path.join(import.meta.dirname, 'output')
 
+// Only the timed steps are narrated — the briefing/close lines stay text-only.
 const LINES = [
-  {
-    id: '00-briefing-lead',
-    en: 'Read this once, then close your eyes. Each step opens with a bowl — stay with it until the next one.',
-    bg: 'Прочети това веднъж, после затвори очи. Всяка стъпка започва със звън на купа — остани с нея до следващата.',
-  },
-  {
-    id: '01-briefing-close',
-    en: 'Three soft bowls end the practice. Come back in your own time.',
-    bg: 'Три меки купи завършват практиката. Върни се без бързане.',
-  },
   {
     id: '02-settle',
     en: 'Eyes closed. Let the body settle and the breath slow on its own.',

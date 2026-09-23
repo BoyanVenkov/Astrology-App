@@ -51,7 +51,7 @@ export function Meditation({
   }, [style, transit, chakra, aspects, transitHouses, hasNatal, minutes, t])
 
   const totalSeconds = minutes * 60
-  const [stage, setStage] = useState<'briefing' | 'narrating' | 'running'>('briefing')
+  const [stage, setStage] = useState<'briefing' | 'running'>('briefing')
   const [running, setRunning] = useState(true)
   const [elapsed, setElapsed] = useState(0)
   const [phaseIndex, setPhaseIndex] = useState(0)
@@ -130,13 +130,8 @@ export function Meditation({
 
   const begin = () => {
     onStarted?.()
-    setStage('narrating')
-    playClip('briefingLead', () => {
-      playClip('briefingClose', () => {
-        setStage('running')
-        if (meditation) playClip(meditation.phases[0].key)
-      })
-    })
+    setStage('running')
+    if (meditation) playClip(meditation.phases[0].key)
   }
 
   if (!meditation) {
@@ -150,7 +145,7 @@ export function Meditation({
   const hue = meditation.hue
 
   /* ---------------------------------------------------------- briefing */
-  if (stage === 'briefing' || stage === 'narrating') {
+  if (stage === 'briefing') {
     return (
       <section className={`glass-panel flex flex-col gap-5 p-6 ${className}`}>
         <div>
@@ -185,8 +180,7 @@ export function Meditation({
         <button
           type="button"
           onClick={begin}
-          disabled={stage === 'narrating'}
-          className="mt-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-60"
+          className="mt-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
         >
           {t('scr.ritual.beginPractice')}
         </button>

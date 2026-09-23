@@ -1,8 +1,11 @@
 import type { MeditationStyleKey, Locale } from '../types/resonance'
 import type { MeditationPhaseKey } from './meditation'
 
-/** The two briefing lines are narrated too, ahead of the timed phases. */
-export type MeditationAudioKey = MeditationPhaseKey | 'briefingLead' | 'briefingClose'
+/**
+ * Only the timed steps are narrated. The briefing (read before starting)
+ * and the on-screen close line stay text-only, on screen, in every locale.
+ */
+export type MeditationAudioKey = MeditationPhaseKey
 
 /**
  * Which (style, locale) pairs have real recorded narration under
