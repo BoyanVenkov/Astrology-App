@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'Sessizce, nefesin ritmiyle: {affirmation}',
   'med.step.close': 'Pratiği bırak. Gözlerini açmadan önce şu an nasıl hissettiğini fark et.',
 
+  'med.step.chakra.root.0': 'Dikkatini omurganın tabanına, yerle buluştuğun yere getir. Bu senin kök merkezin — güvende olma, yeterli olma, burada olmaya izinli olma hissini taşır. Bugün sarsıntılı hissettiyse, o denge tam burada başlar.',
+  'med.step.chakra.root.1': 'Nefes, ta en dibe ulaşıyormuş gibi nefes al. Sessizce, nefesin ritmiyle: Güvendeyim. Buradayım. İhtiyacım olana sahibim.',
+  'med.step.chakra.sacral.0': 'Dikkatini alt karnına, göbeğinin bir el genişliği altına getir. Bu senin sakral merkezin — hissetme, keyif alma, donup kalmak yerine hayatın akmasına izin verme kapasiteni taşır.',
+  'med.step.chakra.sacral.1': 'Nefesin bu alanı sıkmak yerine yumuşatmasına izin ver. Sessizce, nefesin ritmiyle: Hayatın içimden geçmesine izin veriyorum.',
+  'med.step.chakra.solar-plexus.0': 'Dikkatini kaburgalarının altındaki yumuşak yere getir. Bu senin güneş sinir ağın — ateşin, iraden, büzülmek yerine karar veren ve harekete geçen tarafın.',
+  'med.step.chakra.solar-plexus.1': 'Nefesin onu zorlamadan, nazikçe canlandırmasına izin ver. Sessizce, nefesin ritmiyle: Kendi ateşime güveniyorum.',
+  'med.step.chakra.heart.0': 'Dikkatini göğsünün merkezine getir. Bu senin kalp merkezin — kendini kaybetmeden verebilmeni, korumaya çalışmadan alabilmeni sağlar.',
+  'med.step.chakra.heart.1': 'Nefesin bu alanı, önden ve arkadan genişletmesine izin ver. Sessizce, nefesin ritmiyle: Sevgiyi özgürce verip alıyorum.',
+  'med.step.chakra.throat.0': 'Dikkatini boğazının çukuruna getir. Bu senin sesin — kolay olanı değil, doğru olanı söylemeni sağlar.',
+  'med.step.chakra.throat.1': 'Nefesin buradan engelsizce geçmesine izin ver. Sessizce, nefesin ritmiyle: Hakikatimi kolaylıkla söylüyorum.',
+  'med.step.chakra.third-eye.0': 'Dikkatini kaşlarının arasındaki boşluğa getir. Burada, açıklayabilmeden önce bildiğini hissedersin.',
+  'med.step.chakra.third-eye.1': 'Nefesin gürültüyü dindirmesine izin ver, böylece o sessiz bilgi duyulabilsin. Sessizce, nefesin ritmiyle: İçimde gördüğüme güveniyorum.',
+  'med.step.chakra.crown.0': 'Dikkatini başının tepesine, biraz üstüne getir. Burada bugünün kaygılarından daha büyük bir şeyle bağlantı kurarsın.',
+  'med.step.chakra.crown.1': 'Nefesin tüm bedenden yumuşakça yükselip ona ulaşmasına izin ver. Sessizce, nefesin ritmiyle: Uçsuz bucaksız bir şeyin parçasıyım ve o beni tutuyor.',
+
   /* ---- nefes farkındalığı ---- */
   'med.step.ba.count': 'Şimdi her verişi say — birden ona, sonra baştan başla. Sayıyı kaybedersen sadece birden başla. Kimse puan tutmuyor.',
 

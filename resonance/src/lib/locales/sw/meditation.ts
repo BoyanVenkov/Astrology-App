@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'Kimya, kwa mdundo wa pumzi: {affirmation}',
   'med.step.close': 'Acha zoezi liende. Tambua unavyohisi sasa, kabla ya kufungua macho.',
 
+  'med.step.chakra.root.0': 'Peleka uangalifu wako kwenye msingi wa uti wa mgongo, ambapo unakutana na ardhi. Huu ni kitovu chako cha mizizi — kinabeba hisia yako ya usalama, ya kuwa na cha kutosha, ya kuruhusiwa kuwepo tu hapa. Kama leo imehisi kuyumba, uthabiti huo unaanzia hapa hapa.',
+  'med.step.chakra.root.1': 'Pumua kana kwamba pumzi yenyewe inafika chini kabisa. Kimya, kwa mdundo wa pumzi: Niko salama. Niko hapa. Nina kile ninachohitaji.',
+  'med.step.chakra.sacral.0': 'Peleka uangalifu wako kwenye tumbo la chini, upana wa kiganja chini ya kitovu. Huu ni kitovu chako cha sakrali — kinabeba uwezo wako wa kuhisi, kufurahia, kuruhusu maisha yasogee badala ya kuganda mbele yake.',
+  'med.step.chakra.sacral.1': 'Ruhusu pumzi ilainishe nafasi hii badala ya kuikaza. Kimya, kwa mdundo wa pumzi: Naacha maisha yasogee ndani yangu.',
+  'med.step.chakra.solar-plexus.0': 'Peleka uangalifu wako kwenye sehemu laini chini ya mbavu. Huu ni mfumo wako wa jua — moto wako, dhamira yako, sehemu yako inayoamua na kutenda badala ya kujikunja.',
+  'med.step.chakra.solar-plexus.1': 'Ruhusu pumzi iuchochee kwa upole, bila kulazimisha. Kimya, kwa mdundo wa pumzi: Naamini moto wangu.',
+  'med.step.chakra.heart.0': 'Peleka uangalifu wako katikati ya kifua. Huu ni kitovu chako cha moyo — kinachokuruhusu kutoa bila kujipoteza, na kupokea bila kujilinda.',
+  'med.step.chakra.heart.1': 'Ruhusu pumzi ipanue nafasi hii, mbele na nyuma. Kimya, kwa mdundo wa pumzi: Natoa na kupokea upendo kwa uhuru.',
+  'med.step.chakra.throat.0': 'Peleka uangalifu wako kwenye shimo la koo. Hii ni sauti yako — inayokuruhusu kusema jambo la kweli badala ya jepesi.',
+  'med.step.chakra.throat.1': 'Ruhusu pumzi ipite hapa bila kizuizi. Kimya, kwa mdundo wa pumzi: Nasema kweli yangu kwa urahisi.',
+  'med.step.chakra.third-eye.0': 'Peleka uangalifu wako kwenye nafasi kati ya nyusi. Hapa ndipo unahisi kile unachojua kabla ya kukieleza.',
+  'med.step.chakra.third-eye.1': 'Ruhusu pumzi itulize kelele ili maarifa hayo tulivu zaidi yasikike. Kimya, kwa mdundo wa pumzi: Naamini kile ninachokiona ndani.',
+  'med.step.chakra.crown.0': 'Peleka uangalifu wako kwenye utosi wa kichwa, na kidogo juu yake. Hapa ndipo unaungana na kitu kikubwa kuliko mahangaiko ya leo.',
+  'med.step.chakra.crown.1': 'Ruhusu pumzi ipande kwa upole kupitia mwili wote kukutana nacho. Kimya, kwa mdundo wa pumzi: Ni sehemu ya kitu kikubwa, na kinanibeba.',
+
   /* ---- utambuzi wa pumzi ---- */
   'med.step.ba.count': 'Sasa hesabu kila kutoa pumzi — moja hadi kumi, kisha anza upya. Ukipoteza hesabu, anza tu kutoka moja. Hakuna anayeweka alama.',
 

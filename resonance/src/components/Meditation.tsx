@@ -2,11 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { buildMeditation } from '../lib/meditation'
 import {
-  hasMeditationAudio,
-  meditationAudioUrl,
-  type MeditationAudioKey,
+  ambientTrackUrl,
+  hasFullMeditationAudio,
+  meditationLineAudioUrl,
 } from '../lib/meditationAudio'
 import { useT } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import type { MeditationStyleKey } from '../types/resonance'
 import { PauseIcon, PlayIcon } from './icons'
 
@@ -24,6 +25,9 @@ const mmss = (s: number): string => {
   const sec = Math.floor(s % 60)
   return `${m}:${sec.toString().padStart(2, '0')}`
 }
+
+const AMBIENT_VOLUME = 0.35
+const AMBIENT_DUCK_VOLUME = 0.12
 
 export function Meditation({
   minutes,
@@ -62,6 +66,7 @@ export function Meditation({
   const doneRef = useRef(false)
   const onCompleteRef = useRef(onComplete)
   const activeAudioRef = useRef<HTMLAudioElement | null>(null)
+  const ambientAudioRef = useRef<HTMLAudioElement | null>(null)
   useEffect(() => {
     onCompleteRef.current = onComplete
   })
@@ -71,21 +76,46 @@ export function Meditation({
     return () => activeAudioRef.current?.pause()
   }, [])
 
+  // ambient bed: one track per session length, ducked under narration
+  useEffect(() => {
+    if (stage !== 'running') return
+    const audio = new Audio(ambientTrackUrl(minutes))
+    audio.volume = AMBIENT_VOLUME
+    ambientAudioRef.current = audio
+    return () => {
+      audio.pause()
+      ambientAudioRef.current = null
+    }
+  }, [stage, minutes])
+
+  useEffect(() => {
+    const audio = ambientAudioRef.current
+    if (!audio) return
+    if (stage === 'running' && running) audio.play().catch(() => undefined)
+    else audio.pause()
+  }, [stage, running])
+
   const playClip = useCallback(
-    (key: MeditationAudioKey, onEnded?: () => void) => {
-      const url = meditationAudioUrl(style, locale, key)
+    (line: MessageKey, onEnded?: () => void) => {
+      const url = meditationLineAudioUrl(locale, line)
       if (!url) {
         onEnded?.()
         return
       }
+      const ambient = ambientAudioRef.current
+      const restore = () => {
+        if (ambient) ambient.volume = AMBIENT_VOLUME
+        onEnded?.()
+      }
       activeAudioRef.current?.pause()
       const audio = new Audio(url)
       activeAudioRef.current = audio
-      audio.onended = () => onEnded?.()
-      audio.onerror = () => onEnded?.()
-      audio.play().catch(() => onEnded?.())
+      if (ambient) ambient.volume = AMBIENT_DUCK_VOLUME
+      audio.onended = restore
+      audio.onerror = restore
+      audio.play().catch(restore)
     },
-    [style, locale],
+    [locale],
   )
 
   const tick = useCallback(() => {
@@ -105,7 +135,7 @@ export function Meditation({
       const idx = nextPhaseRef.current
       nextPhaseRef.current += 1
       setPhaseIndex(idx)
-      playClip(meditation.phases[idx].key)
+      playClip(meditation.phases[idx].line)
     }
 
     if (!doneRef.current && total >= totalSeconds) {
@@ -131,7 +161,7 @@ export function Meditation({
   const begin = () => {
     onStarted?.()
     setStage('running')
-    if (meditation) playClip(meditation.phases[0].key)
+    if (meditation) playClip(meditation.phases[0].line)
   }
 
   if (!meditation) {
@@ -196,19 +226,11 @@ export function Meditation({
     <section
       className={`glass-panel flex flex-col items-center gap-6 p-6 ${className}`}
     >
-      <div className="flex w-full items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="eyebrow">{t('medp.eyebrow')}</p>
-          <h2 className="mt-1 font-serif text-2xl leading-tight text-gilded">
-            {meditation.title}
-          </h2>
-        </div>
-        <span className="mt-1 shrink-0 whitespace-nowrap rounded-full border border-gold-500/30 px-3 py-1 text-xs tabular-nums tracking-[0.12em] text-haze-200">
-          {t('medp.bowlOf', {
-            n: phaseIndex + 1,
-            total: meditation.phases.length,
-          })}
-        </span>
+      <div className="w-full">
+        <p className="eyebrow">{t('medp.eyebrow')}</p>
+        <h2 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+          {meditation.title}
+        </h2>
       </div>
 
       <div className="w-full">
@@ -265,9 +287,10 @@ export function Meditation({
         </button>
       </div>
 
-      {!hasMeditationAudio(style, locale) && (
-        <p className="text-center text-[11px] text-haze-500">{t('medp.noVoice')}</p>
-      )}
+      {!hasFullMeditationAudio(
+        locale,
+        meditation.phases.map((p) => p.line),
+      ) && <p className="text-center text-[11px] text-haze-500">{t('medp.noVoice')}</p>}
     </section>
   )
 }

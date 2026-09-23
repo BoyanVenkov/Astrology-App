@@ -26,6 +26,7 @@ import { ResonanceMark } from './Logo'
 import { chakraColor } from '../lib/resonanceData'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
+import { useWakeLock } from '../lib/wakeLock'
 import { LockIcon } from './icons'
 import type { PracticeKind, RitualPreset, SolfeggioFrequency } from '../types/resonance'
 
@@ -78,6 +79,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   const [screen, setScreen] = useState<'intro' | 'practice' | 'done'>(
     preset?.skipIntro ? 'practice' : 'intro',
   )
+  useWakeLock(screen === 'practice')
   const [mode, setMode] = useState<PracticeKind>(preset?.mode ?? 'breath')
   const [breathMin, setBreathMin] = useState(
     preset?.mode === 'breath' && preset.minutes

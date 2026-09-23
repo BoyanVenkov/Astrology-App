@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'En silence, au rythme du souffle : {affirmation}',
   'med.step.close': 'Laisse la pratique partir. Remarque comment tu te sens maintenant, avant d’ouvrir les yeux.',
 
+  'med.step.chakra.root.0': 'Porte ton attention à la base de la colonne, là où tu rencontres le sol. C’est ton centre racine — il porte ton sentiment de sécurité, d’avoir assez, d’avoir le droit d’être simplement ici. Si aujourd’hui a semblé instable, cette stabilité commence ici même.',
+  'med.step.chakra.root.1': 'Respire comme si le souffle lui-même atteignait tout en bas. En silence, au rythme du souffle : Je suis en sécurité. Je suis ici. J’ai ce qu’il me faut.',
+  'med.step.chakra.sacral.0': 'Porte ton attention au bas-ventre, une paume sous le nombril. C’est ton centre sacré — il porte ta capacité à ressentir, à savourer, à laisser la vie circuler plutôt que de te figer.',
+  'med.step.chakra.sacral.1': 'Laisse le souffle adoucir cet espace plutôt que de le serrer. En silence, au rythme du souffle : Je laisse la vie se mouvoir à travers moi.',
+  'med.step.chakra.solar-plexus.0': 'Porte ton attention au point tendre sous les côtes. C’est ton plexus solaire — ton feu, ta volonté, la part de toi qui décide et agit plutôt que de se rétracter.',
+  'med.step.chakra.solar-plexus.1': 'Laisse le souffle l’attiser doucement, sans le forcer. En silence, au rythme du souffle : Je fais confiance à mon feu.',
+  'med.step.chakra.heart.0': 'Porte ton attention au centre de la poitrine. C’est ton centre du cœur — ce qui te permet de donner sans te perdre, et de recevoir sans te protéger.',
+  'med.step.chakra.heart.1': 'Laisse le souffle élargir cet espace, devant et derrière. En silence, au rythme du souffle : Je donne et je reçois de l’amour librement.',
+  'med.step.chakra.throat.0': 'Porte ton attention au creux de la gorge. C’est ta voix — ce qui te permet de dire la chose vraie plutôt que la chose facile.',
+  'med.step.chakra.throat.1': 'Laisse le souffle passer ici sans obstacle. En silence, au rythme du souffle : Je dis ma vérité avec aisance.',
+  'med.step.chakra.third-eye.0': 'Porte ton attention à l’espace entre les sourcils. C’est là que tu sens ce que tu sais avant de pouvoir l’expliquer.',
+  'med.step.chakra.third-eye.1': 'Laisse le souffle apaiser le bruit pour que ce savoir plus silencieux puisse se faire entendre. En silence, au rythme du souffle : Je fais confiance à ce que je vois en moi.',
+  'med.step.chakra.crown.0': 'Porte ton attention au sommet de la tête, et un peu au-dessus. C’est là que tu te relies à quelque chose de plus grand que les soucis d’aujourd’hui.',
+  'med.step.chakra.crown.1': 'Laisse le souffle monter doucement à travers tout le corps pour le rejoindre. En silence, au rythme du souffle : Je fais partie de quelque chose de vaste, et cela me porte.',
+
   /* ---- conscience du souffle ---- */
   'med.step.ba.count': 'Maintenant compte chaque expiration — de un à dix, puis recommence. Si tu perds le compte, repars simplement à un. Personne ne tient les scores.',
 

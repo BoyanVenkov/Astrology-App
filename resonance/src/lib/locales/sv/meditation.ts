@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'Tyst, i takt med andningen: {affirmation}',
   'med.step.close': 'Släpp praktiken. Lägg märke till hur du känner dig nu, innan du öppnar ögonen.',
 
+  'med.step.chakra.root.0': 'För din uppmärksamhet till ryggradens bas, där du möter marken. Det här är ditt rotcentrum — det bär din känsla av trygghet, av att ha nog, av att få lov att bara vara här. Om dagen har känts skakig börjar den stadgan just här.',
+  'med.step.chakra.root.1': 'Andas som om andningen själv nådde hela vägen ner. Tyst, i takt med andningen: Jag är trygg. Jag är här. Jag har det jag behöver.',
+  'med.step.chakra.sacral.0': 'För din uppmärksamhet till nedre magen, en handsbredd under naveln. Det här är ditt sakralcentrum — det bär din förmåga att känna, att njuta, att låta livet röra sig istället för att stelna inför det.',
+  'med.step.chakra.sacral.1': 'Låt andningen mjuka upp det här utrymmet istället för att spänna det. Tyst, i takt med andningen: Jag låter livet röra sig genom mig.',
+  'med.step.chakra.solar-plexus.0': 'För din uppmärksamhet till den mjuka punkten under revbenen. Det här är din solarplexus — din eld, din vilja, den del av dig som bestämmer och handlar istället för att dra sig undan.',
+  'med.step.chakra.solar-plexus.1': 'Låt andningen fläkta den försiktigt, utan att tvinga. Tyst, i takt med andningen: Jag litar på min eld.',
+  'med.step.chakra.heart.0': 'För din uppmärksamhet till bröstets mitt. Det här är ditt hjärtcentrum — det som låter dig ge utan att förlora dig själv, och ta emot utan att skydda dig.',
+  'med.step.chakra.heart.1': 'Låt andningen vidga det här utrymmet, fram och bak. Tyst, i takt med andningen: Jag ger och tar emot kärlek fritt.',
+  'med.step.chakra.throat.0': 'För din uppmärksamhet till halsgropen. Det här är din röst — den som låter dig säga det sanna istället för det enkla.',
+  'med.step.chakra.throat.1': 'Låt andningen röra sig obehindrat härigenom. Tyst, i takt med andningen: Jag säger min sanning med lätthet.',
+  'med.step.chakra.third-eye.0': 'För din uppmärksamhet till rummet mellan ögonbrynen. Här känner du det du vet innan du kan förklara det.',
+  'med.step.chakra.third-eye.1': 'Låt andningen lägga sig över bruset så att den tystare kunskapen kan höras. Tyst, i takt med andningen: Jag litar på det jag ser inombords.',
+  'med.step.chakra.crown.0': 'För din uppmärksamhet till hjässan, och en bit ovanför. Här knyter du an till något större än dagens bekymmer.',
+  'med.step.chakra.crown.1': 'Låt andningen stiga mjukt genom hela kroppen för att nå dit. Tyst, i takt med andningen: Jag är en del av något vidsträckt, och det bär mig.',
+
   /* ---- andningsmedvetenhet ---- */
   'med.step.ba.count': 'Räkna nu varje utandning — ett till tio, börja sedan om. Tappar du räkningen, börja bara på ett igen. Ingen håller poäng.',
 

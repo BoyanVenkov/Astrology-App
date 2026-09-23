@@ -22,38 +22,20 @@ export interface MeditationInput {
 /**
  * A guided meditation, delivered as a briefing and then a sequence of
  * self-paced phases. Each phase's instruction stays on screen for its whole
- * duration; where a recorded narration clip exists for the style/locale
- * (see lib/meditationAudio.ts), it plays at the phase's `at` offset instead
- * of a bowl chime. The "Chakra Alignment" style is composed live from the
- * person's chart × today's transits (never recorded); the rest are fixed.
+ * duration; where a recorded narration clip exists for its exact line/locale
+ * (see lib/meditationAudio.ts), it plays at the phase's `at` offset. The
+ * "Chakra Alignment" style picks one of seven fixed scripts based on today's
+ * focus centre — it's personalised by *selection*, not by narrating the
+ * day's transit specifics (that combinatorial space can't be pre-recorded).
  */
-
-export type MeditationPhaseKey =
-  | 'settle'
-  | 'breath'
-  | 'centre'
-  | 'transit'
-  | 'affirm'
-  | 'close'
-  | 'count'
-  | 'scan'
-  | 'metta'
-  | 'bath'
-  | 'gratitude'
-  | 'safe'
-  | 'mountain'
-  | 'open'
-  | 'morning'
-  | 'evening'
-  | 'nidra'
 
 export interface MeditationPhase {
   /** Seconds from the start of the session when this phase opens. */
   at: number
   /** The instruction shown on screen for the whole of this phase. */
   text: string
-  /** Which recorded narration clip (if any) opens this phase. */
-  key: MeditationPhaseKey
+  /** Which message key this came from — the recorded-narration lookup key. */
+  line: MessageKey
 }
 
 export interface Meditation {
@@ -75,7 +57,7 @@ export const MEDITATION_STYLES: MeditationStyle[] = [
   {
     key: 'chakra',
     name: 'Chakra Alignment',
-    tagline: 'Tuned to today’s planet, chakra & transit',
+    tagline: 'Support for whichever centre needs it most today',
     category: 'grounding',
     durations: [5, 10, 15, 20],
     dynamic: true,
@@ -168,102 +150,96 @@ export const MEDITATION_STYLE_MAP: Record<MeditationStyleKey, MeditationStyle> =
 /* --------------------------------------------------- phase plans (data) */
 
 interface PlanPhase {
-  key: MeditationPhaseKey
-  /** Message key for the instruction. */
+  /** Message key for the instruction — also the recorded-narration lookup key. */
   line: MessageKey
   /** Relative share of the session length. */
   weight: number
 }
 
-const settle = (): PlanPhase => ({
-  key: 'settle',
-  line: 'med.step.settle',
-  weight: 1,
-})
-const close = (): PlanPhase => ({
-  key: 'close',
-  line: 'med.step.close',
-  weight: 1,
-})
+const settle = (): PlanPhase => ({ line: 'med.step.settle', weight: 1 })
+const close = (): PlanPhase => ({ line: 'med.step.close', weight: 1 })
 
-const PHASE_PLANS: Record<MeditationStyleKey, PlanPhase[]> = {
-  chakra: [
-    settle(),
-    { key: 'breath', line: 'med.step.breath', weight: 1.4 },
-    { key: 'centre', line: 'med.step.centre', weight: 2.4 },
-    { key: 'transit', line: 'med.step.transit', weight: 2 },
-    { key: 'affirm', line: 'med.step.affirm', weight: 1.4 },
-    close(),
-  ],
+/** Which two fixed lines "Chakra Alignment" speaks, per focus centre. */
+const CHAKRA_FOCUS_LINES: Record<ChakraKey, [MessageKey, MessageKey]> = {
+  root: ['med.step.chakra.root.0', 'med.step.chakra.root.1'],
+  sacral: ['med.step.chakra.sacral.0', 'med.step.chakra.sacral.1'],
+  'solar-plexus': ['med.step.chakra.solar-plexus.0', 'med.step.chakra.solar-plexus.1'],
+  heart: ['med.step.chakra.heart.0', 'med.step.chakra.heart.1'],
+  throat: ['med.step.chakra.throat.0', 'med.step.chakra.throat.1'],
+  'third-eye': ['med.step.chakra.third-eye.0', 'med.step.chakra.third-eye.1'],
+  crown: ['med.step.chakra.crown.0', 'med.step.chakra.crown.1'],
+}
+
+const PHASE_PLANS: Record<Exclude<MeditationStyleKey, 'chakra'>, PlanPhase[]> = {
   'breath-awareness': [
     settle(),
-    { key: 'breath', line: 'med.step.breath', weight: 3 },
-    { key: 'count', line: 'med.step.ba.count', weight: 2.2 },
+    { line: 'med.step.breath', weight: 3 },
+    { line: 'med.step.ba.count', weight: 2.2 },
     close(),
   ],
   'body-scan': [
     settle(),
-    { key: 'scan', line: 'med.step.scan.0', weight: 3.2 },
-    { key: 'scan', line: 'med.step.scan.1', weight: 2 },
+    { line: 'med.step.scan.0', weight: 3.2 },
+    { line: 'med.step.scan.1', weight: 2 },
     close(),
   ],
   metta: [
     settle(),
-    { key: 'metta', line: 'med.step.metta.0', weight: 2.2 },
-    { key: 'metta', line: 'med.step.metta.1', weight: 2 },
-    { key: 'metta', line: 'med.step.metta.2', weight: 2 },
+    { line: 'med.step.metta.0', weight: 2.2 },
+    { line: 'med.step.metta.1', weight: 2 },
+    { line: 'med.step.metta.2', weight: 2 },
     close(),
   ],
   'sound-bath': [
     settle(),
-    { key: 'bath', line: 'med.step.bath.0', weight: 3 },
-    { key: 'bath', line: 'med.step.bath.1', weight: 2.4 },
+    { line: 'med.step.bath.0', weight: 3 },
+    { line: 'med.step.bath.1', weight: 2.4 },
     close(),
   ],
   gratitude: [
     settle(),
-    { key: 'gratitude', line: 'med.step.grat.0', weight: 2 },
-    { key: 'gratitude', line: 'med.step.grat.1', weight: 2 },
-    { key: 'gratitude', line: 'med.step.grat.2', weight: 2 },
+    { line: 'med.step.grat.0', weight: 2 },
+    { line: 'med.step.grat.1', weight: 2 },
+    { line: 'med.step.grat.2', weight: 2 },
     close(),
   ],
   'safe-place': [
     settle(),
-    { key: 'safe', line: 'med.step.safe.0', weight: 3 },
-    { key: 'safe', line: 'med.step.safe.1', weight: 2.4 },
+    { line: 'med.step.safe.0', weight: 3 },
+    { line: 'med.step.safe.1', weight: 2.4 },
     close(),
   ],
   mountain: [
     settle(),
-    { key: 'mountain', line: 'med.step.mtn.0', weight: 3 },
-    { key: 'mountain', line: 'med.step.mtn.1', weight: 2.6 },
+    { line: 'med.step.mtn.0', weight: 3 },
+    { line: 'med.step.mtn.1', weight: 2.6 },
     close(),
   ],
   'open-awareness': [
     settle(),
-    { key: 'breath', line: 'med.step.breath', weight: 1.6 },
-    { key: 'open', line: 'med.step.open.0', weight: 2.6 },
-    { key: 'open', line: 'med.step.open.1', weight: 2.4 },
+    { line: 'med.step.breath', weight: 1.6 },
+    { line: 'med.step.open.0', weight: 2.6 },
+    { line: 'med.step.open.1', weight: 2.4 },
     close(),
   ],
   morning: [
     settle(),
-    { key: 'morning', line: 'med.step.morn.0', weight: 2.4 },
-    { key: 'morning', line: 'med.step.morn.1', weight: 2.4 },
+    { line: 'med.step.morn.0', weight: 2.4 },
+    { line: 'med.step.morn.1', weight: 2.4 },
     close(),
   ],
   evening: [
     settle(),
-    { key: 'evening', line: 'med.step.eve.0', weight: 2.6 },
-    { key: 'evening', line: 'med.step.eve.1', weight: 2.6 },
+    { line: 'med.step.eve.0', weight: 2.6 },
+    { line: 'med.step.eve.1', weight: 2.6 },
     close(),
   ],
   'yoga-nidra': [
     settle(),
-    { key: 'nidra', line: 'med.step.nidra.0', weight: 2 },
-    { key: 'nidra', line: 'med.step.nidra.1', weight: 2.4 },
-    { key: 'nidra', line: 'med.step.nidra.2', weight: 2.4 },
-    { key: 'nidra', line: 'med.step.nidra.3', weight: 2 },
+    { line: 'med.step.nidra.0', weight: 2 },
+    { line: 'med.step.nidra.1', weight: 2.4 },
+    { line: 'med.step.nidra.2', weight: 2.4 },
+    { line: 'med.step.nidra.3', weight: 2 },
     close(),
   ],
 }
@@ -277,43 +253,18 @@ export function buildMeditation(
   t: TFn,
 ): Meditation {
   const focus = reading.chakra.key
-  const planet = reading.transit.body as BodyName
-  const dominantAspect = reading.aspects[0]
-  const harmony = dominantAspect?.def.harmony ?? 'neutral'
 
-  const other =
-    (dominantAspect?.other ?? '').length > 0
-      ? t(`planet.${dominantAspect!.other}` as MessageKey)
-      : t('med.dominant.chartWord')
-  const verbKey = `med.domverb.${reading.transit.aspect}` as MessageKey
-  const dominantText =
-    reading.hasNatal && reading.transit.aspect !== 'in'
-      ? t('med.dominant.aspect', {
-          planet: t(`planet.${reading.transit.body}` as MessageKey),
-          verb: t(verbKey),
-          other,
-        })
-      : t('med.dominant.sign', {
-          planet: t(`planet.${reading.transit.body}` as MessageKey),
-          sign: t(`sign.${reading.transit.sign}` as MessageKey),
-        })
+  const plan: PlanPhase[] =
+    style === 'chakra'
+      ? [
+          settle(),
+          { line: 'med.step.breath', weight: 1.4 },
+          { line: CHAKRA_FOCUS_LINES[focus][0], weight: 2.9 },
+          { line: CHAKRA_FOCUS_LINES[focus][1], weight: 2.9 },
+          close(),
+        ]
+      : PHASE_PLANS[style]
 
-  const chakraLower = t('med.chakraLower', {
-    chakra: t(`chakra.${focus}` as MessageKey).toLowerCase(),
-  })
-
-  const params: Record<string, string | number> = {
-    seat: t(`med.seat.${focus}` as MessageKey),
-    chakra: t(`chakra.${focus}` as MessageKey),
-    chakraLower,
-    hz: reading.transit.recommendedFrequency,
-    affirmation: t(`med.mantraLong.${focus}` as MessageKey),
-    transitLine: t(`med.ease.${harmony}` as MessageKey, { dominant: dominantText }),
-    planetInvite:
-      t(`med.invite.${planet}` as MessageKey) || t('med.invite.default'),
-  }
-
-  const plan = PHASE_PLANS[style]
   const totalWeight = plan.reduce((sum, p) => sum + p.weight, 0)
   const total = minutes * 60
 
@@ -321,7 +272,7 @@ export function buildMeditation(
   const phases: MeditationPhase[] = plan.map((p) => {
     const at = Math.round((acc / totalWeight) * total)
     acc += p.weight
-    return { at, text: t(p.line, params), key: p.key }
+    return { at, text: t(p.line), line: p.line }
   })
 
   return {

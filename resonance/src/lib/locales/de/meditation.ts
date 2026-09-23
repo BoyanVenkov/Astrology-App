@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'Still, im Takt des Atems: {affirmation}',
   'med.step.close': 'Lass die Praxis los. Bemerke, wie du dich jetzt fühlst, bevor du die Augen öffnest.',
 
+  'med.step.chakra.root.0': 'Bring deine Aufmerksamkeit zur Basis der Wirbelsäule, wo du den Boden triffst. Das ist dein Wurzelzentrum — es trägt dein Gefühl von Sicherheit, von Genug-Haben, von dem Recht, einfach hier zu sein. Wenn sich der heutige Tag wacklig angefühlt hat, beginnt diese Standfestigkeit genau hier.',
+  'med.step.chakra.root.1': 'Atme, als würde der Atem selbst ganz nach unten reichen. Still, im Takt des Atems: Ich bin sicher. Ich bin hier. Ich habe, was ich brauche.',
+  'med.step.chakra.sacral.0': 'Bring deine Aufmerksamkeit zum Unterbauch, eine Handbreit unter dem Nabel. Das ist dein Sakralzentrum — es trägt deine Fähigkeit zu fühlen, zu genießen, das Leben fließen zu lassen, statt davor zu erstarren.',
+  'med.step.chakra.sacral.1': 'Lass den Atem diesen Raum weich machen, statt ihn zu verengen. Still, im Takt des Atems: Ich lasse das Leben durch mich hindurchfließen.',
+  'med.step.chakra.solar-plexus.0': 'Bring deine Aufmerksamkeit zur weichen Stelle unter den Rippen. Das ist dein Solarplexus — dein Feuer, dein Wille, der Teil von dir, der entscheidet und handelt, statt sich zurückzuziehen.',
+  'med.step.chakra.solar-plexus.1': 'Lass den Atem es sanft anfachen, ohne es zu erzwingen. Still, im Takt des Atems: Ich vertraue meinem Feuer.',
+  'med.step.chakra.heart.0': 'Bring deine Aufmerksamkeit zur Mitte der Brust. Das ist dein Herzzentrum — es lässt dich geben, ohne dich zu verlieren, und empfangen, ohne dich zu schützen.',
+  'med.step.chakra.heart.1': 'Lass den Atem diesen Raum weiten, vorne und hinten. Still, im Takt des Atems: Ich gebe und empfange Liebe frei.',
+  'med.step.chakra.throat.0': 'Bring deine Aufmerksamkeit zur Kuhle der Kehle. Das ist deine Stimme — sie lässt dich das Wahre sagen statt des Einfachen.',
+  'med.step.chakra.throat.1': 'Lass den Atem hier ungehindert hindurchziehen. Still, im Takt des Atems: Ich sage meine Wahrheit mit Leichtigkeit.',
+  'med.step.chakra.third-eye.0': 'Bring deine Aufmerksamkeit zum Raum zwischen den Augenbrauen. Hier spürst du, was du weißt, bevor du es erklären kannst.',
+  'med.step.chakra.third-eye.1': 'Lass den Atem den Lärm zur Ruhe bringen, damit dieses leisere Wissen gehört werden kann. Still, im Takt des Atems: Ich vertraue dem, was ich in mir sehe.',
+  'med.step.chakra.crown.0': 'Bring deine Aufmerksamkeit zum Scheitel des Kopfes, und ein Stück darüber. Hier verbindest du dich mit etwas Größerem als den Sorgen von heute.',
+  'med.step.chakra.crown.1': 'Lass den Atem sanft durch den ganzen Körper aufsteigen, um es zu erreichen. Still, im Takt des Atems: Ich bin Teil von etwas Weitem, und es trägt mich.',
+
   /* ---- Atembewusstsein ---- */
   'med.step.ba.count': 'Zähl jetzt jede Ausatmung — eins bis zehn, dann fang von vorn an. Verlierst du die Zählung, beginn einfach bei eins. Niemand führt Buch.',
 

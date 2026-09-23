@@ -1,9 +1,9 @@
 /**
- * Guided-meditation copy. A meditation is now a short briefing the user reads
- * once, then a run of self-paced phases — each opens with a singing-bowl strike,
- * its instruction stays on screen, and three bowls close the practice. No
- * spoken audio. The chart-aware "Chakra Alignment" phases are templates with
- * the day's transit pieces filled in at build time.
+ * Guided-meditation copy: a short briefing plus a run of self-paced phases.
+ * Where a recorded clip exists (lib/meditationAudio.ts), it narrates the
+ * phase; otherwise the instruction just stays on screen. "Chakra Alignment"
+ * picks one of the seven med.step.chakra.<centre>.* pairs below based on
+ * today's focus centre — fixed scripts, not live transit narration.
  */
 export const meditation = {
   /* ---- where each centre sits in the body ---- */
@@ -82,6 +82,22 @@ export const meditation = {
   'med.step.transit': '{transitLine}',
   'med.step.affirm': 'Silently, in time with the breath: {affirmation}',
   'med.step.close': 'Let the practice go. Notice how you feel now, before you open your eyes.',
+
+  /* ---- chakra alignment: fixed support script per focus centre ---- */
+  'med.step.chakra.root.0': 'Bring your attention to the base of your spine, where you meet the ground. This is your root — it holds your sense of safety, of having enough, of being allowed to simply be here. If today has felt unsteady, that steadiness starts right here.',
+  'med.step.chakra.root.1': 'Breathe as if the breath itself reached all the way down. Silently, in time with the breath: I am safe. I am here. I have what I need.',
+  'med.step.chakra.sacral.0': "Bring your attention to your lower belly, a hand's width below the navel. This is your sacral centre — it holds your capacity to feel, to enjoy, to let life move rather than freezing around it.",
+  'med.step.chakra.sacral.1': 'Let the breath soften this space rather than tighten it. Silently, in time with the breath: I let life move through me.',
+  'med.step.chakra.solar-plexus.0': 'Bring your attention to the soft place beneath your ribs. This is your solar plexus — your fire, your will, the part of you that decides and acts rather than shrinks.',
+  'med.step.chakra.solar-plexus.1': 'Let the breath stoke it gently, not force it. Silently, in time with the breath: I trust my own fire.',
+  'med.step.chakra.heart.0': 'Bring your attention to the centre of your chest. This is your heart centre — what lets you give without losing yourself, and receive without guarding.',
+  'med.step.chakra.heart.1': 'Let the breath widen this space, front and back. Silently, in time with the breath: I give and receive love freely.',
+  'med.step.chakra.throat.0': 'Bring your attention to the hollow of your throat. This is your voice — what lets you say the true thing instead of the easy thing.',
+  'med.step.chakra.throat.1': 'Let the breath move through here unobstructed. Silently, in time with the breath: I speak my truth with ease.',
+  'med.step.chakra.third-eye.0': 'Bring your attention to the space between your brows. This is where you sense what you know before you can explain it.',
+  'med.step.chakra.third-eye.1': 'Let the breath settle the noise so that quieter knowing can be heard. Silently, in time with the breath: I trust what I see within.',
+  'med.step.chakra.crown.0': "Bring your attention to the crown of your head, and a little above it. This is where you connect to something larger than today's concerns.",
+  'med.step.chakra.crown.1': 'Let the breath rise gently through the whole body to meet it. Silently, in time with the breath: I am part of something vast, and it holds me.',
 
   /* ---- breath awareness ---- */
   'med.step.ba.count': 'Now count each exhale — one to ten, then start again. Lose count, and simply begin at one. No score is being kept.',

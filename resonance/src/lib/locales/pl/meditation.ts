@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'Bezgłośnie, w rytm oddechu: {affirmation}',
   'med.step.close': 'Puść praktykę. Zauważ, jak się teraz czujesz, zanim otworzysz oczy.',
 
+  'med.step.chakra.root.0': 'Przenieś uwagę do podstawy kręgosłupa, tam gdzie spotykasz ziemię. To twój ośrodek korzenia — niesie twoje poczucie bezpieczeństwa, tego że masz dość, że wolno ci po prostu tu być. Jeśli dzisiaj było niepewnie, ta stabilność zaczyna się właśnie tutaj.',
+  'med.step.chakra.root.1': 'Oddychaj tak, jakby sam oddech sięgał aż na sam dół. Bezgłośnie, w rytm oddechu: Czuję się bezpiecznie. Jestem tutaj. Mam to, czego potrzebuję.',
+  'med.step.chakra.sacral.0': 'Przenieś uwagę do podbrzusza, szerokość dłoni pod pępkiem. To twój ośrodek sakralny — niesie twoją zdolność odczuwania, cieszenia się, pozwalania życiu płynąć zamiast zamierać wobec niego.',
+  'med.step.chakra.sacral.1': 'Pozwól oddechowi zmiękczyć tę przestrzeń, zamiast ją ściskać. Bezgłośnie, w rytm oddechu: Pozwalam życiu poruszać się przeze mnie.',
+  'med.step.chakra.solar-plexus.0': 'Przenieś uwagę do miękkiego miejsca pod żebrami. To twój splot słoneczny — twój ogień, twoja wola, ta część ciebie, która decyduje i działa zamiast się kurczyć.',
+  'med.step.chakra.solar-plexus.1': 'Pozwól oddechowi delikatnie go rozniecać, bez forsowania. Bezgłośnie, w rytm oddechu: Ufam własnemu ogniowi.',
+  'med.step.chakra.heart.0': 'Przenieś uwagę do środka klatki piersiowej. To twój ośrodek serca — dzięki niemu dajesz, nie tracąc siebie, i przyjmujesz, nie broniąc się.',
+  'med.step.chakra.heart.1': 'Pozwól oddechowi rozszerzać tę przestrzeń, z przodu i z tyłu. Bezgłośnie, w rytm oddechu: Daję i przyjmuję miłość swobodnie.',
+  'med.step.chakra.throat.0': 'Przenieś uwagę do wgłębienia gardła. To twój głos — dzięki niemu mówisz to, co prawdziwe, zamiast tego, co łatwe.',
+  'med.step.chakra.throat.1': 'Pozwól oddechowi przepływać tędy bez przeszkód. Bezgłośnie, w rytm oddechu: Mówię swoją prawdę z łatwością.',
+  'med.step.chakra.third-eye.0': 'Przenieś uwagę do przestrzeni między brwiami. Tu wyczuwasz to, co wiesz, zanim zdołasz to wyjaśnić.',
+  'med.step.chakra.third-eye.1': 'Pozwól oddechowi uciszyć zgiełk, by dało się usłyszeć tę cichszą wiedzę. Bezgłośnie, w rytm oddechu: Ufam temu, co widzę w środku.',
+  'med.step.chakra.crown.0': 'Przenieś uwagę na czubek głowy i trochę ponad nim. Tu łączysz się z czymś większym niż dzisiejsze troski.',
+  'med.step.chakra.crown.1': 'Pozwól oddechowi unosić się łagodnie przez całe ciało, by to spotkać. Bezgłośnie, w rytm oddechu: Jestem częścią czegoś bezkresnego, a to mnie trzyma.',
+
   /* ---- świadomość oddechu ---- */
   'med.step.ba.count': 'Teraz licz każdy wydech — od jednego do dziesięciu, potem zacznij od nowa. Zgubisz rachubę — po prostu zacznij od jednego. Nikt nie liczy punktów.',
 

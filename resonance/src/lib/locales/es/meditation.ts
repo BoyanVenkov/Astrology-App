@@ -74,6 +74,21 @@ export const meditation: Record<MeditationKey, string> = {
   'med.step.affirm': 'En silencio, al ritmo de la respiración: {affirmation}',
   'med.step.close': 'Suelta la práctica. Nota cómo te sientes ahora, antes de abrir los ojos.',
 
+  'med.step.chakra.root.0': 'Lleva tu atención a la base de tu columna, donde te encuentras con el suelo. Este es tu centro raíz — sostiene tu sentido de seguridad, de tener suficiente, de tener permiso para simplemente estar aquí. Si hoy se ha sentido inestable, esa estabilidad empieza justo aquí.',
+  'med.step.chakra.root.1': 'Respira como si la respiración misma llegara hasta el fondo. En silencio, al ritmo de la respiración: Estoy a salvo. Estoy aquí. Tengo lo que necesito.',
+  'med.step.chakra.sacral.0': 'Lleva tu atención a tu bajo vientre, a un palmo por debajo del ombligo. Este es tu centro sacro — sostiene tu capacidad de sentir, de disfrutar, de dejar que la vida se mueva en vez de congelarte ante ella.',
+  'med.step.chakra.sacral.1': 'Deja que la respiración suavice este espacio en vez de tensarlo. En silencio, al ritmo de la respiración: Dejo que la vida se mueva a través de mí.',
+  'med.step.chakra.solar-plexus.0': 'Lleva tu atención al lugar blando bajo tus costillas. Este es tu plexo solar — tu fuego, tu voluntad, la parte de ti que decide y actúa en vez de encogerse.',
+  'med.step.chakra.solar-plexus.1': 'Deja que la respiración lo avive con suavidad, sin forzarlo. En silencio, al ritmo de la respiración: Confío en mi propio fuego.',
+  'med.step.chakra.heart.0': 'Lleva tu atención al centro de tu pecho. Este es tu centro del corazón — lo que te permite dar sin perderte a ti mismo, y recibir sin protegerte.',
+  'med.step.chakra.heart.1': 'Deja que la respiración ensanche este espacio, por delante y por detrás. En silencio, al ritmo de la respiración: Doy y recibo amor libremente.',
+  'med.step.chakra.throat.0': 'Lleva tu atención al hueco de tu garganta. Esta es tu voz — lo que te permite decir lo verdadero en vez de lo fácil.',
+  'med.step.chakra.throat.1': 'Deja que la respiración pase por aquí sin obstáculos. En silencio, al ritmo de la respiración: Digo mi verdad con soltura.',
+  'med.step.chakra.third-eye.0': 'Lleva tu atención al espacio entre tus cejas. Aquí es donde sientes lo que sabes antes de poder explicarlo.',
+  'med.step.chakra.third-eye.1': 'Deja que la respiración calme el ruido para que se pueda escuchar ese saber más silencioso. En silencio, al ritmo de la respiración: Confío en lo que veo por dentro.',
+  'med.step.chakra.crown.0': 'Lleva tu atención a la coronilla de tu cabeza, y un poco por encima. Aquí es donde te conectas con algo más grande que las preocupaciones de hoy.',
+  'med.step.chakra.crown.1': 'Deja que la respiración se eleve suavemente por todo el cuerpo hasta encontrarlo. En silencio, al ritmo de la respiración: Soy parte de algo vasto, y me sostiene.',
+
   /* ---- conciencia de la respiración ---- */
   'med.step.ba.count': 'Ahora cuenta cada exhalación — del uno al diez, luego empieza de nuevo. Si pierdes la cuenta, simplemente empieza en uno. Nadie lleva un marcador.',
 
