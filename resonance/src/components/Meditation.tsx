@@ -6,6 +6,7 @@ import {
   hasFullMeditationAudio,
   meditationLineAudioUrl,
 } from '../lib/meditationAudio'
+import { resolveCachedAudioSrc, revokeCachedAudioSrc } from '../lib/audioCache'
 import { useT } from '../lib/i18n'
 import type { MessageKey } from '../lib/locales/en'
 import type { MeditationStyleKey } from '../types/resonance'
@@ -65,33 +66,55 @@ export function Meditation({
   const doneRef = useRef(false)
   const onCompleteRef = useRef(onComplete)
   const activeAudioRef = useRef<HTMLAudioElement | null>(null)
+  const activeBlobRef = useRef<string | null>(null)
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null)
+  const [ambientSrc, setAmbientSrc] = useState<string | null>(null)
   useEffect(() => {
     onCompleteRef.current = onComplete
   })
 
   // stop any in-flight narration clip when the practice unmounts
   useEffect(() => {
-    return () => activeAudioRef.current?.pause()
+    return () => {
+      activeAudioRef.current?.pause()
+      if (activeBlobRef.current) revokeCachedAudioSrc(activeBlobRef.current)
+    }
   }, [])
+
+  // fetch (or reuse the cached copy of) the ambient bed for this session length
+  useEffect(() => {
+    let cancelled = false
+    void resolveCachedAudioSrc(ambientTrackUrl(minutes)).then((src) => {
+      if (cancelled) {
+        revokeCachedAudioSrc(src)
+        return
+      }
+      setAmbientSrc(src)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [minutes])
 
   // ambient bed: one track per session length, ducked under narration
   useEffect(() => {
-    const audio = new Audio(ambientTrackUrl(minutes))
+    if (!ambientSrc) return
+    const audio = new Audio(ambientSrc)
     audio.volume = AMBIENT_VOLUME
     ambientAudioRef.current = audio
     return () => {
       audio.pause()
       ambientAudioRef.current = null
+      revokeCachedAudioSrc(ambientSrc)
     }
-  }, [minutes])
+  }, [ambientSrc])
 
   useEffect(() => {
     const audio = ambientAudioRef.current
     if (!audio) return
     if (running) audio.play().catch(() => undefined)
     else audio.pause()
-  }, [running])
+  }, [running, ambientSrc])
 
   const playClip = useCallback(
     (line: MessageKey, onEnded?: () => void) => {
@@ -106,12 +129,24 @@ export function Meditation({
         onEnded?.()
       }
       activeAudioRef.current?.pause()
-      const audio = new Audio(url)
+      if (activeBlobRef.current) {
+        revokeCachedAudioSrc(activeBlobRef.current)
+        activeBlobRef.current = null
+      }
+      const audio = new Audio()
       activeAudioRef.current = audio
-      if (ambient) ambient.volume = AMBIENT_DUCK_VOLUME
       audio.onended = restore
       audio.onerror = restore
-      audio.play().catch(restore)
+      void resolveCachedAudioSrc(url).then((src) => {
+        if (activeAudioRef.current !== audio) {
+          revokeCachedAudioSrc(src)
+          return
+        }
+        activeBlobRef.current = src
+        audio.src = src
+        if (ambient) ambient.volume = AMBIENT_DUCK_VOLUME
+        audio.play().catch(restore)
+      })
     },
     [locale],
   )

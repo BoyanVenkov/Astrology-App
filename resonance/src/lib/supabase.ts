@@ -6,7 +6,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
  * public by design (row-level security is what protects the data).
  */
 
-const URL =
+export const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL ??
   'https://oyjceuypabkrnkpenaqu.supabase.co'
 const ANON_KEY =
@@ -20,7 +20,7 @@ let client: SupabaseClient | null = null
 
 export function supabase(): SupabaseClient {
   if (!client) {
-    client = createClient(URL, ANON_KEY, {
+    client = createClient(SUPABASE_URL, ANON_KEY, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
