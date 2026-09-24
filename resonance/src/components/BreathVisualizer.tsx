@@ -89,6 +89,7 @@ export function BreathVisualizer({
   const auraRef = useRef<HTMLDivElement | null>(null)
   const coreRef = useRef<HTMLDivElement | null>(null)
   const progressRef = useRef<SVGCircleElement | null>(null)
+  const haloRef = useRef<HTMLDivElement | null>(null)
 
   const restingScale = reducedMotion ? 0.86 : MIN_BREATH_SCALE
 
@@ -106,9 +107,18 @@ export function BreathVisualizer({
         progressRef.current.style.strokeDashoffset = String(
           RING_CIRCUMFERENCE * (1 - phaseProgress),
         )
+        progressRef.current.style.filter =
+          `drop-shadow(0 0 ${4 + fullness * 10}px ${accent}${Math.round(
+            (0.5 + fullness * 0.5) * 255,
+          )
+            .toString(16)
+            .padStart(2, '0')})`
+      }
+      if (haloRef.current) {
+        haloRef.current.style.opacity = String(0.15 + fullness * 0.3)
       }
     },
-    [reducedMotion],
+    [reducedMotion, accent],
   )
 
   const step = useCallback(
@@ -201,9 +211,15 @@ export function BreathVisualizer({
       }
       if (progressRef.current) {
         progressRef.current.style.strokeDashoffset = String(RING_CIRCUMFERENCE)
+        progressRef.current.style.transition = `filter ${fadeMs}ms ease`
+        progressRef.current.style.filter = `drop-shadow(0 0 6px ${accent}aa)`
+      }
+      if (haloRef.current) {
+        haloRef.current.style.transition = `opacity ${fadeMs}ms ease`
+        haloRef.current.style.opacity = '0.15'
       }
     }
-  }, [running, setAudioPlaying, restingScale])
+  }, [running, setAudioPlaying, restingScale, accent])
 
   // Leaving the screen ends the guided session.
   useEffect(() => {
@@ -252,6 +268,27 @@ export function BreathVisualizer({
       )}
 
       <div className="relative mx-auto aspect-square w-full max-w-[280px]">
+        {/* a slow, independent living glow — depth behind the breath itself */}
+        <div
+          className={`absolute inset-[-8%] rounded-full blur-3xl ${
+            reducedMotion ? '' : 'animate-aura-breathe'
+          }`}
+          style={{
+            background: `radial-gradient(circle, ${accent}33 0%, ${accent}00 68%)`,
+          }}
+          aria-hidden
+        />
+
+        <div
+          ref={haloRef}
+          className="absolute inset-[-2%] rounded-full blur-2xl will-change-opacity"
+          style={{
+            background: `radial-gradient(circle, ${accent}40 0%, ${accent}00 65%)`,
+            opacity: 0.15,
+          }}
+          aria-hidden
+        />
+
         <div
           ref={auraRef}
           className="absolute inset-[6%] rounded-full blur-2xl will-change-transform"
@@ -307,13 +344,25 @@ export function BreathVisualizer({
           <p className="eyebrow mb-1" style={{ color: accent }}>
             {t('breath.round', { n: round })}
           </p>
-          <p className="font-serif text-4xl leading-none text-white text-glow">
+          <p
+            key={label}
+            className={`font-serif text-4xl leading-none text-white text-glow ${
+              reducedMotion ? '' : 'animate-rise-in'
+            }`}
+          >
             {breathStep(label, t)}
           </p>
           <p className="mt-2 font-sans text-5xl font-semibold tabular-nums text-white/90">
             {secondsLeft}
           </p>
-          <p className="mt-1 px-6 text-xs text-haze-300">{breathHint(kind, t)}</p>
+          <p
+            key={kind}
+            className={`mt-1 px-6 text-xs text-haze-300 ${
+              reducedMotion ? '' : 'animate-rise-in'
+            }`}
+          >
+            {breathHint(kind, t)}
+          </p>
         </div>
       </div>
 

@@ -246,8 +246,10 @@ export interface BreathTick {
 
 const clamp01 = (n: number): number => Math.min(1, Math.max(0, n))
 
-const easeInOut = (t: number): number =>
-  t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
+// Sine-based, not quadratic: acceleration stays continuous through the whole
+// motion (no "jerk" at the midpoint), so an inhale or exhale reads as one
+// smooth, unbroken breath rather than two glued-together halves.
+const easeInOut = (t: number): number => 0.5 - 0.5 * Math.cos(Math.PI * t)
 
 export const patternCycleSeconds = (pattern: BreathPattern): number =>
   pattern.steps.reduce((sum, step) => sum + step.seconds, 0)
