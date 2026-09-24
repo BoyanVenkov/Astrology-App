@@ -234,7 +234,7 @@ export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
           {horoscope.practice}
         </p>
         <div className="mt-4">
-          <TodaysPractice variant="inline" onLaunch={onRitual} />
+          <TodaysPractice variant="inline" onLaunch={onRitual} onUpgrade={onUpgrade} />
         </div>
       </section>
     </Screen>

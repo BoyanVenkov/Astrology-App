@@ -1,11 +1,14 @@
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { usePrescription } from '../lib/prescription'
 import { useT } from '../lib/i18n'
-import { BreathIcon, FrequenciesIcon, PlayIcon } from './icons'
+import { breathUnlocked, meditationUnlocked, useEntitlements } from '../lib/premium'
+import { BreathIcon, FrequenciesIcon, LockIcon, PlayIcon } from './icons'
 import type { RitualPreset } from '../types/resonance'
 
 interface TodaysPracticeProps {
   onLaunch: (preset: RitualPreset) => void
+  /** Locked (free tier, today's pick happens to be Pro) opens the paywall instead. */
+  onUpgrade: (reason?: string) => void
   /** `full` wraps it in a glass panel with a heading; `inline` is just the buttons. */
   variant?: 'full' | 'inline'
   /** Show the composed one-line directive (only meaningful for `full`). */
@@ -23,12 +26,14 @@ const midOf = (arr: number[], fallback: number): number =>
  */
 export function TodaysPractice({
   onLaunch,
+  onUpgrade,
   variant = 'full',
   showDirective = true,
   className = '',
 }: TodaysPracticeProps) {
   const t = useT()
   const rx = usePrescription()
+  const { isPro } = useEntitlements()
   const breathMin = midOf(BREATH_PATTERNS[rx.breathPattern].durations, 6)
 
   const options: {
@@ -36,6 +41,8 @@ export function TodaysPractice({
     label: string
     sub: string
     accent: boolean
+    locked: boolean
+    reason?: string
     preset: RitualPreset
   }[] = [
     {
@@ -43,6 +50,8 @@ export function TodaysPractice({
       label: t('tp.meditate'),
       sub: t('tp.min', { n: rx.minutes }),
       accent: !rx.urgent,
+      locked: !meditationUnlocked(rx.meditationStyle, isPro),
+      reason: t('lib.reasonMed'),
       preset: {
         mode: 'meditation',
         minutes: rx.minutes,
@@ -55,6 +64,8 @@ export function TodaysPractice({
       label: t('tp.breathe'),
       sub: rx.breathRatio,
       accent: rx.urgent,
+      locked: !breathUnlocked(rx.breathPattern, isPro),
+      reason: t('lib.reasonBreath'),
       preset: {
         mode: 'breath',
         minutes: breathMin,
@@ -67,6 +78,9 @@ export function TodaysPractice({
       label: t('tp.frequency'),
       sub: `${rx.frequency} Hz`,
       accent: false,
+      // today's recommended frequency is always free (Ritual.tsx's own picker
+      // carves out the current recommendation regardless of tier)
+      locked: false,
       preset: {
         mode: 'frequency',
         minutes: Math.max(10, rx.minutes),
@@ -87,18 +101,19 @@ export function TodaysPractice({
     <div className="grid grid-cols-3 gap-2">
       {options.map((o) => {
         const I = Icon(o.key)
+        const showAccent = o.accent && !o.locked
         return (
           <button
             key={o.key}
             type="button"
-            onClick={() => onLaunch(o.preset)}
-            className={`flex flex-col items-center gap-1.5 rounded-[0.9rem] px-1 py-3.5 text-center transition active:scale-[0.97] ${
-              o.accent
+            onClick={() => (o.locked ? onUpgrade(o.reason) : onLaunch(o.preset))}
+            className={`relative flex flex-col items-center gap-1.5 rounded-[0.9rem] px-1 py-3.5 text-center transition active:scale-[0.97] ${
+              showAccent
                 ? ''
                 : 'border border-white/[0.08] bg-white/[0.035] text-haze-100'
-            }`}
+            } ${o.locked ? 'opacity-60' : ''}`}
             style={
-              o.accent
+              showAccent
                 ? {
                     background:
                       'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 84%, #fff 16%), var(--rz-hue))',
@@ -109,6 +124,9 @@ export function TodaysPractice({
                 : undefined
             }
           >
+            {o.locked && (
+              <LockIcon className="absolute end-2 top-2 h-3 w-3 text-haze-400" />
+            )}
             <I className="h-[18px] w-[18px]" />
             <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">
               {o.label}

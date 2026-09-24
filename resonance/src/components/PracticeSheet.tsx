@@ -9,6 +9,7 @@ interface PracticeSheetProps {
   prescription: Prescription
   onClose: () => void
   onRitual: (launch: RitualPreset) => void
+  onUpgrade: (reason?: string) => void
   onLibrary: () => void
 }
 
@@ -40,6 +41,7 @@ export function PracticeSheet({
   prescription,
   onClose,
   onRitual,
+  onUpgrade,
   onLibrary,
 }: PracticeSheetProps) {
   const t = useT()
@@ -82,7 +84,7 @@ export function PracticeSheet({
         </p>
 
         <div className="mt-4">
-          <TodaysPractice variant="inline" onLaunch={onRitual} />
+          <TodaysPractice variant="inline" onLaunch={onRitual} onUpgrade={onUpgrade} />
         </div>
 
         <div className="mt-4 flex flex-col gap-2">

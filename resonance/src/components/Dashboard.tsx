@@ -19,6 +19,7 @@ import { CardsIcon, SparkIcon } from './icons'
 
 interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
+  onUpgrade: (reason?: string) => void
   onPracticeSheet: () => void
   onTab: (tab: TabKey) => void
   onStones: () => void
@@ -37,6 +38,7 @@ const greetingKey = (h: number): MessageKey =>
 
 export function Dashboard({
   onRitual,
+  onUpgrade,
   onPracticeSheet,
   onTab,
   onStones,
@@ -158,7 +160,7 @@ export function Dashboard({
       <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:items-start md:gap-x-10">
       {/* left — the one action */}
       <div className="flex flex-col gap-5">
-      <TodaysPractice variant="full" onLaunch={onRitual} />
+      <TodaysPractice variant="full" onLaunch={onRitual} onUpgrade={onUpgrade} />
       <button
         type="button"
         onClick={onPracticeSheet}

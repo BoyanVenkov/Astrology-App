@@ -235,6 +235,7 @@ function App() {
         {sub === null && tab === 'today' && (
           <Dashboard
             onRitual={launchRitual}
+            onUpgrade={openPaywall}
             onPracticeSheet={() => setPracticeOpen(true)}
             onTab={goTab}
             onStones={() => setSub('stones')}
@@ -275,6 +276,7 @@ function App() {
         <PracticeLauncher
           onClose={() => setPracticeOpen(false)}
           onRitual={(l) => launchRitual(l)}
+          onUpgrade={openPaywall}
           onLibrary={() => {
             setPracticeOpen(false)
             setSub('library')
@@ -305,6 +307,7 @@ function App() {
 function PracticeLauncher(props: {
   onClose: () => void
   onRitual: (l: RitualPreset) => void
+  onUpgrade: (reason?: string) => void
   onLibrary: () => void
 }) {
   const prescription = usePrescription()

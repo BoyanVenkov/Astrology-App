@@ -194,7 +194,7 @@ export function SkyView({
         <Tile
           icon={<HeartLinkIcon />}
           title={t('sky.tileCompat')}
-          sub={t('sky.tileCompatSub')}
+          sub={isPro ? t('sky.tileCompatSubPro') : t('sky.tileCompatSub')}
           locked={!isPro}
           onClick={isPro ? onOpenCompat : () => onUpgrade(t('sky.reasonCompat'))}
         />
