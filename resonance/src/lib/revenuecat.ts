@@ -142,30 +142,34 @@ export async function restoreEntitlement(): Promise<boolean> {
 /**
  * Sync the local tier from RevenueCat's record — call on launch and resume.
  *
- * `reconcile: true` (cold start only — see `useRevenueCat`) additionally
- * falls back to `restorePurchases()` when this identity shows no entitlement.
- * `getCustomerInfo()` alone only ever reflects what's already attached to the
- * *current* RevenueCat app-user-id — a fresh identity (new install, cleared
- * app data, a testing-lab reset) starts blank even when the signed-in Google
- * account already owns a real, active subscription. Only `restorePurchases()`
- * actually asks Play Billing "what does this account already own?" and
- * reattaches it. Without this, a real subscription silently stops being
- * recognized the moment the local RevenueCat identity resets.
+ * `reconcile: true` (cold start only — see `useRevenueCat`) always goes
+ * through `restorePurchases()` rather than `getCustomerInfo()`. The two
+ * matter for different reasons:
+ *  - A fresh identity (new install, cleared app data, a testing-lab reset)
+ *    starts blank even when the signed-in Google account already owns a
+ *    real, active subscription — only `restorePurchases()` actually asks
+ *    Play Billing "what does this account already own?" and reattaches it.
+ *  - `getCustomerInfo()` can also return a recent *cached* snapshot for an
+ *    identity RevenueCat already knows, so it can still read "active" for a
+ *    short window after a subscription has genuinely expired server-side.
+ *    Trusting that on cold start is exactly how a lapsed subscription kept
+ *    showing as Pro after a plain close/reopen. `restorePurchases()` bypasses
+ *    that cache and checks Play Billing directly, so cold start always gets
+ *    the real answer instead of a possibly-stale cached "yes."
+ * Only the cheap `getCustomerInfo()` path is used for background **resume**
+ * checks, where a short cache window is an acceptable trade for not hitting
+ * the network on every app-foreground.
  */
 export async function refreshEntitlement(opts?: { reconcile?: boolean }): Promise<void> {
   if (!configured) return
   try {
-    const { customerInfo } = await Purchases.getCustomerInfo()
-    if (hasPro(customerInfo)) {
-      useAppStore.getState().setTier('pro')
-      return
-    }
     if (opts?.reconcile) {
-      const { customerInfo: restored } = await Purchases.restorePurchases()
-      useAppStore.getState().setTier(hasPro(restored) ? 'pro' : 'free')
+      const { customerInfo } = await Purchases.restorePurchases()
+      useAppStore.getState().setTier(hasPro(customerInfo) ? 'pro' : 'free')
       return
     }
-    useAppStore.getState().setTier('free')
+    const { customerInfo } = await Purchases.getCustomerInfo()
+    useAppStore.getState().setTier(hasPro(customerInfo) ? 'pro' : 'free')
   } catch {
     /* keep whatever tier we already had */
   }
