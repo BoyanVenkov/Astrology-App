@@ -193,10 +193,21 @@ export async function subscriptionManagementUrl(): Promise<string | null> {
  * is merely backgrounded (not force-killed) would stay stale for the rest of
  * the session, potentially days.
  */
-export function useRevenueCat(userId: string | null): void {
+export function useRevenueCat(userId: string | null | undefined): void {
   const lastUserId = useRef<string | null | undefined>(undefined)
 
   useEffect(() => {
+    // `undefined` means Supabase's own session restore hasn't resolved yet —
+    // NOT "signed out". Auth always starts this way for a moment on every
+    // cold start (`getSession()` is async). Treating that gap as "signed
+    // out" would call `Purchases.logOut()` on a device that's actually
+    // already identified from a prior session, demoting it to a fresh
+    // anonymous id — and since Google Play Billing purchases only get
+    // reattached to an *already-known* identified user via `restorePurchases`
+    // (not automatically by a later `logIn`), any entitlement active at that
+    // moment gets orphaned on the throwaway anonymous id instead of staying
+    // on the real account. Waiting for a real answer here avoids the churn.
+    if (userId === undefined) return
     let cancelled = false
     void (async () => {
       await configureRevenueCat()

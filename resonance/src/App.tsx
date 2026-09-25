@@ -89,7 +89,7 @@ function App() {
   useNotificationSync()
   useAuthDeepLink()
   useCloudSync()
-  useRevenueCat(auth.user?.id ?? null)
+  useRevenueCat(auth.status === 'loading' ? undefined : (auth.user?.id ?? null))
 
   useEffect(() => {
     applyHtmlLang(locale)
