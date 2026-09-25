@@ -237,6 +237,13 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
       {!langHintSeen && (
         <div
+          aria-hidden
+          className="fixed inset-0 z-[15] bg-midnight-void/70 backdrop-blur-sm"
+        />
+      )}
+
+      {!langHintSeen && (
+        <div
           className="absolute end-5 z-20 w-[15rem] rounded-2xl border border-gold-500/30 bg-[#0c1024]/95 p-4 shadow-[0_14px_34px_-12px_rgba(0,0,0,0.65)] backdrop-blur-sm"
           style={{ top: 'calc(max(1.25rem, env(safe-area-inset-top)) + 3.1rem)' }}
         >

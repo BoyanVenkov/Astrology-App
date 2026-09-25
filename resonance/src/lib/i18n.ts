@@ -7,7 +7,6 @@ import type {
   TransitParts,
 } from '../types/resonance'
 import { useAppStore } from '../store/useAppStore'
-import { detectLocale } from './detectLocale'
 import { en, type MessageKey } from './locales/en'
 import { bg } from './locales/bg'
 import { es } from './locales/es'
@@ -23,8 +22,6 @@ import { sw } from './locales/sw'
 import { tr } from './locales/tr'
 import { ar } from './locales/ar'
 import { pl } from './locales/pl'
-
-export { detectLocale }
 
 /**
  * A small, offline, dependency-free i18n layer. English is the source

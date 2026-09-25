@@ -21,7 +21,6 @@ import type {
   SolfeggioFrequency,
 } from '../types/resonance'
 import { computeDailyReading, type Aspect } from '../lib/astrology'
-import { detectLocale } from '../lib/detectLocale'
 import type { BodyName, BodyPosition } from '../lib/ephemeris'
 import type { ChartAngles } from '../lib/houses'
 import { longestStreak } from '../lib/streak'
@@ -138,7 +137,9 @@ const createSession = (): ResonanceSession & SkyState => {
     longestStreakEver: 0,
     people: [],
     authSkipped: false,
-    locale: detectLocale(),
+    // always start in English — the pre-sign-in language hint is how
+    // non-English users are meant to pick their language, not auto-detection
+    locale: 'en',
     langHintSeen: false,
     oracleReading: null,
     pronounGender: 'unspecified',
