@@ -139,12 +139,33 @@ export async function restoreEntitlement(): Promise<boolean> {
   }
 }
 
-/** Sync the local tier from RevenueCat's record — call on launch and resume. */
-export async function refreshEntitlement(): Promise<void> {
+/**
+ * Sync the local tier from RevenueCat's record — call on launch and resume.
+ *
+ * `reconcile: true` (cold start only — see `useRevenueCat`) additionally
+ * falls back to `restorePurchases()` when this identity shows no entitlement.
+ * `getCustomerInfo()` alone only ever reflects what's already attached to the
+ * *current* RevenueCat app-user-id — a fresh identity (new install, cleared
+ * app data, a testing-lab reset) starts blank even when the signed-in Google
+ * account already owns a real, active subscription. Only `restorePurchases()`
+ * actually asks Play Billing "what does this account already own?" and
+ * reattaches it. Without this, a real subscription silently stops being
+ * recognized the moment the local RevenueCat identity resets.
+ */
+export async function refreshEntitlement(opts?: { reconcile?: boolean }): Promise<void> {
   if (!configured) return
   try {
     const { customerInfo } = await Purchases.getCustomerInfo()
-    useAppStore.getState().setTier(hasPro(customerInfo) ? 'pro' : 'free')
+    if (hasPro(customerInfo)) {
+      useAppStore.getState().setTier('pro')
+      return
+    }
+    if (opts?.reconcile) {
+      const { customerInfo: restored } = await Purchases.restorePurchases()
+      useAppStore.getState().setTier(hasPro(restored) ? 'pro' : 'free')
+      return
+    }
+    useAppStore.getState().setTier('free')
   } catch {
     /* keep whatever tier we already had */
   }
@@ -184,7 +205,7 @@ export function useRevenueCat(userId: string | null): void {
         await linkRevenueCatUser(userId)
         lastUserId.current = userId
       }
-      if (!cancelled) await refreshEntitlement()
+      if (!cancelled) await refreshEntitlement({ reconcile: true })
     })()
     return () => {
       cancelled = true
