@@ -263,7 +263,14 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
           size={300}
           labels
           selected={open}
-          onSelect={(k) => setOpen((cur) => (cur === k ? null : k))}
+          onSelect={(k) => {
+            const locked = !isPro && !field.find((c) => c.key === k)?.focus
+            if (locked) {
+              onUpgrade(t('field.reasonFull'))
+              return
+            }
+            setOpen((cur) => (cur === k ? null : k))
+          }}
         />
       </div>
 

@@ -1,7 +1,6 @@
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { usePrescription } from '../lib/prescription'
 import { useT } from '../lib/i18n'
-import { breathUnlocked, meditationUnlocked, useEntitlements } from '../lib/premium'
 import { BreathIcon, FrequenciesIcon, LockIcon, PlayIcon } from './icons'
 import type { RitualPreset } from '../types/resonance'
 
@@ -33,7 +32,6 @@ export function TodaysPractice({
 }: TodaysPracticeProps) {
   const t = useT()
   const rx = usePrescription()
-  const { isPro } = useEntitlements()
   const breathMin = midOf(BREATH_PATTERNS[rx.breathPattern].durations, 6)
 
   const options: {
@@ -50,7 +48,9 @@ export function TodaysPractice({
       label: t('tp.meditate'),
       sub: t('tp.min', { n: rx.minutes }),
       accent: !rx.urgent,
-      locked: !meditationUnlocked(rx.meditationStyle, isPro),
+      // today's recommended meditation is always free, regardless of which
+      // style it happens to be — same carve-out as the frequency option below
+      locked: false,
       reason: t('lib.reasonMed'),
       preset: {
         mode: 'meditation',
@@ -64,7 +64,8 @@ export function TodaysPractice({
       label: t('tp.breathe'),
       sub: rx.breathRatio,
       accent: rx.urgent,
-      locked: !breathUnlocked(rx.breathPattern, isPro),
+      // today's recommended breath pattern is always free, same carve-out
+      locked: false,
       reason: t('lib.reasonBreath'),
       preset: {
         mode: 'breath',

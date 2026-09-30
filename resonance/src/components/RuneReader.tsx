@@ -23,7 +23,6 @@ import { localDayKey } from '../lib/timezone'
 import type { MessageKey } from '../lib/locales/en'
 import { LockIcon } from './icons'
 import { BackButton } from './Screen'
-import { RuneGlyph } from './RuneGlyph'
 import { RuneChip, RuneInterpretation, RuneStoneSlot } from './RuneStone'
 
 interface RuneReaderProps {
@@ -464,21 +463,5 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
         </section>
       ))}
     </div>
-  )
-}
-
-/** A compact glyph row used elsewhere (e.g. the Divination hub teaser). */
-export function RuneRow() {
-  return (
-    <span className="flex gap-1.5" aria-hidden>
-      {(['fehu', 'ansuz', 'gebo', 'sowilo', 'algiz'] as RuneKey[]).map((k) => (
-        <RuneGlyph
-          key={k}
-          runeKey={k}
-          className="h-4 w-3"
-          style={{ color: 'var(--rz-hue)' }}
-        />
-      ))}
-    </span>
   )
 }
