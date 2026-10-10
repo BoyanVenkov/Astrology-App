@@ -8,6 +8,7 @@ import { crystals } from './crystals'
 import { reading } from './reading'
 import { deepReading } from './deepReading'
 import { tarot } from './tarot'
+import { spreadReading } from './spreadReading'
 import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
@@ -28,6 +29,7 @@ export const sv: Partial<Record<MessageKey, string>> = {
   ...reading,
   ...deepReading,
   ...tarot,
+  ...spreadReading,
   ...runes,
   ...rewards,
   ...screens,
