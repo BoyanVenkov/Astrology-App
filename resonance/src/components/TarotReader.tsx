@@ -10,6 +10,7 @@ import {
   spreadBlurb,
   spreadName,
   spreadPosition,
+  spreadReading,
   SPREADS,
   spreadOf,
   type DrawnCard,
@@ -208,6 +209,11 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
     const id = window.setTimeout(() => setShuffling(false), 1200)
     return () => window.clearTimeout(id)
   }, [shuffling])
+
+  const synthesis = useMemo(
+    () => (reading && spread.key !== 'one' ? spreadReading(reading, t) : null),
+    [reading, spread.key, t],
+  )
 
   const startReading = (s: Spread) => {
     setSpread(s)
@@ -563,6 +569,25 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
               ) : null,
             )}
           </div>
+
+          {allFlipped && synthesis && (
+            <article className="glass-panel glass-panel-active animate-rise-in flex flex-col gap-2 p-4">
+              <p className="eyebrow-hue">{t('sp.reading.heading')}</p>
+              <p className="text-sm leading-relaxed text-haze-100">
+                {synthesis.throughline}
+              </p>
+              {synthesis.arc && (
+                <p className="text-sm leading-relaxed text-haze-200">
+                  {synthesis.arc}
+                </p>
+              )}
+              {synthesis.crossNote && (
+                <p className="text-sm leading-relaxed text-haze-200">
+                  {synthesis.crossNote}
+                </p>
+              )}
+            </article>
+          )}
 
           {allFlipped && (
             <div className="flex gap-2">

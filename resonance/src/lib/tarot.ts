@@ -370,6 +370,15 @@ function leanValue(card: TarotCard): number {
   return PIP_LEAN[card.arcana as Suit][card.rank - 1] ?? 0
 }
 
+// Reversed shifts the lean one step toward neutral either way — dampens a
+// yes, softens a no. (Shifting by 1 both ways keeps it monotonic: stronger
+// cards keep more of their character reversed, a weaker card never ends up
+// harsher than a stronger one would.)
+function dampenedLean(card: TarotCard, reversed: boolean): number {
+  const base = leanValue(card)
+  return reversed ? (base > 0 ? base - 1 : base < 0 ? base + 1 : 0) : base
+}
+
 export type OracleVerdict = 'yes' | 'no' | 'wait' | 'both'
 
 export interface OracleReading {
@@ -406,15 +415,7 @@ export function oracleReading(
 ): OracleReading {
   const { card, reversed } = drawn
   const cls = classifyQuestion(question)
-  const base = leanValue(card)
-  // Reversed shifts the lean one step toward neutral either way — dampens a
-  // yes, softens a no. (Previously the positive side dropped by 2 and
-  // clamped at -1, so a mild yes (1) reversed became a firm no (-1) while a
-  // strong yes (2) reversed only fell to "wait" (0) — a weaker card ending
-  // up harsher than a stronger one. Shifting by 1 both ways keeps it
-  // monotonic: stronger cards keep more of their character reversed, same
-  // as the already-correct negative side.)
-  const lean = reversed ? (base > 0 ? base - 1 : base < 0 ? base + 1 : 0) : base
+  const lean = dampenedLean(card, reversed)
 
   let verdict: OracleVerdict | null = null
   if (cls.kind === 'decision') {
@@ -469,4 +470,76 @@ export function oracleReading(
     meaning,
     action,
   }
+}
+
+/* --------------------------------------------------------- spread reading */
+
+/** The whole-spread synthesis — what a multi-card draw says taken together,
+ *  not just position by position. */
+export interface SpreadReading {
+  /** One line reading the spread as a whole — its dominant energy and tone. */
+  throughline: string
+  /** Past → present → future as one connected arc. Three-card spread only. */
+  arc: string | null
+  /** Whether the obstacle (Crossing) works with or against the Heart card. Celtic Cross only. */
+  crossNote: string | null
+}
+
+const SPREAD_SUITS: Suit[] = ['wands', 'cups', 'swords', 'pentacles']
+
+export function spreadReading(reading: TarotReading, t: TFn): SpreadReading {
+  const { cards, spreadKey } = reading
+  const leans = cards.map(({ card, reversed }) => dampenedLean(card, reversed))
+  const avg = leans.reduce((a, b) => a + b, 0) / leans.length
+  const range = Math.max(...leans) - Math.min(...leans)
+  const tone =
+    range >= 3
+      ? 'mixed'
+      : avg >= 0.75
+        ? 'rising'
+        : avg <= -0.75
+          ? 'testing'
+          : 'steady'
+
+  const majorCount = cards.filter((d) => d.card.arcana === 'major').length
+  let dominant: Arcana = 'major'
+  if (majorCount * 2 < cards.length) {
+    const counts: Record<Suit, number> = { wands: 0, cups: 0, swords: 0, pentacles: 0 }
+    cards.forEach((d) => {
+      if (d.card.arcana !== 'major') counts[d.card.arcana as Suit] += 1
+    })
+    dominant = SPREAD_SUITS.reduce(
+      (best, s) => (counts[s] > counts[best] ? s : best),
+      SPREAD_SUITS[0],
+    )
+  }
+
+  const throughline = t('sp.throughline', {
+    dominant: t(`sp.dominant.${dominant}` as MessageKey),
+    tone: t(`sp.tone.${tone}` as MessageKey),
+  })
+
+  let arc: string | null = null
+  if (spreadKey === 'three') {
+    const [past, present, future] = cards
+    arc = t('sp.three.arc', {
+      past: cardName(past.card, t),
+      present: cardName(present.card, t),
+      future: cardName(future.card, t),
+    })
+  }
+
+  let crossNote: string | null = null
+  if (spreadKey === 'cross') {
+    const [heartLean, crossingLean] = leans
+    const rel =
+      heartLean === 0 || crossingLean === 0
+        ? 'neutral'
+        : Math.sign(heartLean) === Math.sign(crossingLean)
+          ? 'aligned'
+          : 'opposed'
+    crossNote = t(`sp.cross.${rel}` as MessageKey)
+  }
+
+  return { throughline, arc, crossNote }
 }

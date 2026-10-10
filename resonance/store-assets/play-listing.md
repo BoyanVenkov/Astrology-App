@@ -7,45 +7,39 @@ Character limits: app name 30 · short description 80 · full description 4000.
 
 ## App name (30 max)
 
-**Recommended:**
+**Recommended — not yet live, the Play Console listing still says plain "Resonance":**
 ```
-Resonance: Astrology & Ritual
+Resonance: Astrology & Tarot
 ```
-(29 chars — "Astrology" is the primary keyword; "Ritual" captures the daily-practice angle competitors don't have.)
+(29 chars. ASO research, 2026-10: title is the single highest-weighted indexed field on Google Play — higher than short/full description. "Tarot" and "Horoscope" both out-search "Ritual" in this category; leads with the two highest-volume terms Resonance can honestly claim.)
 
 Alternatives:
 ```
-Resonance: Daily Astrology
+Resonance: Astrology & Love
 ```
+(28 chars — trade Tarot for a wider-casual-search "Love"/compatibility angle, if that's the growth lever you want to lean into instead.)
 ```
-Resonance – Astrology & Tarot
+Resonance: Horoscope & Tarot
 ```
+(28 chars — "Horoscope" may out-pull "Astrology" on raw search volume; worth an A/B test later via a Custom Store Listing rather than guessing.)
 
 ---
 
-## Short description (80 max)
+## Short description (80 max) — LIVE as of 2026-09-30
 
-**Recommended (72 chars):**
 ```
-The sky, read for you — real astrology, tarot, runes, breathwork & sound
+Real astrology, AI horoscopes, tarot & meditation — one calm practice a day
 ```
-
-Alternatives:
-```
-Real astrology from your birth chart, turned into a daily 2-minute practice
-```
-```
-Your birth chart, today's sky, and one calm practice to match it each day
-```
+(78 chars. Leads with "Real astrology" — searchable + credibility signal — names the standout premium feature [AI horoscopes, no direct competitor has this], closes on the emotional hook that matches the whole brand voice.)
 
 ---
 
-## Full description (4000 max — this draft ~3,050)
+## Full description (4000 max) — LIVE as of 2026-09-30, includes the AI Horoscope section
 
 ```
 Most astrology apps hand everyone born in the same month the same paragraph. Resonance doesn't.
 
-It tracks the real planets — exactly where they are in the sky right now — and reads them against your own birth chart. Then it does the thing no other astrology app does: it turns that reading into one small practice for today. A breath. A frequency. A few quiet minutes. The energy centre that is asking for your attention.
+It tracks the real planets — exactly where they are in the sky right now — and reads them against your own birth chart. Then it does the thing no other astrology app does: it turns that reading into one small practice for today. A breath. A frequency. A few quiet minutes. The energy center that is asking for your attention.
 
 Open it in the morning. Do the one thing it suggests. Close it. That is the whole app.
 
@@ -54,13 +48,16 @@ YOUR REAL BIRTH CHART
 Planets, signs, houses, aspects, Ascendant and Midheaven — drawn as a full chart wheel and calculated by a real astronomical engine. No vague sun-sign shortcuts.
 
 A DAILY READING THAT IS ACTUALLY ABOUT YOU
-Today's transits to your natal chart, a personalised mantra, and the single practice that fits the day. Go deeper with a long-form daily horoscope that walks through every transit in play, the way a real astrologer would.
+Today's transits to your natal chart, a personalized mantra, and the single practice that fits the day. Go deeper with a long-form daily horoscope that walks through every transit in play, the way a real astrologer would.
+
+YOUR HOROSCOPE, WRITTEN BY AI — JUST FOR YOU
+Not a phrase bank. Ask, and Resonance's AI writes a genuinely original reading from your exact chart and the sky right now — words composed for you, in the moment, never recycled.
 
 GUIDED PRACTICE
 Twelve breathing patterns, from simple box breathing to a full Wim Hof journey. Twelve meditation styles. Solfeggio frequency sessions over a warm ambient bed.
 
 THE CHAKRA FIELD
-All seven centres, decoded live from where today's sky is landing in your body.
+All seven centers, decoded live from where today's sky is landing in your body.
 
 TAROT
 A real, fully illustrated 78-card Rider-Waite-Smith deck. A daily card, three-card spreads, the ten-card Celtic Cross, and a one-card Oracle for your questions.
@@ -87,7 +84,7 @@ Resonance works fully offline and needs no account. Your birth data and journal 
 FREE, WITH AN OPTIONAL UPGRADE
 Your chart, a daily transit reading and mantra, today's practice, a daily tarot card, a daily rune, the Moon and your full journal are free — for good.
 
-Resonance Pro opens the rest: the in-depth daily horoscope, every breathing pattern, meditation and frequency, all tarot spreads and the Oracle, the full rune casts, the complete Chakra Field, compatibility for everyone in your life, and unlimited journal history. Monthly or annual, billed through Google Play, cancel anytime.
+Resonance Pro opens the rest: your AI-written horoscope, the in-depth daily reading, every breathing pattern, meditation and frequency, all tarot spreads and the Oracle, the full rune casts, the complete Chakra Field, compatibility for everyone in your life, and unlimited journal history. Monthly or annual, billed through Google Play, cancel anytime.
 
 FIFTEEN LANGUAGES
 English, Български, Español, Italiano, Français, Deutsch, Português, Svenska, 中文, 日本語, हिन्दी, Kiswahili, Türkçe, العربية, Polski.
