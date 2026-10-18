@@ -101,7 +101,7 @@ export function TodaysPractice({
   }
 
   const buttons = (
-    <div className="grid grid-cols-3 gap-2.5">
+    <div className="relative grid grid-cols-3 divide-x divide-white/10 overflow-visible pt-3">
       {options.map((o) => {
         const showAccent = o.accent && !o.locked
         return (
@@ -109,30 +109,36 @@ export function TodaysPractice({
             key={o.key}
             type="button"
             onClick={() => (o.locked ? onUpgrade(o.reason) : onLaunch(o.preset))}
-            className={`bento-tile relative flex flex-col items-center gap-1 overflow-hidden rounded-[1rem] px-1 pb-2.5 pt-3 text-center border border-white/[0.08] bg-white/[0.035] text-haze-100 ${
-              showAccent ? 'glass-panel-active' : ''
-            } ${o.locked ? 'opacity-60' : ''}`}
+            className={`card-press relative flex flex-col items-center gap-2 px-1 pt-1 ${o.locked ? 'opacity-60' : ''}`}
           >
-            <img
-              src={ART[o.key]}
-              alt=""
-              aria-hidden
-              className="relative h-12 w-12 object-contain"
-              style={{
-                filter: showAccent
-                  ? `drop-shadow(0 0 10px var(--rz-glow))`
-                  : 'saturate(0.7) brightness(0.85)',
-              }}
-            />
-            {o.locked && (
-              <LockIcon className="absolute end-2 top-2 h-3 w-3 text-haze-400" />
-            )}
-            <span className="relative mt-0.5 text-xs font-semibold uppercase tracking-[0.12em] text-haze-100">
-              {o.label}
+            <span className="relative mb-0.5 grid h-20 w-20 place-items-center">
+              {showAccent && (
+                <span
+                  aria-hidden
+                  className="absolute h-16 w-16 rounded-full blur-xl"
+                  style={{
+                    background: 'radial-gradient(circle, var(--rz-hue) 0%, transparent 72%)',
+                    opacity: 0.55,
+                  }}
+                />
+              )}
+              <img
+                src={ART[o.key]}
+                alt=""
+                aria-hidden
+                className="relative h-16 w-16 object-contain"
+                style={{
+                  filter: showAccent
+                    ? 'drop-shadow(0 10px 12px rgba(0,0,0,0.5))'
+                    : 'saturate(0.65) brightness(0.82) drop-shadow(0 8px 10px rgba(0,0,0,0.45))',
+                }}
+              />
+              {o.locked && (
+                <LockIcon className="absolute end-0 top-0 h-3.5 w-3.5 text-haze-400" />
+              )}
             </span>
-            <span className="data relative text-[11px] text-haze-400">
-              {o.sub}
-            </span>
+            <span className="eyebrow">{o.label}</span>
+            <span className="data text-sm text-haze-200">{o.sub}</span>
           </button>
         )
       })}
