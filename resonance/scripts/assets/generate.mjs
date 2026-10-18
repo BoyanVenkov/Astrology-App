@@ -95,6 +95,7 @@ const ASSETS = {
   'icon-transits': `A minimalist glowing line-art illustration of two intersecting orbital rings at an angle, like a planetary aspect diagram, with small radiant planet nodes glowing where they cross, fine gold linework, faint radiating pulse lines like a radar sweep, mystical astrological aesthetic, symmetrical. Icon-style composition.`,
   'icon-horoscope': `A 3D rendered illustration of an ornate open scroll of parchment with a radiant glowing zodiac wheel hovering just above it, fine gold filigree linework on the wheel, soft ethereal glow, mystical astrological aesthetic. Premium product photography style, floating slightly, dramatic soft lighting.`,
   'icon-chakra-field': `A 3D rendered illustration of a vertical glowing column of seven small luminous orbs stacked top to bottom in rainbow chakra order — violet, indigo, blue, green, yellow, orange, red — each orb glossy and glass-like, connected by a thin radiant thread of golden light running through their centres, soft bloom, floating upright in empty space. Premium 3D render, studio lighting.`,
+  'icon-tarot-spread': `A 3D rendered illustration of three mystical tarot cards fanned out in a gentle arc, face down, ornate gold filigree card backs facing the viewer, the center card slightly raised with a soft glowing aura radiating upward from behind it. Premium product photography style, dramatic soft lighting.`,
 }
 
 const WIDE_ASSETS = {

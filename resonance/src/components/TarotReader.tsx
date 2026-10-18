@@ -30,8 +30,11 @@ import { spreadUnlocked, useEntitlements } from '../lib/premium'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon } from './icons'
 import { BackButton } from './Screen'
-import { RuneGlyph } from './RuneGlyph'
 import { TarotCardBack, TarotCardFace } from './TarotCard'
+import artRuneStone from '../assets/art/icon-rune-stone.webp'
+import artOracle from '../assets/art/icon-oracle.webp'
+import artTarotSpread from '../assets/art/icon-tarot-spread.webp'
+import artWaveMesh from '../assets/art/bg-wave-mesh.webp'
 
 interface TarotReaderProps {
   /** Only set when Tarot is pushed as a sub-screen; as a tab there's nowhere back. */
@@ -152,6 +155,58 @@ function Interpretation({
         {drawn.reversed ? text.reversed : text.upright}
       </p>
     </article>
+  )
+}
+
+/* -------------------------------------------------------- a feature row */
+
+function FeatureRow({
+  art,
+  title,
+  sub,
+  locked = false,
+  index = 0,
+  onClick,
+}: {
+  art: string
+  title: string
+  sub: string
+  locked?: boolean
+  index?: number
+  onClick: () => void
+}) {
+  const tilt = index % 2 === 0 ? 'rotate-[8deg]' : '-rotate-[8deg]'
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="bento-tile glass-panel animate-rise-in relative flex items-center gap-4 overflow-visible p-4 text-start"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      <span className="relative grid h-16 w-16 shrink-0 place-items-center">
+        <img
+          src={art}
+          alt=""
+          aria-hidden
+          className={`animate-card-float h-20 w-20 object-contain ${tilt}`}
+          style={{
+            filter:
+              'drop-shadow(0 10px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 14px var(--rz-glow))',
+            animationDelay: `${0.1 + index * 0.08}s`,
+          }}
+        />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-1.5 font-serif text-lg text-white">
+          {title}
+          {locked && <LockIcon className="h-4 w-4 text-haze-400" />}
+        </span>
+        <span className="block text-xs text-haze-300">{sub}</span>
+      </span>
+      <span className="shrink-0 self-center" style={{ color: 'var(--rz-hue)' }}>
+        ›
+      </span>
+    </button>
   )
 }
 
@@ -284,26 +339,48 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
         {onBack && <BackButton onClick={onBack} />}
 
-        <header className="px-1">
-          <p className="eyebrow-hue">{t('tr.eyebrow')}</p>
-          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
-            {t('tr.dailyTitle')}
-          </h1>
-          <p className="mt-1 text-sm text-haze-300">
-            {profile ? t('tr.dailyBlurbChart') : t('tr.dailyBlurbPlain')}
-          </p>
-        </header>
+        <div className="relative">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+          >
+            <img
+              src={artWaveMesh}
+              alt=""
+              className="animate-drift absolute -left-[30%] -top-[30%] w-[160%] max-w-none opacity-55 mix-blend-screen"
+              style={{ animationDuration: '32s' }}
+            />
+            <span
+              className="animate-drift absolute start-[10%] top-[10%] h-36 w-36 rounded-full opacity-35 blur-3xl"
+              style={{ background: 'var(--rz-hue)', animationDuration: '20s' }}
+            />
+          </div>
+          <header className="animate-bloom-in px-1 pb-2">
+            <p className="eyebrow-hue">{t('tr.eyebrow')}</p>
+            <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.1] text-gilded">
+              {t('tr.dailyTitle')}
+            </h1>
+            <p className="mt-1.5 text-[0.95rem] text-haze-300">
+              {profile ? t('tr.dailyBlurbChart') : t('tr.dailyBlurbPlain')}
+            </p>
+          </header>
 
-        <div className="mx-auto w-[210px]">
-          <CardSlot
-            drawn={d}
-            faceUp={dailyUp}
-            t={t}
-            onFlip={() => {
-              setDailyUp(true)
-              markTarotDrawn()
-            }}
-          />
+          <div className="relative mx-auto w-[210px]">
+            <span
+              aria-hidden
+              className="animate-pulse-glow pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+              style={{ background: 'var(--rz-hue)', opacity: 0.22 }}
+            />
+            <CardSlot
+              drawn={d}
+              faceUp={dailyUp}
+              t={t}
+              onFlip={() => {
+                setDailyUp(true)
+                markTarotDrawn()
+              }}
+            />
+          </div>
         </div>
 
         {dailyUp ? (
@@ -313,76 +390,39 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         )}
 
         {onOpenRunes && (
-          <button
-            type="button"
+          <FeatureRow
+            art={artRuneStone}
+            index={0}
+            title={t('dash.dailyRune')}
+            sub={
+              runeDrawnDay === today
+                ? runeMeta(dailyRune.key).name +
+                  ' · ' +
+                  runeText(dailyRune.key, dailyRune.merkstave, t).keywords[0]
+                : t('dash.runeNew')
+            }
             onClick={onOpenRunes}
-            className="glass-panel flex items-center gap-3 p-4 text-start active:scale-[0.99]"
-          >
-            <span
-              className="grid h-11 w-9 shrink-0 place-items-center rounded-[26%]"
-              style={{
-                background:
-                  'radial-gradient(120% 100% at 30% 20%, #333949, #23283492 55%, #1a1d27)',
-                border: '1px solid rgba(255,255,255,0.10)',
-              }}
-            >
-              <RuneGlyph
-                runeKey={dailyRune.key}
-                merkstave={dailyRune.merkstave}
-                className="h-[64%] w-[64%]"
-                style={{ color: '#e3c063' }}
-              />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="font-serif text-lg text-white">
-                {t('dash.dailyRune')}
-              </span>
-              <span className="block text-xs text-haze-300">
-                {runeDrawnDay === today
-                  ? runeMeta(dailyRune.key).name +
-                    ' · ' +
-                    runeText(dailyRune.key, dailyRune.merkstave, t).keywords[0]
-                  : t('dash.runeNew')}
-              </span>
-            </span>
-            <span style={{ color: 'var(--rz-hue)' }}>›</span>
-          </button>
+          />
         )}
 
-        <button
-          type="button"
+        <FeatureRow
+          art={artTarotSpread}
+          index={1}
+          title={t('tr.drawSpread')}
+          sub={t('tr.drawSpreadSub')}
           onClick={() => setView('choose')}
-          className="glass-panel glass-panel-active flex items-center justify-between p-4 text-start active:scale-[0.99]"
-        >
-          <span>
-            <span className="font-serif text-lg text-white">
-              {t('tr.drawSpread')}
-            </span>
-            <span className="block text-xs text-haze-300">
-              {t('tr.drawSpreadSub')}
-            </span>
-          </span>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
-        </button>
+        />
 
-        <button
-          type="button"
+        <FeatureRow
+          art={artOracle}
+          index={2}
+          title={t('tr.askOracle')}
+          sub={t('tr.askOracleSub')}
+          locked={!isPro}
           onClick={() =>
             isPro ? setView('oracle') : onUpgrade?.(t('tr.reasonOracle'))
           }
-          className="glass-panel flex items-center justify-between p-4 text-start active:scale-[0.99]"
-        >
-          <span>
-            <span className="flex items-center gap-1.5 font-serif text-lg text-white">
-              {t('tr.askOracle')}
-              {!isPro && <LockIcon className="h-4 w-4 text-haze-400" />}
-            </span>
-            <span className="block text-xs text-haze-300">
-              {t('tr.askOracleSub')}
-            </span>
-          </span>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
-        </button>
+        />
       </div>
     )
   }
@@ -400,7 +440,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
 
         <header className="px-1">
           <p className="eyebrow-hue">{t('tr.oracleEyebrow')}</p>
-          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+          <h1 className="mt-1 font-serif text-[1.9rem] leading-[1.1] text-gilded">
             {t('tr.askOracle')}
           </h1>
           <p className="mt-1 text-sm text-haze-300">{t('tr.oracleBlurb')}</p>
@@ -477,7 +517,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
 
         <header className="px-1">
           <p className="eyebrow-hue">{t('tr.eyebrow')}</p>
-          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+          <h1 className="mt-1 font-serif text-[1.9rem] leading-[1.1] text-gilded">
             {t('tr.chooseTitle')}
           </h1>
           <p className="mt-1 text-sm text-haze-300">{t('tr.chooseBlurb')}</p>
@@ -545,7 +585,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         <p className="eyebrow-hue">
           {t('tr.spreadEyebrow', { spread: spreadName(spread.key, t) })}
         </p>
-        <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded">
+        <h1 className="mt-1 font-serif text-[1.9rem] leading-[1.1] text-gilded">
           {shuffling
             ? t('tr.shuffling')
             : allFlipped
