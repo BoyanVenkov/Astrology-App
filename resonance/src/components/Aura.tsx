@@ -116,7 +116,6 @@ export function Aura({ state, size = 200, className = '' }: AuraProps) {
         className={reducedMotion ? 'absolute inset-0 h-full w-full object-contain' : 'animate-aura-breathe absolute inset-0 h-full w-full object-contain'}
         style={{
           padding: `${(1 - (0.42 + score * 0.3)) * 50}%`,
-          filter: `drop-shadow(0 0 ${8 + score * 14}px ${hue})`,
           opacity: 0.85 + score * 0.15,
         }}
       />

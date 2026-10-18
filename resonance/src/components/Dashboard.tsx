@@ -243,28 +243,22 @@ export function Dashboard({
           onClick={onChakras}
           className="card-press relative flex flex-col items-center gap-2 px-1 pt-1"
         >
-          <span className="mb-0.5 relative grid h-24 w-24 place-items-center">
-            <svg viewBox="0 0 96 96" className="pointer-events-none absolute inset-0 h-24 w-24 -rotate-90">
-              <circle
-                cx="48"
-                cy="48"
-                r="43"
-                fill="none"
-                stroke={chakraColor(focusChakra)}
-                strokeOpacity="0.9"
-                strokeWidth="4.5"
-                strokeLinecap="round"
-                strokeDasharray={`${Math.max(aura.score, 0.12) * 270} 270`}
-                style={{ filter: `drop-shadow(0 0 10px ${chakraColor(focusChakra)})` }}
-              />
-            </svg>
+          <span className="relative mb-0.5 grid h-24 w-24 place-items-center">
+            <span
+              aria-hidden
+              className="absolute h-20 w-20 rounded-full blur-xl"
+              style={{
+                background: `radial-gradient(circle, ${chakraColor(focusChakra)} 0%, transparent 72%)`,
+                opacity: 0.55,
+              }}
+            />
             <img
               src={artField}
               alt=""
               aria-hidden
-              className="animate-aura-breathe h-16 w-16 object-contain"
+              className="animate-aura-breathe relative h-20 w-20 object-contain"
               style={{
-                filter: `hue-rotate(${hexToHue(chakraColor(focusChakra)) - 25}deg) saturate(1.4) drop-shadow(0 14px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 14px ${chakraColor(focusChakra)})`,
+                filter: `hue-rotate(${hexToHue(chakraColor(focusChakra)) - 25}deg) saturate(1.4) drop-shadow(0 14px 16px rgba(0,0,0,0.55))`,
               }}
             />
           </span>
@@ -279,16 +273,24 @@ export function Dashboard({
           onClick={onStones}
           className="card-press relative flex flex-col items-center gap-2 px-1 pt-1"
         >
-          <span className="mb-0.5 grid h-24 w-24 place-items-center">
+          <span className="relative mb-0.5 grid h-24 w-24 place-items-center">
+            <span
+              aria-hidden
+              className="absolute h-20 w-20 rounded-full blur-xl"
+              style={{
+                background: `radial-gradient(circle, ${heroStone?.color ?? 'var(--rz-glow)'} 0%, transparent 72%)`,
+                opacity: 0.55,
+              }}
+            />
             <img
               src={artStone}
               alt=""
               aria-hidden
-              className="h-[5.5rem] w-[5.5rem] object-contain"
+              className="relative h-[5.5rem] w-[5.5rem] object-contain"
               style={{
                 filter: `hue-rotate(${
                   heroStone ? hexToHue(heroStone.color) - 25 : 0
-                }deg) drop-shadow(0 14px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 14px ${heroStone?.color ?? 'var(--rz-glow)'})`,
+                }deg) drop-shadow(0 14px 16px rgba(0,0,0,0.55))`,
               }}
             />
           </span>

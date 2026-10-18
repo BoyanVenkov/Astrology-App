@@ -13,6 +13,7 @@ import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
 import { LockIcon } from './icons'
 import { QuickHoroscope } from './QuickHoroscope'
+import { ChakraBody } from './ChakraBody'
 import artCompass from '../assets/art/icon-compass.webp'
 import artMoon from '../assets/art/icon-moon.webp'
 import artCompatibility from '../assets/art/icon-compatibility.webp'
@@ -20,7 +21,6 @@ import artOracle from '../assets/art/icon-oracle.webp'
 import artApothecary from '../assets/art/icon-apothecary.webp'
 import artTransits from '../assets/art/icon-transits.webp'
 import artHoroscope from '../assets/art/icon-horoscope.webp'
-import artChakraField from '../assets/art/icon-chakra-field.webp'
 import artWaveMesh from '../assets/art/bg-wave-mesh.webp'
 
 interface SkyViewProps {
@@ -170,14 +170,11 @@ export function SkyView({
         onClick={onOpenChakras}
         className="glass-panel card-press animate-rise-in flex items-center gap-4 p-4 text-start"
       >
-        <span className="relative grid h-20 w-16 shrink-0 place-items-center">
-          <img
-            src={artChakraField}
-            alt=""
-            aria-hidden
-            className="animate-aura-breathe h-20 w-20 object-contain"
-            style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 16px var(--rz-glow))' }}
-          />
+        <span
+          className="relative grid h-24 w-14 shrink-0 place-items-center"
+          style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 14px var(--rz-glow))' }}
+        >
+          <ChakraBody field={chakraField} size={56} className="pointer-events-none" />
         </span>
         <span className="min-w-0 flex-1">
           <span className="eyebrow">{t('sky.chakraField')}</span>
