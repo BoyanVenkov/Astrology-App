@@ -30,6 +30,7 @@ import { spreadUnlocked, useEntitlements } from '../lib/premium'
 import { localDayKey } from '../lib/timezone'
 import { LockIcon } from './icons'
 import { BackButton } from './Screen'
+import { FeatureRow } from './FeatureRow'
 import { TarotCardBack, TarotCardFace } from './TarotCard'
 import artRuneStone from '../assets/art/icon-rune-stone.webp'
 import artOracle from '../assets/art/icon-oracle.webp'
@@ -155,58 +156,6 @@ function Interpretation({
         {drawn.reversed ? text.reversed : text.upright}
       </p>
     </article>
-  )
-}
-
-/* -------------------------------------------------------- a feature row */
-
-function FeatureRow({
-  art,
-  title,
-  sub,
-  locked = false,
-  index = 0,
-  onClick,
-}: {
-  art: string
-  title: string
-  sub: string
-  locked?: boolean
-  index?: number
-  onClick: () => void
-}) {
-  const tilt = index % 2 === 0 ? 'rotate-[8deg]' : '-rotate-[8deg]'
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="bento-tile glass-panel animate-rise-in relative flex items-center gap-4 overflow-visible p-4 text-start"
-      style={{ animationDelay: `${index * 60}ms` }}
-    >
-      <span className="relative grid h-16 w-16 shrink-0 place-items-center">
-        <img
-          src={art}
-          alt=""
-          aria-hidden
-          className={`animate-card-float h-20 w-20 object-contain ${tilt}`}
-          style={{
-            filter:
-              'drop-shadow(0 10px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 14px var(--rz-glow))',
-            animationDelay: `${0.1 + index * 0.08}s`,
-          }}
-        />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-1.5 font-serif text-lg text-white">
-          {title}
-          {locked && <LockIcon className="h-4 w-4 text-haze-400" />}
-        </span>
-        <span className="block text-xs text-haze-300">{sub}</span>
-      </span>
-      <span className="shrink-0 self-center" style={{ color: 'var(--rz-hue)' }}>
-        ›
-      </span>
-    </button>
   )
 }
 

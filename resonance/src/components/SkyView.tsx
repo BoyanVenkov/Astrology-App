@@ -11,9 +11,9 @@ import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
 import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
-import { LockIcon } from './icons'
 import { QuickHoroscope } from './QuickHoroscope'
 import { ChakraBody } from './ChakraBody'
+import { FeatureRow } from './FeatureRow'
 import artCompass from '../assets/art/icon-compass.webp'
 import artMoon from '../assets/art/icon-moon.webp'
 import artCompatibility from '../assets/art/icon-compatibility.webp'
@@ -33,50 +33,6 @@ interface SkyViewProps {
   onOpenMoon: () => void
   onOpenStones: () => void
   onUpgrade: (reason?: string) => void
-}
-
-function Tile({
-  art,
-  title,
-  sub,
-  locked = false,
-  index = 0,
-  onClick,
-}: {
-  art: string
-  title: string
-  sub: string
-  locked?: boolean
-  index?: number
-  onClick: () => void
-}) {
-  const tilt = index % 2 === 0 ? 'rotate-[7deg]' : '-rotate-[7deg]'
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="bento-tile glass-panel animate-rise-in relative flex min-h-[9.5rem] flex-col justify-end overflow-visible p-4 pt-2 text-start"
-      style={{ animationDelay: `${index * 45}ms` }}
-    >
-      <img
-        src={art}
-        alt=""
-        aria-hidden
-        className={`animate-card-float pointer-events-none absolute -top-4 end-1 h-20 w-20 object-contain ${tilt}`}
-        style={{
-          filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6)) drop-shadow(0 0 16px var(--rz-glow))',
-          animationDelay: `${0.1 + index * 0.08}s`,
-        }}
-      />
-      {locked && (
-        <LockIcon className="relative mb-1 h-3.5 w-3.5 text-haze-400" />
-      )}
-      <span className="relative font-serif text-lg leading-tight text-white">
-        {title}
-      </span>
-      <span className="relative text-[0.8rem] leading-snug text-haze-300">{sub}</span>
-    </button>
-  )
 }
 
 function chakraFieldSummary(field: ChakraReading[], t: TFn): string {
@@ -190,15 +146,15 @@ export function SkyView({
         </span>
       </button>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-        <Tile
+      <div className="flex flex-col gap-3">
+        <FeatureRow
           index={0}
           art={artCompass}
           title={hasNatal ? t('sky.tileChart') : t('sky.addChart')}
           sub={hasNatal ? t('sky.chartSub') : t('sky.addChartSub')}
           onClick={onOpenChart}
         />
-        <Tile
+        <FeatureRow
           index={1}
           art={artTransits}
           title={t('sky.tileTransits')}
@@ -209,14 +165,14 @@ export function SkyView({
           }
           onClick={onOpenTransits}
         />
-        <Tile
+        <FeatureRow
           index={2}
           art={artMoon}
           title={t('sky.tileMoon')}
           sub={t('sky.moonSub', { phase: phaseLabel(transit.moonPhase, t) })}
           onClick={onOpenMoon}
         />
-        <Tile
+        <FeatureRow
           index={3}
           art={artCompatibility}
           title={t('sky.tileCompat')}
@@ -224,7 +180,7 @@ export function SkyView({
           locked={!isPro}
           onClick={isPro ? onOpenCompat : () => onUpgrade(t('sky.reasonCompat'))}
         />
-        <Tile
+        <FeatureRow
           index={4}
           art={artHoroscope}
           title={t('sky.tileHoroscope')}
@@ -234,7 +190,7 @@ export function SkyView({
             isPro ? onOpenHoroscope : () => onUpgrade(t('sky.reasonHoroscope'))
           }
         />
-        <Tile
+        <FeatureRow
           index={5}
           art={artOracle}
           title={t('sky.tileOracle')}
@@ -246,7 +202,7 @@ export function SkyView({
           // straight to it.
           onClick={onOpenOracle}
         />
-        <Tile
+        <FeatureRow
           index={6}
           art={artApothecary}
           title={t('sky.tileStones')}
