@@ -236,7 +236,6 @@ function App() {
           <Dashboard
             onRitual={launchRitual}
             onUpgrade={openPaywall}
-            onPracticeSheet={() => setPracticeOpen(true)}
             onTab={goTab}
             onStones={() => setSub('stones')}
             onChakras={() => setSub('chakras')}

@@ -8,13 +8,10 @@ import { chakraLabel, useLocaleTag, useT } from '../lib/i18n'
 import { crystalName } from '../lib/crystals'
 import { chakraColor } from '../lib/resonanceData'
 import type { MessageKey } from '../lib/locales/en'
-import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { TodaysPractice } from './TodaysPractice'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
-import { drawRunes, layoutOf, runeDailySeed } from '../lib/runes'
-import { RuneGlyph } from './RuneGlyph'
 import { SparkIcon } from './icons'
 import artStone from '../assets/art/orb-stone.webp'
 import artField from '../assets/art/orb-field.webp'
@@ -27,7 +24,6 @@ import { hexToHue } from '../lib/color'
 interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
   onUpgrade: (reason?: string) => void
-  onPracticeSheet: () => void
   onTab: (tab: TabKey) => void
   onStones: () => void
   onChakras: () => void
@@ -46,7 +42,6 @@ const greetingKey = (h: number): MessageKey =>
 export function Dashboard({
   onRitual,
   onUpgrade,
-  onPracticeSheet,
   onTab,
   onStones,
   onChakras,
@@ -62,11 +57,6 @@ export function Dashboard({
   const moodLog = useAppStore((s) => s.moodLog)
   const tarotDrawnDay = useAppStore((s) => s.tarotDrawnDay)
   const runeDrawnDay = useAppStore((s) => s.runeDrawnDay)
-  const profile = useAppStore((s) => s.profile)
-  const dailyRune = useMemo(
-    () => drawRunes(layoutOf('one'), runeDailySeed(profile)).runes[0],
-    [profile],
-  )
 
   const [bucket, setBucket] = useState(() => Math.floor(Date.now() / 300_000))
   useEffect(() => {
@@ -94,7 +84,6 @@ export function Dashboard({
 
   const focusChakra = chakra?.key ?? transit?.resonantChakra ?? 'heart'
   const aura = computeAura(focusChakra, sessionLog, moodLog)
-  const doneToday = practicedToday(sessionLog)
   const focusPlanet = sky.find((p) => p.body === transit?.body)
   const rx = usePrescription()
 
@@ -226,30 +215,24 @@ export function Dashboard({
       {/* left — the one action */}
       <div className="flex flex-col gap-5">
       <TodaysPractice variant="full" onLaunch={onRitual} onUpgrade={onUpgrade} />
-      <button
-        type="button"
-        onClick={onPracticeSheet}
-        className="-mt-1.5 self-center rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition active:scale-95"
-        style={{
-          color: 'var(--rz-hue)',
-          borderColor: 'color-mix(in srgb, var(--rz-hue) 42%, transparent)',
-          background: 'color-mix(in srgb, var(--rz-hue) 9%, transparent)',
-        }}
-      >
-        {doneToday ? t('dash.practiseAgain') : t('dash.moreWays')} →
-      </button>
       </div>
 
       {/* right — the day around it */}
       <div className="flex flex-col gap-5">
       {/* the day at a glance — a unified glowing-sphere widget */}
-      <section className="glass-panel animate-rise-in grid grid-cols-3 divide-x divide-white/8 p-3.5">
+      <section className="glass-panel glass-panel-active animate-rise-in relative grid grid-cols-3 divide-x divide-white/10 overflow-visible px-2 pb-3.5 pt-5">
         <button
           type="button"
           onClick={() => onTab('you')}
-          className="card-press flex flex-col items-center gap-2 px-1"
+          className="card-press relative flex flex-col items-center gap-2 px-1 pt-1"
         >
-          <Aura state={aura} size={64} className="h-16 w-16" />
+          <span className="mb-0.5 grid place-items-center">
+            <Aura
+              state={aura}
+              size={96}
+              className="h-24 w-24 drop-shadow-[0_16px_18px_rgba(0,0,0,0.55)]"
+            />
+          </span>
           <span className="eyebrow">{t('dash.slotAura')}</span>
           <span className="data text-sm text-haze-200">
             {Math.round(aura.score * 100)}%
@@ -258,30 +241,30 @@ export function Dashboard({
         <button
           type="button"
           onClick={onChakras}
-          className="card-press flex flex-col items-center gap-2 px-1"
+          className="card-press relative flex flex-col items-center gap-2 px-1 pt-1"
         >
-          <span className="relative grid h-16 w-16 place-items-center">
-            <svg viewBox="0 0 64 64" className="pointer-events-none absolute inset-0 h-16 w-16 -rotate-90">
+          <span className="mb-0.5 relative grid h-24 w-24 place-items-center">
+            <svg viewBox="0 0 96 96" className="pointer-events-none absolute inset-0 h-24 w-24 -rotate-90">
               <circle
-                cx="32"
-                cy="32"
-                r="29"
+                cx="48"
+                cy="48"
+                r="43"
                 fill="none"
                 stroke={chakraColor(focusChakra)}
                 strokeOpacity="0.9"
-                strokeWidth="3.5"
+                strokeWidth="4.5"
                 strokeLinecap="round"
-                strokeDasharray={`${Math.max(aura.score, 0.12) * 182} 182`}
-                style={{ filter: `drop-shadow(0 0 8px ${chakraColor(focusChakra)})` }}
+                strokeDasharray={`${Math.max(aura.score, 0.12) * 270} 270`}
+                style={{ filter: `drop-shadow(0 0 10px ${chakraColor(focusChakra)})` }}
               />
             </svg>
             <img
               src={artField}
               alt=""
               aria-hidden
-              className="animate-aura-breathe h-11 w-11 object-contain"
+              className="animate-aura-breathe h-16 w-16 object-contain"
               style={{
-                filter: `hue-rotate(${hexToHue(chakraColor(focusChakra)) - 25}deg) saturate(1.4) drop-shadow(0 0 10px ${chakraColor(focusChakra)})`,
+                filter: `hue-rotate(${hexToHue(chakraColor(focusChakra)) - 25}deg) saturate(1.4) drop-shadow(0 14px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 14px ${chakraColor(focusChakra)})`,
               }}
             />
           </span>
@@ -294,18 +277,18 @@ export function Dashboard({
         <button
           type="button"
           onClick={onStones}
-          className="card-press flex flex-col items-center gap-2 px-1"
+          className="card-press relative flex flex-col items-center gap-2 px-1 pt-1"
         >
-          <span className="grid h-16 w-16 place-items-center">
+          <span className="mb-0.5 grid h-24 w-24 place-items-center">
             <img
               src={artStone}
               alt=""
               aria-hidden
-              className="h-14 w-14 object-contain"
+              className="h-[5.5rem] w-[5.5rem] object-contain"
               style={{
                 filter: `hue-rotate(${
                   heroStone ? hexToHue(heroStone.color) - 25 : 0
-                }deg) drop-shadow(0 0 10px ${heroStone?.color ?? 'var(--rz-glow)'})`,
+                }deg) drop-shadow(0 14px 16px rgba(0,0,0,0.55)) drop-shadow(0 0 14px ${heroStone?.color ?? 'var(--rz-glow)'})`,
               }}
             />
           </span>
@@ -348,21 +331,13 @@ export function Dashboard({
           className="bento-tile glass-panel relative flex min-h-[9.5rem] flex-col justify-end overflow-visible p-4 pt-2 text-start"
           style={{ animationDelay: '110ms' }}
         >
-          <span className="animate-card-float pointer-events-none absolute -top-5 end-2 grid h-24 w-24 place-items-center -rotate-6">
-            <img
-              src={artRuneStone}
-              alt=""
-              aria-hidden
-              className="h-24 w-24 object-contain"
-              style={{ filter: 'drop-shadow(0 16px 26px rgba(0,0,0,0.6)) drop-shadow(0 0 18px var(--rz-glow))' }}
-            />
-            <RuneGlyph
-              runeKey={dailyRune.key}
-              merkstave={runeDrawn && dailyRune.merkstave}
-              className="absolute h-7 w-5"
-              style={{ color: runeDrawn ? '#e3c063' : 'var(--rz-hue)' }}
-            />
-          </span>
+          <img
+            src={artRuneStone}
+            alt=""
+            aria-hidden
+            className="animate-card-float pointer-events-none absolute -top-5 end-2 h-24 w-24 -rotate-6 object-contain"
+            style={{ filter: 'drop-shadow(0 16px 26px rgba(0,0,0,0.6)) drop-shadow(0 0 18px var(--rz-glow))' }}
+          />
           <p className="relative font-serif text-lg leading-tight text-white">
             {t('dash.dailyRune')}
           </p>
