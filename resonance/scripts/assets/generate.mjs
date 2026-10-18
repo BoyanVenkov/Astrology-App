@@ -92,6 +92,9 @@ const ASSETS = {
   'icon-apothecary': `A small cluster of glowing crystal gemstones — faceted amethyst and rose-quartz points — with a soft inner glow. Premium 3D render, studio lighting. Icon-style composition.`,
   'icon-oracle': `A glowing mystical all-seeing eye set within a radiant sacred-geometry frame, fine gold linework, soft ethereal glow, symmetrical. Icon-style composition.`,
   'icon-moon': `A glowing crescent moon rendered with fine gold linework detail and soft star-dust particles drifting around it, mystical celestial illustration. Icon-style composition.`,
+  'icon-transits': `A minimalist glowing line-art illustration of two intersecting orbital rings at an angle, like a planetary aspect diagram, with small radiant planet nodes glowing where they cross, fine gold linework, faint radiating pulse lines like a radar sweep, mystical astrological aesthetic, symmetrical. Icon-style composition.`,
+  'icon-horoscope': `A 3D rendered illustration of an ornate open scroll of parchment with a radiant glowing zodiac wheel hovering just above it, fine gold filigree linework on the wheel, soft ethereal glow, mystical astrological aesthetic. Premium product photography style, floating slightly, dramatic soft lighting.`,
+  'icon-chakra-field': `A 3D rendered illustration of a vertical glowing column of seven small luminous orbs stacked top to bottom in rainbow chakra order — violet, indigo, blue, green, yellow, orange, red — each orb glossy and glass-like, connected by a thin radiant thread of golden light running through their centres, soft bloom, floating upright in empty space. Premium 3D render, studio lighting.`,
 }
 
 const WIDE_ASSETS = {

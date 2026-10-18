@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import {
   chakraLabel,
@@ -12,13 +11,17 @@ import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
 import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
-import { LockIcon, PulseIcon } from './icons'
+import { LockIcon } from './icons'
 import { QuickHoroscope } from './QuickHoroscope'
 import artCompass from '../assets/art/icon-compass.webp'
 import artMoon from '../assets/art/icon-moon.webp'
 import artCompatibility from '../assets/art/icon-compatibility.webp'
 import artOracle from '../assets/art/icon-oracle.webp'
 import artApothecary from '../assets/art/icon-apothecary.webp'
+import artTransits from '../assets/art/icon-transits.webp'
+import artHoroscope from '../assets/art/icon-horoscope.webp'
+import artChakraField from '../assets/art/icon-chakra-field.webp'
+import artWaveMesh from '../assets/art/bg-wave-mesh.webp'
 
 interface SkyViewProps {
   onOpenChart: () => void
@@ -33,7 +36,6 @@ interface SkyViewProps {
 }
 
 function Tile({
-  icon,
   art,
   title,
   sub,
@@ -41,33 +43,38 @@ function Tile({
   index = 0,
   onClick,
 }: {
-  icon?: ReactNode
-  art?: string
+  art: string
   title: string
   sub: string
   locked?: boolean
   index?: number
   onClick: () => void
 }) {
+  const tilt = index % 2 === 0 ? 'rotate-[7deg]' : '-rotate-[7deg]'
   return (
     <button
       type="button"
       onClick={onClick}
-      className="glass-panel bento-tile animate-rise-in flex flex-col gap-2 p-4 text-start"
+      className="bento-tile glass-panel animate-rise-in relative flex min-h-[9.5rem] flex-col justify-end overflow-visible p-4 pt-2 text-start"
       style={{ animationDelay: `${index * 45}ms` }}
     >
-      <span className="flex items-center justify-between">
-        {art ? (
-          <img src={art} alt="" aria-hidden className="h-10 w-10 object-contain" />
-        ) : (
-          <span style={{ color: 'var(--rz-hue)' }}>{icon}</span>
-        )}
-        {locked && <LockIcon className="h-3.5 w-3.5 text-haze-400" />}
-      </span>
-      <span className="font-serif text-lg leading-tight text-white">
+      <img
+        src={art}
+        alt=""
+        aria-hidden
+        className={`animate-card-float pointer-events-none absolute -top-4 end-1 h-20 w-20 object-contain ${tilt}`}
+        style={{
+          filter: 'drop-shadow(0 14px 20px rgba(0,0,0,0.6)) drop-shadow(0 0 16px var(--rz-glow))',
+          animationDelay: `${0.1 + index * 0.08}s`,
+        }}
+      />
+      {locked && (
+        <LockIcon className="relative mb-1 h-3.5 w-3.5 text-haze-400" />
+      )}
+      <span className="relative font-serif text-lg leading-tight text-white">
         {title}
       </span>
-      <span className="text-[0.8rem] leading-snug text-haze-300">{sub}</span>
+      <span className="relative text-[0.8rem] leading-snug text-haze-300">{sub}</span>
     </button>
   )
 }
@@ -119,19 +126,36 @@ export function SkyView({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 lg:max-w-3xl">
-      <header className="animate-bloom-in px-1">
-        <p className="eyebrow-hue">{t('sky.eyebrow')}</p>
-        <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.1] text-gilded">
-          {planetLabel(transit.body, t)}{' '}
-          <span aria-hidden>{planetSymbol(transit.body)}</span>
-          {focusPlanet?.retrograde && (
-            <span className="ms-1 align-super text-sm text-haze-300">℞</span>
-          )}
-          <span className="text-haze-400"> · </span>
-          {chakraLabel(chakra.key, t)}
-        </h1>
-        <p className="mt-1.5 text-[0.95rem] text-haze-300">{transitTitle(transit, t)}</p>
-      </header>
+      <div className="relative">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        >
+          <img
+            src={artWaveMesh}
+            alt=""
+            className="animate-drift absolute -left-[30%] -top-[20%] w-[160%] max-w-none opacity-60 mix-blend-screen"
+            style={{ animationDuration: '32s' }}
+          />
+          <span
+            className="animate-drift absolute end-[6%] top-[-6%] h-32 w-32 rounded-full opacity-35 blur-3xl"
+            style={{ background: 'var(--rz-hue)', animationDuration: '20s' }}
+          />
+        </div>
+        <header className="animate-bloom-in px-1">
+          <p className="eyebrow-hue">{t('sky.eyebrow')}</p>
+          <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.1] text-gilded">
+            {planetLabel(transit.body, t)}{' '}
+            <span aria-hidden>{planetSymbol(transit.body)}</span>
+            {focusPlanet?.retrograde && (
+              <span className="ms-1 align-super text-sm text-haze-300">℞</span>
+            )}
+            <span className="text-haze-400"> · </span>
+            {chakraLabel(chakra.key, t)}
+          </h1>
+          <p className="mt-1.5 text-[0.95rem] text-haze-300">{transitTitle(transit, t)}</p>
+        </header>
+      </div>
 
       <QuickHoroscope
         isPro={isPro}
@@ -140,27 +164,20 @@ export function SkyView({
         }
       />
 
-      {/* chakra field — full-width feature row with the live column */}
+      {/* chakra field — full-width feature row, the live column rendered as premium art */}
       <button
         type="button"
         onClick={onOpenChakras}
         className="glass-panel card-press animate-rise-in flex items-center gap-4 p-4 text-start"
       >
-        <span className="flex h-12 items-center gap-[3px]">
-          {[...chakraField].reverse().map((c) => (
-            <span
-              key={c.key}
-              className="animate-pulse-glow rounded-full"
-              style={{
-                width: 5 + (c.charge / 100) * 5,
-                height: 5 + (c.charge / 100) * 5,
-                background: c.color,
-                opacity: c.tone === 'quiet' ? 0.4 : 1,
-                boxShadow: c.focus ? `0 0 8px ${c.color}` : undefined,
-                animationDuration: c.focus ? '3s' : '6s',
-              }}
-            />
-          ))}
+        <span className="relative grid h-20 w-16 shrink-0 place-items-center">
+          <img
+            src={artChakraField}
+            alt=""
+            aria-hidden
+            className="animate-aura-breathe h-20 w-20 object-contain"
+            style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 16px var(--rz-glow))' }}
+          />
         </span>
         <span className="min-w-0 flex-1">
           <span className="eyebrow">{t('sky.chakraField')}</span>
@@ -186,7 +203,7 @@ export function SkyView({
         />
         <Tile
           index={1}
-          icon={<PulseIcon className="h-5 w-5" />}
+          art={artTransits}
           title={t('sky.tileTransits')}
           sub={
             aspects.length > 0
@@ -212,7 +229,7 @@ export function SkyView({
         />
         <Tile
           index={4}
-          icon={<ScrollIcon />}
+          art={artHoroscope}
           title={t('sky.tileHoroscope')}
           sub={isPro ? t('sky.tileHoroscopeSubPro') : t('sky.tileHoroscopeSub')}
           locked={!isPro}
@@ -248,16 +265,5 @@ export function SkyView({
         />
       </div>
     </div>
-  )
-}
-
-/* a little inline glyph the shared icon set doesn't have */
-
-function ScrollIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
-      <path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-      <path d="M9 8h7M9 12h7M9 16h4" />
-    </svg>
   )
 }
