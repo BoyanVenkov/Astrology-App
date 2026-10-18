@@ -41,7 +41,7 @@
   }
 
   html {
-    background-color: #03040c;
+    background-color: #080811;
     -webkit-text-size-adjust: 100%;
     overflow-x: clip;
   }
@@ -58,7 +58,9 @@
     font-weight: 400;
     line-height: 1.5;
     color: rgb(233 237 250 / 0.92);
-    /* Deep midnight — a nebula glow in the day's hue over a vertical void gradient */
+    /* Celestial Luxury — deep cosmic obsidian, a nebula glow in the day's hue
+       drifting over a vertical void gradient. The Starfield canvas sits
+       behind this at -z-20; this is the colour wash above it. */
     background:
       radial-gradient(
         ellipse 95% 55% at 50% -12%,
@@ -67,15 +69,15 @@
       ),
       radial-gradient(
         ellipse 75% 50% at 100% 0%,
-        rgba(37, 53, 111, 0.35),
+        rgba(88, 86, 214, 0.16),
         transparent 55%
       ),
       radial-gradient(
         ellipse 90% 70% at 0% 100%,
-        rgba(11, 18, 48, 0.5),
+        rgba(15, 12, 27, 0.6),
         transparent 60%
       ),
-      linear-gradient(180deg, #070b1c 0%, #05070f 55%, #03040c 100%);
+      linear-gradient(180deg, #0f0c1b 0%, #0a0915 55%, #080811 100%);
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -271,6 +273,42 @@
   &:active {
     background: rgba(255, 255, 255, 0.08);
   }
+}
+
+/* Consistent tactile feedback for anything tappable — a touch of scale and
+   brightness so the whole app feels pressable, not just flat/static. */
+@utility card-press {
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.18s ease;
+
+  &:active {
+    transform: scale(0.97);
+    filter: brightness(1.08);
+  }
+}
+
+/* A Bento tile's own micro-states — a slightly bigger, glowing lift instead
+   of the plain press above. Used on the grid tiles themselves. */
+@utility bento-tile {
+  transition:
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+
+  &:active {
+    transform: scale(1.02);
+    border-color: color-mix(in srgb, var(--rz-hue) 55%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--rz-hue) 30%, transparent),
+      0 20px 50px -18px rgba(0, 0, 0, 0.65), 0 0 36px -10px var(--rz-glow);
+  }
+}
+
+/* The inner-depth hint on a scrollable text container — a soft shadow
+   bitten out of the bottom edge, suggesting more content without a visible
+   scrollbar or a hard cut. */
+@utility scroll-depth {
+  box-shadow: inset 0 -14px 14px -10px rgba(0, 0, 0, 0.55);
 }
 
 /* Edge-to-edge horizontal strips without a visible scrollbar. */

@@ -6,6 +6,7 @@ import { usePrescription } from '../lib/prescription'
 import { moonVoidOfCourseCached } from '../lib/lunar'
 import { chakraLabel, useLocaleTag, useT } from '../lib/i18n'
 import { crystalName } from '../lib/crystals'
+import { chakraColor } from '../lib/resonanceData'
 import type { MessageKey } from '../lib/locales/en'
 import { practicedToday } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
@@ -15,7 +16,11 @@ import type { TabKey } from '../types/resonance'
 import { useChakraField } from '../lib/chakraField'
 import { drawRunes, layoutOf, runeDailySeed } from '../lib/runes'
 import { RuneGlyph } from './RuneGlyph'
-import { CardsIcon, SparkIcon } from './icons'
+import { SparkIcon } from './icons'
+import artStone from '../assets/art/orb-stone.webp'
+import artTarotDeck from '../assets/art/icon-tarot-deck.webp'
+import artRuneStone from '../assets/art/icon-rune-stone.webp'
+import { hexToHue } from '../lib/color'
 
 interface DashboardProps {
   onRitual: (preset: RitualPreset) => void
@@ -105,7 +110,7 @@ export function Dashboard({
           onClick={() =>
             onRitual({ mode: 'breath', minutes: 2, skipIntro: true })
           }
-          className="glass-panel flex items-center justify-between gap-3 border-amber-400/25 p-3 text-start active:scale-[0.99]"
+          className="glass-panel card-press animate-rise-in flex items-center justify-between gap-3 border-amber-400/25 p-3 text-start"
         >
           <span className="text-sm text-amber-200">
             {voc.active
@@ -127,34 +132,67 @@ export function Dashboard({
         </button>
       )}
 
-      {/* -------- the quiet centre — full width -------- */}
-      <header className="px-1 pt-1 md:mx-auto md:max-w-2xl md:text-center">
-        <p className="eyebrow-hue">
-          {t('dash.headerDate', {
-            greeting: t(when.greetingKey),
-            date: when.date,
-          })}
-        </p>
-        <h1 className="mt-2 font-serif text-[1.75rem] leading-[1.12] text-gilded md:text-[2rem]">
-          {transit ? rx.headline : t('dash.attuning')}
-        </h1>
-      </header>
-
-      {transit && (
-        <div className="px-2 py-1 text-center md:mx-auto md:max-w-2xl md:py-3">
-          <div className="mx-auto mb-3.5 flex items-center justify-center gap-2.5">
-            <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/20" />
-            <SparkIcon className="h-2.5 w-2.5" style={{ color: 'var(--rz-hue)' }} />
-            <span className="h-px w-9 bg-gradient-to-l from-transparent to-white/20" />
-          </div>
-          <p className="display text-[1.8rem] text-gilded md:text-[2.1rem]">
-            “{t(rx.mantra)}”
-          </p>
-          <p className="mt-3 eyebrow" style={{ color: 'var(--rz-hue)' }}>
-            {t('dash.mantra')}
-          </p>
+      {/* -------- the quiet centre — full width, nebula drifting behind it -------- */}
+      <div className="relative">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+        >
+          <span
+            className="animate-drift absolute start-[8%] top-[-10%] h-40 w-40 rounded-full opacity-40 blur-3xl"
+            style={{ background: 'var(--rz-hue)', animationDuration: '18s' }}
+          />
+          <span
+            className="animate-drift absolute end-[4%] top-[6%] h-28 w-28 rounded-full opacity-30 blur-3xl"
+            style={{ background: 'var(--rz-hue)', animationDuration: '22s', animationDelay: '-6s' }}
+          />
         </div>
-      )}
+
+        <header className="animate-bloom-in px-1 pt-1 md:mx-auto md:max-w-2xl md:text-center">
+          <p className="eyebrow-hue">
+            {t('dash.headerDate', {
+              greeting: t(when.greetingKey),
+              date: when.date,
+            })}
+          </p>
+          <h1 className="mt-2.5 font-serif text-[2.1rem] leading-[1.08] text-gilded md:text-[2.5rem]">
+            {transit ? rx.headline : t('dash.attuning')}
+          </h1>
+        </header>
+
+        {transit && (
+          <div
+            className="animate-bloom-in mt-4 md:mx-auto md:max-w-2xl"
+            style={{ animationDelay: '120ms' }}
+          >
+            {/* the celestial card — the mantra, lit from behind */}
+            <div
+              className="glass-panel glass-panel-active relative overflow-hidden px-6 py-7 text-center"
+              style={{ boxShadow: '0 0 60px -20px var(--rz-glow)' }}
+            >
+              <span
+                aria-hidden
+                className="animate-pulse-glow pointer-events-none absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+                style={{ background: 'var(--rz-hue)', opacity: 0.22 }}
+              />
+              <div className="relative mx-auto mb-4 flex items-center justify-center gap-2.5">
+                <span className="h-px w-9 bg-gradient-to-r from-transparent to-white/20" />
+                <SparkIcon
+                  className="animate-pulse-glow h-2.5 w-2.5"
+                  style={{ color: 'var(--rz-hue)' }}
+                />
+                <span className="h-px w-9 bg-gradient-to-l from-transparent to-white/20" />
+              </div>
+              <p className="display relative text-[2.05rem] leading-[1.18] text-gilded md:text-[2.35rem]">
+                “{t(rx.mantra)}”
+              </p>
+              <p className="relative mt-3.5 eyebrow" style={{ color: 'var(--rz-hue)' }}>
+                {t('dash.mantra')}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* -------- the day, in two panes on a wide screen -------- */}
       <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:items-start md:gap-x-10">
@@ -177,41 +215,49 @@ export function Dashboard({
 
       {/* right — the day around it */}
       <div className="flex flex-col gap-5">
-      {/* the day at a glance */}
-      <section className="glass-panel grid grid-cols-3 divide-x divide-white/8 p-3">
+      {/* the day at a glance — a unified glowing-sphere widget */}
+      <section className="glass-panel animate-rise-in grid grid-cols-3 divide-x divide-white/8 p-3.5">
         <button
           type="button"
           onClick={() => onTab('you')}
-          className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
+          className="card-press flex flex-col items-center gap-2 px-1"
         >
-          <Aura state={aura} size={40} className="h-10 w-10" />
+          <Aura state={aura} size={48} className="h-12 w-12" />
           <span className="eyebrow">{t('dash.slotAura')}</span>
-          <span className="text-xs tabular-nums text-haze-300">
+          <span className="data text-sm text-haze-200">
             {Math.round(aura.score * 100)}%
           </span>
         </button>
         <button
           type="button"
           onClick={onChakras}
-          className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
+          className="card-press flex flex-col items-center gap-2 px-1"
         >
-          <span className="flex h-10 items-center gap-[3px]">
-            {[...chakraField].reverse().map((c) => (
-              <span
-                key={c.key}
-                className="rounded-full"
-                style={{
-                  width: 4 + (c.charge / 100) * 4,
-                  height: 4 + (c.charge / 100) * 4,
-                  background: c.color,
-                  opacity: c.tone === 'quiet' ? 0.4 : 1,
-                  boxShadow: c.focus ? `0 0 8px ${c.color}` : undefined,
-                }}
-              />
-            ))}
+          <span
+            aria-hidden
+            className="grid h-12 w-12 place-items-center rounded-full"
+            style={{
+              background: `radial-gradient(circle at 36% 30%, color-mix(in srgb, ${chakraColor(focusChakra)} 55%, white), ${chakraColor(focusChakra)} 62%)`,
+              boxShadow: `0 0 18px -2px ${chakraColor(focusChakra)}`,
+            }}
+          >
+            <span className="flex items-center gap-[2.5px]">
+              {[...chakraField].reverse().map((c) => (
+                <span
+                  key={c.key}
+                  className="animate-pulse-glow rounded-full bg-white"
+                  style={{
+                    width: 2.5 + (c.charge / 100) * 2.5,
+                    height: 2.5 + (c.charge / 100) * 2.5,
+                    opacity: c.tone === 'quiet' ? 0.35 : 0.9,
+                    animationDuration: c.focus ? '3s' : '6s',
+                  }}
+                />
+              ))}
+            </span>
           </span>
           <span className="eyebrow">{t('dash.slotField')}</span>
-          <span className="truncate text-xs text-haze-300">
+          <span className="truncate text-sm text-haze-200">
             {chakraLabel(focusChakra, t)}
             {focusPlanet?.retrograde ? ' ℞' : ''}
           </span>
@@ -219,21 +265,23 @@ export function Dashboard({
         <button
           type="button"
           onClick={onStones}
-          className="flex flex-col items-center gap-1.5 px-1 active:scale-[0.97]"
+          className="card-press flex flex-col items-center gap-2 px-1"
         >
-          <span className="grid h-10 w-10 place-items-center">
-            <span
-              className="h-[18px] w-[18px] rounded-full"
+          <span className="grid h-12 w-12 place-items-center">
+            <img
+              src={artStone}
+              alt=""
+              aria-hidden
+              className="h-10 w-10 object-contain"
               style={{
-                background: `radial-gradient(circle at 34% 28%, rgba(255,255,255,0.85), ${
-                  heroStone?.color ?? 'var(--rz-hue)'
-                } 58%)`,
-                boxShadow: `0 0 12px ${heroStone?.color ?? 'var(--rz-glow)'}, inset 0 0 4px rgba(255,255,255,0.35)`,
+                filter: `hue-rotate(${
+                  heroStone ? hexToHue(heroStone.color) - 25 : 0
+                }deg) drop-shadow(0 0 8px ${heroStone?.color ?? 'var(--rz-glow)'})`,
               }}
             />
           </span>
           <span className="eyebrow">{t('dash.slotStone')}</span>
-          <span className="w-full truncate px-1 text-center text-xs text-haze-300">
+          <span className="w-full truncate px-1 text-center text-sm text-haze-200">
             {heroStone ? crystalName(heroStone.name, t) : '—'}
           </span>
         </button>
@@ -244,13 +292,14 @@ export function Dashboard({
         <button
           type="button"
           onClick={() => onTab('tarot')}
-          className="glass-panel flex flex-col gap-2 p-4 text-start active:scale-[0.99]"
+          className="glass-panel bento-tile animate-rise-in flex flex-col gap-1.5 p-4 text-start"
+          style={{ animationDelay: '60ms' }}
         >
-          <CardsIcon className="h-5 w-5" style={{ color: 'var(--rz-hue)' }} />
-          <p className="font-serif text-base leading-tight text-white">
+          <img src={artTarotDeck} alt="" aria-hidden className="h-11 w-11 object-contain" />
+          <p className="font-serif text-lg leading-tight text-white">
             {t('dash.dailyTarot')}
           </p>
-          <p className="text-xs text-haze-300">
+          <p className="text-sm text-haze-300">
             {tarotDrawn ? t('dash.tarotSeen') : t('dash.tarotNew')}
           </p>
         </button>
@@ -258,18 +307,22 @@ export function Dashboard({
         <button
           type="button"
           onClick={onRunes}
-          className="glass-panel flex flex-col gap-2 p-4 text-start active:scale-[0.99]"
+          className="glass-panel bento-tile animate-rise-in flex flex-col gap-1.5 p-4 text-start"
+          style={{ animationDelay: '110ms' }}
         >
-          <RuneGlyph
-            runeKey={dailyRune.key}
-            merkstave={runeDrawn && dailyRune.merkstave}
-            className="h-5 w-4"
-            style={{ color: runeDrawn ? '#e3c063' : 'var(--rz-hue)' }}
-          />
-          <p className="font-serif text-base leading-tight text-white">
+          <span className="relative grid h-11 w-11 place-items-center">
+            <img src={artRuneStone} alt="" aria-hidden className="h-11 w-11 object-contain" />
+            <RuneGlyph
+              runeKey={dailyRune.key}
+              merkstave={runeDrawn && dailyRune.merkstave}
+              className="absolute h-4 w-3"
+              style={{ color: runeDrawn ? '#e3c063' : 'var(--rz-hue)' }}
+            />
+          </span>
+          <p className="font-serif text-lg leading-tight text-white">
             {t('dash.dailyRune')}
           </p>
-          <p className="text-xs text-haze-300">
+          <p className="text-sm text-haze-300">
             {runeDrawn ? t('dash.runeSeen') : t('dash.runeNew')}
           </p>
         </button>

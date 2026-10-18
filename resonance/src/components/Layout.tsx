@@ -56,7 +56,7 @@ function PracticeOrb({
       type="button"
       onClick={onClick}
       aria-label={`${label}`}
-      className={`relative grid place-items-center rounded-full border transition active:scale-95 ${className}`}
+      className={`card-press relative grid place-items-center rounded-full border ${className}`}
       style={{
         background:
           'radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--rz-hue) 72%, #fff 16%), color-mix(in srgb, var(--rz-hue) 38%, #05070f) 78%)',
@@ -65,6 +65,12 @@ function PracticeOrb({
           '0 0 30px -4px var(--rz-glow), 0 8px 20px -6px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.3)',
       }}
     >
+      {/* a soft ambient ring pulsing outward — the orb breathing */}
+      <span
+        aria-hidden
+        className="animate-freq-ring pointer-events-none absolute inset-0 rounded-full"
+        style={{ boxShadow: `0 0 0 1.5px var(--rz-hue)` }}
+      />
       <span
         aria-hidden
         className="absolute inset-1.5 rounded-full border border-white/15"
@@ -93,7 +99,7 @@ function BottomTab({
       type="button"
       onClick={onClick}
       aria-current={active ? 'page' : undefined}
-      className="relative flex min-h-[3.4rem] flex-1 flex-col items-center justify-center gap-[3px] rounded-xl px-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] transition-[color,transform] active:scale-95"
+      className="card-press relative flex min-h-[3.4rem] flex-1 flex-col items-center justify-center gap-[3px] rounded-xl px-1 py-1.5 text-[10px] font-semibold uppercase tracking-[0.1em] transition-colors"
       style={{ color: active ? 'var(--rz-hue)' : 'rgba(193,203,228,0.94)' }}
     >
       <span
@@ -104,6 +110,16 @@ function BottomTab({
           background: 'color-mix(in srgb, var(--rz-hue) 15%, transparent)',
           boxShadow:
             'inset 0 0 0 1px color-mix(in srgb, var(--rz-hue) 34%, transparent)',
+        }}
+      />
+      {/* the active indicator — a thin glowing line riding the top edge */}
+      <span
+        aria-hidden
+        className="absolute inset-x-3 top-0 h-[2px] rounded-full transition-opacity"
+        style={{
+          opacity: active ? 1 : 0,
+          background: 'var(--rz-hue)',
+          boxShadow: '0 0 8px 1px var(--rz-glow)',
         }}
       />
       <span className="relative flex flex-col items-center gap-[3px]">
@@ -237,7 +253,7 @@ export function Layout({
           style={{
             paddingBottom: navHidden
               ? 'calc(1.5rem + env(safe-area-inset-bottom))'
-              : 'calc(6.5rem + env(safe-area-inset-bottom))',
+              : 'calc(7rem + env(safe-area-inset-bottom))',
           }}
         >
           {/* my-auto centres a short screen vertically on large displays and
@@ -246,18 +262,19 @@ export function Layout({
         </main>
       </div>
 
-      {/* ---- bottom tab bar (phone / small tablet) ---- */}
+      {/* ---- floating tab dock (phone / small tablet) ---- */}
       {!navHidden && (
         <nav
-          className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-md border-t border-white/[0.1] backdrop-blur-2xl md:hidden"
+          className="fixed inset-x-3 z-30 mx-auto max-w-[27rem] rounded-[1.75rem] border border-white/[0.12] backdrop-blur-2xl md:hidden"
           style={{
+            bottom: 'calc(0.75rem + env(safe-area-inset-bottom))',
             background:
-              'linear-gradient(180deg, rgba(8,12,28,0.86) 0%, rgba(3,4,12,0.98) 100%)',
-            boxShadow: '0 -1px 0 0 rgba(255,255,255,0.05) inset',
-            paddingBottom: 'env(safe-area-inset-bottom)',
+              'linear-gradient(180deg, rgba(10,14,32,0.88) 0%, rgba(4,5,14,0.96) 100%)',
+            boxShadow:
+              '0 1px 0 0 rgba(255,255,255,0.07) inset, 0 20px 46px -16px rgba(0,0,0,0.75), 0 0 32px -14px var(--rz-glow)',
           }}
         >
-          <div className="flex items-end px-1.5 pb-1 pt-1.5">
+          <div className="flex items-end px-1.5 pb-1.5 pt-1.5">
             {BOTTOM_LEFT.map((d) => (
               <BottomTab
                 key={d.key}

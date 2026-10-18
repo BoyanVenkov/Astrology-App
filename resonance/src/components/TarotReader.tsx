@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import {
   cardText,
@@ -56,24 +56,61 @@ function CardSlot({
   onFlip: () => void
   t: TFn
 }) {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+
+  const onPointerMove = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (faceUp) return
+    const r = e.currentTarget.getBoundingClientRect()
+    const px = (e.clientX - r.left) / r.width - 0.5
+    const py = (e.clientY - r.top) / r.height - 0.5
+    setTilt({ x: py * -14, y: px * 14 })
+  }
+  const resetTilt = () => setTilt({ x: 0, y: 0 })
+
   return (
     <button
       type="button"
       onClick={onFlip}
+      onPointerMove={onPointerMove}
+      onPointerLeave={resetTilt}
+      onPointerUp={resetTilt}
       disabled={faceUp}
       className="tf-scene block w-full"
       aria-label={faceUp ? cardText(drawn.card, t).name : t('tr.turnCard')}
     >
-      <div className={`tf-card aspect-[200/340] ${faceUp ? 'is-face' : ''}`}>
-        <div className="tf-side">
-          <TarotCardBack className="h-full w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]" />
-        </div>
-        <div className="tf-side tf-side-face">
-          <TarotCardFace
-            card={drawn.card}
-            reversed={drawn.reversed}
-            className="h-full w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
-          />
+      {/* float layer — a CSS keyframe animation, untouched by the tilt below */}
+      <div className={faceUp ? '' : 'animate-card-float'}>
+        {/* tilt layer — instant pointer-driven transform, separate element so
+            it never fights the flip's own 0.7s transition below */}
+        <div
+          style={{
+            transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+            transition: 'transform 0.15s ease-out',
+          }}
+        >
+          <div className={`tf-card aspect-[200/340] ${faceUp ? 'is-face' : ''}`}>
+            <div className="tf-side relative overflow-hidden rounded-[8%]">
+              <TarotCardBack className="h-full w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]" />
+              {/* gold foil sheen — sweeps on its own, brightens on tilt */}
+              <span
+                aria-hidden
+                className="animate-shimmer pointer-events-none absolute inset-0 rounded-[8%]"
+                style={{
+                  background:
+                    'linear-gradient(115deg, transparent 30%, rgba(255,215,0,0.28) 46%, rgba(255,215,0,0.5) 50%, rgba(255,215,0,0.28) 54%, transparent 70%)',
+                  backgroundSize: '250% 100%',
+                  opacity: 0.6 + Math.min(Math.abs(tilt.y) / 14, 1) * 0.4,
+                }}
+              />
+            </div>
+            <div className="tf-side tf-side-face">
+              <TarotCardFace
+                card={drawn.card}
+                reversed={drawn.reversed}
+                className="h-full w-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </button>

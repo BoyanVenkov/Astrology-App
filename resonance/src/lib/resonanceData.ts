@@ -7,13 +7,13 @@ const CHAKRA_META: Record<
   ChakraKey,
   { name: string; note: string; color: string }
 > = {
-  root: { name: 'Root', note: 'C', color: '#ef4444' },
-  sacral: { name: 'Sacral', note: 'D', color: '#f97316' },
-  'solar-plexus': { name: 'Solar Plexus', note: 'E', color: '#facc15' },
-  heart: { name: 'Heart', note: 'F', color: '#34d399' },
-  throat: { name: 'Throat', note: 'G', color: '#38bdf8' },
-  'third-eye': { name: 'Third Eye', note: 'A', color: '#6366f1' },
-  crown: { name: 'Crown', note: 'B', color: '#a78bfa' },
+  root: { name: 'Root', note: 'C', color: '#FF3B30' },
+  sacral: { name: 'Sacral', note: 'D', color: '#FF9500' },
+  'solar-plexus': { name: 'Solar Plexus', note: 'E', color: '#FFCC00' },
+  heart: { name: 'Heart', note: 'F', color: '#34C759' },
+  throat: { name: 'Throat', note: 'G', color: '#5AC8FA' },
+  'third-eye': { name: 'Third Eye', note: 'A', color: '#5856D6' },
+  crown: { name: 'Crown', note: 'B', color: '#AF52DE' },
 }
 
 export const chakraName = (key: ChakraKey): string => CHAKRA_META[key].name

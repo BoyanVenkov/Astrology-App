@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import {
   houseArena,
@@ -9,7 +9,7 @@ import {
 } from '../lib/i18n'
 import { useChakraField, type ChakraContact, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
-import { ChakraColumn } from './ChakraColumn'
+import { ChakraBody } from './ChakraBody'
 import { LockIcon } from './icons'
 import { Screen } from './Screen'
 import type { RitualPreset } from '../types/resonance'
@@ -55,6 +55,8 @@ function ChakraRow({
   onToggle,
   onRitual,
   t,
+  index = 0,
+  rowRef,
 }: {
   c: ChakraReading
   open: boolean
@@ -62,6 +64,8 @@ function ChakraRow({
   onToggle: () => void
   onRitual: (preset: RitualPreset) => void
   t: TFn
+  index?: number
+  rowRef?: (el: HTMLDivElement | null) => void
 }) {
   const driverText = c.driver
     ? contactLine(c.driver, t)
@@ -71,15 +75,17 @@ function ChakraRow({
 
   return (
     <div
-      className={`glass-panel overflow-hidden ${c.focus ? 'glass-panel-active' : ''} ${
+      ref={rowRef}
+      className={`glass-panel animate-rise-in overflow-hidden ${c.focus ? 'glass-panel-active' : ''} ${
         locked ? 'opacity-70' : ''
       }`}
+      style={{ animationDelay: `${index * 45}ms` }}
     >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={locked ? undefined : open}
-        className="flex w-full items-center gap-3 p-4 text-start active:scale-[0.995]"
+        className="card-press flex w-full items-center gap-3 p-4 text-start"
       >
         <span
           className="h-3.5 w-3.5 shrink-0 rounded-full"
@@ -131,17 +137,17 @@ function ChakraRow({
 
       {open && (
         <div className="animate-rise-in border-t border-white/[0.06] px-4 py-4">
-          <p className="text-[11px] uppercase tracking-[0.14em] text-haze-500">
+          <p className="text-xs uppercase tracking-[0.14em] text-haze-500">
             {c.sanskrit} · {c.element} · {c.location}
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-haze-200">{c.theme}.</p>
+          <p className="mt-2 text-[0.9rem] leading-relaxed text-haze-200">{c.theme}.</p>
 
           {c.contacts.length > 0 ? (
-            <ul className="mt-3 flex flex-col gap-1.5">
+            <ul className="no-scrollbar mt-3 flex max-h-[11rem] flex-col gap-2 overflow-y-auto overscroll-contain">
               {c.contacts.map((ct, i) => (
                 <li
                   key={`${ct.transiting}-${ct.other}-${ct.aspect}-${i}`}
-                  className="flex items-center justify-between text-xs"
+                  className="flex items-center justify-between text-[0.8rem]"
                 >
                   <span className="text-haze-100">{contactLine(ct, t)}</span>
                   <span className="data shrink-0 text-haze-400">
@@ -152,13 +158,13 @@ function ChakraRow({
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-xs text-haze-400">
+            <p className="mt-3 text-[0.8rem] text-haze-400">
               {t('field.nothingAspecting')}
             </p>
           )}
 
           {c.house && c.house >= 1 && (
-            <p className="mt-3 text-xs text-haze-300">
+            <p className="mt-3 text-[0.8rem] text-haze-300">
               {t('field.landingHouse', {
                 ord: ordinal(c.house, t),
                 arena: houseArena(c.house, t),
@@ -167,7 +173,7 @@ function ChakraRow({
           )}
 
           <p
-            className="mt-3 rounded-xl border px-3 py-2 text-sm"
+            className="mt-3 rounded-xl border px-3.5 py-2.5 text-[0.9rem] leading-relaxed"
             style={{
               borderColor: `${c.color}33`,
               background: `${c.color}0f`,
@@ -182,7 +188,7 @@ function ChakraRow({
             onClick={() =>
               onRitual({ mode: 'frequency', frequency: c.frequency, minutes: 10 })
             }
-            className="mt-3 w-full rounded-[0.9rem] border border-white/10 bg-white/[0.03] py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-haze-200 active:bg-white/[0.08]"
+            className="card-press mt-3 w-full rounded-[0.9rem] border border-white/10 bg-white/[0.03] py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-haze-200"
           >
             {t('field.tune', { chakra: c.name, hz: c.frequency })}
           </button>
@@ -199,6 +205,14 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
   const editProfile = useAppStore((s) => s.editProfile)
   const { isPro } = useEntitlements()
   const [open, setOpen] = useState<ChakraReading['key'] | null>(null)
+  const rowRefs = useRef<Partial<Record<ChakraReading['key'], HTMLDivElement | null>>>({})
+  const openAndScroll = (k: ChakraReading['key']) => {
+    setOpen((cur) => (cur === k ? null : k))
+    window.setTimeout(
+      () => rowRefs.current[k]?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
+      80,
+    )
+  }
 
   const focus = field.find((c) => c.focus) ?? field[3]
   const strained = field.filter(
@@ -257,11 +271,10 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
       width="wide"
     >
       <div className="flex flex-col gap-4 md:grid md:grid-cols-[minmax(0,20rem)_1fr] md:items-start md:gap-8">
-      <div className="flex justify-center py-1 md:sticky md:top-4">
-        <ChakraColumn
+      <div className="flex justify-center py-2 md:sticky md:top-4">
+        <ChakraBody
           field={field}
-          size={300}
-          labels
+          size={280}
           selected={open}
           onSelect={(k) => {
             const locked = !isPro && !field.find((c) => c.key === k)?.focus
@@ -269,20 +282,24 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
               onUpgrade(t('field.reasonFull'))
               return
             }
-            setOpen((cur) => (cur === k ? null : k))
+            openAndScroll(k)
           }}
         />
       </div>
 
       <div className="flex flex-col gap-2.5">
-      <p className="px-1 text-sm leading-relaxed text-haze-300">{summary}</p>
+      <p className="px-1 text-[0.95rem] leading-relaxed text-haze-300">{summary}</p>
 
-        {field.map((c) => {
+        {field.map((c, i) => {
           const locked = !isPro && !c.focus
           return (
             <ChakraRow
               key={c.key}
               c={c}
+              index={i}
+              rowRef={(el) => {
+                rowRefs.current[c.key] = el
+              }}
               locked={locked}
               open={open === c.key}
               onToggle={() =>
@@ -300,7 +317,7 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
         <button
           type="button"
           onClick={() => onUpgrade(t('field.reasonFull'))}
-          className="glass-panel glass-panel-active flex items-center justify-between gap-3 p-4 text-start active:scale-[0.99]"
+          className="glass-panel glass-panel-active card-press flex items-center justify-between gap-3 p-4 text-start"
         >
           <span>
             <span className="flex items-center gap-1.5 font-serif text-lg text-white">

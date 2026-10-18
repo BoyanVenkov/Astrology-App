@@ -9,11 +9,11 @@ export function BackButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label={t('common.back')}
-      className="-ms-1 grid h-9 w-9 shrink-0 place-items-center self-start rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-white/15"
+      className="card-press -ms-1 grid h-10 w-10 shrink-0 place-items-center self-start rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] active:bg-white/15"
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-[1.15rem] w-[1.15rem] rtl:-scale-x-100"
+        className="h-[1.2rem] w-[1.2rem] rtl:-scale-x-100"
         fill="none"
         stroke="currentColor"
         strokeWidth={2.4}
@@ -60,25 +60,29 @@ export function Screen({
 }: ScreenProps) {
   return (
     <div
-      className={`mx-auto flex w-full flex-col gap-4 ${
+      className={`mx-auto flex w-full flex-col gap-5 ${
         width === 'wide' ? '' : 'md:max-w-2xl'
       }`}
     >
-      <header className="flex items-start gap-2">
+      <header className="animate-bloom-in flex items-start gap-3">
         {onBack && <BackButton onClick={onBack} />}
         <div className="min-w-0 flex-1 pt-0.5">
           {eyebrow && <p className="eyebrow-hue">{eyebrow}</p>}
-          <h1 className="mt-1 font-serif text-2xl leading-tight text-gilded md:text-[1.75rem]">
+          <h1 className="mt-1.5 font-serif text-[1.9rem] leading-[1.08] text-gilded md:text-[2.2rem]">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-1 text-sm text-haze-300">{subtitle}</p>
+            <p className="mt-1.5 text-[0.95rem] leading-relaxed text-haze-200">
+              {subtitle}
+            </p>
           )}
         </div>
         {action && <div className="shrink-0 pt-1">{action}</div>}
       </header>
 
-      {children}
+      <div className="animate-rise-in flex flex-col gap-5" style={{ animationDelay: '80ms' }}>
+        {children}
+      </div>
     </div>
   )
 }

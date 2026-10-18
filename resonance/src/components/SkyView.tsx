@@ -12,15 +12,13 @@ import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
 import { useChakraField, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
-import {
-  ApothecaryIcon,
-  CompassIcon,
-  LockIcon,
-  MoonIcon,
-  OracleIcon,
-  PulseIcon,
-} from './icons'
+import { LockIcon, PulseIcon } from './icons'
 import { QuickHoroscope } from './QuickHoroscope'
+import artCompass from '../assets/art/icon-compass.webp'
+import artMoon from '../assets/art/icon-moon.webp'
+import artCompatibility from '../assets/art/icon-compatibility.webp'
+import artOracle from '../assets/art/icon-oracle.webp'
+import artApothecary from '../assets/art/icon-apothecary.webp'
 
 interface SkyViewProps {
   onOpenChart: () => void
@@ -36,31 +34,40 @@ interface SkyViewProps {
 
 function Tile({
   icon,
+  art,
   title,
   sub,
   locked = false,
+  index = 0,
   onClick,
 }: {
-  icon: ReactNode
+  icon?: ReactNode
+  art?: string
   title: string
   sub: string
   locked?: boolean
+  index?: number
   onClick: () => void
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="glass-panel flex flex-col gap-2 p-4 text-start transition active:scale-[0.98]"
+      className="glass-panel bento-tile animate-rise-in flex flex-col gap-2 p-4 text-start"
+      style={{ animationDelay: `${index * 45}ms` }}
     >
       <span className="flex items-center justify-between">
-        <span style={{ color: 'var(--rz-hue)' }}>{icon}</span>
+        {art ? (
+          <img src={art} alt="" aria-hidden className="h-10 w-10 object-contain" />
+        ) : (
+          <span style={{ color: 'var(--rz-hue)' }}>{icon}</span>
+        )}
         {locked && <LockIcon className="h-3.5 w-3.5 text-haze-400" />}
       </span>
-      <span className="font-serif text-base leading-tight text-white">
+      <span className="font-serif text-lg leading-tight text-white">
         {title}
       </span>
-      <span className="text-xs leading-snug text-haze-300">{sub}</span>
+      <span className="text-[0.8rem] leading-snug text-haze-300">{sub}</span>
     </button>
   )
 }
@@ -112,9 +119,9 @@ export function SkyView({
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 lg:max-w-3xl">
-      <header className="px-1">
+      <header className="animate-bloom-in px-1">
         <p className="eyebrow-hue">{t('sky.eyebrow')}</p>
-        <h1 className="mt-1.5 font-serif text-2xl leading-tight text-gilded">
+        <h1 className="mt-2 font-serif text-[1.9rem] leading-[1.1] text-gilded">
           {planetLabel(transit.body, t)}{' '}
           <span aria-hidden>{planetSymbol(transit.body)}</span>
           {focusPlanet?.retrograde && (
@@ -123,7 +130,7 @@ export function SkyView({
           <span className="text-haze-400"> · </span>
           {chakraLabel(chakra.key, t)}
         </h1>
-        <p className="mt-1 text-sm text-haze-300">{transitTitle(transit, t)}</p>
+        <p className="mt-1.5 text-[0.95rem] text-haze-300">{transitTitle(transit, t)}</p>
       </header>
 
       <QuickHoroscope
@@ -137,29 +144,30 @@ export function SkyView({
       <button
         type="button"
         onClick={onOpenChakras}
-        className="glass-panel flex items-center gap-4 p-4 text-start transition active:scale-[0.99]"
+        className="glass-panel card-press animate-rise-in flex items-center gap-4 p-4 text-start"
       >
         <span className="flex h-12 items-center gap-[3px]">
           {[...chakraField].reverse().map((c) => (
             <span
               key={c.key}
-              className="rounded-full"
+              className="animate-pulse-glow rounded-full"
               style={{
                 width: 5 + (c.charge / 100) * 5,
                 height: 5 + (c.charge / 100) * 5,
                 background: c.color,
                 opacity: c.tone === 'quiet' ? 0.4 : 1,
                 boxShadow: c.focus ? `0 0 8px ${c.color}` : undefined,
+                animationDuration: c.focus ? '3s' : '6s',
               }}
             />
           ))}
         </span>
         <span className="min-w-0 flex-1">
           <span className="eyebrow">{t('sky.chakraField')}</span>
-          <span className="mt-1 block font-serif text-lg leading-tight text-white">
+          <span className="mt-1 block font-serif text-xl leading-tight text-white">
             {chakraFieldSummary(chakraField, t)}
           </span>
-          <span className="mt-0.5 block text-xs text-haze-300">
+          <span className="mt-0.5 block text-[0.8rem] text-haze-300">
             {t('sky.chakraFieldSub')}
           </span>
         </span>
@@ -170,12 +178,14 @@ export function SkyView({
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
         <Tile
-          icon={<CompassIcon className="h-5 w-5" />}
+          index={0}
+          art={artCompass}
           title={hasNatal ? t('sky.tileChart') : t('sky.addChart')}
           sub={hasNatal ? t('sky.chartSub') : t('sky.addChartSub')}
           onClick={onOpenChart}
         />
         <Tile
+          index={1}
           icon={<PulseIcon className="h-5 w-5" />}
           title={t('sky.tileTransits')}
           sub={
@@ -186,19 +196,22 @@ export function SkyView({
           onClick={onOpenTransits}
         />
         <Tile
-          icon={<MoonIcon className="h-5 w-5" />}
+          index={2}
+          art={artMoon}
           title={t('sky.tileMoon')}
           sub={t('sky.moonSub', { phase: phaseLabel(transit.moonPhase, t) })}
           onClick={onOpenMoon}
         />
         <Tile
-          icon={<HeartLinkIcon />}
+          index={3}
+          art={artCompatibility}
           title={t('sky.tileCompat')}
           sub={isPro ? t('sky.tileCompatSubPro') : t('sky.tileCompatSub')}
           locked={!isPro}
           onClick={isPro ? onOpenCompat : () => onUpgrade(t('sky.reasonCompat'))}
         />
         <Tile
+          index={4}
           icon={<ScrollIcon />}
           title={t('sky.tileHoroscope')}
           sub={isPro ? t('sky.tileHoroscopeSubPro') : t('sky.tileHoroscopeSub')}
@@ -208,7 +221,8 @@ export function SkyView({
           }
         />
         <Tile
-          icon={<OracleIcon className="h-5 w-5" />}
+          index={5}
+          art={artOracle}
           title={t('sky.tileOracle')}
           sub={isPro ? t('sky.tileOracleSubPro') : t('sky.tileOracleSub')}
           locked={!isPro}
@@ -219,7 +233,8 @@ export function SkyView({
           onClick={onOpenOracle}
         />
         <Tile
-          icon={<ApothecaryIcon className="h-5 w-5" />}
+          index={6}
+          art={artApothecary}
           title={t('sky.tileStones')}
           sub={
             dailyCrystals.length > 0
@@ -236,16 +251,7 @@ export function SkyView({
   )
 }
 
-/* two little inline glyphs the shared icon set doesn't have */
-
-function HeartLinkIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={1.6}>
-      <circle cx="8.5" cy="12" r="5" />
-      <circle cx="15.5" cy="12" r="5" />
-    </svg>
-  )
-}
+/* a little inline glyph the shared icon set doesn't have */
 
 function ScrollIcon() {
   return (

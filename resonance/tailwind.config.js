@@ -34,8 +34,8 @@ export default {
           100: '#f9efcf',
           200: '#f2dc9c',
           300: '#e9c469',
-          400: '#e0ad3f',
-          500: '#d4af37',
+          400: '#E5C158',
+          500: '#FFD700',
           600: '#b8912e',
           700: '#8f6d25',
           800: '#6b5020',
@@ -176,6 +176,40 @@ export default {
           '50%': { transform: 'translateX(11px) rotate(5deg)' },
           '75%': { transform: 'translateX(-6px) rotate(-2deg)' },
         },
+        /* a bigger, more tactile entrance than rise-in — hero moments, hub tiles */
+        'bloom-in': {
+          from: { opacity: '0', transform: 'translateY(16px) scale(0.96)' },
+          to: { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        /* a slow, wide wander — ambient background orbs */
+        drift: {
+          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
+          '33%': { transform: 'translate(14px, -18px) scale(1.06)' },
+          '66%': { transform: 'translate(-10px, 10px) scale(0.97)' },
+        },
+        /* a slow continuous bob — unrevealed tarot cards / rune stones,
+           inviting a tap the way a floating object invites a touch */
+        'card-float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        /* one equalizer bar in a frequency visualizer — stack several with
+           staggered animation-delay for the full wave */
+        'wave-bar': {
+          '0%, 100%': { transform: 'scaleY(0.35)' },
+          '50%': { transform: 'scaleY(1)' },
+        },
+        /* an unsteady, irregular flicker — a strained/blocked chakra node */
+        flicker: {
+          '0%, 100%': { opacity: '0.9' },
+          '8%': { opacity: '0.35' },
+          '18%': { opacity: '0.85' },
+          '32%': { opacity: '0.3' },
+          '45%': { opacity: '0.9' },
+          '60%': { opacity: '0.45' },
+          '78%': { opacity: '0.8' },
+          '90%': { opacity: '0.4' },
+        },
       },
       animation: {
         'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
@@ -188,6 +222,11 @@ export default {
         'rise-in': 'rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both',
         'freq-ring': 'freq-ring 6s ease-out infinite',
         'card-shuffle': 'card-shuffle 0.6s ease-in-out infinite',
+        'bloom-in': 'bloom-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both',
+        drift: 'drift 16s ease-in-out infinite',
+        'card-float': 'card-float 4.5s ease-in-out infinite',
+        'wave-bar': 'wave-bar 1.1s ease-in-out infinite',
+        flicker: 'flicker 2.6s ease-in-out infinite',
       },
       transitionTimingFunction: {
         resonance: 'cubic-bezier(0.22, 1, 0.36, 1)',

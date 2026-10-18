@@ -1,8 +1,11 @@
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { usePrescription } from '../lib/prescription'
 import { useT } from '../lib/i18n'
-import { BreathIcon, FrequenciesIcon, LockIcon, PlayIcon } from './icons'
+import { LockIcon } from './icons'
 import type { RitualPreset } from '../types/resonance'
+import artMeditate from '../assets/art/icon-meditate.webp'
+import artBreathe from '../assets/art/icon-breathe.webp'
+import artFrequency from '../assets/art/icon-frequency.webp'
 
 interface TodaysPracticeProps {
   onLaunch: (preset: RitualPreset) => void
@@ -91,50 +94,43 @@ export function TodaysPractice({
     },
   ]
 
-  const Icon = (key: string) =>
-    key === 'breath'
-      ? BreathIcon
-      : key === 'frequency'
-        ? FrequenciesIcon
-        : PlayIcon
+  const ART: Record<string, string> = {
+    meditation: artMeditate,
+    breath: artBreathe,
+    frequency: artFrequency,
+  }
 
   const buttons = (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-2.5">
       {options.map((o) => {
-        const I = Icon(o.key)
         const showAccent = o.accent && !o.locked
         return (
           <button
             key={o.key}
             type="button"
             onClick={() => (o.locked ? onUpgrade(o.reason) : onLaunch(o.preset))}
-            className={`relative flex flex-col items-center gap-1.5 rounded-[0.9rem] px-1 py-3.5 text-center transition active:scale-[0.97] ${
-              showAccent
-                ? ''
-                : 'border border-white/[0.08] bg-white/[0.035] text-haze-100'
+            className={`bento-tile relative flex flex-col items-center gap-1 overflow-hidden rounded-[1rem] px-1 pb-2.5 pt-3 text-center border border-white/[0.08] bg-white/[0.035] text-haze-100 ${
+              showAccent ? 'glass-panel-active' : ''
             } ${o.locked ? 'opacity-60' : ''}`}
-            style={
-              showAccent
-                ? {
-                    background:
-                      'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 84%, #fff 16%), var(--rz-hue))',
-                    color: '#05070f',
-                    boxShadow:
-                      '0 8px 22px -10px var(--rz-glow), inset 0 1px 0 rgba(255,255,255,0.35)',
-                  }
-                : undefined
-            }
           >
+            <img
+              src={ART[o.key]}
+              alt=""
+              aria-hidden
+              className="relative h-12 w-12 object-contain"
+              style={{
+                filter: showAccent
+                  ? `drop-shadow(0 0 10px var(--rz-glow))`
+                  : 'saturate(0.7) brightness(0.85)',
+              }}
+            />
             {o.locked && (
               <LockIcon className="absolute end-2 top-2 h-3 w-3 text-haze-400" />
             )}
-            <I className="h-[18px] w-[18px]" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.12em]">
+            <span className="relative mt-0.5 text-xs font-semibold uppercase tracking-[0.12em] text-haze-100">
               {o.label}
             </span>
-            <span
-              className={`data text-[10px] ${o.accent ? 'text-[#05070f]/70' : 'text-haze-400'}`}
-            >
+            <span className="data relative text-[11px] text-haze-400">
               {o.sub}
             </span>
           </button>
@@ -149,18 +145,18 @@ export function TodaysPractice({
 
   return (
     <section
-      className={`glass-panel glass-panel-active p-4 ${className}`}
-      style={{ boxShadow: '0 0 32px -12px var(--rz-glow)' }}
+      className={`glass-panel glass-panel-active animate-bloom-in p-4.5 ${className}`}
+      style={{ boxShadow: '0 0 36px -12px var(--rz-glow)' }}
     >
       <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
         {rx.urgent ? t('tp.restoreFirst') : t('tp.today')}
       </p>
       {showDirective && (
-        <p className="mt-1.5 text-sm leading-relaxed text-haze-200">
+        <p className="mt-1.5 text-[0.95rem] leading-relaxed text-haze-200">
           {rx.directive}
         </p>
       )}
-      <div className="mt-3">{buttons}</div>
+      <div className="mt-3.5">{buttons}</div>
     </section>
   )
 }

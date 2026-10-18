@@ -17,6 +17,10 @@ scripts/audio/.env
 scripts/audio/.env.supabase
 scripts/audio/output/
 
+# Local image-asset generation secrets/output (see scripts/assets)
+scripts/assets/.env
+scripts/assets/output/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

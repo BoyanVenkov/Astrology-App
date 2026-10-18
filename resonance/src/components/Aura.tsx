@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import type { AuraState } from '../lib/aura'
+import artOrb from '../assets/art/orb-aura.webp'
 
 interface AuraProps {
   state: AuraState
@@ -8,8 +9,10 @@ interface AuraProps {
 }
 
 /**
- * The user's "aura" — a soft orb that grows, brightens and gains orbiting
- * motes as their practice score rises. Pure SVG + CSS animation.
+ * The user's "aura" — the generated iridescent orb as the core, with a
+ * live SVG halo + orbiting motes layered on top that still grow, brighten
+ * and multiply as their practice score rises. Real artwork, same meaningful
+ * data encoding as before.
  */
 export function Aura({ state, size = 200, className = '' }: AuraProps) {
   const { score, hue } = state
@@ -21,8 +24,8 @@ export function Aura({ state, size = 200, className = '' }: AuraProps) {
   )
 
   const c = size / 2
-  const coreR = size * (0.11 + score * 0.15)
-  const haloR = size * (0.2 + score * 0.28)
+  const coreR = size * (0.2 + score * 0.17)
+  const haloR = size * (0.26 + score * 0.26)
   const ringCount = 2 + Math.round(score * 3)
   const moteCount = Math.round(3 + score * 13)
   const glow = 0.32 + score * 0.5
@@ -47,81 +50,76 @@ export function Aura({ state, size = 200, className = '' }: AuraProps) {
   }, [moteCount, haloR])
 
   return (
-    <svg
-      viewBox={`0 0 ${size} ${size}`}
-      className={className}
+    <div
+      className={`relative ${className}`}
       role="img"
       aria-label={`Aura, ${Math.round(score * 100)} percent`}
     >
-      <defs>
-        <radialGradient id="aura-core" cx="50%" cy="45%" r="60%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity={0.9} />
-          <stop offset="35%" stopColor={hue} stopOpacity={0.9} />
-          <stop offset="100%" stopColor={hue} stopOpacity={0} />
-        </radialGradient>
-        <radialGradient id="aura-halo" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={hue} stopOpacity={glow * 0.5} />
-          <stop offset="70%" stopColor={hue} stopOpacity={glow * 0.15} />
-          <stop offset="100%" stopColor={hue} stopOpacity={0} />
-        </radialGradient>
-      </defs>
+      <svg viewBox={`0 0 ${size} ${size}`} className="absolute inset-0 h-full w-full">
+        <defs>
+          <radialGradient id="aura-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={hue} stopOpacity={glow * 0.5} />
+            <stop offset="70%" stopColor={hue} stopOpacity={glow * 0.15} />
+            <stop offset="100%" stopColor={hue} stopOpacity={0} />
+          </radialGradient>
+        </defs>
 
-      {/* outer breathing halo */}
-      <circle
-        cx={c}
-        cy={c}
-        r={haloR}
-        fill="url(#aura-halo)"
-        className={reducedMotion ? '' : 'animate-aura-breathe'}
-        style={{ transformOrigin: 'center' }}
-      />
+        <circle
+          cx={c}
+          cy={c}
+          r={haloR}
+          fill="url(#aura-halo)"
+          className={reducedMotion ? '' : 'animate-aura-breathe'}
+          style={{ transformOrigin: 'center' }}
+        />
 
-      {/* concentric rings */}
-      {Array.from({ length: ringCount }, (_, i) => {
-        const t = (i + 1) / (ringCount + 1)
-        return (
-          <circle
-            key={i}
-            cx={c}
-            cy={c}
-            r={coreR + (haloR - coreR) * t}
-            fill="none"
-            stroke={hue}
-            strokeWidth={0.6}
-            strokeOpacity={glow * (1 - t) * 0.6}
-          />
-        )
-      })}
-
-      {/* orbiting motes */}
-      <g
-        className={reducedMotion ? '' : 'animate-aura-orbit'}
-        style={{ transformOrigin: 'center' }}
-      >
-        {motes.map((m, i) => {
-          const rad = (m.angle * Math.PI) / 180
+        {Array.from({ length: ringCount }, (_, i) => {
+          const t = (i + 1) / (ringCount + 1)
           return (
             <circle
               key={i}
-              cx={c + m.r * Math.cos(rad)}
-              cy={c + m.r * Math.sin(rad)}
-              r={m.size}
-              fill={hue}
-              fillOpacity={m.dim * glow}
+              cx={c}
+              cy={c}
+              r={coreR + (haloR - coreR) * t}
+              fill="none"
+              stroke={hue}
+              strokeWidth={0.6}
+              strokeOpacity={glow * (1 - t) * 0.6}
             />
           )
         })}
-      </g>
 
-      {/* bright core */}
-      <circle
-        cx={c}
-        cy={c}
-        r={coreR}
-        fill="url(#aura-core)"
-        className={reducedMotion ? '' : 'animate-pulse-glow'}
-        style={{ transformOrigin: 'center' }}
+        <g
+          className={reducedMotion ? '' : 'animate-aura-orbit'}
+          style={{ transformOrigin: 'center' }}
+        >
+          {motes.map((m, i) => {
+            const rad = (m.angle * Math.PI) / 180
+            return (
+              <circle
+                key={i}
+                cx={c + m.r * Math.cos(rad)}
+                cy={c + m.r * Math.sin(rad)}
+                r={m.size}
+                fill={hue}
+                fillOpacity={m.dim * glow}
+              />
+            )
+          })}
+        </g>
+      </svg>
+
+      <img
+        src={artOrb}
+        alt=""
+        aria-hidden
+        className={reducedMotion ? 'absolute inset-0 h-full w-full object-contain' : 'animate-aura-breathe absolute inset-0 h-full w-full object-contain'}
+        style={{
+          padding: `${(1 - (0.42 + score * 0.3)) * 50}%`,
+          filter: `drop-shadow(0 0 ${8 + score * 14}px ${hue})`,
+          opacity: 0.85 + score * 0.15,
+        }}
       />
-    </svg>
+    </div>
   )
 }
