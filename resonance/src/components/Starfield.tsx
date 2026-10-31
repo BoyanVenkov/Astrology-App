@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { isScrolling } from '../lib/scrollCalm'
 
 interface Particle {
   x: number
@@ -68,8 +69,15 @@ export function Starfield() {
     let raf = 0
     let running = true
 
+    let lastDraw = 0
     const draw = (t: number) => {
       if (!running) return
+      // ~30 fps is plenty for slow twinkles; hold the frame while scrolling
+      if (t - lastDraw < 32 || isScrolling()) {
+        raf = requestAnimationFrame(draw)
+        return
+      }
+      lastDraw = t
       ctx.clearRect(0, 0, width, height)
       for (const p of particles) {
         if (!reduceMotion) {

@@ -504,6 +504,17 @@
   max-width: 42rem;
 }
 
+/* Scroll calm (lib/scrollCalm.ts): looping decoration pauses mid-scroll and
+   resumes from the same frame when the page settles. */
+.is-scrolling :is(
+  .animate-ken-burns, .animate-moon-breathe, .animate-orbit-slow, .animate-orbit-slow-rev,
+  .animate-twinkle, .animate-float-slow, .animate-card-float, .animate-aura-breathe,
+  .animate-aura-orbit, .animate-pulse-glow, .animate-drift, .animate-freq-ring,
+  .animate-hum, .animate-shimmer, .animate-flicker
+) {
+  animation-play-state: paused !important;
+}
+
 @media (min-width: 768px) {
   /* A faint fixed star wash behind everything, so the ambient space around a
      wide layout still reads as sky. Phones keep their per-tab SVG backdrop
