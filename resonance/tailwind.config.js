@@ -204,6 +204,11 @@ export default {
           '0%': { transform: 'scale(1.03) translate3d(0, 0, 0)' },
           '100%': { transform: 'scale(1.11) translate3d(-0.8%, -1.6%, 0)' },
         },
+        /* a section's scene arriving — a slow dissolve with a hair of zoom */
+        'scene-in': {
+          from: { opacity: '0', transform: 'scale(1.04)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
         /* moonlight swelling and settling */
         'moon-breathe': {
           '0%, 100%': { opacity: '0.45', transform: 'scale(0.96)' },
@@ -239,6 +244,7 @@ export default {
         flicker: 'flicker 2.6s ease-in-out infinite',
         'ken-burns': 'ken-burns 38s ease-in-out infinite alternate',
         'moon-breathe': 'moon-breathe 9s ease-in-out infinite',
+        'scene-in': 'scene-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both',
         'orbit-slow': 'aura-orbit 120s linear infinite',
         'orbit-slow-rev': 'aura-orbit 160s linear infinite reverse',
       },

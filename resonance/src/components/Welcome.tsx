@@ -8,6 +8,7 @@ import { PRIVACY_URL, TERMS_URL, openExternal } from '../lib/links'
 import { GlobeIcon } from './icons'
 import { LanguageSheet } from './LanguageSheet'
 import { ResonanceMark } from './Logo'
+import { SceneBackdrop } from './SceneBackdrop'
 
 /* ----------------------------------------------------------------- backdrop */
 
@@ -220,6 +221,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
         paddingBottom: 'max(1.75rem, env(safe-area-inset-bottom))',
       }}
     >
+      <SceneBackdrop scene="welcome" variant="full" />
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <WelcomeSky />
         <PlanetField />

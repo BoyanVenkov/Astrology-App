@@ -11,6 +11,7 @@ import { searchCities, type City } from '../data/cities'
 import { useT } from '../lib/i18n'
 import { DateField, TimeField } from './DateTimeField'
 import { ResonanceMark } from './Logo'
+import { SceneBackdrop } from './SceneBackdrop'
 
 const todayKey = (): string => {
   const n = new Date()
@@ -96,6 +97,7 @@ export function Onboarding() {
         paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom))',
       }}
     >
+      <SceneBackdrop scene="welcome" variant="full" />
       <div className="flex w-full flex-col py-6 my-auto">
       <ResonanceMark
         className="mb-5 h-9 w-9"

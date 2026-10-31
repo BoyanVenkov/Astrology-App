@@ -8,6 +8,7 @@ import { useAppStore } from '../store/useAppStore'
 import { crystalName } from '../lib/crystals'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
+import { SceneBackdrop, type SceneKey } from './SceneBackdrop'
 import { GemArt } from './ui'
 import { useEntitlements } from '../lib/premium'
 import {
@@ -429,6 +430,12 @@ export function Layout({
   const litSub = sub === 'fasting' ? 'moon' : sub
   // the Practice section's screens light the orb on the phone dock
   const practiceActive = sub === 'library' || sub === 'stones'
+  // each section's own place behind the content (Today has its moon hero)
+  const scene: SceneKey | null = practiceActive
+    ? 'practice'
+    : active === 'today'
+      ? null
+      : active
   const isActive = (item: SideItem) =>
     item.kind === 'sub'
       ? litSub === item.key
@@ -506,7 +513,7 @@ export function Layout({
         ))}
       </div>
 
-      <div className="mt-3 shrink-0">
+      <div className="mt-3 shrink-0 [@media(max-height:960px)]:hidden">
         <StoneOfDay
           expanded={expanded}
           onClick={() => onOpen('stones')}
@@ -524,6 +531,7 @@ export function Layout({
         className="pointer-events-none fixed inset-0 z-0 mx-auto h-[100dvh] w-full max-w-xl overflow-hidden md:max-w-none"
       >
         <TabBackdrop tab={active} />
+        {scene && <SceneBackdrop scene={scene} />}
       </div>
 
       {/* ---- sidebar (tablet / desktop) ---- */}

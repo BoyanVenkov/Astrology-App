@@ -7,6 +7,7 @@ import { localDayKey } from '../lib/timezone'
 import { ResonanceMark } from './Logo'
 import type { Mood } from '../types/resonance'
 import type { MessageKey } from '../lib/locales/en'
+import { SceneBackdrop } from './SceneBackdrop'
 
 interface MoodGateProps {
   onDone: () => void
@@ -41,10 +42,9 @@ export function MoodGate({ onDone }: MoodGateProps) {
       style={{
         paddingTop: 'max(2rem, env(safe-area-inset-top))',
         paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',
-        background:
-          'radial-gradient(ellipse 90% 45% at 50% 0%, var(--rz-hue-soft), transparent 60%)',
       }}
     >
+      <SceneBackdrop scene="welcome" variant="full" />
       <div className="my-auto flex w-full flex-col py-4">
       <ResonanceMark
         className="mb-6 h-8 w-8 self-center"

@@ -66,6 +66,9 @@ const timingKind = (a: Aspect): 'peak' | 'build' | 'fade' =>
 export interface HoroscopeSection {
   heading: string
   body: string
+  /** The transit this section reads — for its glyph and colour in the UI. */
+  transiting?: BodyName
+  harmony?: Aspect['def']['harmony']
 }
 
 export interface DailyHoroscope {
@@ -333,6 +336,8 @@ function composeSection(
       b,
     }),
     body: open + signLine + houseLine + '\n\n' + aspectLine + closeLine,
+    transiting: a.transiting,
+    harmony: a.def.harmony,
   }
 }
 

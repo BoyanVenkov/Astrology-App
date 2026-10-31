@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
 import { buildHoroscope } from '../lib/horoscope'
 import { clockHM, geoContext } from '../lib/geo'
@@ -10,11 +10,14 @@ import {
   transitTitle,
   useT,
 } from '../lib/i18n'
+import type { MessageKey } from '../lib/locales/en'
 import { useEntitlements } from '../lib/premium'
-import { chakraColor } from '../lib/resonanceData'
+import { planetSymbol } from '../data/esoteric'
 import { Screen } from './Screen'
 import { TodaysPractice } from './TodaysPractice'
+import { Chip, GlyphBadge, ListRow } from './ui'
 import type { RitualPreset } from '../types/resonance'
+import artHoroscope from '../assets/art/icon-horoscope.webp'
 
 interface HoroscopeProps {
   onBack: () => void
@@ -22,9 +25,44 @@ interface HoroscopeProps {
   onUpgrade: (reason?: string) => void
 }
 
+const HARMONY_COLOR = { hard: '#f29a9a', soft: '#86dcbc', neutral: '#e8c274' } as const
+
+const SIGN_KEYS = [
+  'Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+  'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces',
+]
+
+/** A titled block of the reading — one anchor the chip bar can jump to. */
+function Block({
+  id,
+  title,
+  children,
+  accent = false,
+}: {
+  id: string
+  title: string
+  children: ReactNode
+  accent?: boolean
+}) {
+  return (
+    <section
+      id={id}
+      className={`glass-panel scroll-mt-20 p-4 ${accent ? 'glass-gold' : ''}`}
+    >
+      <p className="eyebrow" style={accent ? { color: 'var(--rz-gold)' } : undefined}>
+        {title}
+      </p>
+      <div className="mt-2 flex flex-col gap-2 text-[0.92rem] leading-relaxed text-haze-100">
+        {children}
+      </div>
+    </section>
+  )
+}
+
 export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
   const t = useT()
   const { isPro } = useEntitlements()
+  const [open, setOpen] = useState(0)
 
   // The Sky tile is the only normal entry point and already gates this, but
   // that's UI-only — self-gate here too so this Pro screen can't be reached
@@ -53,24 +91,8 @@ export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
   const geo = geoContext(profile, currentLocation)
   const dominantBody = transit.body
   const dominantHouse = transitHouses[dominantBody as keyof typeof transitHouses]
-  const SIGN_KEYS = [
-    'Aries',
-    'Taurus',
-    'Gemini',
-    'Cancer',
-    'Leo',
-    'Virgo',
-    'Libra',
-    'Scorpio',
-    'Sagittarius',
-    'Capricorn',
-    'Aquarius',
-    'Pisces',
-  ]
   const risingNow =
-    nowAngles != null
-      ? SIGN_KEYS[Math.floor(nowAngles.ascendant / 30)]
-      : null
+    nowAngles != null ? SIGN_KEYS[Math.floor(nowAngles.ascendant / 30)] : null
 
   const horoscope = buildHoroscope(
     {
@@ -86,7 +108,23 @@ export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
     },
     t,
   )
-  const accent = chakraColor(chakra.key)
+
+  // the chip bar — every part of the reading, one tap away
+  const parts: { id: string; label: string }[] = [
+    { id: 'h-overview', label: t('nav.overview') },
+    ...(horoscope.sections.length ? [{ id: 'h-transits', label: t('sky.tileTransits') }] : []),
+    ...(horoscope.moon ? [{ id: 'h-moon', label: t('scr.horo.moonHead') }] : []),
+    ...(horoscope.threads.length ? [{ id: 'h-threads', label: t('scr.horo.threadsHead') }] : []),
+    ...(horoscope.timing.length ? [{ id: 'h-timing', label: t('scr.horo.timingHead') }] : []),
+    { id: 'h-week', label: t('scr.horo.weekHead') },
+    { id: 'h-sky', label: t('scr.horo.skyHead') },
+    { id: 'h-practice', label: t('scr.horo.practiceHead') },
+  ]
+  const jump = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+  // intro[0] is the "how this is read" note — a caption, not the lead
+  const [note, lead, ...rest] = horoscope.intro
 
   return (
     <Screen
@@ -95,103 +133,121 @@ export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
       subtitle={horoscope.greeting}
       onBack={onBack}
     >
+      {/* ---- jump bar, pinned while you read ---- */}
+      <nav
+        aria-label={t('scr.horo.eyebrow')}
+        className="no-scrollbar sticky top-0 z-20 -mx-4 -mt-2 flex gap-2 overflow-x-auto bg-[linear-gradient(180deg,rgba(5,6,15,0.92),rgba(5,6,15,0.7))] px-4 py-2.5 backdrop-blur-xl md:-mx-0 md:rounded-2xl"
+        style={{ top: 'env(safe-area-inset-top)' }}
+      >
+        {parts.map((p) => (
+          <Chip key={p.id} active={false} onClick={() => jump(p.id)}>
+            {p.label}
+          </Chip>
+        ))}
+      </nav>
 
-      <section className="glass-panel p-5">
-        {horoscope.intro.map((para, i) => (
-          <p
-            key={i}
-            className={`text-sm leading-relaxed ${
-              i === 0 ? 'text-haze-300' : 'text-haze-200'
-            } ${i > 0 ? 'mt-3' : ''}`}
-          >
+      {/* ---- the lead ---- */}
+      <section id="h-overview" className="glass-panel glass-gold relative scroll-mt-20 overflow-hidden p-5">
+        <img
+          src={artHoroscope}
+          alt=""
+          aria-hidden
+          className="animate-card-float pointer-events-none absolute -end-4 -top-4 h-28 w-28 object-contain opacity-80"
+        />
+        <GlyphBadge glyph={planetSymbol(transit.body)} size={44} />
+        {lead && (
+          <p className="relative mt-3 pe-16 font-serif text-[1.15rem] leading-snug text-[#fbf3df]">
+            {lead}
+          </p>
+        )}
+        {rest.map((para, i) => (
+          <p key={i} className="relative mt-3 text-[0.92rem] leading-relaxed text-haze-100">
             {para}
           </p>
         ))}
+        {note && (
+          <p className="relative mt-4 border-t border-white/[0.08] pt-3 text-[0.78rem] leading-relaxed text-haze-400">
+            {note}
+          </p>
+        )}
         {!hasNatal && (
           <button
             type="button"
             onClick={editProfile}
-            className="mt-3 text-xs uppercase tracking-[0.14em] text-gold-300"
+            className="relative mt-3 text-xs uppercase tracking-[0.14em] text-[color:var(--rz-gold)]"
           >
             {t('scr.horo.addBirth')}
           </button>
         )}
       </section>
 
-      {horoscope.sections.map((section) => (
-        <section key={section.heading} className="glass-panel p-4">
-          <p
-            className="font-serif text-lg text-white"
-            style={{ borderLeft: `2px solid ${accent}`, paddingLeft: 10 }}
-          >
-            {section.heading}
-          </p>
-          {section.body.split('\n\n').map((para, i) => (
-            <p
-              key={i}
-              className="mt-2 text-sm leading-relaxed text-haze-200"
-            >
-              {para}
-            </p>
-          ))}
-        </section>
-      ))}
+      {/* ---- one card per transit; the first one opens ---- */}
+      {horoscope.sections.length > 0 && (
+        <div id="h-transits" className="flex scroll-mt-20 flex-col gap-2.5">
+          {horoscope.sections.map((section, i) => {
+            const paras = section.body.split('\n\n')
+            const color = section.harmony ? HARMONY_COLOR[section.harmony] : '#e8c274'
+            return (
+              <ListRow
+                key={section.heading}
+                delay={i * 50}
+                active={i === 0}
+                expanded={open === i}
+                onClick={() => setOpen((o) => (o === i ? -1 : i))}
+                leading={
+                  <GlyphBadge
+                    glyph={section.transiting ? planetSymbol(section.transiting) : '✦'}
+                    color={color}
+                  />
+                }
+                title={<span className="font-serif text-[1.08rem] font-medium">{section.heading}</span>}
+                sub={
+                  open === i ? undefined : (
+                    <span className="line-clamp-2">{paras[0]}</span>
+                  )
+                }
+              >
+                <div className="flex flex-col gap-2.5 text-[0.92rem] leading-relaxed text-haze-100">
+                  {paras.map((para, j) => (
+                    <p key={j}>{para}</p>
+                  ))}
+                </div>
+              </ListRow>
+            )
+          })}
+        </div>
+      )}
 
       {horoscope.moon && (
-        <section className="glass-panel p-4">
-          <p className="eyebrow">{t('scr.horo.moonHead')}</p>
-          <p className="mt-2 text-sm leading-relaxed text-haze-200">
-            {horoscope.moon}
-          </p>
-        </section>
+        <Block id="h-moon" title={t('scr.horo.moonHead')}>
+          <p>{horoscope.moon}</p>
+        </Block>
       )}
 
       {horoscope.threads.length > 0 && (
-        <section className="glass-panel p-4">
-          <p className="eyebrow">{t('scr.horo.threadsHead')}</p>
+        <Block id="h-threads" title={t('scr.horo.threadsHead')}>
           {horoscope.threads.map((para, i) => (
-            <p
-              key={i}
-              className={`text-sm leading-relaxed text-haze-200 ${
-                i > 0 ? 'mt-2' : 'mt-2'
-              }`}
-            >
-              {para}
-            </p>
+            <p key={i}>{para}</p>
           ))}
-        </section>
+        </Block>
       )}
 
       {horoscope.timing.length > 0 && (
-        <section className="glass-panel p-4">
-          <p className="eyebrow">{t('scr.horo.timingHead')}</p>
+        <Block id="h-timing" title={t('scr.horo.timingHead')}>
           {horoscope.timing.map((para, i) => (
-            <p
-              key={i}
-              className="mt-2 text-sm leading-relaxed text-haze-200"
-            >
-              {para}
-            </p>
+            <p key={i}>{para}</p>
           ))}
-        </section>
+        </Block>
       )}
 
-      <section className="glass-panel p-4">
-        <p className="eyebrow">{t('scr.horo.weekHead')}</p>
-        <p className="mt-2 text-sm leading-relaxed text-haze-100">
-          {horoscope.close}
-        </p>
-      </section>
+      <Block id="h-week" title={t('scr.horo.weekHead')} accent>
+        <p className="font-serif text-[1.02rem] leading-snug text-[#fbf3df]">{horoscope.close}</p>
+      </Block>
 
-      <section className="glass-panel p-4">
-        <p className="eyebrow">{t('scr.horo.skyHead')}</p>
-        {risingNow && (
-          <p className="mt-2 text-sm text-haze-200">
-            {t('scr.horo.risingNow', { sign: signLabel(risingNow, t) })}
-          </p>
-        )}
+      <Block id="h-sky" title={t('scr.horo.skyHead')}>
+        {risingNow && <p>{t('scr.horo.risingNow', { sign: signLabel(risingNow, t) })}</p>}
         {dominantHouse && (
-          <p className="mt-1 text-sm text-haze-200">
+          <p>
             {t('scr.horo.transitingHouse', {
               planet: planetLabel(dominantBody, t),
               ord: ordinal(dominantHouse, t),
@@ -199,44 +255,37 @@ export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
           </p>
         )}
         {geo.hasLocation && (
-          <p className="mt-2 text-sm text-haze-300">
+          <p className="text-haze-300">
             {t('scr.horo.geoLine', {
               season: seasonLabel(geo.season, t),
               sunrise: clockHM(geo.sunrise),
               sunset: clockHM(geo.sunset),
               light:
                 geo.dayLengthHours != null
-                  ? t('scr.horo.dayLight', {
-                      hours: geo.dayLengthHours.toFixed(1),
-                    })
+                  ? t('scr.horo.dayLight', { hours: geo.dayLengthHours.toFixed(1) })
                   : '',
               place: geo.source === 'birth' ? t('scr.horo.birthPlace') : '',
             })}
           </p>
         )}
-        <p className="mt-2 text-sm leading-relaxed text-haze-200">
-          {t(geo.groundingKey)}
-        </p>
+        <p>{t(geo.groundingKey as MessageKey)}</p>
         {!geo.hasLocation && (
           <button
             type="button"
             onClick={editProfile}
-            className="mt-2 text-xs uppercase tracking-[0.14em] text-gold-300"
+            className="self-start text-xs uppercase tracking-[0.14em] text-[color:var(--rz-gold)]"
           >
             {t('scr.horo.addPlace')}
           </button>
         )}
-      </section>
+      </Block>
 
-      <section className="glass-panel glass-panel-active p-5">
-        <p className="eyebrow">{t('scr.horo.practiceHead')}</p>
-        <p className="mt-2 text-sm leading-relaxed text-haze-100">
-          {horoscope.practice}
-        </p>
-        <div className="mt-4">
+      <Block id="h-practice" title={t('scr.horo.practiceHead')} accent>
+        <p>{horoscope.practice}</p>
+        <div className="mt-2">
           <TodaysPractice variant="inline" onLaunch={onRitual} onUpgrade={onUpgrade} />
         </div>
-      </section>
+      </Block>
     </Screen>
   )
 }
