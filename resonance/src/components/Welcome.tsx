@@ -5,7 +5,7 @@ import { LOCALES, transitTitle, useT } from '../lib/i18n'
 import { CHAKRA_ORDER, chakraColor } from '../lib/resonanceData'
 import { signInWithGoogle } from '../lib/auth'
 import { PRIVACY_URL, TERMS_URL, openExternal } from '../lib/links'
-import { GlobeIcon } from './icons'
+import { ChevronIcon, GlobeIcon } from './icons'
 import { LanguageSheet } from './LanguageSheet'
 import { ResonanceMark } from './Logo'
 import { SceneBackdrop } from './SceneBackdrop'
@@ -194,8 +194,6 @@ export function Welcome({ onSkip }: WelcomeProps) {
   const t = useT()
   const transit = useAppStore((s) => s.transit)
   const locale = useAppStore((s) => s.locale)
-  const langHintSeen = useAppStore((s) => s.langHintSeen)
-  const dismissLangHint = useAppStore((s) => s.dismissLangHint)
   const localeNative =
     LOCALES.find((l) => l.code === locale)?.native ?? 'English'
 
@@ -227,52 +225,6 @@ export function Welcome({ onSkip }: WelcomeProps) {
         <PlanetField />
       </div>
 
-      <button
-        type="button"
-        onClick={() => setLangOpen(true)}
-        aria-label={t('welcome.language')}
-        className="absolute end-5 top-[max(1.25rem,env(safe-area-inset-top))] z-20 flex items-center gap-2 rounded-full border border-gold-500/30 bg-white/[0.06] py-1.5 ps-3 pe-3.5 text-[13px] font-medium text-haze-100 shadow-[0_2px_14px_-6px_rgba(0,0,0,0.5)] backdrop-blur-sm active:bg-white/[0.12]"
-      >
-        <GlobeIcon className="h-[1.05rem] w-[1.05rem] text-gold-300" />
-        <span>{localeNative}</span>
-      </button>
-
-      {!langHintSeen && (
-        <div
-          aria-hidden
-          className="fixed inset-0 z-[15] bg-midnight-void/70"
-        />
-      )}
-
-      {!langHintSeen && (
-        <div
-          className="absolute end-5 z-20 w-[15rem] rounded-2xl border border-gold-500/30 bg-[#0c1024]/95 p-4 shadow-[0_14px_34px_-12px_rgba(0,0,0,0.65)] backdrop-blur-sm"
-          style={{ top: 'calc(max(1.25rem, env(safe-area-inset-top)) + 3.1rem)' }}
-        >
-          <span
-            aria-hidden
-            className="absolute -top-[7px] end-6 h-3 w-3 rotate-45 border-s border-t border-gold-500/30 bg-[#0c1024]"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              setLangOpen(true)
-              dismissLangHint()
-            }}
-            className="block text-start text-[13px] leading-relaxed text-haze-100 active:text-white"
-          >
-            {t('welcome.langHint')}
-          </button>
-          <button
-            type="button"
-            onClick={dismissLangHint}
-            className="mt-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-300 active:text-gold-100"
-          >
-            {t('common.done')}
-          </button>
-        </div>
-      )}
-
       <div className="relative z-10 my-auto flex w-full flex-col py-8">
         <ResonanceMark
           className="mb-7 h-11 w-11 self-center"
@@ -298,14 +250,25 @@ export function Welcome({ onSkip }: WelcomeProps) {
 
       <div className="shrink-0">
         <div className="flex flex-col gap-2.5">
-          <p className="mb-1 text-center text-[11px] leading-relaxed text-haze-500">
+          {/* language sits with the actions, where the eye and thumb already are */}
+          <button
+            type="button"
+            onClick={() => setLangOpen(true)}
+            className="glass-veil mb-2 flex items-center gap-3 rounded-[0.95rem] border border-gold-500/35 px-4 py-3 text-start active:bg-white/[0.1]"
+          >
+            <GlobeIcon className="h-5 w-5 shrink-0 text-gold-300" />
+            <span className="flex-1 text-sm text-haze-200">{t('welcome.language')}</span>
+            <span className="text-sm font-semibold text-gold-200">{localeNative}</span>
+            <ChevronIcon className="h-4 w-4 shrink-0 -scale-x-100 text-gold-300 rtl:scale-x-100" />
+          </button>
+          <p className="mb-1 text-center text-xs leading-relaxed text-haze-300">
             {t('welcome.pitch')}
           </p>
           <button
             type="button"
             onClick={() => void google()}
             disabled={busy}
-            className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-gold-glow)] transition active:scale-[0.98] disabled:opacity-60"
+            className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-base font-semibold text-[#1a1c22] shadow-[0_0_0_2px_var(--rz-gold),0_0_28px_-4px_var(--rz-gold-glow),0_12px_32px_-10px_var(--rz-gold-glow)] transition active:scale-[0.98] disabled:opacity-60"
           >
             <GoogleG />
             {busy ? t('welcome.googleOpening') : t('welcome.google')}

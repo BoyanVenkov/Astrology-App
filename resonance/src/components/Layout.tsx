@@ -376,9 +376,9 @@ function TopBar({
         type="button"
         onClick={onSettings}
         aria-label={t('nav.settings')}
-        className="glass-veil pointer-events-auto grid h-10 w-10 place-items-center rounded-full text-[#eef1fb] transition hover:text-white active:scale-90"
+        className="glass-veil pointer-events-auto grid h-11 w-11 place-items-center rounded-full border border-gold-400/60 text-gold-200 shadow-[0_0_16px_-2px_var(--rz-gold-glow)] transition hover:text-gold-100 active:scale-90"
       >
-        <GearIcon className="h-[1.25rem] w-[1.25rem]" strokeWidth={1.8} />
+        <GearIcon className="h-6 w-6" strokeWidth={2} />
       </button>
       <button
         type="button"
@@ -574,9 +574,9 @@ export function Layout({
                 type="button"
                 onClick={onSettings}
                 aria-label={t('nav.settings')}
-                className="absolute end-2 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-white/15"
+                className="absolute end-3 grid h-11 w-11 place-items-center rounded-full border border-gold-400/60 bg-gold-500/15 text-gold-200 shadow-[0_0_16px_-2px_var(--rz-gold-glow),0_2px_10px_-3px_rgba(0,0,0,0.55)] transition active:scale-90 active:bg-gold-500/25"
               >
-                <GearIcon className="h-[1.3rem] w-[1.3rem]" strokeWidth={1.8} />
+                <GearIcon className="h-6 w-6" strokeWidth={2} />
               </button>
             </div>
             <TopBar
