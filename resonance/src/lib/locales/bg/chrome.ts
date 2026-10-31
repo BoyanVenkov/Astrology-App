@@ -148,6 +148,14 @@ export const chrome: Record<ChromeKey, string> = {
   'dash.tarotSeen': 'Виж картата за деня или направи разгъвка',
   'dash.tarotNew': 'Обърни картата си за днес',
   'dash.addBirth': 'Добави рождените си данни за личен прочит →',
+  'nav.explore': 'Открий',
+  'nav.collapse': 'Свий менюто',
+  'nav.expand': 'Разгъни менюто',
+  'dash.beginPractice': 'Започни практиката',
+  'dash.yourDay': 'Твоят ден',
+  'dash.lunarDay': 'Лунен ден {n}',
+  'dash.stoneOfDay': 'Камък на деня',
+  'dash.symbolicNote': 'Символичен прочит на днешното небе — не са здравни измервания.',
 
   /* ---- you ---- */
   'you.progress': 'Напредък',

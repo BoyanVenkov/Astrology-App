@@ -148,6 +148,14 @@ export const chrome: Record<ChromeKey, string> = {
   'dash.tarotSeen': 'Bugünün kartına bak ya da bir açılım çek',
   'dash.tarotNew': 'Bugün için kartını çevir',
   'dash.addBirth': 'Kişisel bir okuma için doğum bilgilerini ekle →',
+  'nav.explore': 'Keşfet',
+  'nav.collapse': 'Menüyü daralt',
+  'nav.expand': 'Menüyü genişlet',
+  'dash.beginPractice': 'Pratiğe başla',
+  'dash.yourDay': 'Senin günün',
+  'dash.lunarDay': 'Ay günü {n}',
+  'dash.stoneOfDay': 'Günün taşı',
+  'dash.symbolicNote': 'Bugünkü gökyüzünün sembolik yorumları — sağlık ölçümü değildir.',
 
   /* ---- sen ---- */
   'you.progress': 'İlerleme',

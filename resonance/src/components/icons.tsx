@@ -229,3 +229,65 @@ export function SparkIcon(props: IconProps) {
     </svg>
   )
 }
+
+/* ------------------------------------------------------- explore nav */
+
+export function ScrollIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M7 4h10.5a2 2 0 0 1 2 2v.5h-3V18a2.5 2.5 0 0 1-2.5 2.5H6A2.5 2.5 0 0 1 3.5 18v-.5h11" {...fill} />
+      <path d="M7 4h10.5a2 2 0 0 1 2 2v.5h-3" />
+      <path d="M7 4a2 2 0 0 0-2 2v11.5M16.5 6.5V18a2.5 2.5 0 0 1-2.5 2.5H6A2.5 2.5 0 0 1 3.5 18v-.5h11" />
+      <path d="M8.5 9h5M8.5 12h5M8.5 15h3" strokeOpacity="0.6" />
+    </svg>
+  )
+}
+
+export function OrbitIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="12" r="3" {...fill} />
+      <circle cx="12" cy="12" r="3" />
+      <ellipse cx="12" cy="12" rx="9.5" ry="4.2" transform="rotate(-28 12 12)" />
+      <circle cx="19.6" cy="7.2" r="1.4" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+export function RingsIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="9" cy="12" r="5.6" {...fill} />
+      <circle cx="9" cy="12" r="5.6" />
+      <circle cx="15" cy="12" r="5.6" />
+    </svg>
+  )
+}
+
+export function RuneIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M12 2.8c4.6 0 7.4 3.6 7.4 9.2 0 5.4-3 9.2-7.4 9.2s-7.4-3.8-7.4-9.2c0-5.6 2.8-9.2 7.4-9.2Z" {...fill} />
+      <path d="M12 2.8c4.6 0 7.4 3.6 7.4 9.2 0 5.4-3 9.2-7.4 9.2s-7.4-3.8-7.4-9.2c0-5.6 2.8-9.2 7.4-9.2Z" />
+      <path d="M10 7v10M10 7.5l4 3M10 11l4-3" />
+    </svg>
+  )
+}
+
+export function JournalIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <rect x="5" y="3.5" width="14" height="17" rx="2.2" {...fill} />
+      <rect x="5" y="3.5" width="14" height="17" rx="2.2" />
+      <path d="M8.5 3.5v17M11.5 8.5h4.5M11.5 11.5h4.5" strokeOpacity="0.6" />
+    </svg>
+  )
+}
+
+export function ChevronIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} strokeWidth={2}>
+      <path d="M15 5l-7 7 7 7" />
+    </svg>
+  )
+}

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { ASPECT_GLYPH } from '../lib/astrology'
 import { useAppStore } from '../store/useAppStore'
 import { clockHM, geoContext } from '../lib/geo'
 import { SIGNS } from '../lib/ephemeris'
@@ -16,13 +17,6 @@ interface TransitsProps {
   onBack: () => void
 }
 
-const ASPECT_GLYPH: Record<string, string> = {
-  conjunction: '☌︎',
-  opposition: '☍︎',
-  square: '□︎',
-  trine: '△︎',
-  sextile: '⚹︎',
-}
 
 export function Transits({ onBack }: TransitsProps) {
   const t = useT()

@@ -4,6 +4,7 @@ import type {
   Crystal,
   MeditationStyleKey,
   Mood,
+  RitualPreset,
   SolfeggioFrequency,
 } from '../types/resonance'
 import { useAppStore } from '../store/useAppStore'
@@ -202,4 +203,24 @@ export function usePrescription(): Prescription {
     aura,
     t,
   )
+}
+
+const midOf = (arr: number[], fallback: number): number =>
+  arr.length ? (arr[Math.floor(arr.length / 2)] ?? arr[0]) : fallback
+
+/** The one-tap default — breath when the day says restore first, else the meditation. */
+export function primaryPreset(rx: Prescription): RitualPreset {
+  return rx.urgent
+    ? {
+        mode: 'breath',
+        minutes: midOf(BREATH_PATTERNS[rx.breathPattern].durations, 6),
+        breathPattern: rx.breathPattern,
+        personalised: true,
+      }
+    : {
+        mode: 'meditation',
+        minutes: rx.minutes,
+        meditationStyle: rx.meditationStyle,
+        personalised: true,
+      }
 }

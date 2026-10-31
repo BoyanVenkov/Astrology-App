@@ -148,6 +148,14 @@ export const chrome: Record<ChromeKey, string> = {
   'dash.tarotSeen': 'आज का कार्ड देखें, या एक प्रसार निकालें',
   'dash.tarotNew': 'आज का अपना कार्ड पलटें',
   'dash.addBirth': 'व्यक्तिगत पठन के लिए अपने जन्म-विवरण जोड़ें →',
+  'nav.explore': 'खोजें',
+  'nav.collapse': 'मेनू समेटें',
+  'nav.expand': 'मेनू फैलाएँ',
+  'dash.beginPractice': 'अभ्यास शुरू करें',
+  'dash.yourDay': 'आपका दिन',
+  'dash.lunarDay': 'चंद्र दिन {n}',
+  'dash.stoneOfDay': 'आज का रत्न',
+  'dash.symbolicNote': 'आज के आकाश का प्रतीकात्मक पठन — यह स्वास्थ्य का माप नहीं है।',
 
   /* ---- आप ---- */
   'you.progress': 'प्रगति',

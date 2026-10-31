@@ -9,7 +9,7 @@ import { Dashboard } from './components/Dashboard'
 import { Horoscope } from './components/Horoscope'
 import { Journal } from './components/Journal'
 import { LanguageSheet } from './components/LanguageSheet'
-import { Layout } from './components/Layout'
+import { Layout, type NavSub } from './components/Layout'
 import { MoodCheckIn } from './components/MoodCheckIn'
 import { MoodGate } from './components/MoodGate'
 import { MoonScreen } from './components/MoonScreen'
@@ -35,6 +35,7 @@ import { syncNotifications } from './lib/notifications'
 import { useRevenueCat } from './lib/revenuecat'
 import { useCloudSync } from './lib/sync'
 import { usePrescription } from './lib/prescription'
+import { useEntitlements } from './lib/premium'
 import { localDayKey } from './lib/timezone'
 import { useAppStore } from './store/useAppStore'
 import type { RitualPreset, TabKey } from './types/resonance'
@@ -75,6 +76,7 @@ function App() {
   const [langOpen, setLangOpen] = useState(false)
   const auth = useAuth()
   const t = useT()
+  const { isPro } = useEntitlements()
   const authSkipped = useAppStore((s) => s.authSkipped)
   const skipAuth = useAppStore((s) => s.skipAuth)
   const locale = useAppStore((s) => s.locale)
@@ -142,6 +144,14 @@ function App() {
     setPracticeOpen(false)
   }
   const back = () => setSub(null)
+  // One entry point for every shortcut into a pushed screen (sidebar,
+  // dashboard widgets) — the Pro gates live here, not at each call site.
+  const openSub = (next: NavSub) => {
+    if (next === 'horoscope' && !isPro) return openPaywall(t('sky.reasonHoroscope'))
+    if (next === 'compat' && !isPro) return openPaywall(t('sky.reasonCompat'))
+    setPracticeOpen(false)
+    setSub(next)
+  }
   const launchRitual = (preset: RitualPreset) => {
     setPracticeOpen(false)
     setRitual(preset)
@@ -178,7 +188,9 @@ function App() {
       <AudioBridge />
       <Layout
         active={tab}
+        sub={sub}
         onTabChange={goTab}
+        onOpen={openSub}
         onPractice={() => setPracticeOpen(true)}
         practiceLabel={t('nav.practice')}
         onSettings={sub === null ? () => setSub('settings') : undefined}
@@ -237,9 +249,8 @@ function App() {
             onRitual={launchRitual}
             onUpgrade={openPaywall}
             onTab={goTab}
-            onStones={() => setSub('stones')}
+            onOpen={openSub}
             onChakras={() => setSub('chakras')}
-            onRunes={() => setSub('runes')}
           />
         )}
         {sub === null && tab === 'sky' && (

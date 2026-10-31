@@ -148,6 +148,14 @@ export const chrome: Record<ChromeKey, string> = {
   'dash.tarotSeen': 'Se dagens kort, eller lägg en spådom',
   'dash.tarotNew': 'Vänd ditt kort för dagen',
   'dash.addBirth': 'Lägg till dina födelseuppgifter för en personlig läsning →',
+  'nav.explore': 'Utforska',
+  'nav.collapse': 'Fäll ihop menyn',
+  'nav.expand': 'Fäll ut menyn',
+  'dash.beginPractice': 'Börja praktiken',
+  'dash.yourDay': 'Din dag',
+  'dash.lunarDay': 'Månddag {n}',
+  'dash.stoneOfDay': 'Dagens sten',
+  'dash.symbolicNote': 'Symboliska tolkningar av dagens himmel – inte hälsomätningar.',
 
   /* ---- du ---- */
   'you.progress': 'Framsteg',

@@ -148,6 +148,14 @@ export const chrome: Record<ChromeKey, string> = {
   'dash.tarotSeen': '今日のカードを見る、またはスプレッドを引く',
   'dash.tarotNew': '今日のカードをめくる',
   'dash.addBirth': '出生情報を追加して、あなた専用のリーディングを →',
+  'nav.explore': '探索',
+  'nav.collapse': 'メニューを閉じる',
+  'nav.expand': 'メニューを開く',
+  'dash.beginPractice': '実践を始める',
+  'dash.yourDay': 'あなたの一日',
+  'dash.lunarDay': '月日 {n}',
+  'dash.stoneOfDay': '今日の石',
+  'dash.symbolicNote': '今日の空から読み解く象徴的な解釈であり、健康の測定値ではありません。',
 
   /* ---- あなた ---- */
   'you.progress': '進み具合',

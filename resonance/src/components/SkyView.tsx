@@ -5,11 +5,10 @@ import {
   planetLabel,
   transitTitle,
   useT,
-  type TFn,
 } from '../lib/i18n'
 import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
-import { useChakraField, type ChakraReading } from '../lib/chakraField'
+import { chakraFieldSummary, useChakraField } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
 import { QuickHoroscope } from './QuickHoroscope'
 import { ChakraBody } from './ChakraBody'
@@ -35,25 +34,6 @@ interface SkyViewProps {
   onUpgrade: (reason?: string) => void
 }
 
-function chakraFieldSummary(field: ChakraReading[], t: TFn): string {
-  const join = t('scr.field.summary.join')
-  const strained = field.filter(
-    (c) => c.tone === 'blocked' || c.tone === 'strained',
-  )
-  if (strained.length > 0)
-    return t('scr.field.summary.pressure', {
-      names: strained.map((c) => c.name).join(join),
-    })
-  const open = field.filter((c) => c.tone === 'open' || c.tone === 'lit')
-  if (open.length > 0)
-    return t('scr.field.summary.open', {
-      names: open.map((c) => c.name).join(join),
-    })
-  const focus = field.find((c) => c.focus)
-  return focus
-    ? t('scr.field.summary.carries', { name: focus.name })
-    : t('scr.field.summary.settled')
-}
 
 export function SkyView({
   onOpenChart,

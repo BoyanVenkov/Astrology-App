@@ -199,6 +199,16 @@ export default {
           '0%, 100%': { transform: 'scaleY(0.35)' },
           '50%': { transform: 'scaleY(1)' },
         },
+        /* the hero photograph's slow camera push — a living still */
+        'ken-burns': {
+          '0%': { transform: 'scale(1.03) translate3d(0, 0, 0)' },
+          '100%': { transform: 'scale(1.11) translate3d(-0.8%, -1.6%, 0)' },
+        },
+        /* moonlight swelling and settling */
+        'moon-breathe': {
+          '0%, 100%': { opacity: '0.45', transform: 'scale(0.96)' },
+          '50%': { opacity: '0.8', transform: 'scale(1.04)' },
+        },
         /* an unsteady, irregular flicker — a strained/blocked chakra node */
         flicker: {
           '0%, 100%': { opacity: '0.9' },
@@ -227,6 +237,10 @@ export default {
         'card-float': 'card-float 4.5s ease-in-out infinite',
         'wave-bar': 'wave-bar 1.1s ease-in-out infinite',
         flicker: 'flicker 2.6s ease-in-out infinite',
+        'ken-burns': 'ken-burns 38s ease-in-out infinite alternate',
+        'moon-breathe': 'moon-breathe 9s ease-in-out infinite',
+        'orbit-slow': 'aura-orbit 120s linear infinite',
+        'orbit-slow-rev': 'aura-orbit 160s linear infinite reverse',
       },
       transitionTimingFunction: {
         resonance: 'cubic-bezier(0.22, 1, 0.36, 1)',

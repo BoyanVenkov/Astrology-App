@@ -237,3 +237,24 @@ export function useChakraField(): ChakraReading[] {
     [aspects, hasNatal, focusKey, focusBalance, transitHouses, t],
   )
 }
+
+/** One line on the whole field — what is under pressure, what is open. */
+export function chakraFieldSummary(field: ChakraReading[], t: TFn): string {
+  const join = t('scr.field.summary.join')
+  const strained = field.filter(
+    (c) => c.tone === 'blocked' || c.tone === 'strained',
+  )
+  if (strained.length > 0)
+    return t('scr.field.summary.pressure', {
+      names: strained.map((c) => c.name).join(join),
+    })
+  const open = field.filter((c) => c.tone === 'open' || c.tone === 'lit')
+  if (open.length > 0)
+    return t('scr.field.summary.open', {
+      names: open.map((c) => c.name).join(join),
+    })
+  const focus = field.find((c) => c.focus)
+  return focus
+    ? t('scr.field.summary.carries', { name: focus.name })
+    : t('scr.field.summary.settled')
+}

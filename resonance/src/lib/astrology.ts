@@ -445,3 +445,12 @@ export function computeDailyReading(
 export function birthChart(birthUtc: Date): BodyPosition[] {
   return chartPositions(birthUtc)
 }
+
+/** Text glyphs for the aspects (U+FE0E keeps them flat, never emoji). */
+export const ASPECT_GLYPH: Record<string, string> = {
+  conjunction: '☌︎',
+  opposition: '☍︎',
+  square: '□︎',
+  trine: '△︎',
+  sextile: '⚹︎',
+}

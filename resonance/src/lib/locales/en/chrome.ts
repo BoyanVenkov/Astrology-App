@@ -147,6 +147,14 @@ export const chrome = {
   'dash.tarotSeen': "See today's card, or draw a spread",
   'dash.tarotNew': 'Turn your card for today',
   'dash.addBirth': 'Add your birth details for a personal reading →',
+  'nav.explore': 'Explore',
+  'nav.collapse': 'Collapse menu',
+  'nav.expand': 'Expand menu',
+  'dash.beginPractice': 'Begin practice',
+  'dash.yourDay': 'Your day',
+  'dash.lunarDay': 'Lunar day {n}',
+  'dash.stoneOfDay': 'Stone of the day',
+  'dash.symbolicNote': "Symbolic readings of today's sky — not health measurements.",
 
   /* ---- you ---- */
   'you.progress': 'Progress',

@@ -148,6 +148,14 @@ export const chrome: Record<ChromeKey, string> = {
   'dash.tarotSeen': 'Angalia kadi ya leo, au weka mtandao',
   'dash.tarotNew': 'Geuza kadi yako ya leo',
   'dash.addBirth': 'Ongeza taarifa zako za kuzaliwa kwa usomaji wa binafsi →',
+  'nav.explore': 'Gundua',
+  'nav.collapse': 'Kunja menyu',
+  'nav.expand': 'Panua menyu',
+  'dash.beginPractice': 'Anza zoezi',
+  'dash.yourDay': 'Siku yako',
+  'dash.lunarDay': 'Siku ya mwezi {n}',
+  'dash.stoneOfDay': 'Jiwe la siku',
+  'dash.symbolicNote': 'Usomaji wa kiishara wa anga la leo — si vipimo vya afya.',
 
   /* ---- wewe ---- */
   'you.progress': 'Maendeleo',
