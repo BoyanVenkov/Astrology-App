@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': 'Pełne Pole Czakr',
   'field.openEvery': 'Otwórz każde centrum',
   'field.openEverySub': 'Dlaczego każde jest naładowane, wszystkie jego tranzyty i ton, by je dostroić — Resonance Pro',
+  'field.keyPractices': 'Kluczowe praktyki',
+  'field.prev': 'Poprzedni ośrodek',
+  'field.next': 'Następny ośrodek',
+  'field.startNow': 'Zacznij teraz',
   'field.footer': 'Każda planeta rezonuje z jednym centrum; jej aspekty do twojego horoskopu ładują je lub napinają. Miękkie aspekty otwierają centrum, twarde stawiają je pod presją. Przeliczane w ciągu dnia, gdy planety się poruszają.',
   'field.svgAria': 'Siedem czakr i ich dzisiejszy ładunek',
 

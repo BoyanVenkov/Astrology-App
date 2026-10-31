@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Запази проверката',
 
   /* ---- натална карта ---- */
+  'scr.natal.tabsLabel': 'Изгледи на картата',
+  'scr.natal.tabChart': 'Карта',
+  'scr.natal.tabPositions': 'Позиции',
+  'scr.natal.tabAspects': 'Аспекти',
+  'scr.natal.tabReading': 'Тълкуване',
+  'scr.natal.tapPlanet': 'Докосни планета в кръга, за да я прочетеш.',
+  'scr.natal.holds': 'Наталният {planet} държи {na}.',
+  'scr.natal.inSign': '{planet} в {sign} — {flavour}.',
+  'scr.natal.inHouse': 'Стои в твоя {ord} дом — {arena}.',
+  'scr.natal.retro': 'Ретрограден при раждането — енергията му се обръща навътре и се изработва насаме, преди да се покаже.',
+  'scr.natal.ascendant': 'Асцендент',
+  'scr.natal.midheaven': 'Медиум цели',
+  'scr.natal.aspectsOf': 'Неговите аспекти',
   'scr.natal.eyebrow': 'Натална карта',
   'scr.natal.title': 'Небето при раждането ти',
   'scr.natal.blurb':

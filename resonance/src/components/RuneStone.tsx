@@ -26,7 +26,7 @@ function StoneShell({
           : '1px solid rgba(255,255,255,0.16)',
         boxShadow: carved
           ? 'inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04), 0 14px 34px -12px rgba(0,0,0,0.6)'
-          : 'inset 0 2px 1px rgba(255,255,255,0.14), inset 0 -10px 18px rgba(0,0,0,0.35), 0 16px 36px -12px rgba(0,0,0,0.65), 0 0 0 6px color-mix(in srgb, var(--rz-hue) 8%, transparent)',
+          : 'inset 0 2px 1px rgba(255,255,255,0.14), inset 0 -10px 18px rgba(0,0,0,0.35), 0 16px 36px -12px rgba(0,0,0,0.65), 0 0 0 6px color-mix(in srgb, var(--rz-gold) 8%, transparent)',
       }}
     >
       {children}

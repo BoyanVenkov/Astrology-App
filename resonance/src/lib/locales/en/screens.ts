@@ -128,6 +128,19 @@ export const screens = {
   'scr.moodci.save': 'Save check-in',
 
   /* ---- natal chart ---- */
+  'scr.natal.tabsLabel': 'Chart views',
+  'scr.natal.tabChart': 'Chart',
+  'scr.natal.tabPositions': 'Positions',
+  'scr.natal.tabAspects': 'Aspects',
+  'scr.natal.tabReading': 'Interpretation',
+  'scr.natal.tapPlanet': 'Tap a planet on the wheel to read it.',
+  'scr.natal.holds': 'Natal {planet} governs {na}.',
+  'scr.natal.inSign': '{planet} in {sign} — {flavour}.',
+  'scr.natal.inHouse': 'It sits in your {ord} house — {arena}.',
+  'scr.natal.retro': 'Retrograde at birth — its energy turns inward and works itself out privately before it shows.',
+  'scr.natal.ascendant': 'Ascendant',
+  'scr.natal.midheaven': 'Midheaven',
+  'scr.natal.aspectsOf': 'Its aspects',
   'scr.natal.eyebrow': 'Natal Chart',
   'scr.natal.title': 'Your birth sky',
   'scr.natal.blurb':

@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': '保存记录',
 
   /* ---- 出生星盘 ---- */
+  'scr.natal.tabsLabel': '星盘视图',
+  'scr.natal.tabChart': '星盘',
+  'scr.natal.tabPositions': '位置',
+  'scr.natal.tabAspects': '相位',
+  'scr.natal.tabReading': '解读',
+  'scr.natal.tapPlanet': '点按星盘上的行星来解读它。',
+  'scr.natal.holds': '你的本命{planet}掌管{na}。',
+  'scr.natal.inSign': '{planet}落在{sign}——{flavour}。',
+  'scr.natal.inHouse': '它位于你的{ord}宫——{arena}。',
+  'scr.natal.retro': '出生时逆行——它的能量转向内在，先在私下消化，然后才显现出来。',
+  'scr.natal.ascendant': '上升点',
+  'scr.natal.midheaven': '天顶',
+  'scr.natal.aspectsOf': '它的相位',
   'scr.natal.eyebrow': '出生星盘',
   'scr.natal.title': '你出生时的星空',
   'scr.natal.blurb':

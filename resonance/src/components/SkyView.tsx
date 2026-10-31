@@ -6,7 +6,6 @@ import {
   transitTitle,
   useT,
 } from '../lib/i18n'
-import { crystalName } from '../lib/crystals'
 import { planetSymbol } from '../data/esoteric'
 import { chakraFieldSummary, useChakraField } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
@@ -17,7 +16,6 @@ import artCompass from '../assets/art/icon-compass.webp'
 import artMoon from '../assets/art/icon-moon.webp'
 import artCompatibility from '../assets/art/icon-compatibility.webp'
 import artOracle from '../assets/art/icon-oracle.webp'
-import artApothecary from '../assets/art/icon-apothecary.webp'
 import artTransits from '../assets/art/icon-transits.webp'
 import artHoroscope from '../assets/art/icon-horoscope.webp'
 import artWaveMesh from '../assets/art/bg-wave-mesh.webp'
@@ -30,7 +28,6 @@ interface SkyViewProps {
   onOpenCompat: () => void
   onOpenTransits: () => void
   onOpenMoon: () => void
-  onOpenStones: () => void
   onUpgrade: (reason?: string) => void
 }
 
@@ -43,7 +40,6 @@ export function SkyView({
   onOpenCompat,
   onOpenTransits,
   onOpenMoon,
-  onOpenStones,
   onUpgrade,
 }: SkyViewProps) {
   const t = useT()
@@ -53,7 +49,6 @@ export function SkyView({
   const chakra = useAppStore((s) => s.chakra)
   const aspects = useAppStore((s) => s.aspects)
   const sky = useAppStore((s) => s.sky)
-  const dailyCrystals = useAppStore((s) => s.dailyCrystals)
   const hasNatal = useAppStore((s) => s.hasNatal)
 
   const focusPlanet = sky.find((p) => p.body === transit?.body)
@@ -65,7 +60,7 @@ export function SkyView({
       <div className="relative">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+          className="pointer-events-none absolute -inset-x-4 -inset-y-6 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_72%)]"
         >
           <img
             src={artWaveMesh}
@@ -75,7 +70,7 @@ export function SkyView({
           />
           <span
             className="animate-drift absolute end-[6%] top-[-6%] h-32 w-32 rounded-full opacity-35 blur-3xl"
-            style={{ background: 'var(--rz-hue)', animationDuration: '20s' }}
+            style={{ background: 'var(--rz-gold)', animationDuration: '20s' }}
           />
         </div>
         <header className="animate-bloom-in px-1">
@@ -108,7 +103,7 @@ export function SkyView({
       >
         <span
           className="relative grid h-24 w-14 shrink-0 place-items-center"
-          style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 14px var(--rz-glow))' }}
+          style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 14px var(--rz-gold-glow))' }}
         >
           <ChakraBody field={chakraField} size={56} className="pointer-events-none" />
         </span>
@@ -121,7 +116,7 @@ export function SkyView({
             {t('sky.chakraFieldSub')}
           </span>
         </span>
-        <span className="shrink-0 self-center" style={{ color: 'var(--rz-hue)' }}>
+        <span className="shrink-0 self-center" style={{ color: 'var(--rz-gold)' }}>
           ›
         </span>
       </button>
@@ -181,20 +176,6 @@ export function SkyView({
           // CTA) that's worth showing before the paywall, not after skipping
           // straight to it.
           onClick={onOpenOracle}
-        />
-        <FeatureRow
-          index={6}
-          art={artApothecary}
-          title={t('sky.tileStones')}
-          sub={
-            dailyCrystals.length > 0
-              ? dailyCrystals
-                  .slice(0, 2)
-                  .map((c) => crystalName(c.name, t))
-                  .join(' · ')
-              : t('sky.stonesEmpty')
-          }
-          onClick={onOpenStones}
         />
       </div>
     </div>

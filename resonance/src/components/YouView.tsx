@@ -4,12 +4,14 @@ import { Aura } from './Aura'
 import { ChakraBody } from './ChakraBody'
 import { useChakraField } from '../lib/chakraField'
 import { computeAura } from '../lib/aura'
-import { auraLabel, moodLabel, useT, type TFn } from '../lib/i18n'
+import { auraLabel, moodLabel, signLabel, useT, type TFn } from '../lib/i18n'
 import { practiceStreak } from '../lib/streak'
 import { localDayKey } from '../lib/timezone'
 import { useEntitlements } from '../lib/premium'
 import { useAuth } from '../lib/auth'
-import artJournal from '../assets/art/icon-journal.webp'
+import { zodiacGlyph } from '../lib/resonanceData'
+import { GlyphBadge, ListRow } from './ui'
+import { GearIcon, JournalIcon, LockIcon, PulseIcon, SparkIcon } from './icons'
 
 interface YouViewProps {
   onOpen: (view: 'journal' | 'mood' | 'settings') => void
@@ -21,47 +23,24 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="animate-rise-in">
       <p className="eyebrow mb-2 px-1">{title}</p>
-      <div className="flex flex-col gap-3">{children}</div>
+      <div className="flex flex-col gap-2.5">{children}</div>
     </section>
   )
 }
 
-function Row({
-  title,
-  sub,
-  art,
-  accent = false,
-  onClick,
-}: {
-  title: string
-  sub: string
-  art?: string
-  accent?: boolean
-  onClick: () => void
-}) {
+/** A gold-ringed icon for the list rows — the same medallion the transit rows use. */
+function RowIcon({ children }: { children: ReactNode }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`glass-panel card-press flex items-center gap-3 justify-between p-4 text-start ${
-        accent ? 'glass-panel-active' : ''
-      }`}
+    <span
+      aria-hidden
+      className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-[color:var(--rz-gold)]"
+      style={{
+        background: 'radial-gradient(circle at 50% 35%, rgba(232,194,116,0.18), rgba(6,8,22,0.85) 70%)',
+        boxShadow: 'inset 0 0 0 1.5px rgba(232,194,116,0.55)',
+      }}
     >
-      <span className="flex min-w-0 items-center gap-3">
-        {art && (
-          <img src={art} alt="" aria-hidden className="h-9 w-9 shrink-0 object-contain" />
-        )}
-        <span className="min-w-0">
-          <span className="block font-serif text-lg leading-tight text-white">
-            {title}
-          </span>
-          <span className="mt-0.5 block text-[0.8rem] text-haze-300">{sub}</span>
-        </span>
-      </span>
-      <span className="shrink-0" style={{ color: 'var(--rz-hue)' }}>
-        ›
-      </span>
-    </button>
+      {children}
+    </span>
   )
 }
 
@@ -72,6 +51,9 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
   const transit = useAppStore((s) => s.transit)
   const sessionLog = useAppStore((s) => s.sessionLog)
   const moodLog = useAppStore((s) => s.moodLog)
+  const profile = useAppStore((s) => s.profile)
+  const natal = useAppStore((s) => s.natal)
+  const editProfile = useAppStore((s) => s.editProfile)
   const { isPro } = useEntitlements()
   const chakraField = useChakraField()
 
@@ -84,73 +66,100 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
   const totalSessions = sessionLog.filter((s) => s.completed).length
   const hasMoodToday = moodLog.some((m) => m.day === localDayKey())
   const focusReading = chakraField.find((c) => c.focus)
+  const sun = natal.find((p) => p.body === 'Sun')
+  const moon = natal.find((p) => p.body === 'Moon')
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
-      <header className="animate-bloom-in px-1">
-        <p className="eyebrow mb-2">{t('field.eyebrow')}</p>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="glass-panel glass-panel-active flex flex-col items-center gap-1 p-5 text-center">
-            <Aura state={aura} size={120} className="h-24 w-24" />
-            <p className="mt-1 font-serif text-lg leading-tight text-gilded">
-              {auraLabel(aura.score, t)}
-            </p>
-            <p className="data text-xs text-haze-300">
-              {Math.round(aura.score * 100)}%
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => onOpen('journal')}
-            className="card-press glass-panel flex flex-col items-center justify-center gap-1 p-5 text-center"
-          >
-            <ChakraBody field={chakraField} size={90} className="pointer-events-none" />
-            {focusReading && (
-              <>
-                <p className="mt-1 font-serif text-lg leading-tight text-white">
-                  {focusReading.name}
-                </p>
-                <p className="text-xs uppercase tracking-[0.1em] text-haze-300">
-                  {focusReading.state}
-                </p>
-              </>
+      {/* ---- who you are, in the sky ---- */}
+      <header className="glass-panel glass-gold animate-bloom-in flex items-center gap-4 p-4">
+        <GlyphBadge glyph={sun ? zodiacGlyph(sun.sign) : '✦'} size={64} />
+        <div className="min-w-0 flex-1">
+          <p className="eyebrow-hue">{t('nav.profile')}</p>
+          <p className="mt-1 font-serif text-[1.35rem] leading-tight text-gilded">
+            {sun ? signLabel(sun.sign, t) : t('sky.addChart')}
+            {moon && (
+              <span className="text-haze-300">
+                {' · '}
+                <span aria-hidden className="font-serif">{zodiacGlyph(moon.sign)}</span>{' '}
+                {signLabel(moon.sign, t)}
+              </span>
             )}
-          </button>
+          </p>
+          {profile && (
+            <p className="data mt-1 truncate text-[0.75rem] text-haze-400">
+              {profile.date} · {profile.timeKnown ? profile.time : t('scr.natal.timeUnknown')}
+              {profile.placeLabel ? ` · ${profile.placeLabel}` : ''}
+            </p>
+          )}
         </div>
+        <button
+          type="button"
+          onClick={editProfile}
+          className="shrink-0 self-start rounded-full px-3 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--rz-gold)] shadow-[inset_0_0_0_1px_rgba(232,194,116,0.4)] transition hover:bg-[rgba(232,194,116,0.1)]"
+        >
+          {profile ? t('scr.natal.edit') : t('scr.natal.addDetails')}
+        </button>
       </header>
 
-      <Group title={t('you.progress')}>
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => onOpen('journal')}
-            className="card-press glass-panel flex flex-col gap-2 p-4 text-start"
-          >
-            <span className="eyebrow">{t('you.practices')}</span>
-            <span className="font-serif text-2xl text-white">{totalSessions}</span>
-            <span className="data text-xs text-haze-400">
-              {totalMinutes} {t('you.minutes')}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onOpen('journal')}
-            className="card-press glass-panel flex flex-col gap-2 p-4 text-start"
-          >
-            <span className="eyebrow">{t('you.dayStreak')}</span>
-            <span className="font-serif text-2xl text-white">{streak}</span>
-          </button>
+      {/* ---- the field today + progress ---- */}
+      <section className="animate-rise-in grid grid-cols-2 gap-3">
+        <div className="glass-panel flex flex-col items-center gap-1 p-4 text-center">
+          <Aura state={aura} size={110} className="h-20 w-20" />
+          <p className="mt-1 font-serif text-[1.05rem] leading-tight text-white">
+            {auraLabel(aura.score, t)}
+          </p>
+          <p className="data text-xs text-[#f3dca4]">{Math.round(aura.score * 100)}%</p>
         </div>
-        <Row
+        <div className="glass-panel flex flex-col items-center justify-center gap-1 p-4 text-center">
+          <ChakraBody field={chakraField} size={64} className="pointer-events-none" />
+          {focusReading && (
+            <>
+              <p className="mt-1 font-serif text-[1.05rem] leading-tight text-white">
+                {focusReading.name}
+              </p>
+              <p className="text-[0.68rem] uppercase tracking-[0.1em] text-haze-300">
+                {focusReading.state}
+              </p>
+            </>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={() => onOpen('journal')}
+          className="glass-panel card-lift card-press flex flex-col gap-1 p-4 text-start"
+        >
+          <span className="eyebrow">{t('you.practices')}</span>
+          <span className="font-serif text-[1.8rem] leading-none text-gilded">{totalSessions}</span>
+          <span className="data text-xs text-haze-400">
+            {totalMinutes} {t('you.minutes')}
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpen('journal')}
+          className="glass-panel card-lift card-press flex flex-col gap-1 p-4 text-start"
+        >
+          <span className="eyebrow">{t('you.dayStreak')}</span>
+          <span className="font-serif text-[1.8rem] leading-none text-gilded">{streak}</span>
+        </button>
+        <p className="col-span-2 -mt-1 px-1 text-center text-[11px] leading-snug text-haze-500">
+          {t('dash.symbolicNote')}
+        </p>
+      </section>
+
+      <Group title={t('you.progress')}>
+        <ListRow
+          leading={<RowIcon><JournalIcon className="h-5 w-5" /></RowIcon>}
           title={t('you.journal')}
           sub={t('you.journalSub')}
-          art={artJournal}
           onClick={() => onOpen('journal')}
         />
       </Group>
 
       <Group title={t('you.checkIn')}>
-        <Row
+        <ListRow
+          leading={<RowIcon><PulseIcon className="h-5 w-5" /></RowIcon>}
           title={t('you.mood')}
           sub={
             hasMoodToday && aura.mood
@@ -162,8 +171,16 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
       </Group>
 
       <Group title={t('you.account')}>
+        <ListRow
+          active={!isPro}
+          leading={<RowIcon>{isPro ? <SparkIcon className="h-5 w-5" /> : <LockIcon className="h-5 w-5" />}</RowIcon>}
+          title={isPro ? t('you.proActive') : t('you.pro')}
+          sub={isPro ? t('you.proActiveSub') : t('you.proSub')}
+          onClick={isPro ? () => onOpen('settings') : onUpgrade}
+        />
         {status === 'signed-in' ? (
-          <Row
+          <ListRow
+            leading={<RowIcon><SparkIcon className="h-5 w-5" /></RowIcon>}
             title={t('you.backupOn')}
             sub={t('you.backupOnSub', {
               email: user?.email ?? t('set.signedIn'),
@@ -171,19 +188,15 @@ export function YouView({ onOpen, onUpgrade, onAuth }: YouViewProps) {
             onClick={() => onOpen('settings')}
           />
         ) : (
-          <Row
+          <ListRow
+            leading={<RowIcon><SparkIcon className="h-5 w-5" /></RowIcon>}
             title={t('you.backupSync')}
             sub={t('you.backupSyncSub')}
             onClick={onAuth}
           />
         )}
-        <Row
-          title={isPro ? t('you.proActive') : t('you.pro')}
-          sub={isPro ? t('you.proActiveSub') : t('you.proSub')}
-          accent={!isPro}
-          onClick={isPro ? () => onOpen('settings') : onUpgrade}
-        />
-        <Row
+        <ListRow
+          leading={<RowIcon><GearIcon className="h-5 w-5" /></RowIcon>}
           title={t('you.settings')}
           sub={t('you.settingsSub')}
           onClick={() => onOpen('settings')}

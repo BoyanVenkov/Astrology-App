@@ -334,3 +334,17 @@ export function SearchIcon(props: IconProps) {
     </svg>
   )
 }
+
+export function ChakraIcon(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <circle cx="12" cy="4.6" r="1.8" {...fill} />
+      <circle cx="12" cy="4.6" r="1.8" />
+      <path d="M12 6.6v13.6" strokeOpacity="0.45" />
+      <circle cx="12" cy="10" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="14" r="1.5" fill="currentColor" stroke="none" fillOpacity="0.7" />
+      <circle cx="12" cy="18" r="1.5" fill="currentColor" stroke="none" fillOpacity="0.45" />
+      <path d="M6.5 13.5c1.6-1 3.4-1.5 5.5-1.5s3.9.5 5.5 1.5" strokeOpacity="0.6" />
+    </svg>
+  )
+}

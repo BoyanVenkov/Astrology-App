@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'रिकॉर्ड सहेजें',
 
   /* ---- जन्म-कुंडली ---- */
+  'scr.natal.tabsLabel': 'कुंडली के दृश्य',
+  'scr.natal.tabChart': 'कुंडली',
+  'scr.natal.tabPositions': 'स्थितियाँ',
+  'scr.natal.tabAspects': 'दृष्टियाँ',
+  'scr.natal.tabReading': 'व्याख्या',
+  'scr.natal.tapPlanet': 'पढ़ने के लिए चक्र पर किसी ग्रह को छुएँ।',
+  'scr.natal.holds': 'आपका जन्म का {planet} {na} थामे है।',
+  'scr.natal.inSign': '{sign} में {planet} — {flavour}।',
+  'scr.natal.inHouse': 'यह आपके {ord} भाव में है — {arena}।',
+  'scr.natal.retro': 'जन्म के समय वक्री — इसकी ऊर्जा भीतर की ओर मुड़ती है और प्रकट होने से पहले चुपचाप पकती है।',
+  'scr.natal.ascendant': 'लग्न',
+  'scr.natal.midheaven': 'दशम भाव (MC)',
+  'scr.natal.aspectsOf': 'इसकी दृष्टियाँ',
   'scr.natal.eyebrow': 'जन्म-कुंडली',
   'scr.natal.title': 'आपके जन्म का आकाश',
   'scr.natal.blurb':

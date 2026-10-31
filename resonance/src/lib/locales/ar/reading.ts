@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': 'حقل الشاكرات الكامل',
   'field.openEvery': 'افتح كل مركز',
   'field.openEverySub': 'لماذا كل واحد مشحون، وكل عبوراته، ونغمة لضبطه — Resonance Pro',
+  'field.keyPractices': 'الممارسات الأساسية',
+  'field.prev': 'المركز السابق',
+  'field.next': 'المركز التالي',
+  'field.startNow': 'ابدأ الآن',
   'field.footer': 'كل كوكب يرنّ مع مركز واحد؛ اتصالاته بخريطتك تشحنه أو تُجهده. الاتصالات الليّنة تفتح مركزاً، والصعبة تضعه تحت ضغط. يُعاد حسابه خلال اليوم مع حركة الكواكب.',
   'field.svgAria': 'الشاكرات السبع وشحنتها اليوم',
 

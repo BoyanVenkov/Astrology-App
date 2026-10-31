@@ -84,8 +84,8 @@ export function ResonanceLockup({
       <ResonanceMark
         className={compact ? 'h-4 w-4' : 'h-5 w-5'}
         style={{
-          color: 'var(--rz-hue)',
-          filter: 'drop-shadow(0 0 12px var(--rz-glow))',
+          color: 'var(--rz-gold)',
+          filter: 'drop-shadow(0 0 12px var(--rz-gold-glow))',
         }}
       />
       <span

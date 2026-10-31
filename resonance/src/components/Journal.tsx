@@ -62,12 +62,12 @@ function Emblem({ m, state }: { m: Milestone; state: EmblemState }) {
           border: gold
             ? '1px solid rgba(242,220,156,0.55)'
             : state === 'next'
-              ? '1px solid color-mix(in srgb, var(--rz-hue) 55%, transparent)'
+              ? '1px solid color-mix(in srgb, var(--rz-gold) 55%, transparent)'
               : '1px solid rgba(255,255,255,0.08)',
           color: gold
             ? '#1a1204'
             : state === 'next'
-              ? 'var(--rz-hue)'
+              ? 'var(--rz-gold)'
               : 'rgba(233,237,250,0.28)',
           boxShadow: gold ? '0 0 14px -3px rgba(212,175,55,0.55)' : undefined,
         }}

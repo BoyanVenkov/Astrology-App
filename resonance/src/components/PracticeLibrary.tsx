@@ -88,9 +88,9 @@ function Chip({
       onClick={onClick}
       className="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium uppercase tracking-[0.1em] transition"
       style={{
-        color: active ? 'var(--rz-hue)' : 'rgba(154,166,201,0.8)',
+        color: active ? 'var(--rz-gold)' : 'rgba(154,166,201,0.8)',
         boxShadow: active
-          ? 'inset 0 0 0 1px color-mix(in srgb, var(--rz-hue) 60%, transparent)'
+          ? 'inset 0 0 0 1px color-mix(in srgb, var(--rz-gold) 60%, transparent)'
           : 'inset 0 0 0 1px rgba(255,255,255,0.08)',
       }}
     >
@@ -257,8 +257,8 @@ export function PracticeLibrary({
                   <span
                     className="h-2.5 w-2.5 shrink-0 rounded-full"
                     style={{
-                      background: 'var(--rz-hue)',
-                      boxShadow: '0 0 10px var(--rz-glow)',
+                      background: 'var(--rz-gold)',
+                      boxShadow: '0 0 10px var(--rz-gold-glow)',
                     }}
                   />
                   <h2 className="font-serif text-lg text-white">

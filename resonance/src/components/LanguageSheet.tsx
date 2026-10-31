@@ -45,10 +45,10 @@ export function LanguageSheet({ onClose }: { onClose: () => void }) {
                   className="flex w-full items-center gap-3 rounded-2xl border p-4 text-start transition active:scale-[0.99]"
                   style={{
                     borderColor: active
-                      ? 'color-mix(in srgb, var(--rz-hue) 45%, transparent)'
+                      ? 'color-mix(in srgb, var(--rz-gold) 45%, transparent)'
                       : 'rgba(255,255,255,0.1)',
                     background: active
-                      ? 'color-mix(in srgb, var(--rz-hue) 10%, transparent)'
+                      ? 'color-mix(in srgb, var(--rz-gold) 10%, transparent)'
                       : 'rgba(255,255,255,0.03)',
                   }}
                 >
@@ -69,7 +69,7 @@ export function LanguageSheet({ onClose }: { onClose: () => void }) {
                       strokeWidth={2.4}
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      style={{ color: 'var(--rz-hue)' }}
+                      style={{ color: 'var(--rz-gold)' }}
                       aria-hidden
                     >
                       <path d="M5 13l4 4L19 7" />

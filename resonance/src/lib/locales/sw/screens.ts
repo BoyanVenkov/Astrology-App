@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Hifadhi rekodi',
 
   /* ---- chati ya kuzaliwa ---- */
+  'scr.natal.tabsLabel': 'Mionekano ya chati',
+  'scr.natal.tabChart': 'Chati',
+  'scr.natal.tabPositions': 'Nafasi',
+  'scr.natal.tabAspects': 'Vipengele',
+  'scr.natal.tabReading': 'Tafsiri',
+  'scr.natal.tapPlanet': 'Gusa sayari kwenye gurudumu ili uisome.',
+  'scr.natal.holds': '{planet} yako ya kuzaliwa inashikilia {na}.',
+  'scr.natal.inSign': '{planet} katika {sign} — {flavour}.',
+  'scr.natal.inHouse': 'Iko katika nyumba yako {ord} — {arena}.',
+  'scr.natal.retro': 'Ilikuwa ikirudi nyuma wakati wa kuzaliwa — nguvu zake hugeukia ndani na hufanyiwa kazi faraghani kabla ya kuonekana.',
+  'scr.natal.ascendant': 'Mpandaji',
+  'scr.natal.midheaven': 'Kilele cha anga',
+  'scr.natal.aspectsOf': 'Vipengele vyake',
   'scr.natal.eyebrow': 'Chati ya Kuzaliwa',
   'scr.natal.title': 'Anga lako la kuzaliwa',
   'scr.natal.blurb':

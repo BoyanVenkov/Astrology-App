@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': '完全なチャクラの場',
   'field.openEvery': 'すべての中心を開く',
   'field.openEverySub': 'なぜ各中心が充電されているか、そのすべてのトランジット、そして調律のための音 — Resonance Pro',
+  'field.keyPractices': '主な実践',
+  'field.prev': '前のチャクラ',
+  'field.next': '次のチャクラ',
+  'field.startNow': '今すぐ始める',
   'field.footer': '各惑星は一つの中心と共鳴します。あなたのホロスコープへのそのアスペクトが、それを充電するか張らせます。やわらかいアスペクトは中心を開き、硬いアスペクトはそれに圧をかけます。惑星が動くにつれ、一日を通じて再計算されます。',
   'field.svgAria': '七つのチャクラと、今日のその充電',
 

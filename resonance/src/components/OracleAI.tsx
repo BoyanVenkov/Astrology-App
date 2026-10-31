@@ -30,8 +30,8 @@ function UsagePips({ remaining }: { remaining: number }) {
           className="h-1.5 w-1.5 rounded-full transition"
           style={{
             background:
-              i < remaining ? 'var(--rz-hue)' : 'rgba(255,255,255,0.16)',
-            boxShadow: i < remaining ? '0 0 6px var(--rz-glow)' : 'none',
+              i < remaining ? 'var(--rz-gold)' : 'rgba(255,255,255,0.16)',
+            boxShadow: i < remaining ? '0 0 6px var(--rz-gold-glow)' : 'none',
           }}
         />
       ))}
@@ -45,10 +45,10 @@ function ConsultOrb({ busy }: { busy: boolean }) {
       className={`relative grid h-16 w-16 shrink-0 place-items-center rounded-full border ${busy ? 'animate-pulse-glow' : ''}`}
       style={{
         background:
-          'radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--rz-hue) 72%, #fff 16%), color-mix(in srgb, var(--rz-hue) 38%, #05070f) 78%)',
-        borderColor: 'color-mix(in srgb, var(--rz-hue) 45%, transparent)',
+          'radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--rz-gold) 72%, #fff 16%), color-mix(in srgb, var(--rz-gold) 38%, #05070f) 78%)',
+        borderColor: 'color-mix(in srgb, var(--rz-gold) 45%, transparent)',
         boxShadow:
-          '0 0 30px -4px var(--rz-glow), inset 0 1px 0 rgba(255,255,255,0.3)',
+          '0 0 30px -4px var(--rz-gold-glow), inset 0 1px 0 rgba(255,255,255,0.3)',
       }}
     >
       <OracleIcon className="h-7 w-7 text-[#05070f]" />
@@ -148,7 +148,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
         <button
           type="button"
           onClick={() => onUpgrade(t('oracle.reason'))}
-          className="flex items-center justify-center gap-2 rounded-2xl border border-gold-400/50 bg-gold-500/20 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
+          className="btn-gold min-h-12 flex items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold transition active:scale-[0.98]"
         >
           <LockIcon className="h-4 w-4" />
           {t('oracle.unlock')}
@@ -179,7 +179,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
             <button
               type="button"
               onClick={() => void consult()}
-              className="rounded-2xl border border-gold-400/50 bg-gold-500/20 px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
+              className="btn-gold min-h-12 px-5 py-3 text-sm font-semibold transition active:scale-[0.98]"
             >
               {t('oracle.consult')}
             </button>

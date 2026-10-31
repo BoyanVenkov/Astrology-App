@@ -112,8 +112,8 @@ function ScrollColumn({
         style={{
           height: ROW,
           boxShadow:
-            'inset 0 0 0 1px color-mix(in srgb, var(--rz-hue) 30%, transparent)',
-          background: 'color-mix(in srgb, var(--rz-hue) 8%, transparent)',
+            'inset 0 0 0 1px color-mix(in srgb, var(--rz-gold) 30%, transparent)',
+          background: 'color-mix(in srgb, var(--rz-gold) 8%, transparent)',
         }}
       />
       {/* fade top / bottom */}

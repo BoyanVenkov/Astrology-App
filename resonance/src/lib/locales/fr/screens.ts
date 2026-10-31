@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Enregistrer le bilan',
 
   /* ---- thème natal ---- */
+  'scr.natal.tabsLabel': 'Vues du thème',
+  'scr.natal.tabChart': 'Thème',
+  'scr.natal.tabPositions': 'Positions',
+  'scr.natal.tabAspects': 'Aspects',
+  'scr.natal.tabReading': 'Interprétation',
+  'scr.natal.tapPlanet': 'Touche une planète sur la roue pour la lire.',
+  'scr.natal.holds': 'Ton {planet} natal tient {na}.',
+  'scr.natal.inSign': '{planet} en {sign} — {flavour}.',
+  'scr.natal.inHouse': 'Il se trouve dans ta {ord} maison — {arena}.',
+  'scr.natal.retro': 'Rétrograde à la naissance : son énergie se tourne vers l’intérieur et se travaille en privé avant de se montrer.',
+  'scr.natal.ascendant': 'Ascendant',
+  'scr.natal.midheaven': 'Milieu du Ciel',
+  'scr.natal.aspectsOf': 'Ses aspects',
   'scr.natal.eyebrow': 'Thème Natal',
   'scr.natal.title': 'Le ciel de ta naissance',
   'scr.natal.blurb':

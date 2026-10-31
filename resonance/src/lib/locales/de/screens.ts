@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Check-in speichern',
 
   /* ---- Geburtshoroskop ---- */
+  'scr.natal.tabsLabel': 'Horoskop-Ansichten',
+  'scr.natal.tabChart': 'Horoskop',
+  'scr.natal.tabPositions': 'Positionen',
+  'scr.natal.tabAspects': 'Aspekte',
+  'scr.natal.tabReading': 'Deutung',
+  'scr.natal.tapPlanet': 'Tippe auf einen Planeten im Rad, um ihn zu lesen.',
+  'scr.natal.holds': 'Dein Radix-{planet} hält {na}.',
+  'scr.natal.inSign': '{planet} in {sign} — {flavour}.',
+  'scr.natal.inHouse': 'Er steht in deinem {ord} Haus — {arena}.',
+  'scr.natal.retro': 'Bei der Geburt rückläufig – seine Energie wendet sich nach innen und arbeitet sich im Stillen durch, bevor sie sich zeigt.',
+  'scr.natal.ascendant': 'Aszendent',
+  'scr.natal.midheaven': 'Medium Coeli',
+  'scr.natal.aspectsOf': 'Seine Aspekte',
   'scr.natal.eyebrow': 'Geburtshoroskop',
   'scr.natal.title': 'Dein Geburtshimmel',
   'scr.natal.blurb':

@@ -48,11 +48,11 @@ export function MoodGate({ onDone }: MoodGateProps) {
       <div className="my-auto flex w-full flex-col py-4">
       <ResonanceMark
         className="mb-6 h-8 w-8 self-center"
-        style={{ color: 'var(--rz-hue)' }}
+        style={{ color: 'var(--rz-gold)' }}
         animated
       />
 
-      <p className="eyebrow text-center" style={{ color: 'var(--rz-hue)' }}>
+      <p className="eyebrow text-center" style={{ color: 'var(--rz-gold)' }}>
         {t('mood.eyebrow')}
       </p>
       <h1 className="mt-2 text-center font-serif text-[2rem] leading-tight text-gilded">
@@ -126,7 +126,7 @@ export function MoodGate({ onDone }: MoodGateProps) {
         className="mt-3 rounded-2xl px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.16em] text-midnight-void transition active:scale-[0.98] disabled:opacity-30"
         style={{
           background: mood
-            ? 'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 82%, #fff 14%), var(--rz-hue))'
+            ? 'linear-gradient(180deg, color-mix(in srgb, var(--rz-gold) 82%, #fff 14%), var(--rz-gold))'
             : 'rgba(255,255,255,0.08)',
           color: mood ? '#03040c' : 'rgba(154,166,201,0.7)',
         }}

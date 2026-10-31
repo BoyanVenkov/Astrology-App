@@ -2,6 +2,7 @@ import type {
   BreathPattern,
   BreathPatternKey,
   BreathStep,
+  ChakraKey,
 } from '../types/resonance'
 
 const GOLD = '#d4af37'
@@ -318,3 +319,18 @@ export function resolveBreath(
 
 export const breathScale = (fullness: number): number =>
   MIN_BREATH_SCALE + (MAX_BREATH_SCALE - MIN_BREATH_SCALE) * fullness
+
+/**
+ * A traditional breath for each centre — grounding square breath at the
+ * root, the throat-constricting ujjayi at the throat, alternate-nostril at
+ * the brow, the long 4·7·8 surrender at the crown.
+ */
+export const CHAKRA_BREATH: Record<ChakraKey, BreathPatternKey> = {
+  root: 'box',
+  sacral: 'resonant',
+  'solar-plexus': 'energize',
+  heart: 'coherent',
+  throat: 'ujjayi',
+  'third-eye': 'nadi',
+  crown: 'relax',
+}

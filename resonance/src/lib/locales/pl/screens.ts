@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Zapisz meldunek',
 
   /* ---- horoskop urodzeniowy ---- */
+  'scr.natal.tabsLabel': 'Widoki horoskopu',
+  'scr.natal.tabChart': 'Horoskop',
+  'scr.natal.tabPositions': 'Pozycje',
+  'scr.natal.tabAspects': 'Aspekty',
+  'scr.natal.tabReading': 'Interpretacja',
+  'scr.natal.tapPlanet': 'Dotknij planety na kole, aby ją odczytać.',
+  'scr.natal.holds': 'Twój natalny {planet} trzyma {na}.',
+  'scr.natal.inSign': '{planet} w {sign} — {flavour}.',
+  'scr.natal.inHouse': 'Stoi w twoim {ord} domu — {arena}.',
+  'scr.natal.retro': 'Retrogradacja przy urodzeniu — energia kieruje się do wewnątrz i przepracowuje się po cichu, zanim się ujawni.',
+  'scr.natal.ascendant': 'Ascendent',
+  'scr.natal.midheaven': 'Medium Coeli',
+  'scr.natal.aspectsOf': 'Jego aspekty',
   'scr.natal.eyebrow': 'Horoskop urodzeniowy',
   'scr.natal.title': 'Twoje niebo urodzenia',
   'scr.natal.blurb':

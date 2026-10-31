@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Kaydı kaydet',
 
   /* ---- doğum haritası ---- */
+  'scr.natal.tabsLabel': 'Harita görünümleri',
+  'scr.natal.tabChart': 'Harita',
+  'scr.natal.tabPositions': 'Konumlar',
+  'scr.natal.tabAspects': 'Açılar',
+  'scr.natal.tabReading': 'Yorum',
+  'scr.natal.tapPlanet': 'Okumak için çarktaki bir gezegene dokun.',
+  'scr.natal.holds': 'Doğum {planet} gezegenin {na} tutar.',
+  'scr.natal.inSign': '{planet}, {sign} burcunda — {flavour}.',
+  'scr.natal.inHouse': '{ord} evinde duruyor — {arena}.',
+  'scr.natal.retro': 'Doğumda retro — enerjisi içe döner ve görünür olmadan önce sessizce işlenir.',
+  'scr.natal.ascendant': 'Yükselen',
+  'scr.natal.midheaven': 'Tepe noktası (MC)',
+  'scr.natal.aspectsOf': 'Açıları',
   'scr.natal.eyebrow': 'Doğum Haritası',
   'scr.natal.title': 'Doğum gökyüzün',
   'scr.natal.blurb':

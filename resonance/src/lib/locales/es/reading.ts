@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': 'El Campo de Chakras completo',
   'field.openEvery': 'Abre cada centro',
   'field.openEverySub': 'Por qué cada uno está cargado, todos sus tránsitos y un tono para sintonizarlo — Resonance Pro',
+  'field.keyPractices': 'Prácticas clave',
+  'field.prev': 'Centro anterior',
+  'field.next': 'Centro siguiente',
+  'field.startNow': 'Empezar ahora',
   'field.footer': 'Cada planeta resuena con un centro; sus aspectos a tu carta lo cargan o lo tensionan. Los aspectos suaves abren un centro, los duros lo ponen bajo presión. Se recalcula a lo largo del día según se mueven los planetas.',
   'field.svgAria': 'Los siete chakras y su carga de hoy',
 

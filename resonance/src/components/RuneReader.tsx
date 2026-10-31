@@ -171,7 +171,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
               {t('rune.castSub')}
             </span>
           </span>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          <span style={{ color: 'var(--rz-gold)' }}>›</span>
         </button>
 
         <button
@@ -190,7 +190,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
               {t('rune.askSub')}
             </span>
           </span>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          <span style={{ color: 'var(--rz-gold)' }}>›</span>
         </button>
 
         <button
@@ -206,7 +206,7 @@ export function RuneReader({ onBack, onUpgrade }: RuneReaderProps) {
               {t('rune.librarySub')}
             </span>
           </span>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          <span style={{ color: 'var(--rz-gold)' }}>›</span>
         </button>
       </div>
     )

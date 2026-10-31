@@ -117,7 +117,7 @@ export function TodaysPractice({
                   aria-hidden
                   className="absolute h-16 w-16 rounded-full blur-xl"
                   style={{
-                    background: 'radial-gradient(circle, var(--rz-hue) 0%, transparent 72%)',
+                    background: 'radial-gradient(circle, var(--rz-gold) 0%, transparent 72%)',
                     opacity: 0.55,
                   }}
                 />
@@ -152,9 +152,9 @@ export function TodaysPractice({
   return (
     <section
       className={`glass-panel glass-panel-active animate-bloom-in p-4.5 ${className}`}
-      style={{ boxShadow: '0 0 36px -12px var(--rz-glow)' }}
+      style={{ boxShadow: '0 0 36px -12px var(--rz-gold-glow)' }}
     >
-      <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+      <p className="eyebrow" style={{ color: 'var(--rz-gold)' }}>
         {rx.urgent ? t('tp.restoreFirst') : t('tp.today')}
       </p>
       {showDirective && (

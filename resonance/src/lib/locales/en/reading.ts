@@ -194,6 +194,10 @@ export const reading = {
   'field.reasonFull': 'The full Chakra Field',
   'field.openEvery': 'Open every centre',
   'field.openEverySub': 'Why each is charged, all its transits, and a tone to tune it — Resonance Pro',
+  'field.keyPractices': 'Key practices',
+  'field.prev': 'Previous centre',
+  'field.next': 'Next centre',
+  'field.startNow': 'Start now',
   'field.footer': 'Each planet resonates with one centre; its aspects to your chart charge or strain it. Soft aspects open a centre, hard aspects put it under pressure. Recomputed through the day as the planets move.',
   'field.svgAria': 'The seven chakras and their charge today',
 

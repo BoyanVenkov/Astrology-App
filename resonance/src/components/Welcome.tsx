@@ -38,7 +38,7 @@ function WelcomeSky() {
       preserveAspectRatio="xMidYMid slice"
       aria-hidden
       className="absolute inset-0 -z-10 h-full w-full"
-      style={{ color: 'var(--rz-hue)' }}
+      style={{ color: 'var(--rz-gold)' }}
     >
       <defs>
         <radialGradient id="rz-welcome" cx="50%" cy="0%" r="78%">
@@ -111,8 +111,8 @@ function PlanetField() {
             top: p.y,
             fontSize: p.s,
             opacity: p.o,
-            color: 'var(--rz-hue)',
-            filter: 'drop-shadow(0 0 12px var(--rz-glow))',
+            color: 'var(--rz-gold)',
+            filter: 'drop-shadow(0 0 12px var(--rz-gold-glow))',
           }}
         >
           {p.g}
@@ -159,7 +159,7 @@ export function Splash() {
     >
       <ResonanceMark
         className="h-12 w-12"
-        style={{ color: 'var(--rz-hue)', filter: 'drop-shadow(0 0 16px var(--rz-glow))' }}
+        style={{ color: 'var(--rz-gold)', filter: 'drop-shadow(0 0 16px var(--rz-gold-glow))' }}
         animated
       />
     </div>
@@ -274,7 +274,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
       <div className="relative z-10 my-auto flex w-full flex-col py-8">
         <ResonanceMark
           className="mb-7 h-11 w-11 self-center"
-          style={{ color: 'var(--rz-hue)', filter: 'drop-shadow(0 0 14px var(--rz-glow))' }}
+          style={{ color: 'var(--rz-gold)', filter: 'drop-shadow(0 0 14px var(--rz-gold-glow))' }}
           animated
         />
         <p className="eyebrow-hue text-center">{t('welcome.eyebrow')}</p>
@@ -303,7 +303,7 @@ export function Welcome({ onSkip }: WelcomeProps) {
             type="button"
             onClick={() => void google()}
             disabled={busy}
-            className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-glow)] transition active:scale-[0.98] disabled:opacity-60"
+            className="flex items-center justify-center gap-3 rounded-[0.95rem] bg-[#f6f4ec] px-4 py-4 text-[0.95rem] font-semibold text-[#1a1c22] shadow-[0_10px_30px_-12px_var(--rz-gold-glow)] transition active:scale-[0.98] disabled:opacity-60"
           >
             <GoogleG />
             {busy ? t('welcome.googleOpening') : t('welcome.google')}

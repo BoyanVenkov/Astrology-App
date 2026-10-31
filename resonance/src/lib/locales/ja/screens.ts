@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': '記録を保存',
 
   /* ---- 出生図 ---- */
+  'scr.natal.tabsLabel': 'チャートの表示',
+  'scr.natal.tabChart': 'チャート',
+  'scr.natal.tabPositions': '配置',
+  'scr.natal.tabAspects': 'アスペクト',
+  'scr.natal.tabReading': '解釈',
+  'scr.natal.tapPlanet': 'ホイール上の惑星をタップすると読み解きが表示されます。',
+  'scr.natal.holds': 'あなたのネイタルの{planet}は{na}を保っています。',
+  'scr.natal.inSign': '{sign}の{planet}——{flavour}。',
+  'scr.natal.inHouse': 'あなたの{ord}ハウスにあります——{arena}。',
+  'scr.natal.retro': '出生時に逆行——そのエネルギーは内側へ向かい、表に出る前にひそかに消化されます。',
+  'scr.natal.ascendant': 'アセンダント',
+  'scr.natal.midheaven': 'MC（天頂）',
+  'scr.natal.aspectsOf': 'その惑星のアスペクト',
   'scr.natal.eyebrow': '出生図',
   'scr.natal.title': 'あなたが生まれたときの空',
   'scr.natal.blurb':

@@ -9,6 +9,7 @@ import { crystalName } from '../lib/crystals'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
 import { GemArt } from './ui'
+import { useEntitlements } from '../lib/premium'
 import {
   BreathIcon,
   ChevronIcon,
@@ -17,7 +18,11 @@ import {
   GearIcon,
   JournalIcon,
   MoonIcon,
+  OracleIcon,
   OrbitIcon,
+  PulseIcon,
+  LockIcon,
+  ChakraIcon,
   RingsIcon,
   RuneIcon,
   ScrollIcon,
@@ -34,11 +39,15 @@ export type NavSub =
   | 'chart'
   | 'transits'
   | 'moon'
+  | 'chakras'
   | 'compat'
+  | 'oracle'
   | 'runes'
   | 'stones'
   | 'library'
   | 'journal'
+  | 'mood'
+  | 'settings'
 
 interface LayoutProps {
   active: TabKey
@@ -67,32 +76,57 @@ const TABS: TabDef[] = [
 const BOTTOM_LEFT = TABS.slice(0, 2)
 const BOTTOM_RIGHT = TABS.slice(2)
 
-/** One sidebar row — either a tab root or a pushed screen. */
+/** One sidebar row — a tab root, a pushed screen, or the practice sheet. */
 type SideItem =
   | { kind: 'tab'; key: TabKey; labelKey: MessageKey; Icon: Icon }
-  | { kind: 'sub'; key: NavSub; labelKey: MessageKey; Icon: Icon }
+  | { kind: 'sub'; key: NavSub; labelKey: MessageKey; Icon: Icon; pro?: boolean }
+  | { kind: 'practice'; key: 'practice'; labelKey: MessageKey; Icon: Icon }
 
-/** The concept's flat list: the day first, then the sky, then the oracles, then you. */
-const SIDEBAR: SideItem[][] = [
-  [
-    { kind: 'tab', key: 'today', labelKey: 'nav.today', Icon: DashboardIcon },
-    { kind: 'sub', key: 'horoscope', labelKey: 'sky.tileHoroscope', Icon: ScrollIcon },
-    { kind: 'tab', key: 'sky', labelKey: 'nav.sky', Icon: SkyIcon },
-    { kind: 'sub', key: 'chart', labelKey: 'sky.tileChart', Icon: CompassIcon },
-    { kind: 'sub', key: 'transits', labelKey: 'sky.tileTransits', Icon: OrbitIcon },
-    { kind: 'sub', key: 'moon', labelKey: 'sky.tileMoon', Icon: MoonIcon },
-    { kind: 'sub', key: 'compat', labelKey: 'sky.tileCompat', Icon: RingsIcon },
-  ],
-  [
-    { kind: 'tab', key: 'tarot', labelKey: 'nav.tarot', Icon: TarotIcon },
-    { kind: 'sub', key: 'runes', labelKey: 'rune.eyebrow', Icon: RuneIcon },
-    { kind: 'sub', key: 'stones', labelKey: 'sky.tileStones', Icon: ApothecaryIcon },
-    { kind: 'sub', key: 'library', labelKey: 'tp.fullLibrary', Icon: BreathIcon },
-  ],
-  [
-    { kind: 'sub', key: 'journal', labelKey: 'you.journal', Icon: JournalIcon },
-    { kind: 'tab', key: 'you', labelKey: 'nav.you', Icon: YouIcon },
-  ],
+/**
+ * The whole app, one home per feature, grouped the way the phone dock is:
+ * Today · The Sky · (✦ Practice) · Divination (the Tarot tab) · Personal (You).
+ */
+const SIDEBAR: { titleKey?: MessageKey; items: SideItem[] }[] = [
+  {
+    items: [{ kind: 'tab', key: 'today', labelKey: 'nav.today', Icon: DashboardIcon }],
+  },
+  {
+    titleKey: 'sky.eyebrow',
+    items: [
+      { kind: 'tab', key: 'sky', labelKey: 'nav.overview', Icon: SkyIcon },
+      { kind: 'sub', key: 'horoscope', labelKey: 'scr.quick.eyebrow', Icon: ScrollIcon, pro: true },
+      { kind: 'sub', key: 'chart', labelKey: 'sky.tileChart', Icon: CompassIcon },
+      { kind: 'sub', key: 'transits', labelKey: 'sky.tileTransits', Icon: OrbitIcon },
+      { kind: 'sub', key: 'moon', labelKey: 'sky.tileMoon', Icon: MoonIcon },
+      { kind: 'sub', key: 'chakras', labelKey: 'sky.chakraField', Icon: ChakraIcon },
+      { kind: 'sub', key: 'compat', labelKey: 'sky.tileCompat', Icon: RingsIcon, pro: true },
+      { kind: 'sub', key: 'oracle', labelKey: 'sky.tileOracle', Icon: OracleIcon },
+    ],
+  },
+  {
+    titleKey: 'nav.secPractice',
+    items: [
+      { kind: 'practice', key: 'practice', labelKey: 'tp.today', Icon: SparkIcon },
+      { kind: 'sub', key: 'library', labelKey: 'tp.fullLibrary', Icon: BreathIcon },
+      { kind: 'sub', key: 'stones', labelKey: 'sky.tileStones', Icon: ApothecaryIcon },
+    ],
+  },
+  {
+    titleKey: 'nav.secDivination',
+    items: [
+      { kind: 'tab', key: 'tarot', labelKey: 'nav.tarot', Icon: TarotIcon },
+      { kind: 'sub', key: 'runes', labelKey: 'rune.eyebrow', Icon: RuneIcon },
+    ],
+  },
+  {
+    titleKey: 'nav.secPersonal',
+    items: [
+      { kind: 'sub', key: 'journal', labelKey: 'you.journal', Icon: JournalIcon },
+      { kind: 'sub', key: 'mood', labelKey: 'you.mood', Icon: PulseIcon },
+      { kind: 'tab', key: 'you', labelKey: 'nav.profile', Icon: YouIcon },
+      { kind: 'sub', key: 'settings', labelKey: 'nav.settings', Icon: GearIcon },
+    ],
+  },
 ]
 
 const NAV_PREF = 'rz-nav-collapsed'
@@ -109,10 +143,13 @@ const readCollapsed = (): boolean => {
 function PracticeOrb({
   onClick,
   label,
+  active = false,
   className = '',
 }: {
   onClick: () => void
   label: string
+  /** A Practice screen is open — a steady bright ring around the orb. */
+  active?: boolean
   className?: string
 }) {
   return (
@@ -139,6 +176,13 @@ function PracticeOrb({
         aria-hidden
         className="absolute inset-1.5 rounded-full border border-white/25"
       />
+      {active && (
+        <span
+          aria-hidden
+          className="absolute -inset-1.5 rounded-full"
+          style={{ boxShadow: '0 0 0 2px var(--rz-gold-hi), 0 0 22px 2px var(--rz-gold-glow)' }}
+        />
+      )}
       <SparkIcon className="h-[45%] w-[45%] animate-pulse-glow text-[#1a1206]" />
     </button>
   )
@@ -200,12 +244,15 @@ function SideRow({
   item,
   active,
   expanded,
+  locked,
   onClick,
   t,
 }: {
   item: SideItem
   active: boolean
   expanded: boolean
+  /** A Pro screen on the free tier — tapping opens the paywall. */
+  locked: boolean
   onClick: () => void
   t: TFn
 }) {
@@ -220,8 +267,8 @@ function SideRow({
       title={expanded ? undefined : label}
       className={`group relative flex w-full items-center rounded-xl transition-colors duration-200 active:scale-[0.98] ${
         expanded
-          ? 'min-h-[2.6rem] gap-3.5 px-3.5 text-start'
-          : 'h-11 justify-center'
+          ? 'min-h-[2.35rem] gap-3.5 px-3.5 text-start'
+          : 'h-10 justify-center'
       } ${
         active
           ? 'text-[#1a1206]'
@@ -253,6 +300,9 @@ function SideRow({
         >
           {label}
         </span>
+      )}
+      {expanded && locked && (
+        <LockIcon className="relative ms-auto h-3.5 w-3.5 shrink-0 opacity-60" />
       )}
     </button>
   )
@@ -372,12 +422,25 @@ export function Layout({
       return !c
     })
 
+  const { isPro } = useEntitlements()
+  const allItems = SIDEBAR.flatMap((g) => g.items)
+  // a pushed screen lights its own row; a tab lights only when no row of
+  // its own is showing (Fasting lights Moon, its parent)
+  const litSub = sub === 'fasting' ? 'moon' : sub
+  // the Practice section's screens light the orb on the phone dock
+  const practiceActive = sub === 'library' || sub === 'stones'
   const isActive = (item: SideItem) =>
     item.kind === 'sub'
-      ? sub === item.key
-      : active === item.key && (sub === null || !SIDEBAR.flat().some((i) => i.key === sub))
+      ? litSub === item.key
+      : item.kind === 'tab'
+        ? active === item.key && (litSub === null || !allItems.some((i) => i.key === litSub))
+        : false
   const select = (item: SideItem) =>
-    item.kind === 'tab' ? onTabChange(item.key) : onOpen(item.key)
+    item.kind === 'tab'
+      ? onTabChange(item.key)
+      : item.kind === 'sub'
+        ? onOpen(item.key)
+        : onPractice()
 
   // md: always the icon rail; lg+: the full labelled sidebar unless collapsed.
   const railW = 'md:w-[4.75rem]'
@@ -418,17 +481,23 @@ export function Layout({
           <div
             key={gi}
             role="group"
-            aria-label={gi === 0 ? undefined : t('nav.explore')}
-            className={`flex flex-col gap-1 ${
-              gi > 0 ? 'mt-2.5 border-t border-white/[0.07] pt-2.5' : ''
+            aria-label={group.titleKey ? t(group.titleKey) : undefined}
+            className={`flex flex-col gap-0.5 ${
+              gi > 0 ? (expanded ? 'mt-3' : 'mt-2 border-t border-white/[0.07] pt-2') : ''
             }`}
           >
-            {group.map((item) => (
+            {expanded && group.titleKey && (
+              <p className="px-3.5 pb-1 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-haze-400">
+                {t(group.titleKey)}
+              </p>
+            )}
+            {group.items.map((item) => (
               <SideRow
                 key={item.key}
                 item={item}
                 active={isActive(item)}
                 expanded={expanded}
+                locked={item.kind === 'sub' && !!item.pro && !isPro}
                 onClick={() => select(item)}
                 t={t}
               />
@@ -552,23 +621,30 @@ export function Layout({
               <BottomTab
                 key={d.key}
                 def={d}
-                active={active === d.key}
+                active={!practiceActive && active === d.key}
                 onClick={() => onTabChange(d.key)}
                 t={t}
               />
             ))}
-            <div className="flex flex-1 justify-center">
+            <div className="flex flex-1 flex-col items-center">
               <PracticeOrb
                 onClick={onPractice}
                 label={practiceLabel}
+                active={practiceActive}
                 className="-mt-7 h-[3.6rem] w-[3.6rem]"
               />
+              <span
+                aria-hidden
+                className="mt-1 text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--rz-gold)]"
+              >
+                {t('nav.secPractice')}
+              </span>
             </div>
             {BOTTOM_RIGHT.map((d) => (
               <BottomTab
                 key={d.key}
                 def={d}
-                active={active === d.key}
+                active={!practiceActive && active === d.key}
                 onClick={() => onTabChange(d.key)}
                 t={t}
               />

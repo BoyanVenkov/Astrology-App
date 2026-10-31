@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': 'Hela Chakrafältet',
   'field.openEvery': 'Öppna varje centrum',
   'field.openEverySub': 'Varför vart och ett är laddat, alla dess transiter, och en ton att stämma det med — Resonance Pro',
+  'field.keyPractices': 'Viktiga praktiker',
+  'field.prev': 'Föregående centrum',
+  'field.next': 'Nästa centrum',
+  'field.startNow': 'Börja nu',
   'field.footer': 'Varje planet resonerar med ett centrum; dess aspekter till din karta laddar eller anstränger det. Mjuka aspekter öppnar ett centrum, hårda aspekter sätter det under press. Omräknat under dagen medan planeterna rör sig.',
   'field.svgAria': 'De sju chakrana och deras laddning idag',
 

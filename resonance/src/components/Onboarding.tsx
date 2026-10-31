@@ -99,10 +99,10 @@ export function Onboarding() {
       <div className="flex w-full flex-col py-6 my-auto">
       <ResonanceMark
         className="mb-5 h-9 w-9"
-        style={{ color: 'var(--rz-hue)' }}
+        style={{ color: 'var(--rz-gold)' }}
         animated
       />
-      <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+      <p className="eyebrow" style={{ color: 'var(--rz-gold)' }}>
         {t('onb.eyebrow')}
       </p>
       <h1 className="mt-2 font-serif text-[2.1rem] leading-[1.1] text-gilded">

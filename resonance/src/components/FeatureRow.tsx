@@ -1,4 +1,4 @@
-import { LockIcon } from './icons'
+import { ChevronIcon, LockIcon } from './icons'
 
 /** A full-width "bento" row — glowing art on the left, title/sub on the right. */
 export function FeatureRow({
@@ -32,7 +32,7 @@ export function FeatureRow({
           className={`animate-card-float h-[5.5rem] w-[5.5rem] object-contain ${tilt}`}
           style={{
             filter:
-              'drop-shadow(0 8px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 12px var(--rz-glow))',
+              'drop-shadow(0 8px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 12px var(--rz-gold-glow))',
             animationDelay: `${0.1 + index * 0.08}s`,
           }}
         />
@@ -44,9 +44,7 @@ export function FeatureRow({
         </span>
         <span className="block text-xs text-haze-300">{sub}</span>
       </span>
-      <span className="shrink-0 self-center" style={{ color: 'var(--rz-hue)' }}>
-        ›
-      </span>
+      <ChevronIcon className="h-4 w-4 shrink-0 self-center -scale-x-100 text-[color:var(--rz-gold)] rtl:scale-x-100" />
     </button>
   )
 }

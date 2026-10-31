@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': 'Uwanja kamili wa Shakra',
   'field.openEvery': 'Fungua kila kituo',
   'field.openEverySub': 'Kwa nini kila kimoja kimejaa nishati, mipito yake yote, na sauti ya kukipatanisha — Resonance Pro',
+  'field.keyPractices': 'Mazoezi muhimu',
+  'field.prev': 'Kituo kilichopita',
+  'field.next': 'Kituo kinachofuata',
+  'field.startNow': 'Anza sasa',
   'field.footer': 'Kila sayari inaungana na kituo kimoja; pembe zake kwa chati yako zinakijaza nishati au kukikaza. Pembe laini zinafungua kituo, pembe ngumu zinakiweka chini ya shinikizo. Inahesabiwa upya siku nzima sayari zinaposogea.',
   'field.svgAria': 'Shakra saba na nishati yao leo',
 

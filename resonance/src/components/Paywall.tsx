@@ -195,7 +195,7 @@ export function Paywall({ onClose, reason, onNeedAuth }: PaywallProps) {
           type="button"
           onClick={() => void buy()}
           disabled={busy !== null}
-          className="mt-4 w-full rounded-2xl border border-gold-400/50 bg-gold-500/20 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-50"
+          className="btn-gold min-h-12 mt-4 w-full px-4 py-3.5 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-50"
         >
           {busy === 'buy' ? t('pay.oneMoment') : cta}
         </button>

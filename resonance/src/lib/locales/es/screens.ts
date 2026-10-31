@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'Guardar registro',
 
   /* ---- carta natal ---- */
+  'scr.natal.tabsLabel': 'Vistas de la carta',
+  'scr.natal.tabChart': 'Carta',
+  'scr.natal.tabPositions': 'Posiciones',
+  'scr.natal.tabAspects': 'Aspectos',
+  'scr.natal.tabReading': 'Interpretación',
+  'scr.natal.tapPlanet': 'Toca un planeta en la rueda para leerlo.',
+  'scr.natal.holds': 'Tu {planet} natal sostiene {na}.',
+  'scr.natal.inSign': '{planet} en {sign} — {flavour}.',
+  'scr.natal.inHouse': 'Está en tu {ord} casa — {arena}.',
+  'scr.natal.retro': 'Retrógrado al nacer: su energía se vuelve hacia dentro y se trabaja en privado antes de mostrarse.',
+  'scr.natal.ascendant': 'Ascendente',
+  'scr.natal.midheaven': 'Medio Cielo',
+  'scr.natal.aspectsOf': 'Sus aspectos',
   'scr.natal.eyebrow': 'Carta Natal',
   'scr.natal.title': 'El cielo de tu nacimiento',
   'scr.natal.blurb':

@@ -296,10 +296,10 @@ function Reading({ person }: { person: SavedPerson }) {
         className="glass-panel p-4"
         style={{
           background:
-            'linear-gradient(180deg, color-mix(in srgb, var(--rz-hue) 8%, transparent), transparent 70%)',
+            'linear-gradient(180deg, color-mix(in srgb, var(--rz-gold) 8%, transparent), transparent 70%)',
         }}
       >
-        <p className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+        <p className="eyebrow" style={{ color: 'var(--rz-gold)' }}>
           {t('syn.deep.growthLead')}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-haze-100">

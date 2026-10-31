@@ -9,7 +9,8 @@ import {
 } from '../lib/i18n'
 import { useChakraField, type ChakraContact, type ChakraReading } from '../lib/chakraField'
 import { useEntitlements } from '../lib/premium'
-import { ChakraBody } from './ChakraBody'
+import { ChakraHero } from './ChakraHero'
+import { ASPECT_GLYPH } from '../lib/astrology'
 import { LockIcon } from './icons'
 import { Screen } from './Screen'
 import type { RitualPreset } from '../types/resonance'
@@ -18,14 +19,6 @@ interface ChakraFieldProps {
   onBack: () => void
   onRitual: (preset: RitualPreset) => void
   onUpgrade: (reason?: string) => void
-}
-
-const ASPECT_GLYPH: Record<string, string> = {
-  conjunction: '☌︎',
-  opposition: '☍︎',
-  square: '□︎',
-  trine: '△︎',
-  sextile: '⚹︎',
 }
 
 const TONE_COLOR: Record<ChakraReading['tone'], string> = {
@@ -97,7 +90,7 @@ function ChakraRow({
               {c.name}
             </span>
             {c.focus && (
-              <span className="eyebrow" style={{ color: 'var(--rz-hue)' }}>
+              <span className="eyebrow" style={{ color: 'var(--rz-gold)' }}>
                 {t('field.today')}
               </span>
             )}
@@ -205,14 +198,8 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
   const editProfile = useAppStore((s) => s.editProfile)
   const { isPro } = useEntitlements()
   const [open, setOpen] = useState<ChakraReading['key'] | null>(null)
+  const [sel, setSel] = useState<ChakraReading['key'] | null>(null)
   const rowRefs = useRef<Partial<Record<ChakraReading['key'], HTMLDivElement | null>>>({})
-  const openAndScroll = (k: ChakraReading['key']) => {
-    setOpen((cur) => (cur === k ? null : k))
-    window.setTimeout(
-      () => rowRefs.current[k]?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
-      80,
-    )
-  }
 
   const focus = field.find((c) => c.focus) ?? field[3]
   const strained = field.filter(
@@ -270,20 +257,22 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
       }
       width="wide"
     >
-      <div className="flex flex-col gap-4 md:grid md:grid-cols-[minmax(0,20rem)_1fr] md:items-start md:gap-8">
-      <div className="flex justify-center py-2 md:sticky md:top-4">
-        <ChakraBody
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-[minmax(0,24rem)_1fr] md:items-start md:gap-8">
+      <div className="md:sticky md:top-4">
+        <ChakraHero
           field={field}
-          size={280}
-          selected={open}
+          selected={sel ?? focus.key}
+          isPro={isPro}
+          isUnlocked={(k) => isPro || !!field.find((c) => c.key === k)?.focus}
           onSelect={(k) => {
             const locked = !isPro && !field.find((c) => c.key === k)?.focus
             if (locked) {
               onUpgrade(t('field.reasonFull'))
               return
             }
-            openAndScroll(k)
+            setSel(k)
           }}
+          onRitual={onRitual}
         />
       </div>
 
@@ -302,11 +291,14 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
               }}
               locked={locked}
               open={open === c.key}
-              onToggle={() =>
-                locked
-                  ? onUpgrade(t('field.reasonFull'))
-                  : setOpen((cur) => (cur === c.key ? null : c.key))
-              }
+              onToggle={() => {
+                if (locked) {
+                  onUpgrade(t('field.reasonFull'))
+                  return
+                }
+                setSel(c.key)
+                setOpen((cur) => (cur === c.key ? null : c.key))
+              }}
               onRitual={onRitual}
               t={t}
             />
@@ -328,12 +320,12 @@ export function ChakraField({ onBack, onRitual, onUpgrade }: ChakraFieldProps) {
               {t('field.openEverySub')}
             </span>
           </span>
-          <span style={{ color: 'var(--rz-hue)' }}>›</span>
+          <span style={{ color: 'var(--rz-gold)' }}>›</span>
         </button>
       )}
 
       <p className="px-1 pb-2 text-[11px] leading-relaxed text-haze-500">
-        {t('field.footer')}
+        {t('field.footer')} {t('dash.symbolicNote')}
       </p>
       </div>
       </div>

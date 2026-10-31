@@ -130,6 +130,19 @@ export const screens: Record<ScreenKey, string> = {
   'scr.moodci.save': 'احفظ التسجيل',
 
   /* ---- خريطة الميلاد ---- */
+  'scr.natal.tabsLabel': 'عروض الخريطة',
+  'scr.natal.tabChart': 'الخريطة',
+  'scr.natal.tabPositions': 'المواضع',
+  'scr.natal.tabAspects': 'الاتصالات',
+  'scr.natal.tabReading': 'التفسير',
+  'scr.natal.tapPlanet': 'المس كوكبًا على الدائرة لقراءته.',
+  'scr.natal.holds': '{planet} الميلادي لديك يحمل {na}.',
+  'scr.natal.inSign': '{planet} في {sign} — {flavour}.',
+  'scr.natal.inHouse': 'يقع في بيتك {ord} — {arena}.',
+  'scr.natal.retro': 'متراجع عند الميلاد — تتّجه طاقته إلى الداخل وتُعالَج بصمت قبل أن تظهر.',
+  'scr.natal.ascendant': 'الطالع',
+  'scr.natal.midheaven': 'وسط السماء',
+  'scr.natal.aspectsOf': 'اتصالاته',
   'scr.natal.eyebrow': 'خريطة الميلاد',
   'scr.natal.title': 'سماء ميلادك',
   'scr.natal.blurb':

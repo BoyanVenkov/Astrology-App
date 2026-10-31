@@ -128,7 +128,7 @@ export function MoodCheckIn({
         type="button"
         onClick={save}
         disabled={!mood}
-        className="rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+        className="btn-gold min-h-12 px-4 py-3.5 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
       >
         {existing ? t('scr.moodci.update') : t('scr.moodci.save')}
       </button>

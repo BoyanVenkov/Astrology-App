@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': 'Tam Çakra Alanı',
   'field.openEvery': 'Her merkezi aç',
   'field.openEverySub': 'Her birinin neden yüklü olduğu, tüm transitleri ve onu ayarlayacak bir ton — Resonance Pro',
+  'field.keyPractices': 'Temel pratikler',
+  'field.prev': 'Önceki merkez',
+  'field.next': 'Sonraki merkez',
+  'field.startNow': 'Şimdi başla',
   'field.footer': 'Her gezegen bir merkezle rezonansa girer; haritana yaptığı açılar onu yükler ya da gerer. Yumuşak açılar bir merkezi açar, sert açılar baskı altına alır. Gezegenler hareket ettikçe gün boyunca yeniden hesaplanır.',
   'field.svgAria': 'Yedi çakra ve bugünkü yükleri',
 

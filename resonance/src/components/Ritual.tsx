@@ -370,7 +370,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         <button
           type="button"
           onClick={begin}
-          className="mt-6 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 shadow-gold-glow transition active:scale-[0.98]"
+          className="btn-gold min-h-12 mt-6 px-4 py-3.5 text-sm font-semibold transition active:scale-[0.98]"
         >
           {t('scr.ritual.beginPractice')}
         </button>
@@ -484,7 +484,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       <button
         type="button"
         onClick={onExit}
-        className="mt-6 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-8 py-3.5 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 transition active:scale-[0.98]"
+        className="btn-gold min-h-12 mt-6 px-8 py-3.5 text-sm font-semibold transition active:scale-[0.98]"
       >
         {t('scr.ritual.done')}
       </button>

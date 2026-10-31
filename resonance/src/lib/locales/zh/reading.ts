@@ -190,6 +190,10 @@ export const reading: Record<ReadingKey, string> = {
   'field.reasonFull': '完整的脉轮能量场',
   'field.openEvery': '打开每一个中心',
   'field.openEverySub': '每一个为何被充电、它所有的行运，以及一段调谐它的声音 — Resonance Pro',
+  'field.keyPractices': '关键练习',
+  'field.prev': '上一个脉轮',
+  'field.next': '下一个脉轮',
+  'field.startNow': '立即开始',
   'field.footer': '每颗行星与一个中心共振；它对你星盘的相位会为它充电或使它紧张。柔和相位打开一个中心，强硬相位使它受压。会随行星移动在一天里重新计算。',
   'field.svgAria': '七个脉轮及其今天的充电情况',
 

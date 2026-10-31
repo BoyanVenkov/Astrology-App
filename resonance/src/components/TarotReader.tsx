@@ -199,7 +199,7 @@ function OracleResult({ q, card, t }: { q: string; card: DrawnCard; t: TFn }) {
           <div key={p.label}>
             <p
               className="text-[10px] uppercase tracking-[0.16em]"
-              style={{ color: 'var(--rz-hue)' }}
+              style={{ color: 'var(--rz-gold)' }}
             >
               {p.label}
             </p>
@@ -291,7 +291,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
         <div className="relative">
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+            className="pointer-events-none absolute -inset-x-4 -inset-y-6 -z-10 overflow-hidden [mask-image:radial-gradient(ellipse_at_center,black_35%,transparent_72%)]"
           >
             <img
               src={artWaveMesh}
@@ -301,7 +301,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
             />
             <span
               className="animate-drift absolute start-[10%] top-[10%] h-36 w-36 rounded-full opacity-35 blur-3xl"
-              style={{ background: 'var(--rz-hue)', animationDuration: '20s' }}
+              style={{ background: 'var(--rz-gold)', animationDuration: '20s' }}
             />
           </div>
           <header className="animate-bloom-in px-1 pb-2">
@@ -318,7 +318,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
             <span
               aria-hidden
               className="animate-pulse-glow pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-              style={{ background: 'var(--rz-hue)', opacity: 0.22 }}
+              style={{ background: 'var(--rz-gold)', opacity: 0.22 }}
             />
             <CardSlot
               drawn={d}
@@ -620,7 +620,7 @@ export function TarotReader({ onBack, onUpgrade, onOpenRunes }: TarotReaderProps
               <button
                 type="button"
                 onClick={() => setView('choose')}
-                className="flex-1 rounded-2xl border border-gold-400/50 bg-gold-500/15 px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-gold-100 active:scale-[0.98]"
+                className="btn-gold min-h-12 flex-1 px-4 py-3 text-sm font-semibold active:scale-[0.98]"
               >
                 {t('tr.newSpread')}
               </button>

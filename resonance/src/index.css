@@ -169,19 +169,20 @@
   overflow: hidden;
 }
 
-/* The chosen / hero surface — a whisper of the day's hue as a ring + glow. */
+/* The chosen / hero surface — a gold ring and a warm glow. */
 @utility glass-panel-active {
-  border-color: color-mix(in srgb, var(--rz-hue) 32%, transparent);
-  background-image: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--rz-hue) 9%, transparent) 0%,
-    rgba(255, 255, 255, 0) 55%
-  );
+  border-color: rgba(232, 194, 116, 0.34);
+  background-image:
+    radial-gradient(
+      120% 80% at 0% 0%,
+      rgba(232, 194, 116, 0.09),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 45%);
   box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.06) inset,
-    0 0 0 1px color-mix(in srgb, var(--rz-hue) 14%, transparent),
+    0 1px 0 0 rgba(251, 236, 196, 0.08) inset,
     0 18px 50px -20px rgba(0, 0, 0, 0.6),
-    0 0 40px -16px var(--rz-glow);
+    0 0 40px -18px var(--rz-gold-glow);
 }
 
 /* Composable glow (filter, so it stacks with any box-shadow). */
@@ -220,8 +221,8 @@
   color: rgb(184 195 224 / 0.96);
 }
 
-/* The screen-identity label — top of a screen, next to the title. Carries the
-   day's hue so each screen reads its colour at a glance. */
+/* The screen-identity label — top of a screen, next to the title. Gold, the
+   brand's accent metal (the day's hue stays in the ambient backdrop). */
 @utility eyebrow-hue {
   font-family:
     'Inter Variable', Inter, system-ui, sans-serif;
@@ -229,8 +230,8 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.17em;
-  color: var(--rz-hue);
-  text-shadow: 0 0 18px var(--rz-glow);
+  color: var(--rz-gold);
+  text-shadow: 0 0 18px var(--rz-gold-glow);
 }
 
 /* The big serif moments — mantra, hero headings. Softer + a touch of wonk
