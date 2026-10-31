@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'Управлявай дистанцията съзнателно. Контакт по твои условия, с граници, обикновено работи по-добре от насилена близост.',
 
   /* ---- екран „Съвместимост“ ---- */
+  'scr.compat.viewReading': 'Виж съвместимостта',
+  'scr.compat.interpretNote': 'Астрологичен прочит на това как се срещат две карти — не е оценка, нито прогноза.',
   'scr.compat.eyebrow': 'Съвместимост',
   'scr.compat.tone.gift': 'Тече',
   'scr.compat.tone.intense': 'Слива се',

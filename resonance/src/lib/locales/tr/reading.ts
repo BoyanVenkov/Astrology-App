@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'Mesafeyi bilinçli yönet. Sınırlarla, kendi koşullarında temas, zorlanmış yakınlıktan daha iyi işler.',
 
   /* ---- uyum ekranı ---- */
+  'scr.compat.viewReading': 'Uyumu gör',
+  'scr.compat.interpretNote': 'İki haritanın nasıl buluştuğuna dair astrolojik bir yorum — bir puan ya da kehanet değildir.',
   'scr.compat.eyebrow': 'Uyum',
   'scr.compat.tone.gift': 'Akar',
   'scr.compat.tone.intense': 'Kaynaşır',

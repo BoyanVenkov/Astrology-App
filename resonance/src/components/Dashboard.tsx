@@ -28,6 +28,7 @@ import type { NavSub } from './Layout'
 import type { RitualPreset } from './Ritual'
 import type { TabKey } from '../types/resonance'
 import { ChevronIcon, LockIcon, PlayIcon } from './icons'
+import { GemArt } from './ui'
 import artStone from '../assets/art/orb-stone.webp'
 import artField from '../assets/art/orb-field.webp'
 import artTarotDeck from '../assets/art/icon-tarot-deck.webp'
@@ -36,7 +37,6 @@ import artHoroscope from '../assets/art/icon-horoscope.webp'
 import artTransits from '../assets/art/icon-transits.webp'
 import artMoon from '../assets/art/icon-moon.webp'
 import artMeditate from '../assets/art/icon-meditate.webp'
-import artApothecary from '../assets/art/icon-apothecary.webp'
 import artBreathe from '../assets/art/icon-breathe.webp'
 import { hexToHue } from '../lib/color'
 
@@ -63,6 +63,7 @@ function Widget({
   eyebrow,
   title,
   art,
+  figure,
   onClick,
   className = '',
   delay = 0,
@@ -72,6 +73,8 @@ function Widget({
   eyebrow: string
   title?: ReactNode
   art?: string
+  /** A rendered figure in the art corner, when an image url won't do. */
+  figure?: ReactNode
   onClick: () => void
   className?: string
   delay?: number
@@ -97,6 +100,11 @@ function Widget({
             animationDelay: `${delay / 200}s`,
           }}
         />
+      )}
+      {figure && (
+        <span aria-hidden className="pointer-events-none absolute -end-1 -top-1 transition-transform duration-500 group-hover:scale-110">
+          {figure}
+        </span>
       )}
       <span className="relative flex items-center gap-1.5 pe-16 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--rz-gold)]">
         {eyebrow}
@@ -532,7 +540,15 @@ export function Dashboard({
         {/* the stone to carry, and the full practice library */}
         <Widget
           eyebrow={t('dash.stoneOfDay')}
-          art={artApothecary}
+          figure={
+            heroStone && (
+              <GemArt
+                name={heroStone.name}
+                color={heroStone.color}
+                className="animate-card-float h-20 w-20 md:h-24 md:w-24"
+              />
+            )
+          }
           title={heroStone ? crystalName(heroStone.name, t) : t('sky.tileStones')}
           onClick={() => onOpen('stones')}
           className="min-h-[11rem]"

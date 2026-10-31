@@ -9,7 +9,7 @@ export function BackButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label={t('common.back')}
-      className="card-press -ms-1 grid h-10 w-10 shrink-0 place-items-center self-start rounded-full border border-white/20 bg-white/[0.08] text-[#eef1fb] shadow-[0_2px_10px_-3px_rgba(0,0,0,0.55)] active:bg-white/15"
+      className="glass-veil card-press -ms-1 grid h-10 w-10 shrink-0 place-items-center self-start rounded-full text-[#f6ecd2] transition hover:text-white"
     >
       <svg
         viewBox="0 0 24 24"
@@ -41,6 +41,8 @@ interface ScreenProps {
    * `'wide'` lets the screen use the full content area for its own columns.
    */
   width?: 'default' | 'wide'
+  /** `'center'` — the concept's hero screens (Moon, Compatibility): title centred over the art. */
+  align?: 'start' | 'center'
   children: ReactNode
 }
 
@@ -56,8 +58,10 @@ export function Screen({
   onBack,
   action,
   width = 'default',
+  align = 'start',
   children,
 }: ScreenProps) {
+  const centered = align === 'center'
   return (
     <div
       className={`mx-auto flex w-full flex-col gap-5 ${
@@ -66,7 +70,7 @@ export function Screen({
     >
       <header className="animate-bloom-in flex items-start gap-3">
         {onBack && <BackButton onClick={onBack} />}
-        <div className="min-w-0 flex-1 pt-0.5">
+        <div className={`min-w-0 flex-1 pt-0.5 ${centered ? 'text-center' : ''}`}>
           {eyebrow && <p className="eyebrow-hue">{eyebrow}</p>}
           <h1 className="mt-1.5 font-serif text-[1.9rem] leading-[1.08] text-gilded md:text-[2.2rem]">
             {title}
@@ -77,7 +81,12 @@ export function Screen({
             </p>
           )}
         </div>
-        {action && <div className="shrink-0 pt-1">{action}</div>}
+        {action ? (
+          <div className="shrink-0 pt-1">{action}</div>
+        ) : (
+          // keep a centred title truly centred against the back button
+          centered && onBack && <div aria-hidden className="w-10 shrink-0" />
+        )}
       </header>
 
       <div className="animate-rise-in flex flex-col gap-5" style={{ animationDelay: '80ms' }}>

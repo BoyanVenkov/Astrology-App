@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · tunatumia mahali pako pa kuzaliwa',
 
   /* ---- mipito ---- */
+  'scr.transits.tabsLabel': 'Kipindi',
+  'scr.transits.tabWeek': 'Wiki',
+  'scr.transits.tabMonth': 'Mwezi',
+  'scr.transits.filterAll': 'Zote',
+  'scr.transits.exactOn': 'Kamili {date}',
+  'scr.transits.windowEmpty': 'Hakuna miunganiko mikubwa katika kipindi hiki.',
+  'scr.transits.windowNote': 'Mionekano ya wiki na mwezi haijumuishi Mwezi — huigusa kila sayari ndani ya siku chache.',
+  'scr.transits.int.exact': 'Kamili',
+  'scr.transits.int.strong': 'Imara',
+  'scr.transits.int.building': 'Inaongezeka',
+  'scr.transits.int.fading': 'Inapungua',
   'scr.transits.eyebrow': 'Anga',
   'scr.transits.titleNatal': 'Mipito kwa chati yako',
   'scr.transits.titleSky': 'Anga leo',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'N{n}',
 
   /* ---- duka la dawa ---- */
+  'scr.apoth.search': 'Tafuta mawe',
+  'scr.apoth.tabsLabel': 'Vinjari mawe',
+  'scr.apoth.tabChakra': 'Kwa chakra',
+  'scr.apoth.tabIntention': 'Kwa nia',
   'scr.apoth.eyebrow': 'Duka la Dawa',
   'scr.apoth.title': 'Wenzako wa Fuwele',
   'scr.apoth.subChart': 'Mawe kwa kazi ya {chakra} leo · {n} katika kabati',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'unganisha jiwe na zoezi la leo →',
 
   /* ---- skrini ya mwezi ---- */
+  'scr.moon.rise': 'Kuchomoza kwa Mwezi',
+  'scr.moon.set': 'Kuzama kwa Mwezi',
+  'scr.moon.sign': 'Ishara',
+  'scr.moon.lit': 'Mwanga',
+  'scr.moon.calendar': 'Kalenda ya mwezi',
   'scr.moon.eyebrow': 'Anga',
   'scr.moon.title': 'Mwezi',
   'scr.moon.sub': '{phase} · umewaka {pct}%',

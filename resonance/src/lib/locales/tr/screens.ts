@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · doğum yerin kullanılıyor',
 
   /* ---- transitler ---- */
+  'scr.transits.tabsLabel': 'Dönem',
+  'scr.transits.tabWeek': 'Hafta',
+  'scr.transits.tabMonth': 'Ay',
+  'scr.transits.filterAll': 'Tümü',
+  'scr.transits.exactOn': '{date} tarihinde tam',
+  'scr.transits.windowEmpty': 'Bu dönemde önemli bir temas yok.',
+  'scr.transits.windowNote': "Hafta ve ay görünümleri Ay'ı dışarıda bırakır — o, birkaç gün içinde her gezegene dokunur.",
+  'scr.transits.int.exact': 'Tam',
+  'scr.transits.int.strong': 'Güçlü',
+  'scr.transits.int.building': 'Güçleniyor',
+  'scr.transits.int.fading': 'Zayıflıyor',
   'scr.transits.eyebrow': 'Gökyüzü',
   'scr.transits.titleNatal': 'Haritana transitler',
   'scr.transits.titleSky': 'Bugün gökyüzü',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'E{n}',
 
   /* ---- şifahane ---- */
+  'scr.apoth.search': 'Taş ara',
+  'scr.apoth.tabsLabel': 'Taşlara göz at',
+  'scr.apoth.tabChakra': 'Çakraya göre',
+  'scr.apoth.tabIntention': 'Niyete göre',
   'scr.apoth.eyebrow': 'Şifahane',
   'scr.apoth.title': 'Kristal Yoldaşlar',
   'scr.apoth.subChart': 'Bugünün {chakra} işi için taşlar · dolapta {n}',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'bir taşı bugünün pratiğiyle eşleştir →',
 
   /* ---- ay ekranı ---- */
+  'scr.moon.rise': 'Ay doğuşu',
+  'scr.moon.set': 'Ay batışı',
+  'scr.moon.sign': 'Burç',
+  'scr.moon.lit': 'Aydınlık',
+  'scr.moon.calendar': 'Ay takvimi',
   'scr.moon.eyebrow': 'Gökyüzü',
   'scr.moon.title': 'Ay',
   'scr.moon.sub': '{phase} · %{pct} aydınlık',

@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': '有意识地管理距离。按你自己的条件、带着限度的联系，往往比强行的亲近更管用。',
 
   /* ---- 合盘界面 ---- */
+  'scr.compat.viewReading': '查看合盘',
+  'scr.compat.interpretNote': '对两张星盘如何相遇的占星解读——不是分数，也不是预测。',
   'scr.compat.eyebrow': '合盘',
   'scr.compat.tone.gift': '流动',
   'scr.compat.tone.intense': '融合',

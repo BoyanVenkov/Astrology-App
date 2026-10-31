@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · あなたの出生地を使用',
 
   /* ---- トランジット ---- */
+  'scr.transits.tabsLabel': '期間',
+  'scr.transits.tabWeek': '今週',
+  'scr.transits.tabMonth': '今月',
+  'scr.transits.filterAll': 'すべて',
+  'scr.transits.exactOn': '{date}に正確',
+  'scr.transits.windowEmpty': 'この期間に主要な接触はありません。',
+  'scr.transits.windowNote': '週と月の表示では月を除外しています。月は数日のうちにすべての惑星に触れるためです。',
+  'scr.transits.int.exact': '正確',
+  'scr.transits.int.strong': '強い',
+  'scr.transits.int.building': '強まる',
+  'scr.transits.int.fading': '弱まる',
   'scr.transits.eyebrow': '空',
   'scr.transits.titleNatal': 'あなたのホロスコープへのトランジット',
   'scr.transits.titleSky': '今日の空',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': '{n}ハウス',
 
   /* ---- 薬房 ---- */
+  'scr.apoth.search': '石を検索',
+  'scr.apoth.tabsLabel': '石を見る',
+  'scr.apoth.tabChakra': 'チャクラ別',
+  'scr.apoth.tabIntention': '目的別',
   'scr.apoth.eyebrow': '薬房',
   'scr.apoth.title': 'クリスタルの伴侶',
   'scr.apoth.subChart': '今日の{chakra}の取り組みのための石 · キャビネットに {n} 個',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': '今日の実践に石を合わせて →',
 
   /* ---- 月の画面 ---- */
+  'scr.moon.rise': '月の出',
+  'scr.moon.set': '月の入り',
+  'scr.moon.sign': 'サイン',
+  'scr.moon.lit': '明るさ',
+  'scr.moon.calendar': '月のカレンダー',
   'scr.moon.eyebrow': '空',
   'scr.moon.title': '月',
   'scr.moon.sub': '{phase} · {pct}% 照らされている',

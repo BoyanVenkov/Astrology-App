@@ -8,7 +8,7 @@ import { useAppStore } from '../store/useAppStore'
 import { crystalName } from '../lib/crystals'
 import { ResonanceLockup } from './Logo'
 import { TabBackdrop } from './TabBackdrop'
-import artStones from '../assets/art/icon-apothecary.webp'
+import { GemArt } from './ui'
 import {
   BreathIcon,
   ChevronIcon,
@@ -280,7 +280,7 @@ function StoneOfDay({
         title={name}
         className="card-press mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-[rgba(232,194,116,0.28)] bg-white/[0.04]"
       >
-        <img src={artStones} alt="" className="h-10 w-10 object-contain" />
+        <GemArt name={stone.name} color={stone.color} className="h-10 w-10" />
       </button>
     )
   return (
@@ -290,17 +290,10 @@ function StoneOfDay({
       className="glass-panel glass-gold card-lift relative flex w-full items-center gap-3 overflow-visible p-3 text-start"
     >
       <span className="relative grid h-14 w-14 shrink-0 place-items-center">
-        <span
-          aria-hidden
-          className="absolute h-12 w-12 rounded-full opacity-60 blur-xl"
-          style={{ background: stone.color }}
-        />
-        <img
-          src={artStones}
-          alt=""
-          aria-hidden
-          className="animate-card-float relative h-16 w-16 object-contain"
-          style={{ filter: 'drop-shadow(0 8px 10px rgba(0,0,0,0.55))' }}
+        <GemArt
+          name={stone.name}
+          color={stone.color}
+          className="animate-card-float h-14 w-14 drop-shadow-[0_8px_10px_rgba(0,0,0,0.55)]"
         />
       </span>
       <span className="min-w-0 flex-1">

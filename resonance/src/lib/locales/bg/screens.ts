@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · по мястото ти на раждане',
 
   /* ---- транзити ---- */
+  'scr.transits.tabsLabel': 'Период',
+  'scr.transits.tabWeek': 'Седмица',
+  'scr.transits.tabMonth': 'Месец',
+  'scr.transits.filterAll': 'Всички',
+  'scr.transits.exactOn': 'Точен на {date}',
+  'scr.transits.windowEmpty': 'Няма значими аспекти в този период.',
+  'scr.transits.windowNote': 'Седмицата и месецът не включват Луната — тя докосва всяка планета за дни.',
+  'scr.transits.int.exact': 'Точен',
+  'scr.transits.int.strong': 'Силен',
+  'scr.transits.int.building': 'Нарастващ',
+  'scr.transits.int.fading': 'Отслабващ',
   'scr.transits.eyebrow': 'Небето',
   'scr.transits.titleNatal': 'Транзити към твоята карта',
   'scr.transits.titleSky': 'Небето днес',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'Д{n}',
 
   /* ---- аптека ---- */
+  'scr.apoth.search': 'Търси камък',
+  'scr.apoth.tabsLabel': 'Разгледай камъните',
+  'scr.apoth.tabChakra': 'По чакра',
+  'scr.apoth.tabIntention': 'По цел',
   'scr.apoth.eyebrow': 'Аптека',
   'scr.apoth.title': 'Кристални спътници',
   'scr.apoth.subChart': 'Камъни за работа с {chakra} чакра днес · {n} в шкафа',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'съчетай камък с днешната практика →',
 
   /* ---- екран „Луната“ ---- */
+  'scr.moon.rise': 'Изгрев на Луната',
+  'scr.moon.set': 'Залез на Луната',
+  'scr.moon.sign': 'Знак',
+  'scr.moon.lit': 'Осветена',
+  'scr.moon.calendar': 'Лунен календар',
   'scr.moon.eyebrow': 'Небето',
   'scr.moon.title': 'Луната',
   'scr.moon.sub': '{phase} · {pct}% осветена',

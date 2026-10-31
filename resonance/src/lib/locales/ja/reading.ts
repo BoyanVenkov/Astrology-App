@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': '距離を意識して管理して。あなたの条件で、限度をもった連絡が、強いた近さよりうまくいく傾向があります。',
 
   /* ---- 相性の画面 ---- */
+  'scr.compat.viewReading': '相性を見る',
+  'scr.compat.interpretNote': '2つのチャートがどう出会うかを読み解く占星術的な解釈です。点数でも予言でもありません。',
   'scr.compat.eyebrow': '相性',
   'scr.compat.tone.gift': '流れます',
   'scr.compat.tone.intense': '融け合います',

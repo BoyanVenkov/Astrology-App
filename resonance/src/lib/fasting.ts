@@ -64,14 +64,15 @@ const WATER = new Set(['Cancer', 'Scorpio', 'Pisces'])
 const EARTH = new Set(['Taurus', 'Virgo', 'Capricorn'])
 const FIRE = new Set(['Aries', 'Leo', 'Sagittarius'])
 
-interface Lunar {
+export interface Lunar {
   angle: number
   tithi: number
   phase: 'waxing' | 'waning'
   special: string | null
 }
 
-function lunarDay(date: Date): Lunar {
+/** The tithi (lunar day 1–30) and named special days for an instant. */
+export function lunarDay(date: Date): Lunar {
   // elongation Moon−Sun, 0 = new, 180 = full
   const angle = moonState(date).angle
   const tithi = Math.floor(angle / 12) + 1

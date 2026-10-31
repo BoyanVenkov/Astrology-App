@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'Zarządzaj dystansem świadomie. Kontakt na twoich warunkach, z limitami, zwykle działa lepiej niż wymuszona bliskość.',
 
   /* ---- ekran dopasowania ---- */
+  'scr.compat.viewReading': 'Zobacz zgodność',
+  'scr.compat.interpretNote': 'Astrologiczne odczytanie tego, jak spotykają się dwa horoskopy — to nie wynik ani przepowiednia.',
   'scr.compat.eyebrow': 'Dopasowanie',
   'scr.compat.tone.gift': 'Płynie',
   'scr.compat.tone.intense': 'Zlewa się',

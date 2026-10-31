@@ -19,8 +19,7 @@ const todayKey = (): string => {
   return `${n.getFullYear()}-${m}-${d}`
 }
 
-const field =
-  'w-full min-w-0 rounded-xl border border-white/[0.09] bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.05]'
+const field = 'field-input'
 
 export function Onboarding() {
   useDayHue()

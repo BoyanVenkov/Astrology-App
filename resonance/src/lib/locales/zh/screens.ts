@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · 使用你的出生地点',
 
   /* ---- 行运 ---- */
+  'scr.transits.tabsLabel': '时间范围',
+  'scr.transits.tabWeek': '本周',
+  'scr.transits.tabMonth': '本月',
+  'scr.transits.filterAll': '全部',
+  'scr.transits.exactOn': '{date} 精确',
+  'scr.transits.windowEmpty': '此期间没有主要相位。',
+  'scr.transits.windowNote': '周视图和月视图不包含月亮——她几天内就会触及每颗行星。',
+  'scr.transits.int.exact': '精确',
+  'scr.transits.int.strong': '强',
+  'scr.transits.int.building': '渐强',
+  'scr.transits.int.fading': '渐弱',
   'scr.transits.eyebrow': '天空',
   'scr.transits.titleNatal': '对你星盘的行运',
   'scr.transits.titleSky': '今天的星空',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': '{n}宫',
 
   /* ---- 药房 ---- */
+  'scr.apoth.search': '搜索晶石',
+  'scr.apoth.tabsLabel': '浏览晶石',
+  'scr.apoth.tabChakra': '按脉轮',
+  'scr.apoth.tabIntention': '按意图',
   'scr.apoth.eyebrow': '药房',
   'scr.apoth.title': '晶石伙伴',
   'scr.apoth.subChart': '为今天的{chakra}功课准备的晶石 · 柜子里有 {n} 块',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': '为今天的练习配一块晶石 →',
 
   /* ---- 月亮界面 ---- */
+  'scr.moon.rise': '月出',
+  'scr.moon.set': '月落',
+  'scr.moon.sign': '星座',
+  'scr.moon.lit': '照亮',
+  'scr.moon.calendar': '月相日历',
   'scr.moon.eyebrow': '天空',
   'scr.moon.title': '月亮',
   'scr.moon.sub': '{phase} · 照亮 {pct}%',

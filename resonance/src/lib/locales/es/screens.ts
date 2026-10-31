@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · usando tu lugar de nacimiento',
 
   /* ---- tránsitos ---- */
+  'scr.transits.tabsLabel': 'Periodo',
+  'scr.transits.tabWeek': 'Semana',
+  'scr.transits.tabMonth': 'Mes',
+  'scr.transits.filterAll': 'Todos',
+  'scr.transits.exactOn': 'Exacto el {date}',
+  'scr.transits.windowEmpty': 'No hay contactos importantes en este periodo.',
+  'scr.transits.windowNote': 'Las vistas de semana y mes dejan fuera a la Luna: toca todos los planetas en pocos días.',
+  'scr.transits.int.exact': 'Exacto',
+  'scr.transits.int.strong': 'Fuerte',
+  'scr.transits.int.building': 'Creciendo',
+  'scr.transits.int.fading': 'Disminuyendo',
   'scr.transits.eyebrow': 'El Cielo',
   'scr.transits.titleNatal': 'Tránsitos a tu carta',
   'scr.transits.titleSky': 'El cielo de hoy',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'C{n}',
 
   /* ---- botica ---- */
+  'scr.apoth.search': 'Buscar piedras',
+  'scr.apoth.tabsLabel': 'Explorar piedras',
+  'scr.apoth.tabChakra': 'Por chakra',
+  'scr.apoth.tabIntention': 'Por intención',
   'scr.apoth.eyebrow': 'Botica',
   'scr.apoth.title': 'Compañeros de cristal',
   'scr.apoth.subChart': 'Piedras para el trabajo de {chakra} hoy · {n} en el armario',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'combina una piedra con la práctica de hoy →',
 
   /* ---- pantalla de la Luna ---- */
+  'scr.moon.rise': 'Salida de la Luna',
+  'scr.moon.set': 'Puesta de la Luna',
+  'scr.moon.sign': 'Signo',
+  'scr.moon.lit': 'Iluminada',
+  'scr.moon.calendar': 'Calendario lunar',
   'scr.moon.eyebrow': 'El Cielo',
   'scr.moon.title': 'La Luna',
   'scr.moon.sub': '{phase} · {pct}% iluminada',

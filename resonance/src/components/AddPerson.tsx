@@ -11,14 +11,14 @@ import { searchCities, type City } from '../data/cities'
 import { useT } from '../lib/i18n'
 import { DateField, TimeField } from './DateTimeField'
 import type { SavedPerson } from '../types/resonance'
+import { PinIcon } from './icons'
 
 interface AddPersonProps {
   onDone: (person: SavedPerson) => void
   onCancel?: () => void
 }
 
-const field =
-  'w-full min-w-0 rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-white/30 focus:bg-white/[0.05]'
+const field = 'field-input'
 
 const todayKey = (): string => new Date().toISOString().slice(0, 10)
 
@@ -103,7 +103,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
   return (
     <div className="flex flex-col gap-4">
       <label className="flex flex-col gap-1.5">
-        <span className="eyebrow">{t('person.name')}</span>
+        <span className="text-[0.85rem] font-medium text-haze-100">{t('person.name')}</span>
         <input
           type="text"
           value={name}
@@ -115,13 +115,13 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="eyebrow">{t('onb.birthDate')}</span>
+        <span className="text-[0.85rem] font-medium text-haze-100">{t('onb.birthDate')}</span>
         <DateField value={date} max={todayKey()} onChange={setDate} />
       </label>
 
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
-          <span className="eyebrow">{t('onb.birthTime')}</span>
+          <span className="text-[0.85rem] font-medium text-haze-100">{t('onb.birthTime')}</span>
           <button
             type="button"
             onClick={() => setTimeKnown((v) => !v)}
@@ -140,7 +140,8 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
       </div>
 
       <div className="relative flex flex-col gap-1.5">
-        <span className="eyebrow">{t('onb.birthPlace')}</span>
+        <span className="text-[0.85rem] font-medium text-haze-100">{t('onb.birthPlace')}</span>
+        <div className="relative">
         <input
           type="text"
           value={query}
@@ -150,8 +151,13 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
           }}
           placeholder={t('onb.placePlaceholder')}
           autoComplete="off"
-          className={field}
+          className={`${field} pe-11`}
         />
+        <PinIcon
+          aria-hidden
+          className="pointer-events-none absolute end-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-haze-300"
+        />
+        </div>
         {results.length > 0 && (
           <ul className="absolute left-0 right-0 top-full z-10 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-white/12 bg-midnight-900/95 backdrop-blur-xl">
             {results.map((c) => (
@@ -187,7 +193,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
       {!city && manual && (
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1.5">
-            <span className="eyebrow">{t('onb.latitude')}</span>
+            <span className="text-[0.85rem] font-medium text-haze-100">{t('onb.latitude')}</span>
             <input
               type="number"
               inputMode="decimal"
@@ -198,7 +204,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
             />
           </label>
           <label className="flex flex-col gap-1.5">
-            <span className="eyebrow">{t('onb.longitude')}</span>
+            <span className="text-[0.85rem] font-medium text-haze-100">{t('onb.longitude')}</span>
             <input
               type="number"
               inputMode="decimal"
@@ -213,7 +219,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
 
       {!city && (
         <label className="flex flex-col gap-1.5">
-          <span className="eyebrow">{t('onb.birthZone')}</span>
+          <span className="text-[0.85rem] font-medium text-haze-100">{t('onb.birthZone')}</span>
           <input
             list="person-tz-list"
             value={timeZone}
@@ -233,7 +239,7 @@ export function AddPerson({ onDone, onCancel }: AddPersonProps) {
         type="button"
         onClick={save}
         disabled={!canSave}
-        className={`mt-1 px-4 py-3.5 text-sm uppercase ${
+        className={`mt-1 min-h-12 px-4 py-3.5 text-[0.95rem] ${
           canSave ? 'btn-primary' : 'btn-ghost opacity-55'
         }`}
       >

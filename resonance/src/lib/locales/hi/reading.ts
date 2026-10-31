@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'दूरी को सचेत रूप से प्रबंधित करें। अपनी शर्तों पर, सीमाओं के साथ संपर्क, ज़बरदस्ती की निकटता से बेहतर चलता है।',
 
   /* ---- अनुकूलता स्क्रीन ---- */
+  'scr.compat.viewReading': 'अनुकूलता देखें',
+  'scr.compat.interpretNote': 'दो कुंडलियाँ कैसे मिलती हैं, इसका ज्योतिषीय पठन — यह कोई अंक या भविष्यवाणी नहीं है।',
   'scr.compat.eyebrow': 'अनुकूलता',
   'scr.compat.tone.gift': 'बहता है',
   'scr.compat.tone.intense': 'मिल जाता है',

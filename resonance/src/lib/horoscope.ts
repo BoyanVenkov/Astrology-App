@@ -483,3 +483,21 @@ export function buildHoroscope(
     affirmation: sky.length ? chakraMantra(chakra.key) : '',
   }
 }
+
+/**
+ * One contact's own read — the same composition the quick horoscope uses for
+ * each of its notes, available for any aspect (the Transits list, timelines).
+ */
+export function aspectReading(a: Aspect, t: TFn): string {
+  return (
+    t('horo.note.text', {
+      planet: planetLabel(a.transiting, t),
+      short: t(`horo.short.${a.transiting}` as MessageKey),
+      cue: t(`horo.quickCue.${a.def.harmony}` as MessageKey, {
+        area: t(`horo.area.${a.other}` as MessageKey),
+      }),
+    }) +
+    ' ' +
+    t(quickCueLong[a.def.harmony] ?? 'horo.deep.q.neutral')
+  )
+}

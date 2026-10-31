@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useT } from '../lib/i18n'
 import { popOverlay, pushOverlay } from '../lib/overlayLock'
+import { CalendarIcon, ClockIcon } from './icons'
 
 /**
  * Birth date / time inputs styled to the app instead of the OS's default
@@ -182,8 +183,7 @@ function PickerSheet({
 
 /* ------------------------------------------------------------------- helpers */
 
-const trigger =
-  'w-full min-w-0 rounded-xl border border-white/[0.1] bg-white/[0.03] px-4 py-3 text-start text-white outline-none transition active:border-white/30 active:bg-white/[0.06]'
+const trigger = 'field-input flex items-center justify-between gap-3 text-start'
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -306,6 +306,7 @@ export function DateField({
     <>
       <button type="button" className={trigger} onClick={() => setOpen(true)}>
         <span className={current ? '' : 'text-haze-400'}>{display}</span>
+        <CalendarIcon className="h-5 w-5 shrink-0 text-haze-300" />
       </button>
       {open && (
         <DateSheet
@@ -385,6 +386,7 @@ export function TimeField({
         <span className="tabular-nums">
           {pad2(safeH)}:{pad2(safeM)}
         </span>
+        <ClockIcon className="h-5 w-5 shrink-0 text-haze-300" />
       </button>
       {open && (
         <TimeSheet

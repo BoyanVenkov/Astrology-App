@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'Dhibiti umbali kwa makusudi. Mawasiliano kwa masharti yako, yenye mipaka, huelekea kufanya kazi vizuri kuliko ukaribu wa kulazimishwa.',
 
   /* ---- skrini ya ulinganifu ---- */
+  'scr.compat.viewReading': 'Tazama ulinganifu',
+  'scr.compat.interpretNote': 'Usomaji wa kinajimu wa jinsi chati mbili zinavyokutana — si alama wala utabiri.',
   'scr.compat.eyebrow': 'Ulinganifu',
   'scr.compat.tone.gift': 'Inatiririka',
   'scr.compat.tone.intense': 'Inaungana',

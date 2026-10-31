@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'أدِر المسافة بوعي. تواصل بشروطك، بحدود، يعمل أفضل من قُرب مفروض.',
 
   /* ---- شاشة التوافق ---- */
+  'scr.compat.viewReading': 'عرض التوافق',
+  'scr.compat.interpretNote': 'قراءة فلكية لكيفية التقاء خريطتين — ليست درجة ولا تنبؤًا.',
   'scr.compat.eyebrow': 'التوافق',
   'scr.compat.tone.gift': 'يتدفّق',
   'scr.compat.tone.intense': 'يندمج',

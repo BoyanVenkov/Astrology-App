@@ -39,6 +39,17 @@ export const screens = {
   'scr.horo.birthPlace': ' · using your birth place',
 
   /* ---- transits ---- */
+  'scr.transits.tabsLabel': 'Time range',
+  'scr.transits.tabWeek': 'Week',
+  'scr.transits.tabMonth': 'Month',
+  'scr.transits.filterAll': 'All',
+  'scr.transits.exactOn': 'Exact {date}',
+  'scr.transits.windowEmpty': 'No major contacts in this window.',
+  'scr.transits.windowNote': 'The week and month views leave out the Moon — she touches every planet within days.',
+  'scr.transits.int.exact': 'Exact',
+  'scr.transits.int.strong': 'Strong',
+  'scr.transits.int.building': 'Building',
+  'scr.transits.int.fading': 'Fading',
   'scr.transits.eyebrow': 'The Sky',
   'scr.transits.titleNatal': 'Transits to your chart',
   'scr.transits.titleSky': 'The sky today',
@@ -136,6 +147,10 @@ export const screens = {
   'scr.natal.house': 'H{n}',
 
   /* ---- apothecary ---- */
+  'scr.apoth.search': 'Search stones',
+  'scr.apoth.tabsLabel': 'Browse stones',
+  'scr.apoth.tabChakra': 'By chakra',
+  'scr.apoth.tabIntention': 'By intention',
   'scr.apoth.eyebrow': 'Apothecary',
   'scr.apoth.title': 'Crystal Companions',
   'scr.apoth.subChart': 'Stones for {chakra} work today · {n} in the cabinet',
@@ -148,6 +163,11 @@ export const screens = {
   'scr.apoth.pair': "pair a stone with today's practice →",
 
   /* ---- moon screen ---- */
+  'scr.moon.rise': 'Moonrise',
+  'scr.moon.set': 'Moonset',
+  'scr.moon.sign': 'Sign',
+  'scr.moon.lit': 'Lit',
+  'scr.moon.calendar': 'Lunar calendar',
   'scr.moon.eyebrow': 'The Sky',
   'scr.moon.title': 'The Moon',
   'scr.moon.sub': '{phase} · {pct}% lit',

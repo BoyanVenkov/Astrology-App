@@ -36,7 +36,8 @@ function Spark({
       d={STAR}
       transform={`translate(${x} ${y}) scale(${size / 12})`}
       fill="currentColor"
-      className={twinkle ? 'animate-twinkle' : undefined}
+      // phone only — on a wide screen the slice-scaled scene blows these up
+      className={`md:hidden ${twinkle ? 'animate-twinkle' : ''}`}
       opacity={twinkle ? undefined : opacity}
       style={delay ? { animationDelay: `${delay}s` } : undefined}
     />

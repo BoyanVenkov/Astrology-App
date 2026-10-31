@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'Hantera avståndet medvetet. Kontakt på dina villkor, med gränser, brukar fungera bättre än påtvingad närhet.',
 
   /* ---- kompatibilitetsskärm ---- */
+  'scr.compat.viewReading': 'Visa kompatibilitet',
+  'scr.compat.interpretNote': 'En astrologisk tolkning av hur två horoskop möts – inte ett betyg eller en förutsägelse.',
   'scr.compat.eyebrow': 'Kompatibilitet',
   'scr.compat.tone.gift': 'Flödar',
   'scr.compat.tone.intense': 'Smälter samman',

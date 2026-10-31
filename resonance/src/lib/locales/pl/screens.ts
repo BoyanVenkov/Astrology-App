@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · używamy twojego miejsca urodzenia',
 
   /* ---- tranzyty ---- */
+  'scr.transits.tabsLabel': 'Okres',
+  'scr.transits.tabWeek': 'Tydzień',
+  'scr.transits.tabMonth': 'Miesiąc',
+  'scr.transits.filterAll': 'Wszystkie',
+  'scr.transits.exactOn': 'Dokładny {date}',
+  'scr.transits.windowEmpty': 'Brak ważnych kontaktów w tym okresie.',
+  'scr.transits.windowNote': 'Widok tygodnia i miesiąca pomija Księżyc — dotyka on każdej planety w ciągu kilku dni.',
+  'scr.transits.int.exact': 'Dokładny',
+  'scr.transits.int.strong': 'Silny',
+  'scr.transits.int.building': 'Narastający',
+  'scr.transits.int.fading': 'Słabnący',
   'scr.transits.eyebrow': 'Niebo',
   'scr.transits.titleNatal': 'Tranzyty do twojego horoskopu',
   'scr.transits.titleSky': 'Niebo dzisiaj',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'D{n}',
 
   /* ---- apteka ---- */
+  'scr.apoth.search': 'Szukaj kamieni',
+  'scr.apoth.tabsLabel': 'Przeglądaj kamienie',
+  'scr.apoth.tabChakra': 'Według czakry',
+  'scr.apoth.tabIntention': 'Według intencji',
   'scr.apoth.eyebrow': 'Apteka',
   'scr.apoth.title': 'Towarzysze kryształowi',
   'scr.apoth.subChart': 'Kamienie do dzisiejszej pracy z {chakra} · {n} w szafce',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'połącz kamień z dzisiejszą praktyką →',
 
   /* ---- ekran Księżyca ---- */
+  'scr.moon.rise': 'Wschód Księżyca',
+  'scr.moon.set': 'Zachód Księżyca',
+  'scr.moon.sign': 'Znak',
+  'scr.moon.lit': 'Oświetlenie',
+  'scr.moon.calendar': 'Kalendarz księżycowy',
   'scr.moon.eyebrow': 'Niebo',
   'scr.moon.title': 'Księżyc',
   'scr.moon.sub': '{phase} · {pct}% oświetlenia',

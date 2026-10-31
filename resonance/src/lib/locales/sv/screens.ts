@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · jag använder din födelseort',
 
   /* ---- transiter ---- */
+  'scr.transits.tabsLabel': 'Period',
+  'scr.transits.tabWeek': 'Vecka',
+  'scr.transits.tabMonth': 'Månad',
+  'scr.transits.filterAll': 'Alla',
+  'scr.transits.exactOn': 'Exakt {date}',
+  'scr.transits.windowEmpty': 'Inga större kontakter under den här perioden.',
+  'scr.transits.windowNote': 'Vecko- och månadsvyn utelämnar Månen – hon berör varje planet inom några dagar.',
+  'scr.transits.int.exact': 'Exakt',
+  'scr.transits.int.strong': 'Stark',
+  'scr.transits.int.building': 'Växande',
+  'scr.transits.int.fading': 'Avtagande',
   'scr.transits.eyebrow': 'Himlen',
   'scr.transits.titleNatal': 'Transiter till din karta',
   'scr.transits.titleSky': 'Himlen idag',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'H{n}',
 
   /* ---- apotek ---- */
+  'scr.apoth.search': 'Sök stenar',
+  'scr.apoth.tabsLabel': 'Bläddra bland stenar',
+  'scr.apoth.tabChakra': 'Efter chakra',
+  'scr.apoth.tabIntention': 'Efter avsikt',
   'scr.apoth.eyebrow': 'Apotek',
   'scr.apoth.title': 'Kristallföljeslagare',
   'scr.apoth.subChart': 'Stenar för dagens {chakra}-arbete · {n} i skåpet',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'para en sten med dagens praktik →',
 
   /* ---- månskärm ---- */
+  'scr.moon.rise': 'Månuppgång',
+  'scr.moon.set': 'Månnedgång',
+  'scr.moon.sign': 'Tecken',
+  'scr.moon.lit': 'Belyst',
+  'scr.moon.calendar': 'Månkalender',
   'scr.moon.eyebrow': 'Himlen',
   'scr.moon.title': 'Månen',
   'scr.moon.sub': '{phase} · {pct}% upplyst',

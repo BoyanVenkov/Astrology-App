@@ -390,6 +390,8 @@ export const reading: Record<ReadingKey, string> = {
   'syn.advice.family.2': 'Gestisci la distanza consapevolmente. Il contatto alle tue condizioni, con limiti, tende a funzionare meglio della vicinanza forzata.',
 
   /* ---- schermata di compatibilità ---- */
+  'scr.compat.viewReading': 'Vedi la compatibilità',
+  'scr.compat.interpretNote': 'Una lettura astrologica di come si incontrano due carte, non un punteggio né una previsione.',
   'scr.compat.eyebrow': 'Compatibilità',
   'scr.compat.tone.gift': 'Scorre',
   'scr.compat.tone.intense': 'Si fonde',

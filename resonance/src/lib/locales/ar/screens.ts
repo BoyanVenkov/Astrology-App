@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · نستخدم مكان ميلادك',
 
   /* ---- العبورات ---- */
+  'scr.transits.tabsLabel': 'الفترة',
+  'scr.transits.tabWeek': 'أسبوع',
+  'scr.transits.tabMonth': 'شهر',
+  'scr.transits.filterAll': 'الكل',
+  'scr.transits.exactOn': 'دقيق في {date}',
+  'scr.transits.windowEmpty': 'لا اتصالات رئيسية في هذه الفترة.',
+  'scr.transits.windowNote': 'يستبعد عرضا الأسبوع والشهر القمر — فهو يلامس كل كوكب في غضون أيام.',
+  'scr.transits.int.exact': 'دقيق',
+  'scr.transits.int.strong': 'قوي',
+  'scr.transits.int.building': 'يتصاعد',
+  'scr.transits.int.fading': 'يتلاشى',
   'scr.transits.eyebrow': 'السماء',
   'scr.transits.titleNatal': 'عبورات إلى خريطتك',
   'scr.transits.titleSky': 'السماء اليوم',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'ب{n}',
 
   /* ---- الصيدلية ---- */
+  'scr.apoth.search': 'ابحث عن الأحجار',
+  'scr.apoth.tabsLabel': 'تصفّح الأحجار',
+  'scr.apoth.tabChakra': 'حسب الشاكرا',
+  'scr.apoth.tabIntention': 'حسب النية',
   'scr.apoth.eyebrow': 'الصيدلية',
   'scr.apoth.title': 'رفاق البلّور',
   'scr.apoth.subChart': 'أحجار لعمل {chakra} اليوم · {n} في الخزانة',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'قرِن حجراً بممارسة اليوم ←',
 
   /* ---- شاشة القمر ---- */
+  'scr.moon.rise': 'شروق القمر',
+  'scr.moon.set': 'غروب القمر',
+  'scr.moon.sign': 'البرج',
+  'scr.moon.lit': 'المُضاء',
+  'scr.moon.calendar': 'التقويم القمري',
   'scr.moon.eyebrow': 'السماء',
   'scr.moon.title': 'القمر',
   'scr.moon.sub': '{phase} · {pct}٪ مُضاء',

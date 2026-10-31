@@ -41,6 +41,17 @@ export const screens: Record<ScreenKey, string> = {
   'scr.horo.birthPlace': ' · आपके जन्म-स्थान का उपयोग',
 
   /* ---- गोचर ---- */
+  'scr.transits.tabsLabel': 'अवधि',
+  'scr.transits.tabWeek': 'सप्ताह',
+  'scr.transits.tabMonth': 'महीना',
+  'scr.transits.filterAll': 'सभी',
+  'scr.transits.exactOn': '{date} को सटीक',
+  'scr.transits.windowEmpty': 'इस अवधि में कोई प्रमुख संपर्क नहीं।',
+  'scr.transits.windowNote': 'सप्ताह और महीने के दृश्य में चंद्रमा शामिल नहीं है — वह कुछ ही दिनों में हर ग्रह को छू लेता है।',
+  'scr.transits.int.exact': 'सटीक',
+  'scr.transits.int.strong': 'प्रबल',
+  'scr.transits.int.building': 'बढ़ता हुआ',
+  'scr.transits.int.fading': 'घटता हुआ',
   'scr.transits.eyebrow': 'आकाश',
   'scr.transits.titleNatal': 'आपकी कुंडली को गोचर',
   'scr.transits.titleSky': 'आज का आकाश',
@@ -137,6 +148,10 @@ export const screens: Record<ScreenKey, string> = {
   'scr.natal.house': 'भाव {n}',
 
   /* ---- औषधालय ---- */
+  'scr.apoth.search': 'रत्न खोजें',
+  'scr.apoth.tabsLabel': 'रत्न देखें',
+  'scr.apoth.tabChakra': 'चक्र के अनुसार',
+  'scr.apoth.tabIntention': 'उद्देश्य के अनुसार',
   'scr.apoth.eyebrow': 'औषधालय',
   'scr.apoth.title': 'क्रिस्टल साथी',
   'scr.apoth.subChart': 'आज के {chakra} काम के लिए रत्न · अलमारी में {n}',
@@ -149,6 +164,11 @@ export const screens: Record<ScreenKey, string> = {
   'scr.apoth.pair': 'आज के अभ्यास के साथ एक रत्न जोड़ें →',
 
   /* ---- चंद्रमा स्क्रीन ---- */
+  'scr.moon.rise': 'चंद्रोदय',
+  'scr.moon.set': 'चंद्रास्त',
+  'scr.moon.sign': 'राशि',
+  'scr.moon.lit': 'प्रकाशित',
+  'scr.moon.calendar': 'चंद्र कैलेंडर',
   'scr.moon.eyebrow': 'आकाश',
   'scr.moon.title': 'चंद्रमा',
   'scr.moon.sub': '{phase} · {pct}% प्रकाशित',

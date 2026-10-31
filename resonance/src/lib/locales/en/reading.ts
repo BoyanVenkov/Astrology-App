@@ -394,6 +394,8 @@ export const reading = {
   'syn.advice.family.2': 'Manage the distance consciously. Contact on your terms, with limits, tends to work better than forced closeness.',
 
   /* ---- compatibility screen chrome ---- */
+  'scr.compat.viewReading': 'View compatibility',
+  'scr.compat.interpretNote': 'An astrological reading of how two charts meet — not a score or a prediction.',
   'scr.compat.eyebrow': 'Compatibility',
   'scr.compat.tone.gift': 'Flows',
   'scr.compat.tone.intense': 'Fuses',
