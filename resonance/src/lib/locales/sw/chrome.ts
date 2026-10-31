@@ -17,7 +17,7 @@ export const chrome: Record<ChromeKey, string> = {
   /* ---- urambazaji ---- */
   'nav.today': 'Leo',
   'nav.sky': 'Anga',
-  'nav.oracle': 'Oracle',
+  'nav.oracle': 'Mwaguzi',
   'nav.tarot': 'Tarot',
   'nav.you': 'Wewe',
   'nav.practice': 'ibada ya leo',

@@ -46,7 +46,7 @@ export const astro: Record<AstroKey, string> = {
   'aspect.sextile': 'セクスタイル',
   'aspect.conjunct': 'コンジャンクション',
   'aspect.opposite': 'オポジション',
-  'aspect.in': 'in',
+  'aspect.in': 'に',
 
   /* ---- ホロスコープの用語 ---- */
   'astro.natal': 'ネイタル',

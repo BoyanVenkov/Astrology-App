@@ -14,13 +14,26 @@
 
 import Anthropic from 'npm:@anthropic-ai/sdk'
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import { guardScript, LOCALE_SCRIPT, type Glossary } from './scriptGuard.ts'
 
 const DAILY_LIMIT = 3 // must match DAILY_LIMIT in src/components/OracleAI.tsx
-const MODEL = 'claude-haiku-4-5'
+// Claude Haiku 5.5: thinks adaptively by default (effort set below) and its
+// tokenizer counts ~30% more tokens for the same text than Haiku 4.5 did —
+// max_tokens is sized for thinking + a 350-500 word reading in any script.
+const MODEL = 'claude-haiku-5-5'
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+/** How each script is named to the model, so the alphabet rule is explicit. */
+const SCRIPT_NAMES: Record<string, string> = {
+  latin: 'the Latin alphabet',
+  cyrillic: 'the Cyrillic alphabet',
+  devanagari: 'Devanagari script',
+  arabic: 'Arabic script',
+  cjk: 'the native Chinese / Japanese script',
 }
 
 const LOCALE_NAMES: Record<string, string> = {
@@ -55,6 +68,8 @@ Voice:
 - Around 350-500 words total — this should read like a genuinely thorough personal reading, not a summary.
 - If a first name is given, use it once, naturally — don't force it into every sentence.
 - Write the ENTIRE reading in the requested language, including any name — never mix languages.
+- Write only in the requested language's own alphabet. Never place a letter from another alphabet inside a word (for example, no Latin "a", "o", "e", "p" or "c" inside a Cyrillic word).
+- The facts JSON uses English identifiers ("Pluto", "Scorpio", "square") because it is machine data. Never copy those English words into the reading: name every planet, sign, aspect and chakra exactly as the glossary gives it in the requested language.
 - If a grammatical gender is given for the reader, use the grammatically correct forms for addressing them in languages that require gender agreement for "you" (e.g. Bulgarian, Spanish, Arabic, German, French, Polish, Italian, Portuguese). If no gender is given, default to whichever form is more common as a generic/neutral default in that language, or restructure sentences to avoid needing to choose where the language allows it.`
 
 interface Payload {
@@ -69,6 +84,8 @@ interface Payload {
   natal?: unknown
   transitHouses?: unknown
   profile?: unknown
+  /** English identifier → the app's own word for it in the reader's language. */
+  glossary?: Glossary
 }
 
 function buildUserPrompt(p: Payload): string {
@@ -90,7 +107,12 @@ function buildUserPrompt(p: Payload): string {
       : p.pronounGender === 'female'
         ? 'The reader is female — use feminine grammatical agreement where the language requires it.'
         : 'No gender was given for the reader.'
-  return `Respond only in ${language}.\n${nameLine}\n${genderLine}\n\nToday's computed astrological facts (JSON):\n${JSON.stringify(facts)}\n\nWrite today's personal reading now.`
+  const script = SCRIPT_NAMES[LOCALE_SCRIPT[p.locale ?? 'en'] ?? 'latin']
+  const glossaryLine =
+    p.glossary && Object.keys(p.glossary).length
+      ? `\nGlossary — use exactly these ${language} names, never the English ones:\n${JSON.stringify(p.glossary)}\n`
+      : ''
+  return `Respond only in ${language}, written in ${script}.\n${nameLine}\n${genderLine}\n${glossaryLine}\nToday's computed astrological facts (JSON):\n${JSON.stringify(facts)}\n\nWrite today's personal reading now.`
 }
 
 Deno.serve(async (req) => {
@@ -162,13 +184,28 @@ Deno.serve(async (req) => {
     const anthropic = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') })
     const response = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 1200,
+      max_tokens: 8000,
+      // medium is Haiku 5.5's default — set explicitly so a change of default
+      // can't silently shift cost or depth
+      output_config: { effort: 'medium' },
       system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: buildUserPrompt(payload) }],
     })
 
     const textBlock = response.content.find((b) => b.type === 'text')
-    const reading = textBlock && textBlock.type === 'text' ? textBlock.text.trim() : ''
+    // Haiku 5.5 runs safety classifiers with no server-side fallback — a
+    // declined request returns no reading; surface it as a normal failure.
+    if (response.stop_reason === 'refusal') {
+      console.warn('ai-horoscope: request declined by the model')
+      return json({ error: 'server_error' }, 502)
+    }
+    let reading = textBlock && textBlock.type === 'text' ? textBlock.text.trim() : ''
+    if (response.stop_reason === 'max_tokens') {
+      console.warn('ai-horoscope: hit max_tokens, trimming to the last full paragraph')
+      const cut = reading.lastIndexOf('\n\n')
+      if (cut > 0) reading = reading.slice(0, cut).trim()
+    }
+    reading = guardScript(reading, payload.locale ?? 'en', payload.glossary ?? {})
     if (!reading) return json({ error: 'server_error' }, 502)
 
     return json({ reading, remaining, generatedAt: new Date().toISOString() }, 200)

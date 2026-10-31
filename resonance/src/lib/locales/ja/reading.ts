@@ -41,7 +41,7 @@ export const reading: Record<ReadingKey, string> = {
   'transit.rel.square': 'スクエア',
   'transit.rel.trine': 'トライン',
   'transit.rel.sextile': 'セクスタイル',
-  'transit.rel.in': 'in',
+  'transit.rel.in': 'に',
 
   /* ---- トランジットの影響 ---- */
   'transit.rx': '（逆行中）',

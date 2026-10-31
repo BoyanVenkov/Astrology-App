@@ -318,7 +318,7 @@ export const reading: Record<ReadingKey, string> = {
 
   'syn.named.Moon-Sun.gift': '一个带来温暖和方向，另一个带来感受和照顾，而它们契合。这是一段联结安静的基石 — 你们让彼此安定下来。',
   'syn.named.Moon-Sun.friction': '底层的节奏不合拍 — 一个想动，另一个想筑巢。不致命，但你们得不断为彼此翻译。',
-  'syn.named.Moon-Sun.intense': '一种磁性的、几乎不由自主的认出 — 你被这个人「看见」。强大；当心它别滑向需要 ta 来定义你。',
+  'syn.named.Moon-Sun.intense': '一种磁性的、几乎不由自主的认出 — 你被这个人「看见」。强大；当心它别滑向需要对方来定义你。',
   'syn.named.Mars-Venus.gift': '不带戏剧的吸引 — 暖意和想要往同一个方向走。轻松的化学反应。',
   'syn.named.Mars-Venus.friction': '火花可能以错误的方式升温。拉扯是真的，但互相激怒的可能性也是。',
   'syn.named.Mars-Venus.intense': '带电而身体的，有点易燃。很难对彼此保持温吞；给这股强度一个去处。',
@@ -421,7 +421,7 @@ export const reading: Record<ReadingKey, string> = {
   'scr.compat.youAnd': '你和{name}',
   'scr.compat.remove': '移除',
   'scr.compat.addSomeone': '添加一个人',
-  'scr.compat.addSub': 'ta 的出生日期和地点 — 时间有帮助，但不是必需',
+  'scr.compat.addSub': '对方的出生日期和地点 — 时间有帮助，但不是必需',
   'scr.compat.titleList': '你们的星盘如何相遇',
   'scr.compat.placeUnset': '地点未设置',
   'scr.compat.addAnother': '再添加一个人',

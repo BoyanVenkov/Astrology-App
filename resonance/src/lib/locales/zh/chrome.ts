@@ -73,8 +73,8 @@ export const chrome: Record<ChromeKey, string> = {
   'picker.birthTime': '出生时间',
 
   /* ---- 添加人物 ---- */
-  'person.name': 'ta 的名字',
-  'person.namePlaceholder': 'Alex',
+  'person.name': '对方的名字',
+  'person.namePlaceholder': '小林',
   'person.noonNote': '将按中午计算：月亮和上升点会是近似值。',
   'person.save': '保存并比对',
   'person.need': '请填写姓名、出生日期和出生地以进行比对。',

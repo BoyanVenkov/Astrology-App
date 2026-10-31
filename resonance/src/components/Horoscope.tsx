@@ -133,11 +133,10 @@ export function Horoscope({ onBack, onRitual, onUpgrade }: HoroscopeProps) {
       subtitle={horoscope.greeting}
       onBack={onBack}
     >
-      {/* ---- jump bar, pinned while you read ---- */}
+      {/* ---- contents — every part of the reading visible at once, wrapping ---- */}
       <nav
         aria-label={t('scr.horo.eyebrow')}
-        className="no-scrollbar sticky top-0 z-20 -mx-4 -mt-2 flex gap-2 overflow-x-auto bg-[linear-gradient(180deg,rgba(5,6,15,0.92),rgba(5,6,15,0.7))] px-4 py-2.5 backdrop-blur-xl md:-mx-0 md:rounded-2xl"
-        style={{ top: 'env(safe-area-inset-top)' }}
+        className="-mt-1 flex flex-wrap gap-1.5 [&>button]:px-3 [&>button]:py-1.5 [&>button]:text-[0.75rem]"
       >
         {parts.map((p) => (
           <Chip key={p.id} active={false} onClick={() => jump(p.id)}>

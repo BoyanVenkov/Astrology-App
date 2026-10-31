@@ -24,8 +24,8 @@ export const astro: Record<AstroKey, string> = {
   'planet.Mars': 'Mirihi',
   'planet.Jupiter': 'Mshtarii',
   'planet.Saturn': 'Zohali',
-  'planet.Uranus': 'Uranus',
-  'planet.Neptune': 'Neptune',
+  'planet.Uranus': 'Uranasi',
+  'planet.Neptune': 'Neptuni',
   'planet.Pluto': 'Pluto',
 
   /* ---- awamu za mwezi ---- */

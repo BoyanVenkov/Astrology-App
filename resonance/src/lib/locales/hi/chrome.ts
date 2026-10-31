@@ -74,7 +74,7 @@ export const chrome: Record<ChromeKey, string> = {
 
   /* ---- व्यक्ति जोड़ें ---- */
   'person.name': 'उनका नाम',
-  'person.namePlaceholder': 'Alex',
+  'person.namePlaceholder': 'अनन्या',
   'person.noonNote': 'दोपहर का उपयोग कर रहे हैं: चंद्रमा और लग्न अनुमानित होंगे।',
   'person.save': 'सहेजें और तुलना करें',
   'person.need': 'तुलना के लिए नाम, जन्म तिथि और जन्म स्थान जोड़ें।',

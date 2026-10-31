@@ -1,6 +1,11 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { useT } from '../lib/i18n'
+import { aspectLabel, chakraLabel, planetLabel, signLabel, useT } from '../lib/i18n'
+import { en } from '../lib/locales/en'
+import type { MessageKey } from '../lib/locales/en'
+import { BODIES, SIGNS } from '../lib/ephemeris'
+import { CHAKRA_ORDER } from '../lib/resonanceData'
+import { guardScript, type Glossary } from '../lib/scriptGuard'
 import { useEntitlements } from '../lib/premium'
 import { supabase } from '../lib/supabase'
 import { localDayKey } from '../lib/timezone'
@@ -80,6 +85,19 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
   const oracleReading = useAppStore((s) => s.oracleReading)
   const setOracleReading = useAppStore((s) => s.setOracleReading)
 
+  // The app's own names for everything the reading talks about, in the
+  // reader's language — sent to the model so it never falls back to English
+  // ("Pluto" in a Bulgarian sentence), and used by the script guard below.
+  const glossary = useMemo<Glossary>(() => {
+    const g: Glossary = {}
+    for (const b of BODIES) g[b] = planetLabel(b, t)
+    for (const s of SIGNS) g[s] = signLabel(s, t)
+    for (const a of ['conjunction', 'opposition', 'square', 'trine', 'sextile'])
+      g[a] = aspectLabel(a, t)
+    for (const c of CHAKRA_ORDER) g[en[`chakra.${c}` as MessageKey]] = chakraLabel(c, t)
+    return g
+  }, [t])
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -104,6 +122,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
           transitHouses,
           hasNatal,
           profile,
+          glossary,
         },
       },
     )
@@ -122,7 +141,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
     }
     setOracleReading({
       day: today,
-      text: data.reading,
+      text: guardScript(data.reading, locale, glossary),
       remaining: data.remaining,
       at: data.generatedAt,
     })
@@ -202,7 +221,7 @@ export function OracleAI({ onBack, onUpgrade }: OracleAIProps) {
 
         {phase === 'result' && cached && (
           <div className="flex w-full flex-col gap-3 text-start">
-            {cached.text.split('\n\n').map((para, i) => (
+            {guardScript(cached.text, locale, glossary).split('\n\n').map((para, i) => (
               <p
                 key={i}
                 className="font-serif text-[1.05rem] leading-relaxed text-haze-100"
