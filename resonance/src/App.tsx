@@ -295,7 +295,9 @@ function App() {
             onUpgrade={openPaywall}
           />
         )}
-        {sub === 'journal' && <Journal onBack={back} onUpgrade={openPaywall} />}
+        {sub === 'journal' && (
+          <Journal onBack={back} onUpgrade={openPaywall} onStart={() => setPracticeOpen(true)} />
+        )}
         {sub === 'mood' && <MoodCheckIn onDone={back} />}
         {sub === 'runes' && (
           <RuneReader onBack={back} onUpgrade={openPaywall} />

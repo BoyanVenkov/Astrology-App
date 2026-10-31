@@ -27,6 +27,15 @@ import type {
   PracticeKind,
   RitualPreset,
 } from '../types/resonance'
+import artBreathe from '../assets/art/icon-breathe.webp'
+import artMeditate from '../assets/art/icon-meditate.webp'
+import artFrequency from '../assets/art/icon-frequency.webp'
+
+const TAB_ART: Record<PracticeKind, string> = {
+  breath: artBreathe,
+  meditation: artMeditate,
+  frequency: artFrequency,
+}
 
 interface PracticeLibraryProps {
   onBack: () => void
@@ -150,21 +159,34 @@ export function PracticeLibrary({
       onBack={onBack}
       width="wide"
     >
-      <div className="mx-auto grid w-full max-w-md grid-cols-3 gap-2">
-        {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((tk) => (
-          <button
-            key={tk}
-            type="button"
-            onClick={() => switchTab(tk)}
-            className={`rounded-2xl border px-2 py-3 text-xs font-semibold transition ${
-              tk === tab
-                ? 'border-gold-400/60 bg-gold-500/15 text-gold-100'
-                : 'border-white/12 bg-white/5 text-haze-300'
-            }`}
-          >
-            {t(`lib.tab.${tk}` as MessageKey)}
-          </button>
-        ))}
+      {/* the three ways to sit — illustrated, the chosen one ringed in gold */}
+      <div role="tablist" aria-label={t('lib.eyebrow')} className="mx-auto grid w-full max-w-md grid-cols-3 gap-2.5">
+        {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((tk) => {
+          const on = tk === tab
+          return (
+            <button
+              key={tk}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              onClick={() => switchTab(tk)}
+              className={`glass-panel card-press flex flex-col items-center gap-1.5 px-2 pb-3 pt-2.5 transition ${
+                on ? 'glass-gold !border-[rgba(232,194,116,0.6)]' : 'opacity-80 hover:opacity-100'
+              }`}
+            >
+              <img
+                src={TAB_ART[tk]}
+                alt=""
+                aria-hidden
+                className={`h-14 w-14 object-contain transition-transform duration-300 ${on ? 'scale-110' : 'saturate-[0.7]'}`}
+                style={{ filter: on ? 'drop-shadow(0 0 12px rgba(232,194,116,0.45))' : undefined }}
+              />
+              <span className={`text-[0.78rem] font-semibold ${on ? 'text-[#fbecc4]' : 'text-haze-300'}`}>
+                {t(`lib.tab.${tk}` as MessageKey)}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
       {categories.length > 0 && (

@@ -103,6 +103,7 @@ const ASSETS = {
   'gem-tumbled': `A single photorealistic polished tumbled gemstone, smooth rounded organic pebble shape with subtle natural banding and inclusions, high gloss polish with a bright specular highlight, rendered entirely in neutral pale silver-grey and white with NO colour tint at all (monochrome, so it can be colour-tinted later). Premium macro product photograph, studio lighting.`,
   'gem-cluster': `A single photorealistic small crystal cluster — several sharp faceted crystal points growing from a rough matrix base, rendered entirely in neutral pale silver-grey and white with NO colour tint at all (monochrome, so it can be colour-tinted later), glassy translucent points with bright highlights. Premium macro product photograph, studio lighting.`,
   'gem-raw': `A single photorealistic raw rough gemstone chunk with natural broken faces and a few glossy polished facets, rendered entirely in neutral pale silver-grey and white with NO colour tint at all (monochrome, so it can be colour-tinted later), visible mineral texture and sparkle. Premium macro product photograph, studio lighting.`,
+  'rune-stone-blank': `A single smooth dark slate river stone, a flat rounded oval pebble seen from directly above and slightly tilted, polished matte surface with subtle natural grain and a few faint mineral flecks, soft top-left studio light giving it a gentle 3D volume, completely blank with no markings, no carvings, no symbols. Premium macro product photograph.`,
 }
 
 const WIDE_ASSETS = {

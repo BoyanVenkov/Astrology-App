@@ -1,11 +1,20 @@
 import { runeText, type DrawnRune } from '../lib/runes'
 import type { TFn } from '../lib/i18n'
 import { RuneGlyph } from './RuneGlyph'
+import stoneArt from '../assets/art/rune-stone-blank.webp'
 
 /**
- * A cast rune stone. Face-down it's a plain river stone; tap and it turns to
- * show the rune carved into it, in gold, upright or merkstave.
+ * A cast rune stone — a photographed slate river pebble (Gemini, keyed).
+ * Face-down it carries a faint gold sigil; tap and it turns to show the rune
+ * carved into it, in gold, upright or merkstave.
  */
+
+/** The carved-gold look: a lit lower lip, a shadowed upper edge, a warm glow. */
+const CARVED = {
+  color: '#e9c873',
+  filter:
+    'drop-shadow(0 1px 0 rgba(255,255,255,0.18)) drop-shadow(0 -1px 0 rgba(0,0,0,0.85)) drop-shadow(0 0 8px rgba(233,200,115,0.45))',
+}
 
 function StoneShell({
   children,
@@ -15,21 +24,20 @@ function StoneShell({
   carved?: boolean
 }) {
   return (
-    <div
-      className="grid aspect-[5/6] w-full place-items-center rounded-[22%]"
-      style={{
-        background: carved
-          ? 'radial-gradient(120% 100% at 30% 20%, #333949, #23283492 55%, #1a1d27)'
-          : 'radial-gradient(125% 105% at 32% 18%, #4a5164, #363c4d 52%, #262a38)',
-        border: carved
-          ? '1px solid rgba(255,255,255,0.10)'
-          : '1px solid rgba(255,255,255,0.16)',
-        boxShadow: carved
-          ? 'inset 0 2px 10px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04), 0 14px 34px -12px rgba(0,0,0,0.6)'
-          : 'inset 0 2px 1px rgba(255,255,255,0.14), inset 0 -10px 18px rgba(0,0,0,0.35), 0 16px 36px -12px rgba(0,0,0,0.65), 0 0 0 6px color-mix(in srgb, var(--rz-gold) 8%, transparent)',
-      }}
-    >
-      {children}
+    <div className="relative grid aspect-[12/11] w-full place-items-center">
+      <span
+        aria-hidden
+        className="absolute inset-[14%] rounded-full blur-2xl"
+        style={{ background: 'var(--rz-gold-glow)', opacity: carved ? 0.5 : 0.3 }}
+      />
+      <img
+        src={stoneArt}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_18px_26px_rgba(0,0,0,0.65)]"
+        style={carved ? { filter: 'brightness(0.92) contrast(1.05)' } : undefined}
+      />
+      <span className="relative grid h-full w-full place-items-center">{children}</span>
     </div>
   )
 }
@@ -53,14 +61,14 @@ export function RuneStoneSlot({
       className="tf-scene block w-full"
       aria-label={faceUp ? runeText(drawn.key, drawn.merkstave, t).name : t('rune.turnStone')}
     >
-      <div className={`tf-card aspect-[5/6] ${faceUp ? 'is-face' : ''}`}>
+      <div className={`tf-card aspect-[12/11] ${faceUp ? 'is-face' : ''}`}>
         <div className="tf-side">
           <StoneShell>
             <span
               className="animate-pulse-glow font-serif text-4xl"
               style={{
-                color: 'rgba(227,192,99,0.5)',
-                textShadow: '0 0 12px rgba(227,192,99,0.3)',
+                color: 'rgba(233,200,115,0.55)',
+                textShadow: '0 0 14px rgba(233,200,115,0.4)',
               }}
             >
               ✦
@@ -72,13 +80,9 @@ export function RuneStoneSlot({
             <RuneGlyph
               runeKey={drawn.key}
               merkstave={drawn.merkstave}
-              strokeWidth={2.2}
-              className="h-[62%] w-[62%]"
-              style={{
-                color: '#e3c063',
-                filter:
-                  'drop-shadow(0 1px 0 rgba(0,0,0,0.65)) drop-shadow(0 0 6px rgba(227,192,99,0.25))',
-              }}
+              strokeWidth={2.4}
+              className="h-[52%] w-[52%]"
+              style={CARVED}
             />
           </StoneShell>
         </div>
@@ -97,21 +101,21 @@ export function RuneChip({
 }) {
   return (
     <span
-      className="grid shrink-0 place-items-center rounded-[26%]"
-      style={{
-        width: size,
-        height: size * 1.16,
-        background:
-          'radial-gradient(120% 100% at 30% 20%, #333949, #23283492 55%, #1a1d27)',
-        border: '1px solid rgba(255,255,255,0.10)',
-        boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.45)',
-      }}
+      className="relative grid shrink-0 place-items-center"
+      style={{ width: size * 1.1, height: size }}
     >
+      <img
+        src={stoneArt}
+        alt=""
+        aria-hidden
+        className="absolute inset-0 h-full w-full object-contain drop-shadow-[0_6px_8px_rgba(0,0,0,0.6)]"
+      />
       <RuneGlyph
         runeKey={drawn.key}
         merkstave={drawn.merkstave}
-        className="h-[64%] w-[64%]"
-        style={{ color: '#e3c063' }}
+        strokeWidth={2.4}
+        className="relative h-[56%] w-[56%]"
+        style={CARVED}
       />
     </span>
   )

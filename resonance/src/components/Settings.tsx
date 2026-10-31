@@ -34,6 +34,8 @@ function Toggle({
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={on}
       onClick={() => onChange(!on)}
       className="flex w-full items-center justify-between gap-3 py-2 text-start"
     >
@@ -43,11 +45,15 @@ function Toggle({
       </span>
       <span
         className={`h-6 w-10 shrink-0 rounded-full p-0.5 transition ${
-          on ? 'bg-gold-500/60' : 'bg-white/15'
+          on
+            ? 'bg-[linear-gradient(180deg,var(--rz-gold-hi),var(--rz-gold-lo))] shadow-[0_0_12px_-2px_var(--rz-gold-glow)]'
+            : 'bg-white/15'
         }`}
       >
         <span
-          className={`block h-5 w-5 rounded-full bg-white transition-transform ${
+          className={`block h-5 w-5 rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.4)] transition-transform ${
+            on ? 'bg-[#1a1206]' : 'bg-white'
+          } ${
             on ? 'translate-x-4 rtl:-translate-x-4' : ''
           }`}
         />

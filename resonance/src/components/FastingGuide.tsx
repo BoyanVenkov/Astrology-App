@@ -9,6 +9,8 @@ import { signLabel, useLocaleTag, useT } from '../lib/i18n'
 import type { MessageKey } from '../lib/locales/en'
 import { useLocalDayKey } from '../lib/timezone'
 import { Screen } from './Screen'
+import { moonState } from '../lib/ephemeris'
+import { MoonPhaseArt } from './ui'
 
 const VERDICT_COLOR: Record<FastingVerdict, string> = {
   favourable: '#6ee7b7',
@@ -38,6 +40,10 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
     return computeFasting(new Date(), t)
   }, [t, dayKey])
   const [openKey, setOpenKey] = useState<string | null>(f.pick.key)
+  const moon = useMemo(() => {
+    void dayKey
+    return moonState(new Date())
+  }, [dayKey])
   const tint = VERDICT_COLOR[f.verdict]
 
   const fitLabel = (fit: MethodFit): string =>
@@ -69,9 +75,14 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
       }
       onBack={onBack}
     >
-      <section className="glass-panel p-4">
-        <div className="flex items-center justify-between">
-          <p className="eyebrow">{t('scr.fast.today')}</p>
+      <section className="glass-panel glass-gold relative overflow-hidden p-4">
+        <MoonPhaseArt
+          illumination={moon.illumination}
+          angle={moon.angle}
+          className="animate-float-slow pointer-events-none absolute -end-3 -top-3 h-24 w-24 opacity-90 drop-shadow-[0_0_24px_rgba(255,226,170,0.3)]"
+        />
+        <div className="relative flex items-center gap-3 pe-24">
+          <p className="eyebrow" style={{ color: 'var(--rz-gold)' }}>{t('scr.fast.today')}</p>
           <span
             className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]"
             style={{ color: tint, boxShadow: `inset 0 0 0 1px ${tint}55` }}
@@ -79,10 +90,10 @@ export function FastingGuide({ onBack }: FastingGuideProps) {
             {t(`fast.verdict.${f.verdict}` as MessageKey)}
           </span>
         </div>
-        <p className="mt-2 font-serif text-lg leading-tight text-white">
+        <p className="relative mt-2 pe-16 font-serif text-[1.35rem] leading-tight text-gilded">
           {f.label}
         </p>
-        <p className="mt-2 text-sm leading-relaxed text-haze-200">{f.reason}</p>
+        <p className="relative mt-2 pe-14 text-sm leading-relaxed text-haze-100">{f.reason}</p>
         <p className="data mt-3 text-[11px] text-haze-400">
           {t('scr.fast.skyBacks', { method: f.pick.name })}
         </p>

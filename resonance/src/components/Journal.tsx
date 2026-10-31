@@ -29,6 +29,8 @@ import type { Mood } from '../types/resonance'
 interface JournalProps {
   onBack: () => void
   onUpgrade: (reason?: string) => void
+  /** Open the practice sheet — the empty state's way forward. */
+  onStart?: () => void
 }
 
 interface DayCell {
@@ -206,7 +208,7 @@ function StreakCelebration({
   )
 }
 
-export function Journal({ onBack, onUpgrade }: JournalProps) {
+export function Journal({ onBack, onUpgrade, onStart }: JournalProps) {
   const t = useT()
   const chakra = useAppStore((s) => s.chakra)
   const transit = useAppStore((s) => s.transit)
@@ -262,7 +264,18 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-5 md:max-w-4xl">
-      <BackButton onClick={onBack} />
+      <header className="animate-bloom-in flex items-start gap-3">
+        <BackButton onClick={onBack} />
+        <div className="min-w-0 flex-1 pt-0.5">
+          <p className="eyebrow-hue">{t('nav.secPersonal')}</p>
+          <h1 className="mt-1.5 font-serif text-[1.9rem] leading-[1.08] text-gilded md:text-[2.2rem]">
+            {t('you.journal')}
+          </h1>
+          <p className="mt-1.5 text-[0.95rem] leading-relaxed text-haze-200">
+            {t('you.journalSub')}
+          </p>
+        </div>
+      </header>
 
       {celebration && (
         <StreakCelebration
@@ -365,9 +378,18 @@ export function Journal({ onBack, onUpgrade }: JournalProps) {
       <section className="glass-panel p-4">
         <p className="eyebrow">{t('scr.journal.recent')}</p>
         {recent.length === 0 ? (
-          <p className="mt-3 text-sm text-haze-400">
-            {t('scr.journal.noSessions')}
-          </p>
+          <div className="mt-3 flex flex-col items-start gap-3">
+            <p className="text-sm text-haze-400">{t('scr.journal.noSessions')}</p>
+            {onStart && (
+              <button
+                type="button"
+                onClick={onStart}
+                className="btn-gold min-h-11 px-6 text-[0.9rem]"
+              >
+                {t('dash.beginPractice')}
+              </button>
+            )}
+          </div>
         ) : (
           <ul className="mt-3 flex flex-col gap-2 text-sm">
             {recent.map((s, i) => (
