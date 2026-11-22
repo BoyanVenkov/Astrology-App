@@ -403,7 +403,9 @@ export function Journal({ onBack, onUpgrade, onStart }: JournalProps) {
                     ? medName(s.style ?? 'chakra', t)
                     : s.kind === 'frequency'
                       ? `${s.frequency} Hz`
-                      : (breathName(s.pattern, t) ?? s.pattern)}
+                      : s.kind === 'yoga'
+                        ? t('yoga.flowName', { chakra: chakraLabel(s.chakra, t) })
+                        : (breathName(s.pattern, t) ?? s.pattern)}
                 </span>
                 <span className="tabular-nums text-xs text-haze-400">
                   {chakraLabel(s.chakra, t)} · {t('scr.journal.min', { n: s.minutes })}

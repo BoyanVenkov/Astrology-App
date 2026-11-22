@@ -136,6 +136,11 @@ export default {
           '0%, 100%': { transform: 'scale(0.9)', opacity: '0.6' },
           '50%': { transform: 'scale(1.12)', opacity: '1' },
         },
+        // a held yoga pose, quietly breathing: a 6s cycle (about ten breaths a minute)
+        'yoga-breathe': {
+          '0%, 100%': { transform: 'scale(1)', filter: 'brightness(1)' },
+          '50%': { transform: 'scale(1.015)', filter: 'brightness(1.14)' },
+        },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
@@ -229,6 +234,7 @@ export default {
       animation: {
         'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
         'aura-breathe': 'aura-breathe 8s ease-in-out infinite',
+        'yoga-breathe': 'yoga-breathe 6s ease-in-out infinite',
         'aura-orbit': 'aura-orbit 44s linear infinite',
         shimmer: 'shimmer 6s linear infinite',
         'float-slow': 'float-slow 7s ease-in-out infinite',

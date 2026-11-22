@@ -6,19 +6,22 @@ import { MEDITATION_STYLES } from '../lib/meditation'
 import {
   breathName,
   breathTag,
+  chakraLabel,
   medName,
   medTag,
   solfeggioIntention,
   useT,
   type TFn,
 } from '../lib/i18n'
+import { poseName, YOGA_FLOWS, YOGA_POSES, yogaFlowMinutes } from '../lib/yoga'
 import type { MessageKey } from '../lib/locales/en'
 import {
   breathUnlocked,
   meditationUnlocked,
   useEntitlements,
+  yogaFlowUnlocked,
 } from '../lib/premium'
-import { chakraColor } from '../lib/resonanceData'
+import { CHAKRA_ORDER, chakraColor } from '../lib/resonanceData'
 import { LockIcon } from './icons'
 import { Screen } from './Screen'
 import type {
@@ -30,11 +33,13 @@ import type {
 import artBreathe from '../assets/art/icon-breathe.webp'
 import artMeditate from '../assets/art/icon-meditate.webp'
 import artFrequency from '../assets/art/icon-frequency.webp'
+import artYoga from '../assets/art/yoga/tree.webp'
 
 const TAB_ART: Record<PracticeKind, string> = {
   breath: artBreathe,
   meditation: artMeditate,
   frequency: artFrequency,
+  yoga: artYoga,
 }
 
 interface PracticeLibraryProps {
@@ -118,9 +123,10 @@ export function PracticeLibrary({
   const [cat, setCat] = useState<string>('all')
   const { isPro, freeFrequencyCount } = useEntitlements()
   const recommended = useAppStore((s) => s.transit?.recommendedFrequency)
+  const todaysChakra = useAppStore((s) => s.chakra?.key)
 
   const categories = useMemo(() => {
-    if (tab === 'frequency') return []
+    if (tab === 'frequency' || tab === 'yoga') return []
     const set =
       tab === 'breath'
         ? [...new Set(breaths.map((b) => b.category))].sort(
@@ -151,17 +157,17 @@ export function PracticeLibrary({
     <Screen
       eyebrow={t('lib.eyebrow')}
       title={t('lib.title')}
-      subtitle={t('lib.sub', {
+      subtitle={`${t('lib.sub', {
         breaths: breaths.length,
         meds: meditations.length,
         tones: SOLFEGGIO_PRESETS.length,
-      })}
+      })} · ${t('yoga.flowCount', { n: CHAKRA_ORDER.length })}`}
       onBack={onBack}
       width="wide"
     >
-      {/* the three ways to sit — illustrated, the chosen one ringed in gold */}
-      <div role="tablist" aria-label={t('lib.eyebrow')} className="mx-auto grid w-full max-w-md grid-cols-3 gap-2.5">
-        {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map((tk) => {
+      {/* the four ways to practise — illustrated, the chosen one ringed in gold */}
+      <div role="tablist" aria-label={t('lib.eyebrow')} className="mx-auto grid w-full max-w-md grid-cols-4 gap-2">
+        {(['breath', 'meditation', 'frequency', 'yoga'] as PracticeKind[]).map((tk) => {
           const on = tk === tab
           return (
             <button
@@ -178,10 +184,10 @@ export function PracticeLibrary({
                 src={TAB_ART[tk]}
                 alt=""
                 aria-hidden
-                className={`h-14 w-14 object-contain transition-transform duration-300 ${on ? 'scale-110' : 'saturate-[0.7]'}`}
+                className={`h-12 w-12 object-contain transition-transform duration-300 ${on ? 'scale-110' : 'saturate-[0.7]'}`}
                 style={{ filter: on ? 'drop-shadow(0 0 12px rgba(232,194,116,0.45))' : undefined }}
               />
-              <span className={`text-[0.78rem] font-semibold ${on ? 'text-[#fbecc4]' : 'text-haze-300'}`}>
+              <span className={`text-center text-[0.74rem] font-semibold leading-tight ${on ? 'text-[#fbecc4]' : 'text-haze-300'}`}>
                 {t(`lib.tab.${tk}` as MessageKey)}
               </span>
             </button>
@@ -306,6 +312,50 @@ export function PracticeLibrary({
                     cat: medCatLabel(m.category, t),
                     len: lengthLabel(m.durations, t),
                   })}
+                </p>
+              </button>
+            )
+          })}
+
+        {tab === 'yoga' &&
+          CHAKRA_ORDER.map((c) => {
+            const isToday = c === todaysChakra
+            const unlocked = yogaFlowUnlocked(c, todaysChakra, isPro)
+            const accent = chakraColor(c)
+            const poses = YOGA_FLOWS[c]
+            return (
+              <button
+                key={c}
+                type="button"
+                onClick={() =>
+                  unlocked
+                    ? onLaunch({ mode: 'yoga', yogaChakra: c, minutes: yogaFlowMinutes(c), personalised: isToday })
+                    : onUpgrade(t('lib.reasonYoga'))
+                }
+                className={`glass-panel p-4 text-start active:scale-[0.99] ${unlocked ? '' : 'opacity-60'}`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: accent, boxShadow: `0 0 10px ${accent}` }} />
+                  <h2 className="font-serif text-lg text-white">{t('yoga.flowName', { chakra: chakraLabel(c, t) })}</h2>
+                  {isToday ? (
+                    <span
+                      className="ms-auto shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]"
+                      style={{ color: accent, boxShadow: `inset 0 0 0 1px ${accent}66` }}
+                    >
+                      {t('lib.today')}
+                    </span>
+                  ) : (
+                    !unlocked && <LockIcon className="ms-auto h-4 w-4 shrink-0 text-haze-400" />
+                  )}
+                </div>
+                <div className="mt-2 flex gap-1">
+                  {poses.map((k) => (
+                    <img key={k} src={YOGA_POSES[k].art} alt="" aria-hidden loading="lazy" className="h-16 w-16 object-contain" />
+                  ))}
+                </div>
+                <p className="mt-1 text-sm text-haze-300">{poses.map((k) => poseName(k, t)).join(' · ')}</p>
+                <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-haze-500">
+                  {t('yoga.flowMeta', { n: poses.length, min: yogaFlowMinutes(c) })}
                 </p>
               </button>
             )

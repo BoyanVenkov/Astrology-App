@@ -5,9 +5,11 @@ import { BreathVisualizer } from './BreathVisualizer'
 import { BreathJourney } from './BreathJourney'
 import { FrequencySession } from './FrequencySession'
 import { Meditation } from './Meditation'
+import { YogaFlow } from './YogaFlow'
 import { MoodCheckIn } from './MoodCheckIn'
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { MEDITATION_STYLE_MAP } from '../lib/meditation'
+import { poseName, YOGA_FLOWS, YOGA_POSES, yogaFlowMinutes } from '../lib/yoga'
 import { buildHoroscope } from '../lib/horoscope'
 import { crystalName } from '../lib/crystals'
 import {
@@ -65,7 +67,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
   const { isPro, freeFrequencyCount } = useEntitlements()
 
   const specificPractice = Boolean(
-    preset?.breathPattern || preset?.meditationStyle || preset?.frequency,
+    preset?.breathPattern || preset?.meditationStyle || preset?.frequency || preset?.yogaChakra,
   )
   const breathKey = preset?.breathPattern ?? suggestedPattern
   const medStyle = preset?.meditationStyle ?? 'chakra'
@@ -124,10 +126,13 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
 
   const accent = chakraColor(chakra.key)
   const focus = chakraLabel(chakra.key, t)
+  // yoga follows today's chakra (the sky's pick) unless a flow was chosen from the library
+  const yogaChakra = preset?.yogaChakra ?? chakra.key
+  const yogaName = t('yoga.flowName', { chakra: chakraLabel(yogaChakra, t) })
   const medDisplayName = medName(medStyle, t)
   const freqInfo = solfeggioInfo(chosenFreq)
   const minutes =
-    mode === 'breath' ? breathMin : mode === 'meditation' ? medMin : freqMin
+    mode === 'breath' ? breathMin : mode === 'meditation' ? medMin : mode === 'yoga' ? yogaFlowMinutes(yogaChakra) : freqMin
   const horoscope = buildHoroscope(
     {
       transit,
@@ -147,7 +152,9 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       ? breathName(breathKey, t)
       : mode === 'meditation'
         ? medDisplayName
-        : `${chosenFreq} Hz`
+        : mode === 'yoga'
+          ? yogaName
+          : `${chosenFreq} Hz`
 
   const record = (mins: number, completed: boolean) => {
     toggleAudio(false)
@@ -155,7 +162,7 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
       at: new Date().toISOString(),
       day: localDayKey(),
       kind: mode,
-      chakra: chakra.key,
+      chakra: mode === 'yoga' ? yogaChakra : chakra.key,
       frequency: mode === 'frequency' ? chosenFreq : frequency,
       pattern: mode === 'breath' ? breathKey : suggestedPattern,
       style: mode === 'meditation' ? medStyle : undefined,
@@ -205,14 +212,18 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
         ? breathName(breathKey, t)
         : mode === 'meditation'
           ? medDisplayName
-          : `${chosenFreq} Hz`
+          : mode === 'yoga'
+            ? yogaName
+            : `${chosenFreq} Hz`
       : t('scr.ritual.focusAlignment', { chakra: focus })
     const blurb = specificPractice
       ? mode === 'breath'
         ? breathGuide(breathKey, t)
         : mode === 'meditation'
           ? medTag(medStyle, t)
-          : solfeggioIntention(chosenFreq, t)
+          : mode === 'yoga'
+            ? t('yoga.blurb', { chakra: chakraLabel(yogaChakra, t) })
+            : solfeggioIntention(chosenFreq, t)
       : horoscope.greeting
 
     return (
@@ -230,8 +241,8 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
 
         {/* mode — only when the practice wasn't chosen from the library */}
         {!specificPractice && (
-          <div className="mt-5 grid grid-cols-3 gap-2">
-            {(['breath', 'meditation', 'frequency'] as PracticeKind[]).map(
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {(['breath', 'meditation', 'frequency', 'yoga'] as PracticeKind[]).map(
               (m) => (
                 <button
                   key={m}
@@ -255,8 +266,8 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
             <span
               className="h-3 w-3 rounded-full"
               style={{
-                background: mode === 'frequency' ? freqInfo.color : accent,
-                boxShadow: `0 0 12px ${mode === 'frequency' ? freqInfo.color : accent}`,
+                background: mode === 'frequency' ? freqInfo.color : mode === 'yoga' ? chakraColor(yogaChakra) : accent,
+                boxShadow: `0 0 12px ${mode === 'frequency' ? freqInfo.color : mode === 'yoga' ? chakraColor(yogaChakra) : accent}`,
               }}
             />
             <p className="font-serif text-lg text-white">
@@ -264,7 +275,9 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                 ? breathName(breathKey, t)
                 : mode === 'meditation'
                   ? medDisplayName
-                  : `${chosenFreq} Hz`}
+                  : mode === 'yoga'
+                    ? yogaName
+                    : `${chosenFreq} Hz`}
             </p>
             {mode === 'breath' && (
               <span className="ms-auto text-xs text-haze-400">
@@ -281,11 +294,13 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                       planet: planetLabel(transit.body, t),
                     })
                   : medTag(medStyle, t)
-                : t('scr.ritual.freqBlurb', {
-                    intention: solfeggioIntention(chosenFreq, t),
-                  })}
+                : mode === 'yoga'
+                  ? t('yoga.blurb', { chakra: chakraLabel(yogaChakra, t) })
+                  : t('scr.ritual.freqBlurb', {
+                      intention: solfeggioIntention(chosenFreq, t),
+                    })}
           </p>
-          {mode !== 'frequency' && (
+          {mode !== 'frequency' && mode !== 'yoga' && (
             <p className="mt-3 text-xs uppercase tracking-[0.12em] text-haze-400">
               {t('scr.ritual.metaLine', {
                 hz: recommendedFreq,
@@ -336,7 +351,22 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
           </>
         )}
 
-        {isJourney ? (
+        {mode === 'yoga' ? (
+          <>
+            <p className="mt-5 eyebrow">{t('yoga.poses')}</p>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {YOGA_FLOWS[yogaChakra].map((k) => (
+                <div key={k} className="glass-panel flex flex-col items-center gap-1 px-2 pb-2.5 pt-1.5 text-center">
+                  <img src={YOGA_POSES[k].art} alt="" aria-hidden className="h-20 w-20 object-contain" />
+                  <span className="text-xs font-semibold leading-tight text-haze-100">{poseName(k, t)}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs leading-relaxed text-haze-400">
+              {t('yoga.safety')} · {t('yoga.flowMeta', { n: YOGA_FLOWS[yogaChakra].length, min: yogaFlowMinutes(yogaChakra) })}
+            </p>
+          </>
+        ) : isJourney ? (
           <p className="mt-5 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-haze-300">
             {t('scr.ritual.journeyNote', {
               n: breathPattern.rounds?.rounds ?? 3,
@@ -412,6 +442,8 @@ export function Ritual({ onExit, preset, onUpgrade }: RitualProps) {
                 className="w-full"
               />
             )
+          ) : mode === 'yoga' ? (
+            <YogaFlow chakra={yogaChakra} onComplete={handleComplete} className="w-full" />
           ) : mode === 'meditation' ? (
             <Meditation
               minutes={minutes}

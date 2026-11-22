@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import type { ChakraReading } from '../lib/chakraField'
 import { BREATH_PATTERNS, CHAKRA_BREATH } from '../lib/breathwork'
 import { usePrescription } from '../lib/prescription'
+import { YOGA_FLOWS, YOGA_POSES, yogaFlowMinutes } from '../lib/yoga'
 import { crystalName } from '../lib/crystals'
 import { ALL_CRYSTALS } from '../data/esoteric'
 import { useAppStore } from '../store/useAppStore'
@@ -55,6 +56,7 @@ export function ChakraHero({
   const t = useT()
   const rx = usePrescription()
   const dailyCrystals = useAppStore((s) => s.dailyCrystals)
+  const todaysChakra = useAppStore((s) => s.chakra?.key)
   const idx = Math.max(0, field.findIndex((c) => c.key === selected))
   const c = field[idx]
 
@@ -72,6 +74,8 @@ export function ChakraHero({
   // free tier: today's prescribed breath (always free); Pro: the centre's own
   const breathKey = isPro ? CHAKRA_BREATH[c.key] : rx.breathPattern
   const breath = BREATH_PATTERNS[breathKey]
+  // free tier: today's chakra flow (always free); Pro: this centre's own
+  const yogaChakra = isPro || !todaysChakra ? c.key : todaysChakra
   const practices: { key: string; art: string; label: string; value: string; preset: RitualPreset }[] = [
     {
       key: 'med',
@@ -98,6 +102,13 @@ export function ChakraHero({
       label: t('tp.frequency'),
       value: `${c.frequency} Hz`,
       preset: { mode: 'frequency', frequency: c.frequency, minutes: 10 },
+    },
+    {
+      key: 'yoga',
+      art: YOGA_POSES[YOGA_FLOWS[yogaChakra][0]].art,
+      label: t('lib.tab.yoga'),
+      value: t('tp.min', { n: yogaFlowMinutes(yogaChakra) }),
+      preset: { mode: 'yoga', yogaChakra, minutes: yogaFlowMinutes(yogaChakra), personalised: yogaChakra === todaysChakra },
     },
   ]
 
@@ -190,7 +201,7 @@ export function ChakraHero({
 
       {/* ---- the centre's practices ---- */}
       <p className="eyebrow relative mt-5 text-start">{t('field.keyPractices')}</p>
-      <div className="relative mt-2 grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/[0.08] bg-[rgba(6,8,22,0.45)] py-3 rtl:divide-x-reverse">
+      <div className="relative mt-2 grid grid-cols-4 divide-x divide-white/10 rounded-2xl border border-white/[0.08] bg-[rgba(6,8,22,0.45)] py-3 rtl:divide-x-reverse">
         {practices.map((p) => (
           <button
             key={p.key}

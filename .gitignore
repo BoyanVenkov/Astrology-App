@@ -28,3 +28,11 @@ keystore.properties
 .env
 .env.local
 .env.*.local
+
+# Video-ad production (Resonance Ad/): renders, frames, stems and finished videos stay local —
+# far too big for GitHub. The scripts, briefs and thumbnails are tracked.
+Resonance Ad/**/work*/
+Resonance Ad/**/stills*/
+Resonance Ad/**/*.mp4
+Resonance Ad/**/*.wav
+Resonance Ad/**/*.mp3

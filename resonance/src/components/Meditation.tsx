@@ -29,6 +29,36 @@ const mmss = (s: number): string => {
 
 const AMBIENT_VOLUME = 0.35
 const AMBIENT_DUCK_VOLUME = 0.12
+// Narration surfaces out of the quiet instead of cutting in: the music settles first, then the
+// voice fades up (and down at the end) — an instant full-volume line pulls people out of the sit.
+const VOICE_VOLUME = 0.8
+const VOICE_LEAD_MS = 700
+const VOICE_FADE_IN_MS = 1500
+const VOICE_FADE_OUT_S = 0.6
+const DUCK_MS = 2000
+const UNDUCK_MS = 2500
+const RESUME_FADE_MS = 1800
+
+/**
+ * Glide an element's volume to `to` over `ms` with a smoothstep curve. Runs on a timer, not
+ * requestAnimationFrame, so it still completes with the screen off; a newer glide on the same
+ * element replaces the one in flight.
+ */
+const glides = new WeakMap<HTMLAudioElement, number>()
+function glideVolume(audio: HTMLAudioElement, to: number, ms: number) {
+  window.clearInterval(glides.get(audio))
+  const from = audio.volume
+  const start = performance.now()
+  const id = window.setInterval(() => {
+    const k = Math.min(1, (performance.now() - start) / ms)
+    audio.volume = from + (to - from) * k * k * (3 - 2 * k)
+    if (k >= 1) {
+      window.clearInterval(id)
+      glides.delete(audio)
+    }
+  }, 30)
+  glides.set(audio, id)
+}
 
 export function Meditation({
   minutes,
@@ -68,6 +98,9 @@ export function Meditation({
   const activeAudioRef = useRef<HTMLAudioElement | null>(null)
   const activeBlobRef = useRef<string | null>(null)
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null)
+  const runningRef = useRef(true)
+  // a narration line held by pause (mid-line, or still waiting for its lead-in)
+  const heldVoiceRef = useRef<HTMLAudioElement | null>(null)
   const [ambientSrc, setAmbientSrc] = useState<string | null>(null)
   useEffect(() => {
     onCompleteRef.current = onComplete
@@ -77,6 +110,7 @@ export function Meditation({
   useEffect(() => {
     return () => {
       activeAudioRef.current?.pause()
+      activeAudioRef.current = null // a line still in its lead-in must not start after we leave
       if (activeBlobRef.current) revokeCachedAudioSrc(activeBlobRef.current)
     }
   }, [])
@@ -109,11 +143,32 @@ export function Meditation({
     }
   }, [ambientSrc])
 
+  // pause holds the music and the voice; resume eases both back in rather than snapping
   useEffect(() => {
-    const audio = ambientAudioRef.current
-    if (!audio) return
-    if (running) audio.play().catch(() => undefined)
-    else audio.pause()
+    runningRef.current = running
+    const ambient = ambientAudioRef.current
+    const voice = activeAudioRef.current
+    if (!running) {
+      ambient?.pause()
+      if (voice && !voice.paused) {
+        voice.pause()
+        heldVoiceRef.current = voice
+      }
+      return
+    }
+    const held = heldVoiceRef.current
+    heldVoiceRef.current = null
+    if (ambient) {
+      // a line that is playing or still in its lead-in keeps the bed low
+      const speaking = !!held || (!!voice && !voice.ended && !voice.error)
+      ambient.volume = 0
+      ambient.play().catch(() => undefined)
+      glideVolume(ambient, speaking ? AMBIENT_DUCK_VOLUME : AMBIENT_VOLUME, RESUME_FADE_MS)
+    }
+    if (held && held === voice) {
+      held.volume = 0
+      held.play().then(() => glideVolume(held, VOICE_VOLUME, VOICE_FADE_IN_MS)).catch(() => undefined)
+    }
   }, [running, ambientSrc])
 
   const playClip = useCallback(
@@ -123,9 +178,10 @@ export function Meditation({
         onEnded?.()
         return
       }
-      const ambient = ambientAudioRef.current
+      // read the bed when it's needed, not now: on the first line it may still be loading
       const restore = () => {
-        if (ambient) ambient.volume = AMBIENT_VOLUME
+        const ambient = ambientAudioRef.current
+        if (ambient) glideVolume(ambient, AMBIENT_VOLUME, UNDUCK_MS)
         onEnded?.()
       }
       activeAudioRef.current?.pause()
@@ -134,9 +190,18 @@ export function Meditation({
         activeBlobRef.current = null
       }
       const audio = new Audio()
+      audio.volume = 0
       activeAudioRef.current = audio
       audio.onended = restore
       audio.onerror = restore
+      // ease the line out over its last moments
+      let fadingOut = false
+      audio.ontimeupdate = () => {
+        if (!fadingOut && audio.duration - audio.currentTime < VOICE_FADE_OUT_S) {
+          fadingOut = true
+          glideVolume(audio, 0, VOICE_FADE_OUT_S * 1000)
+        }
+      }
       void resolveCachedAudioSrc(url).then((src) => {
         if (activeAudioRef.current !== audio) {
           revokeCachedAudioSrc(src)
@@ -144,8 +209,20 @@ export function Meditation({
         }
         activeBlobRef.current = src
         audio.src = src
-        if (ambient) ambient.volume = AMBIENT_DUCK_VOLUME
-        audio.play().catch(restore)
+        // the music settles first, then the voice surfaces
+        const ambient = ambientAudioRef.current
+        if (ambient) glideVolume(ambient, AMBIENT_DUCK_VOLUME, DUCK_MS)
+        window.setTimeout(() => {
+          if (activeAudioRef.current !== audio) return
+          if (!runningRef.current) {
+            heldVoiceRef.current = audio // paused during the lead-in: resume will start it
+            return
+          }
+          audio
+            .play()
+            .then(() => glideVolume(audio, VOICE_VOLUME, VOICE_FADE_IN_MS))
+            .catch(restore)
+        }, VOICE_LEAD_MS)
       })
     },
     [locale],

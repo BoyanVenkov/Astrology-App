@@ -269,7 +269,7 @@ export interface MoodEntry {
   note?: string
 }
 
-export type PracticeKind = 'breath' | 'meditation' | 'frequency'
+export type PracticeKind = 'breath' | 'meditation' | 'frequency' | 'yoga'
 
 /** What launches the guided-practice flow — from the sheet, library, or a nudge. */
 export interface RitualPreset {
@@ -283,6 +283,8 @@ export interface RitualPreset {
   meditationStyle?: MeditationStyleKey
   /** For `mode: 'frequency'` — the tone to sit with; else today's recommended. */
   frequency?: SolfeggioFrequency
+  /** For `mode: 'yoga'` — whose flow to practise; else today's chakra (from the sky). */
+  yogaChakra?: ChakraKey
   /** This IS today's chart+mood prescription — frame it as such, not "from the library". */
   personalised?: boolean
 }

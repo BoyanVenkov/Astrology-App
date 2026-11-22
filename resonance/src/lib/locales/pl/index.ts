@@ -13,6 +13,7 @@ import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
 import { oracle } from './oracle'
+import { yoga } from './yoga'
 
 /**
  * Polski. Każdy moduł to kompletny `Record<…Key, string>`, więc brak tłumaczenia
@@ -33,4 +34,5 @@ export const pl: Partial<Record<MessageKey, string>> = {
   ...rewards,
   ...screens,
   ...oracle,
+  ...yoga,
 }

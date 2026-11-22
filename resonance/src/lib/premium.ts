@@ -89,6 +89,10 @@ export const spreadUnlocked = (spreadKey: string, isPro: boolean): boolean =>
 export const runeLayoutUnlocked = (layoutKey: string, isPro: boolean): boolean =>
   isPro || layoutKey === 'one'
 
+/** Today's chakra flow (the sky's pick) is always free; the full yoga library is Pro. */
+export const yogaFlowUnlocked = (chakra: string, todaysChakra: string | undefined, isPro: boolean): boolean =>
+  isPro || chakra === todaysChakra
+
 /* -------------------------------------------------------------- purchase */
 
 // The actual purchase flow (Play Billing via RevenueCat) lives in

@@ -13,6 +13,7 @@ import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
 import { oracle } from './oracle'
+import { yoga } from './yoga'
 
 /**
  * Български. Modules that are fully translated are typed as complete
@@ -34,4 +35,5 @@ export const bg: Partial<Record<MessageKey, string>> = {
   ...rewards,
   ...screens,
   ...oracle,
+  ...yoga,
 }

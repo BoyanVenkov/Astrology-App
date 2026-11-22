@@ -13,6 +13,7 @@ import { runes } from './runes'
 import { rewards } from './rewards'
 import { screens } from './screens'
 import { oracle } from './oracle'
+import { yoga } from './yoga'
 
 /**
  * 日本語。Every module is a complete `Record<…Key, string>`, so a missing
@@ -34,4 +35,5 @@ export const ja: Partial<Record<MessageKey, string>> = {
   ...rewards,
   ...screens,
   ...oracle,
+  ...yoga,
 }
