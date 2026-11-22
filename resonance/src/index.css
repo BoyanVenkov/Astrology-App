@@ -511,10 +511,15 @@
    phones. The hero's slow zoom and breathing moon stay alive; practice sessions render outside
    the Layout and keep every animation they need. */
 .rz-settle :is(
-  .animate-card-float, .animate-float-slow, .animate-aura-orbit, .animate-aura-breathe,
+  .animate-aura-orbit, .animate-aura-breathe,
   .animate-pulse-glow, .animate-flicker, .animate-freq-ring, .animate-twinkle
 ) {
   animation-iteration-count: 3;
+}
+/* The bobbing icons (widgets, card art, the sidebar stone) are simply still — the cheapest
+   decoration is the one that doesn't move, and they read just as well at rest. */
+.rz-settle :is(.animate-card-float, .animate-float-slow) {
+  animation: none;
 }
 
 /* Scroll calm (lib/scrollCalm.ts): looping decoration pauses mid-scroll and
