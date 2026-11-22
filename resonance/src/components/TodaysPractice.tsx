@@ -1,5 +1,7 @@
 import { BREATH_PATTERNS } from '../lib/breathwork'
 import { usePrescription } from '../lib/prescription'
+import { YOGA_FLOWS, YOGA_POSES, yogaFlowMinutes } from '../lib/yoga'
+import { useAppStore } from '../store/useAppStore'
 import { useT } from '../lib/i18n'
 import { LockIcon } from './icons'
 import type { RitualPreset } from '../types/resonance'
@@ -23,7 +25,7 @@ const midOf = (arr: number[], fallback: number): number =>
 
 /**
  * The day's personalised practice, tuned to the current transit — one tap to
- * start it as a meditation, a breath session, or a frequency sit. Dropped into
+ * start it as a meditation, a breath session, a frequency sit, or the day's chakra yoga flow. Dropped into
  * every screen where "what should I do about this sky" is a natural question.
  */
 export function TodaysPractice({
@@ -36,6 +38,7 @@ export function TodaysPractice({
   const t = useT()
   const rx = usePrescription()
   const breathMin = midOf(BREATH_PATTERNS[rx.breathPattern].durations, 6)
+  const todaysChakra = useAppStore((s) => s.chakra?.key)
 
   const options: {
     key: string
@@ -92,16 +95,37 @@ export function TodaysPractice({
         personalised: true,
       },
     },
+    // today's chakra flow (the sky's pick) is always free, same carve-out
+    ...(todaysChakra
+      ? [
+          {
+            key: 'yoga',
+            label: t('lib.tab.yoga'),
+            sub: t('tp.min', { n: yogaFlowMinutes(todaysChakra) }),
+            accent: false,
+            locked: false,
+            preset: {
+              mode: 'yoga' as const,
+              minutes: yogaFlowMinutes(todaysChakra),
+              yogaChakra: todaysChakra,
+              personalised: true,
+            },
+          },
+        ]
+      : []),
   ]
 
   const ART: Record<string, string> = {
     meditation: artMeditate,
     breath: artBreathe,
     frequency: artFrequency,
+    ...(todaysChakra ? { yoga: YOGA_POSES[YOGA_FLOWS[todaysChakra][0]].art } : {}),
   }
 
   const buttons = (
-    <div className="relative grid grid-cols-3 divide-x divide-white/10 overflow-visible pt-3">
+    <div
+      className={`relative grid divide-x divide-white/10 overflow-visible pt-3 rtl:divide-x-reverse ${options.length > 3 ? 'grid-cols-4' : 'grid-cols-3'}`}
+    >
       {options.map((o) => {
         const showAccent = o.accent && !o.locked
         return (
@@ -109,9 +133,9 @@ export function TodaysPractice({
             key={o.key}
             type="button"
             onClick={() => (o.locked ? onUpgrade(o.reason) : onLaunch(o.preset))}
-            className={`card-press relative flex flex-col items-center gap-2 px-1 pt-1 ${o.locked ? 'opacity-60' : ''}`}
+            className={`card-press relative flex min-w-0 flex-col items-center gap-2 px-1 pt-1 ${o.locked ? 'opacity-60' : ''}`}
           >
-            <span className="relative mb-0.5 grid h-20 w-20 place-items-center">
+            <span className="relative mb-0.5 grid h-[4.5rem] w-[4.5rem] place-items-center">
               {showAccent && (
                 <span
                   aria-hidden
@@ -126,7 +150,7 @@ export function TodaysPractice({
                 src={ART[o.key]}
                 alt=""
                 aria-hidden
-                className="relative h-16 w-16 object-contain"
+                className="relative h-14 w-14 object-contain"
                 style={{
                   filter: showAccent
                     ? 'drop-shadow(0 10px 12px rgba(0,0,0,0.5))'
@@ -137,8 +161,16 @@ export function TodaysPractice({
                 <LockIcon className="absolute end-0 top-0 h-3.5 w-3.5 text-haze-400" />
               )}
             </span>
-            <span className="eyebrow">{o.label}</span>
-            <span className="data text-sm text-haze-200">{o.sub}</span>
+            {/* four across: a smaller, tighter label so the longest (МЕДИТИРАЙ, FREQUENCY) fit whole */}
+            <span
+              className={`eyebrow max-w-full text-center leading-tight [overflow-wrap:anywhere] ${
+                options.length > 3 ? '!text-[0.6rem] !tracking-[0.05em]' : ''
+              }`}
+            >
+              {o.label}
+            </span>
+            {/* dir="auto": "4·7·8" and "396 Hz" stay left-to-right in Arabic; "5 دقيقة" stays right-to-left */}
+            <span dir="auto" className="data text-sm text-haze-200">{o.sub}</span>
           </button>
         )
       })}

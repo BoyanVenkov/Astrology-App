@@ -1,7 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 import { useAppStore } from '../store/useAppStore'
-import { chakraLabel, useT } from '../lib/i18n'
-import { YOGA_FLOWS, YOGA_POSES, yogaFlowMinutes } from '../lib/yoga'
+import { useT } from '../lib/i18n'
+import { YOGA_FLOWS } from '../lib/yoga'
 import { TodaysPractice } from './TodaysPractice'
 import { GemArt } from './ui'
 import { ChevronIcon, PlayIcon } from './icons'
@@ -56,7 +56,6 @@ export function PracticeSheet({
 }: PracticeSheetProps) {
   const t = useT()
   const stone = prescription.stones[0]
-  const todaysChakra = useAppStore((s) => s.chakra?.key)
   const doneToday = useAppStore(
     (s) => s.sessionLog.filter((x) => x.completed).length > 0,
   )
@@ -109,24 +108,6 @@ export function PracticeSheet({
         </div>
 
         <div className="mt-4 flex flex-col gap-2">
-          {/* today's chakra flow — the sky's pick, always free */}
-          {todaysChakra && (
-            <Row
-              title={`${t('lib.tab.yoga')} · ${t('yoga.flowName', { chakra: chakraLabel(todaysChakra, t) })}`}
-              sub={t('yoga.flowMeta', { n: YOGA_FLOWS[todaysChakra].length, min: yogaFlowMinutes(todaysChakra) })}
-              leading={
-                <img
-                  src={YOGA_POSES[YOGA_FLOWS[todaysChakra][0]].art}
-                  alt=""
-                  aria-hidden
-                  className="h-10 w-10 shrink-0 object-contain"
-                />
-              }
-              onClick={() =>
-                onRitual({ mode: 'yoga', yogaChakra: todaysChakra, minutes: yogaFlowMinutes(todaysChakra), personalised: true })
-              }
-            />
-          )}
           <Row
             title={t('tp.fullLibrary')}
             sub={`${t('tp.librarySub')} · ${t('yoga.flowCount', { n: Object.keys(YOGA_FLOWS).length })}`}
