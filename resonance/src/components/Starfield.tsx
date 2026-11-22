@@ -72,8 +72,8 @@ export function Starfield() {
     let lastDraw = 0
     const draw = (t: number) => {
       if (!running) return
-      // ~30 fps is plenty for slow twinkles; hold the frame while scrolling
-      if (t - lastDraw < 32 || isScrolling()) {
+      // ~10 fps is plenty for slow twinkles (and cheap); hold the frame while scrolling
+      if (t - lastDraw < 100 || isScrolling()) {
         raf = requestAnimationFrame(draw)
         return
       }

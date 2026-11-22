@@ -524,7 +524,7 @@ export function Layout({
   )
 
   return (
-    <div className="relative flex min-h-[100dvh] w-full flex-col md:flex-row">
+    <div className="rz-settle relative flex min-h-[100dvh] w-full flex-col md:flex-row">
       {/* per-tab atmosphere, pinned to the viewport behind everything */}
       <div
         aria-hidden

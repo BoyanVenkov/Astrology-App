@@ -155,14 +155,15 @@
   position: relative;
   border-radius: 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.065);
-  background-color: rgba(9, 14, 34, 0.55);
+  /* A pre-baked frost, not a live backdrop blur: sixteen cards each re-blurring what scrolled
+     beneath them, every frame, at 3x density, was the second-largest cause of scroll jank on
+     phones. A slightly denser fill reads the same on this dark sky. */
+  background-color: rgba(10, 15, 36, 0.74);
   background-image: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.028) 0%,
-    rgba(255, 255, 255, 0) 40%
+    rgba(255, 255, 255, 0.034) 0%,
+    rgba(255, 255, 255, 0) 42%
   );
-  backdrop-filter: blur(20px) saturate(135%);
-  -webkit-backdrop-filter: blur(20px) saturate(135%);
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
     0 14px 44px -20px rgba(0, 0, 0, 0.7);
@@ -502,6 +503,18 @@
 /* Prose stays readable no matter how wide the content area gets. */
 .reading-measure {
   max-width: 42rem;
+}
+
+/* Settle (Layout root): on the browsing screens the looping decoration — floating cards, orbiting
+   and breathing auras, pulses, twinkles — plays a few cycles after a screen opens, then rests.
+   Dozens of never-ending, mostly filtered animations were the main cause of scroll jank on
+   phones. The hero's slow zoom and breathing moon stay alive; practice sessions render outside
+   the Layout and keep every animation they need. */
+.rz-settle :is(
+  .animate-card-float, .animate-float-slow, .animate-aura-orbit, .animate-aura-breathe,
+  .animate-pulse-glow, .animate-flicker, .animate-freq-ring, .animate-twinkle
+) {
+  animation-iteration-count: 3;
 }
 
 /* Scroll calm (lib/scrollCalm.ts): looping decoration pauses mid-scroll and

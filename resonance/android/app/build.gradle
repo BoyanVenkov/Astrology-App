@@ -21,8 +21,8 @@ android {
         applicationId "com.venkovdigital.resonance"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 17
-        versionName "17"
+        versionCode 18
+        versionName "18"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -44,7 +44,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            // R8: shrink + obfuscate (Play's DEX optimisation check). Capacitor and its plugins ship
+            // their own keep rules; the WebView bridge is kept by proguard-android-optimize.txt.
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             // Sign with the release key when keystore.properties is present;
             // otherwise fall back to the debug key so CI / fresh clones still build.
